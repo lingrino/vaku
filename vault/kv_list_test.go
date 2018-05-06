@@ -1,15 +1,20 @@
 package vault
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestKVList(t *testing.T) {
-	// c := NewClient()
-	// l, _ := c.KVList(&KVListInput{
-	// 	Path:           "secret/data/test",
-	// 	Recurse:        false,
-	// 	TrimPathPrefix: false,
-	// })
-	// if l != nil {
-	// 	t.Fail()
-	// }
+	c := NewClient()
+	c.simpleInit()
+
+	l, _ := c.KVList(&KVListInput{
+		Path:           "secretv1/test",
+		Recurse:        false,
+		TrimPathPrefix: true,
+	})
+
+	assert.Equal(t, "hi", l)
 }

@@ -16,21 +16,6 @@ func NewClient() *Client {
 	return &Client{}
 }
 
-// SimpleInit initializes a new default Vault Client
-// TODO - rm exported version
-// it should only be used internally for testing
-func (c *Client) SimpleInit() error {
-	var err error
-
-	client, err := vapi.NewClient(vapi.DefaultConfig())
-	if err != nil {
-		return fmt.Errorf("[FATAL]: simpleInit: Failed to init the vault client: %s", err)
-	}
-	c.client = client
-
-	return err
-}
-
 // simpleInit initializes a new default Vault Client
 // it should only be used internally for testing
 func (c *Client) simpleInit() error {

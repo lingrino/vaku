@@ -35,7 +35,7 @@ func TestPathMountInfo(t *testing.T) {
 		"secretv2/test/again": {"secretv2/", "2"},
 	}
 	c := NewClient()
-	c.SimpleInit()
+	c.simpleInit()
 	for i, o := range inputToOutput {
 		b, s, _ := c.PathMountInfo(i)
 		assert.Equal(t, o[0], b)
