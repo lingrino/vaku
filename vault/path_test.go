@@ -23,6 +23,26 @@ func TestPathIsFolder(t *testing.T) {
 	}
 }
 
+func TestPathMountInfo(t *testing.T) {
+	inputToOutput := map[string][]string{
+		"":                    {"", ""},
+		"dflskdjf":            {"", ""},
+		"secretv2":            {"", ""},
+		"secretv1/":           {"secretv1/", "1"},
+		"secretv1/test":       {"secretv1/", "1"},
+		"secretv2/":           {"secretv2/", "2"},
+		"secretv2/test":       {"secretv2/", "2"},
+		"secretv2/test/again": {"secretv2/", "2"},
+	}
+	c := NewClient()
+	c.SimpleInit()
+	for i, o := range inputToOutput {
+		b, s, _ := c.PathMountInfo(i)
+		assert.Equal(t, o[0], b)
+		assert.Equal(t, o[1], s)
+	}
+}
+
 func TestPathJoin(t *testing.T) {
 	outputToInput := map[string][]string{
 		"":        {"/"},
