@@ -12,6 +12,7 @@ jobs:
     environment:
       - VAULT_ADDR: http://0.0.0.0:8300
       - VAULT_TOKEN: hunter2
+    parallelism: 4
     steps:
       - checkout
       - run: go get -v -t -d ./...
