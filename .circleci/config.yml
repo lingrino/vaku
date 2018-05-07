@@ -11,11 +11,10 @@ jobs:
           VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
     working_directory: /go/src/github.com/lingrino/vault-kv-utils
     environment:
-      - VAULT_ADDR: http://localhost:8200
+      - VAULT_ADDR: http://0.0.0.0:8200
       - VAULT_TOKEN: hunter2
     steps:
       - checkout
       - run: sleep 2
-      - run: curl http://127.0.0.1:8200/v1/sys/health
       - run: go get -v -t -d ./...
       - run: go test -v ./...
