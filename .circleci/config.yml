@@ -5,8 +5,6 @@ jobs:
       - image: circleci/golang:latest
       - image: vault:latest
         name: vault-test
-        publish:
-          - "8200:8200"
         environment:
           SKIP_SETCAP: true
           VAULT_DEV_ROOT_TOKEN_ID: hunter2
@@ -17,6 +15,7 @@ jobs:
       - VAULT_TOKEN: hunter2
     steps:
       - checkout
-      - run: sleep 5
+      - run: sleep 2
+      - run: curl http://127.0.0.1:8200/v1/sys/health
       - run: go get -v -t -d ./...
       - run: go test -v ./...
