@@ -5,6 +5,8 @@ jobs:
       - image: circleci/golang:latest
       - image: vault:latest
         name: vault-test
+        ports:
+          - "8200:8200"
         environment:
           SKIP_SETCAP: true
           VAULT_DEV_ROOT_TOKEN_ID: hunter2
