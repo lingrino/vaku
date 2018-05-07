@@ -2,18 +2,17 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/golang:latest
-      - image: vault:latest
+      - image: circleci/golang:1.10.1
+      - image: vault:0.10.1
         environment:
           SKIP_SETCAP: true
           VAULT_DEV_ROOT_TOKEN_ID: hunter2
-          VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+          VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8300
     working_directory: /go/src/github.com/lingrino/vault-kv-utils
     environment:
-      - VAULT_ADDR: http://0.0.0.0:8200
+      - VAULT_ADDR: http://0.0.0.0:8300
       - VAULT_TOKEN: hunter2
     steps:
       - checkout
-      - run: sleep 5
       - run: go get -v -t -d ./...
       - run: go test -v ./...
