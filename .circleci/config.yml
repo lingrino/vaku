@@ -4,7 +4,6 @@ jobs:
     docker:
       - image: circleci/golang:latest
       - image: vault:latest
-        name: vault-test
         environment:
           SKIP_SETCAP: true
           VAULT_DEV_ROOT_TOKEN_ID: hunter2
