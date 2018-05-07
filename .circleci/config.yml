@@ -5,7 +5,7 @@ jobs:
       - image: circleci/golang:latest
       - image: vault:latest
         name: vault-test
-        ports:
+        publish:
           - "8200:8200"
         environment:
           SKIP_SETCAP: true
