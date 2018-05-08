@@ -40,18 +40,21 @@ func (c *Client) KVList(i *KVListInput) ([]string, error) {
 		return nil, errors.Wrapf(err, "Failed to describe mount for path %s", i.Path)
 	}
 
+	var listPath string
 	if version == "2" {
-		i.Path = c.PathJoin(mountPath, "metadata", strings.TrimPrefix(i.Path, mountPath))
+		listPath = c.PathJoin(mountPath, "metadata", strings.TrimPrefix(i.Path, mountPath))
+	} else {
+		listPath = i.Path
 	}
 
-	secret, err := c.client.Logical().List(i.Path)
-	if err != nil || secret == nil {
-		return nil, errors.Wrapf(err, "Failed to list path %s", i.Path)
+	secret, err := c.client.Logical().List(listPath)
+	if err != nil || secret == nil || secret.Data == nil {
+		return nil, errors.Wrapf(err, "Failed to list path %s", listPath)
 	}
 
 	keys, ok := secret.Data["keys"]
-	if !ok {
-		return nil, errors.Wrapf(err, "%s contained no Data['keys']", i.Path)
+	if !ok || keys == nil {
+		return nil, errors.Wrapf(err, "No Data[\"keys\"] at path %s", i.Path)
 	}
 
 	list, ok := keys.([]interface{})
@@ -60,21 +63,22 @@ func (c *Client) KVList(i *KVListInput) ([]string, error) {
 	}
 
 	for _, v := range list {
-		typed, ok := v.(string)
+		key, ok := v.(string)
 		if !ok {
-			return nil, errors.Wrapf(err, "Failed to assert %s in %s as a string", typed, i.Path)
+			return nil, errors.Wrapf(err, "Failed to assert %s in %s as a string", key, i.Path)
 		}
-		if c.PathIsFolder(typed) && i.Recurse {
+
+		if c.PathIsFolder(key) && i.Recurse {
 			subKeys, _ := c.KVList(&KVListInput{
-				Path:           c.PathJoin(i.Path, typed),
-				Recurse:        i.Recurse,
+				Path:           c.PathJoin(i.Path, key),
+				Recurse:        true,
 				TrimPathPrefix: false,
 			})
 			result = append(result, subKeys...)
-		} else if c.PathIsFolder(typed) {
-			result = append(result, c.PathJoin(i.Path, typed)+"/")
+		} else if c.PathIsFolder(key) {
+			result = append(result, c.PathJoin(i.Path, key)+"/")
 		} else {
-			result = append(result, c.PathJoin(i.Path, typed))
+			result = append(result, c.PathJoin(i.Path, key))
 		}
 	}
 
