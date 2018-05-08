@@ -1,9 +1,10 @@
 package vault
 
 import (
-	"fmt"
 	"sort"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 // KVListInput is the required input for KVList
@@ -13,12 +14,13 @@ type KVListInput struct {
 	TrimPathPrefix bool
 }
 
-// NewKVListInput returns a kvListInput struct with default values
-func NewKVListInput() *KVListInput {
+// NewKVListInput takes a path and returns a kvListInput struct with
+// default values to produce similar to what is returned by Vault CLI
+func NewKVListInput(p string) *KVListInput {
 	return &KVListInput{
-		Path:           "",
+		Path:           p,
 		Recurse:        false,
-		TrimPathPrefix: false,
+		TrimPathPrefix: true,
 	}
 }
 
@@ -30,12 +32,12 @@ func (c *Client) KVList(i *KVListInput) ([]string, error) {
 	var result []string
 
 	if i.Path == "" {
-		return nil, fmt.Errorf("[FATAL]: KVList: Path is not specified")
+		return nil, errors.Wrap(err, "Path is not specified")
 	}
 
 	mountPath, version, err := c.PathMountInfo(i.Path)
 	if err != nil {
-		return nil, fmt.Errorf("[FATAL]: KVList: Failed to describe mount for path %s: %s", i.Path, err)
+		return nil, errors.Wrapf(err, "Failed to describe mount for path %s", i.Path)
 	}
 
 	if version == "2" {
@@ -44,23 +46,23 @@ func (c *Client) KVList(i *KVListInput) ([]string, error) {
 
 	secret, err := c.client.Logical().List(i.Path)
 	if err != nil || secret == nil {
-		return nil, fmt.Errorf("[FATAL]: KVList: Failed to list path %s: %s", i.Path, err)
+		return nil, errors.Wrapf(err, "Failed to list path %s", i.Path)
 	}
 
 	keys, ok := secret.Data["keys"]
 	if !ok {
-		return nil, fmt.Errorf("[FATAL]: KVList: %s contained no Data['keys']: %s", i.Path, err)
+		return nil, errors.Wrapf(err, "%s contained no Data['keys']", i.Path)
 	}
 
 	list, ok := keys.([]interface{})
 	if !ok {
-		return nil, fmt.Errorf("[FATAL]: KVList: Failed to convert %s keys to interface: %s", i.Path, err)
+		return nil, errors.Wrapf(err, "Failed to convert %s keys to interface", i.Path)
 	}
 
 	for _, v := range list {
 		typed, ok := v.(string)
 		if !ok {
-			return nil, fmt.Errorf("[FATAL]: KVList: Failed to assert %s in %s as a string", typed, i.Path)
+			return nil, errors.Wrapf(err, "Failed to assert %s in %s as a string", typed, i.Path)
 		}
 		if c.PathIsFolder(typed) && i.Recurse {
 			subKeys, _ := c.KVList(&KVListInput{

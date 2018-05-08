@@ -1,9 +1,10 @@
 package vault
 
 import (
-	"log"
 	pth "path"
 	str "strings"
+
+	"github.com/pkg/errors"
 )
 
 // PathIsFolder returns true if the string ends in a '/'
@@ -27,7 +28,7 @@ func (c *Client) PathMountInfo(p string) (string, string, error) {
 	if p != "" {
 		mounts, err := c.client.Sys().ListMounts()
 		if err != nil {
-			log.Printf("[ERROR]: PathMountInfo: Failed to list mounts: %s", err)
+			errors.Wrap(err, "Failed to list mounts")
 			return mountPath, version, err
 		}
 

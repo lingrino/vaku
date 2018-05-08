@@ -1,9 +1,8 @@
 package vault
 
 import (
-	"fmt"
-
 	vapi "github.com/hashicorp/vault/api"
+	"github.com/pkg/errors"
 )
 
 // Client is a wrapper around a real Vault API client.
@@ -23,7 +22,7 @@ func (c *Client) simpleInit() error {
 
 	client, err := vapi.NewClient(vapi.DefaultConfig())
 	if err != nil {
-		return fmt.Errorf("[FATAL]: simpleInit: Failed to init the vault client: %s", err)
+		return errors.Wrap(err, "Failed to init the vault client")
 	}
 	c.client = client
 
@@ -84,7 +83,7 @@ func (c *Client) seed() error {
 
 		_, err = c.client.Logical().Write(writePath, data)
 		if err != nil {
-			return fmt.Errorf("[FATAL]: seed: Failed to seed vault at path %s: %s", writePath, err)
+			return errors.Wrapf(err, "Failed to seed vault at path %s", writePath)
 		}
 	}
 
@@ -112,7 +111,7 @@ func (c *Client) seed() error {
 
 		_, err = c.client.Logical().Write(writePath, data)
 		if err != nil {
-			return fmt.Errorf("[FATAL]: seed: Failed to seed vault at path %s: %s", writePath, err)
+			return errors.Wrapf(err, "Failed to seed vault at path %s", writePath)
 		}
 	}
 	return err
