@@ -35,6 +35,14 @@ func (c *Client) seed() error {
 	var err error
 	var mountPath string
 
+	c.client.Sys().EnableAuditWithOptions("audit_stdout", &vapi.EnableAuditOptions{
+		Type: "file",
+		Options: map[string]string{
+			"file_path": "stdout",
+			"log_raw":   "true",
+		},
+	})
+
 	seeds := map[string]map[string]string{
 		"test/foo": {
 			"value": "bar",

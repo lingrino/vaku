@@ -26,6 +26,8 @@ func TestKVList(t *testing.T) {
 				Path:           "test",
 				Recurse:        false,
 				TrimPathPrefix: true,
+				MountPath:      "",
+				MountVersion:   "",
 			},
 			output: []string{"HToOeKKD", "fizz", "foo", "inner/", "value"},
 		},
@@ -61,6 +63,8 @@ func TestKVList(t *testing.T) {
 
 			origPath = v.input.Path
 			v.input.Path = c.PathJoin(mount, v.input.Path)
+			v.input.MountPath = ""
+			v.input.MountVersion = ""
 
 			l, _ := c.KVList(v.input)
 			for i, p := range l {
