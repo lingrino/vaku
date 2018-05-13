@@ -1,4 +1,14 @@
-# vault-kv-utils
-[![CircleCI](https://circleci.com/gh/Lingrino/vault-kv-utils/tree/master.svg?style=svg)](https://circleci.com/gh/Lingrino/vault-kv-utils/tree/master)
+# vaku
+[![CircleCI](https://circleci.com/gh/Lingrino/vaku.svg?style=svg)](https://circleci.com/gh/Lingrino/vaku)
 
-Useful functions for the Vault Key/Value Secrets Engine
+Useful functions in Go for Hashicorp Vault.
+
+Currently under active devlopment
+
+Planned Functions:
+- KV List
+- KV Read
+- KV Search
+- KV Delete
+- Policy Enforce
+- Approle Enforce
