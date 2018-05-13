@@ -1,5 +1,5 @@
 # vaku
-[![CircleCI](https://circleci.com/gh/Lingrino/vaku/tree/master.svg?style=svg)](https://circleci.com/gh/Lingrino/vaku/tree/master)
+[![CircleCI](https://circleci.com/gh/Lingrino/vaku.svg?style=svg)](https://circleci.com/gh/Lingrino/vaku)
 
 Useful functions in Go for Hashicorp Vault.
 
