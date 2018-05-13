@@ -3,6 +3,8 @@ package vault
 import (
 	pth "path"
 	str "strings"
+
+	"github.com/pkg/errors"
 )
 
 // PathIsFolder returns true if the string ends in a '/'
@@ -13,6 +15,35 @@ func (c *Client) PathIsFolder(s string) bool {
 		return true
 	}
 	return false
+}
+
+// PathMountInfo checks if a path is on a V2 mount
+// Returns the "mount" path for the given path
+// An empty return string here implies an error
+func (c *Client) PathMountInfo(p string) (string, string, error) {
+	var err error
+	var mountPath string
+	var version string
+
+	if p != "" {
+		mounts, err := c.client.Sys().ListMounts()
+		if err != nil {
+			errors.Wrap(err, "Failed to list mounts")
+			return mountPath, version, err
+		}
+
+		for mount, data := range mounts {
+			if str.HasPrefix(p, mount) {
+				mountPath = mount
+				version, ok := data.Options["version"]
+				if !ok {
+					version = "unknown"
+				}
+				return mountPath, version, err
+			}
+		}
+	}
+	return mountPath, version, err
 }
 
 // PathJoin takes n strings and combines them into a clean vault path
