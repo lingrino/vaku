@@ -12,12 +12,15 @@ jobs:
       - VAULT_ADDR: http://0.0.0.0:8300
       - VAULT_TOKEN: hunter2
     parallelism: 4
-    working_directory: /go/src/github.com/lingrino/vault-kv-utils
+    working_directory: /go/src/github.com/lingrino/vaku
     steps:
       - checkout
       - run:
           name: Make sure there's nothing to go fmt
           command: test -z $(go fmt ./...)
+      - run:
+          name: Install dep
+          command: go get -u github.com/golang/dep/cmd/dep
       - run:
           name: Get Packages
           command: dep ensure
