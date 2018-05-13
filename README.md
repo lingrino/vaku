@@ -3,4 +3,12 @@
 
 Useful functions in Go for Hashicorp Vault.
 
-Currently under active devlopment.
+Currently under active devlopment
+
+Planned Functions:
+- KV List
+- KV Read
+- KV Search
+- KV Delete
+- Policy Enforce
+- Approle Enforce
