@@ -16,8 +16,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Make sure there's nothing to go fmt
+          command: test -z $(go fmt ./...)
+      - run:
           name: Get Packages
-          command: go get -v -t -d ./...
+          command: dep ensure
       - run:
           name: Run Tests
           command: go test -v ./...
