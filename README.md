@@ -5,6 +5,8 @@ Useful functions in Go for Hashicorp Vault.
 
 Currently under active devlopment.
 
+[Documentation](https://godoc.org/github.com/Lingrino/vaku/vaku)
+
 Terminology:
 - A `path` in vault references a location. This location can either be a secret itself or a folder containing secrets. A clean path does not start or end with a `/`
 - A `key` is the same as a path *except* that it can end in a `/`, signifying for certain that it is a folder
