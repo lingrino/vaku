@@ -1,4 +1,4 @@
-package vault
+package vaku
 
 import (
 	vapi "github.com/hashicorp/vault/api"
