@@ -74,3 +74,15 @@ func (c *Client) SliceTrimKeyPrefix(ss []string, p string) {
 		ss[i] = c.KeyJoin(strings.TrimPrefix(s, p))
 	}
 }
+
+// SliceRemoveFolders takes a list of keys and removes any
+// folders (strings that end in a '/') and returns the filtered list
+func (c *Client) SliceRemoveFolders(ss []string) []string {
+	var output []string
+	for _, s := range ss {
+		if !c.KeyIsFolder(s) {
+			output = append(output, s)
+		}
+	}
+	return output
+}

@@ -7,7 +7,7 @@ import (
 )
 
 type TestFolderListData struct {
-	input     *ListInput
+	input     *PathInput
 	output    []string
 	outputErr bool
 }
@@ -18,17 +18,17 @@ func TestFolderList(t *testing.T) {
 
 	tests := map[int]TestFolderListData{
 		1: TestFolderListData{
-			input:     NewListInput("secretv1/test"),
+			input:     NewPathInput("secretv1/test"),
 			output:    []string{"HToOeKKD", "fizz", "foo", "inner/A2xlzTfE", "inner/WKNC3muM", "inner/again/inner/UCrt6sZT", "value"},
 			outputErr: false,
 		},
 		2: TestFolderListData{
-			input:     NewListInput("secretv2/test"),
+			input:     NewPathInput("secretv2/test"),
 			output:    []string{"HToOeKKD", "fizz", "foo", "inner/A2xlzTfE", "inner/WKNC3muM", "inner/again/inner/UCrt6sZT", "value"},
 			outputErr: false,
 		},
 		3: TestFolderListData{
-			input: &ListInput{
+			input: &PathInput{
 				Path:           "secretv1/test/inner",
 				TrimPathPrefix: false,
 			},
@@ -36,7 +36,7 @@ func TestFolderList(t *testing.T) {
 			outputErr: false,
 		},
 		4: TestFolderListData{
-			input: &ListInput{
+			input: &PathInput{
 				Path:           "secretv2/test/inner",
 				TrimPathPrefix: false,
 			},
@@ -44,22 +44,22 @@ func TestFolderList(t *testing.T) {
 			outputErr: false,
 		},
 		5: TestFolderListData{
-			input:     NewListInput("secretv1/test/inner/again/inner"),
+			input:     NewPathInput("secretv1/test/inner/again/inner"),
 			output:    []string{"UCrt6sZT"},
 			outputErr: false,
 		},
 		6: TestFolderListData{
-			input:     NewListInput("secretv2/test/inner/again/inner"),
+			input:     NewPathInput("secretv2/test/inner/again/inner"),
 			output:    []string{"UCrt6sZT"},
 			outputErr: false,
 		},
 		7: TestFolderListData{
-			input:     NewListInput("secretv1/doesnotexist"),
+			input:     NewPathInput("secretv1/doesnotexist"),
 			output:    nil,
 			outputErr: true,
 		},
 		8: TestFolderListData{
-			input:     NewListInput("secretv2/doesnotexist"),
+			input:     NewPathInput("secretv2/doesnotexist"),
 			output:    nil,
 			outputErr: true,
 		},
