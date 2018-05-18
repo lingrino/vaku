@@ -46,25 +46,18 @@ func (c *Client) folderReadWorker(i *folderReadWorkerInput) {
 	}
 }
 
-// FolderRead takes in a PathInput, reads all non-folders in that path
-// and outputs a map of paths to values at that path
-// TODO - add ability to recurse before read
-func (c *Client) FolderRead(i *PathInput) (map[string]map[string]interface{}, error) {
+// folderReadCaller does the actual work of scheduling the reads and collecting the
+// results, since that work is shared for FolderRead and FolderReadAll
+func (c *Client) folderReadCaller(i *PathInput, keys []string) (map[string]map[string]interface{}, error) {
 	var err error
 	var output map[string]map[string]interface{}
 
-	// Don't trim prefix during indivudal reads, only at end
-	trimPrefix := i.TrimPathPrefix
-	i.TrimPathPrefix = false
-
-	// Get the keys to read
-	list, err := c.PathList(i)
-	if err != nil {
-		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
-	}
+	// Initialize the input
+	i.opType = "read"
+	c.InitPathInput(i)
 
 	// Remove folders (can't be read) from the list
-	keys := c.SliceRemoveFolders(list)
+	keys = c.SliceRemoveFolders(keys)
 
 	// Concurrency channels for workers
 	// Create output equal to length of keys
@@ -72,9 +65,8 @@ func (c *Client) FolderRead(i *PathInput) (map[string]map[string]interface{}, er
 	resultsC := make(chan *folderReadWorkerOutput, len(keys))
 	output = make(map[string]map[string]interface{}, len(keys))
 
-	// Spawn 5 workers
-	// TODO - read worker/concurrency count from configuration
-	for w := 1; w <= 5; w++ {
+	// Spawn workers equal to MaxConcurrency
+	for w := 1; w <= MaxConcurrency; w++ {
 		go c.folderReadWorker(&folderReadWorkerInput{
 			inputsC:  inputsC,
 			resultsC: resultsC,
@@ -83,7 +75,14 @@ func (c *Client) FolderRead(i *PathInput) (map[string]map[string]interface{}, er
 
 	// Add all paths to read to the inputs channel
 	for _, p := range keys {
-		inputsC <- NewPathInput(p)
+		inputsC <- &PathInput{
+			Path:           p,
+			opType:         i.opType,
+			mountPath:      i.mountPath,
+			mountlessPath:  i.mountlessPath,
+			mountVersion:   i.mountVersion,
+			TrimPathPrefix: false,
+		}
 	}
 	close(inputsC)
 
@@ -93,13 +92,60 @@ func (c *Client) FolderRead(i *PathInput) (map[string]map[string]interface{}, er
 		if o.err != nil {
 			err = errors.Wrapf(o.err, "Failed to read path %s", o.readPath)
 		} else {
-			if trimPrefix {
+			if i.TrimPathPrefix {
 				output[c.KeyJoin(strings.TrimPrefix(o.readPath, i.Path))] = o.data
 			} else {
 				output[o.readPath] = o.data
 			}
 		}
+	}
 
+	return output, err
+}
+
+// FolderRead takes in a PathInput, reads all non-folders in that path
+// and outputs a map of paths to values at that path
+func (c *Client) FolderRead(i *PathInput) (map[string]map[string]interface{}, error) {
+	var err error
+	var output map[string]map[string]interface{}
+
+	// Get the keys to read
+	list, err := c.PathList(&PathInput{
+		Path:           i.Path,
+		TrimPathPrefix: false,
+	})
+	if err != nil {
+		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
+	}
+
+	// Hand over to folderReadCaller
+	output, err = c.folderReadCaller(i, list)
+	if err != nil {
+		return nil, errors.Wrapf(err, "Failed to read folder at %s", i.Path)
+	}
+
+	return output, err
+}
+
+// FolderReadAll takes in a PathInput, reads all keys in that path
+// and all nested paths and outputs a map of paths to values at that path
+func (c *Client) FolderReadAll(i *PathInput) (map[string]map[string]interface{}, error) {
+	var err error
+	var output map[string]map[string]interface{}
+
+	// Get the keys to read
+	list, err := c.FolderList(&PathInput{
+		Path:           i.Path,
+		TrimPathPrefix: false,
+	})
+	if err != nil {
+		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
+	}
+
+	// Hand over to folderReadCaller
+	output, err = c.folderReadCaller(i, list)
+	if err != nil {
+		return nil, errors.Wrapf(err, "Failed to read folder at %s", i.Path)
 	}
 
 	return output, err

@@ -10,7 +10,7 @@ func TestMain(m *testing.M) {
 	var err error
 
 	V := NewClient()
-	err = V.simpleInit()
+	err = V.SimpleInit()
 	if err != nil {
 		log.Fatalf("[FATAL]: TestMain: Failed to init the vault client: %s", err)
 	}

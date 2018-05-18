@@ -41,9 +41,9 @@ func (c *Client) folderListWorker(i *folderListWorkerInput) {
 					i.inputsWG.Add(1)
 					i.inputsC <- &PathInput{
 						Path:           c.PathJoin(l.Path, c.KeyBase(key)),
-						OpPath:         c.PathJoin(l.OpPath, c.KeyBase(key)),
-						MountPath:      l.MountPath,
-						MountVersion:   l.MountVersion,
+						opPath:         c.PathJoin(l.opPath, c.KeyBase(key)),
+						mountPath:      l.mountPath,
+						mountVersion:   l.mountVersion,
 						TrimPathPrefix: l.TrimPathPrefix,
 					}
 				} else {
@@ -98,9 +98,8 @@ func (c *Client) FolderList(i *PathInput) ([]string, error) {
 		}
 	}()
 
-	// Spawn 5 workers
-	// TODO - read worker/concurrency count from configuration
-	for w := 1; w <= 5; w++ {
+	// Spawn workers equal to MaxConcurrency
+	for w := 1; w <= MaxConcurrency; w++ {
 		go c.folderListWorker(&folderListWorkerInput{
 			inputsC:   inputsC,
 			resultsC:  resultsC,

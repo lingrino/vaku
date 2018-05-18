@@ -1,5 +1,8 @@
 .PHONY: test
 
+fmt:
+	gofmt -l -w -s .
+
 test:
 	docker-compose up -d
 	export VAULT_ADDR=http://localhost:8300 && \

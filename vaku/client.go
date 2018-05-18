@@ -15,9 +15,9 @@ func NewClient() *Client {
 	return &Client{}
 }
 
-// simpleInit initializes a new default Vault Client
+// SimpleInit initializes a new default Vault Client
 // it should only be used internally for testing
-func (c *Client) simpleInit() error {
+func (c *Client) SimpleInit() error {
 	var err error
 
 	client, err := vapi.NewClient(vapi.DefaultConfig())
@@ -35,6 +35,7 @@ func (c *Client) seed() error {
 	var err error
 	var mountPath string
 
+	// Turn on logging to stdout
 	c.client.Sys().EnableAuditWithOptions("audit_stdout", &vapi.EnableAuditOptions{
 		Type: "file",
 		Options: map[string]string{

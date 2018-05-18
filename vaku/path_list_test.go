@@ -14,20 +14,20 @@ type TestPathListData struct {
 
 func TestPathList(t *testing.T) {
 	c := NewClient()
-	c.simpleInit()
+	c.SimpleInit()
 
 	tests := map[int]TestPathListData{
-		1: TestPathListData{
+		1: {
 			input:     NewPathInput("secretv1/test"),
 			output:    []string{"HToOeKKD", "fizz", "foo", "inner/", "value"},
 			outputErr: false,
 		},
-		2: TestPathListData{
+		2: {
 			input:     NewPathInput("secretv2/test"),
 			output:    []string{"HToOeKKD", "fizz", "foo", "inner/", "value"},
 			outputErr: false,
 		},
-		3: TestPathListData{
+		3: {
 			input: &PathInput{
 				Path:           "secretv1/test/inner/again/",
 				TrimPathPrefix: false,
@@ -35,7 +35,7 @@ func TestPathList(t *testing.T) {
 			output:    []string{"secretv1/test/inner/again/inner/"},
 			outputErr: false,
 		},
-		4: TestPathListData{
+		4: {
 			input: &PathInput{
 				Path:           "secretv2/test/inner/again/",
 				TrimPathPrefix: false,
@@ -43,12 +43,12 @@ func TestPathList(t *testing.T) {
 			output:    []string{"secretv2/test/inner/again/inner/"},
 			outputErr: false,
 		},
-		5: TestPathListData{
+		5: {
 			input:     NewPathInput("secretv1/doesnotexist"),
 			output:    nil,
 			outputErr: true,
 		},
-		6: TestPathListData{
+		6: {
 			input:     NewPathInput("secretv2/doesnotexist"),
 			output:    nil,
 			outputErr: true,

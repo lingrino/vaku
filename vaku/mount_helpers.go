@@ -9,9 +9,9 @@ import (
 
 // MountInfoOutput holds output for MountInfo
 // FullPath is the original input path
-// MountPath is the path of the mount
-// MountlessPath is the FullPath with the MountPath removed
-// MountVersion is the version of the mount, or "unknown"
+// mountPath is the path of the mount
+// MountlessPath is the FullPath with the mountPath removed
+// mountVersion is the version of the mount, or "unknown"
 type MountInfoOutput struct {
 	FullPath      string
 	MountPath     string
