@@ -17,21 +17,21 @@ func TestPathRead(t *testing.T) {
 	c.SimpleInit()
 
 	tests := map[int]TestPathReadData{
-		1: TestPathReadData{
+		1: {
 			input: NewPathInput("secretv1/test/foo"),
 			output: map[string]interface{}{
 				"value": "bar",
 			},
 			outputErr: false,
 		},
-		2: TestPathReadData{
+		2: {
 			input: NewPathInput("secretv2/test/foo"),
 			output: map[string]interface{}{
 				"value": "bar",
 			},
 			outputErr: false,
 		},
-		3: TestPathReadData{
+		3: {
 			input: NewPathInput("secretv1/test/inner/again/inner/UCrt6sZT"),
 			output: map[string]interface{}{
 				"Eg5ljS7t": "6F1B5nBg",
@@ -40,7 +40,7 @@ func TestPathRead(t *testing.T) {
 			},
 			outputErr: false,
 		},
-		4: TestPathReadData{
+		4: {
 			input: NewPathInput("secretv2/test/inner/again/inner/UCrt6sZT"),
 			output: map[string]interface{}{
 				"Eg5ljS7t": "6F1B5nBg",
@@ -49,12 +49,12 @@ func TestPathRead(t *testing.T) {
 			},
 			outputErr: false,
 		},
-		5: TestPathReadData{
+		5: {
 			input:     NewPathInput("secretv1/doesnotexist"),
 			output:    nil,
 			outputErr: true,
 		},
-		6: TestPathReadData{
+		6: {
 			input:     NewPathInput("secretv2/doesnotexist"),
 			output:    nil,
 			outputErr: true,

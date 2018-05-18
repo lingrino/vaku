@@ -17,53 +17,53 @@ func TestFolderRead(t *testing.T) {
 	c.SimpleInit()
 
 	tests := map[int]TestFolderReadData{
-		1: TestFolderReadData{
+		1: {
 			input: NewPathInput("secretv1/test"),
 			output: map[string]map[string]interface{}{
-				"foo": map[string]interface{}{
+				"foo": {
 					"value": "bar",
 				},
-				"value": map[string]interface{}{
+				"value": {
 					"fizz": "buzz",
 					"foo":  "bar",
 				},
-				"fizz": map[string]interface{}{
+				"fizz": {
 					"fizz": "buzz",
 					"foo":  "bar",
 				},
-				"HToOeKKD": map[string]interface{}{
+				"HToOeKKD": {
 					"3zqxVbJY": "TvOjGxvC",
 				},
 			},
 			outputErr: false,
 		},
-		2: TestFolderReadData{
+		2: {
 			input: NewPathInput("secretv2/test"),
 			output: map[string]map[string]interface{}{
-				"foo": map[string]interface{}{
+				"foo": {
 					"value": "bar",
 				},
-				"value": map[string]interface{}{
+				"value": {
 					"fizz": "buzz",
 					"foo":  "bar",
 				},
-				"fizz": map[string]interface{}{
+				"fizz": {
 					"fizz": "buzz",
 					"foo":  "bar",
 				},
-				"HToOeKKD": map[string]interface{}{
+				"HToOeKKD": {
 					"3zqxVbJY": "TvOjGxvC",
 				},
 			},
 			outputErr: false,
 		},
-		3: TestFolderReadData{
+		3: {
 			input: &PathInput{
 				Path:           "secretv1/test/inner/again/inner/",
 				TrimPathPrefix: false,
 			},
 			output: map[string]map[string]interface{}{
-				"secretv1/test/inner/again/inner/UCrt6sZT": map[string]interface{}{
+				"secretv1/test/inner/again/inner/UCrt6sZT": {
 					"Eg5ljS7t": "6F1B5nBg",
 					"quqr32S5": "81iY4HAN",
 					"r6R0JUzX": "rs1mCRB5",
@@ -71,13 +71,13 @@ func TestFolderRead(t *testing.T) {
 			},
 			outputErr: false,
 		},
-		4: TestFolderReadData{
+		4: {
 			input: &PathInput{
 				Path:           "secretv2/test/inner/again/inner/",
 				TrimPathPrefix: false,
 			},
 			output: map[string]map[string]interface{}{
-				"secretv2/test/inner/again/inner/UCrt6sZT": map[string]interface{}{
+				"secretv2/test/inner/again/inner/UCrt6sZT": {
 					"Eg5ljS7t": "6F1B5nBg",
 					"quqr32S5": "81iY4HAN",
 					"r6R0JUzX": "rs1mCRB5",
@@ -85,7 +85,7 @@ func TestFolderRead(t *testing.T) {
 			},
 			outputErr: false,
 		},
-		5: TestFolderReadData{
+		5: {
 			input: &PathInput{
 				Path:           "secretv1/doesnotexist",
 				TrimPathPrefix: false,
@@ -93,7 +93,7 @@ func TestFolderRead(t *testing.T) {
 			output:    nil,
 			outputErr: true,
 		},
-		6: TestFolderReadData{
+		6: {
 			input: &PathInput{
 				Path:           "secretv2/doesnotexist",
 				TrimPathPrefix: false,
@@ -119,32 +119,32 @@ func TestFolderReadAll(t *testing.T) {
 	c.SimpleInit()
 
 	tests := map[int]TestFolderReadData{
-		1: TestFolderReadData{
+		1: {
 			input: NewPathInput("secretv1/test"),
 			output: map[string]map[string]interface{}{
-				"foo": map[string]interface{}{
+				"foo": {
 					"value": "bar",
 				},
-				"value": map[string]interface{}{
+				"value": {
 					"fizz": "buzz",
 					"foo":  "bar",
 				},
-				"fizz": map[string]interface{}{
+				"fizz": {
 					"fizz": "buzz",
 					"foo":  "bar",
 				},
-				"HToOeKKD": map[string]interface{}{
+				"HToOeKKD": {
 					"3zqxVbJY": "TvOjGxvC",
 				},
-				"inner/WKNC3muM": map[string]interface{}{
+				"inner/WKNC3muM": {
 					"IY1C148K": "JxBfEt91",
 					"iwVzPqbY": "0NH9GlR1",
 				},
-				"inner/A2xlzTfE": map[string]interface{}{
+				"inner/A2xlzTfE": {
 					"Eg5ljS7t": "BHRMKjj1",
 					"quqr32S5": "pcidzSMW",
 				},
-				"inner/again/inner/UCrt6sZT": map[string]interface{}{
+				"inner/again/inner/UCrt6sZT": {
 					"Eg5ljS7t": "6F1B5nBg",
 					"quqr32S5": "81iY4HAN",
 					"r6R0JUzX": "rs1mCRB5",
@@ -152,32 +152,32 @@ func TestFolderReadAll(t *testing.T) {
 			},
 			outputErr: false,
 		},
-		2: TestFolderReadData{
+		2: {
 			input: NewPathInput("secretv2/test"),
 			output: map[string]map[string]interface{}{
-				"foo": map[string]interface{}{
+				"foo": {
 					"value": "bar",
 				},
-				"value": map[string]interface{}{
+				"value": {
 					"fizz": "buzz",
 					"foo":  "bar",
 				},
-				"fizz": map[string]interface{}{
+				"fizz": {
 					"fizz": "buzz",
 					"foo":  "bar",
 				},
-				"HToOeKKD": map[string]interface{}{
+				"HToOeKKD": {
 					"3zqxVbJY": "TvOjGxvC",
 				},
-				"inner/WKNC3muM": map[string]interface{}{
+				"inner/WKNC3muM": {
 					"IY1C148K": "JxBfEt91",
 					"iwVzPqbY": "0NH9GlR1",
 				},
-				"inner/A2xlzTfE": map[string]interface{}{
+				"inner/A2xlzTfE": {
 					"Eg5ljS7t": "BHRMKjj1",
 					"quqr32S5": "pcidzSMW",
 				},
-				"inner/again/inner/UCrt6sZT": map[string]interface{}{
+				"inner/again/inner/UCrt6sZT": {
 					"Eg5ljS7t": "6F1B5nBg",
 					"quqr32S5": "81iY4HAN",
 					"r6R0JUzX": "rs1mCRB5",
@@ -185,13 +185,13 @@ func TestFolderReadAll(t *testing.T) {
 			},
 			outputErr: false,
 		},
-		3: TestFolderReadData{
+		3: {
 			input: &PathInput{
 				Path:           "secretv1/test/inner/again/inner/",
 				TrimPathPrefix: false,
 			},
 			output: map[string]map[string]interface{}{
-				"secretv1/test/inner/again/inner/UCrt6sZT": map[string]interface{}{
+				"secretv1/test/inner/again/inner/UCrt6sZT": {
 					"Eg5ljS7t": "6F1B5nBg",
 					"quqr32S5": "81iY4HAN",
 					"r6R0JUzX": "rs1mCRB5",
@@ -199,13 +199,13 @@ func TestFolderReadAll(t *testing.T) {
 			},
 			outputErr: false,
 		},
-		4: TestFolderReadData{
+		4: {
 			input: &PathInput{
 				Path:           "secretv2/test/inner/again/inner/",
 				TrimPathPrefix: false,
 			},
 			output: map[string]map[string]interface{}{
-				"secretv2/test/inner/again/inner/UCrt6sZT": map[string]interface{}{
+				"secretv2/test/inner/again/inner/UCrt6sZT": {
 					"Eg5ljS7t": "6F1B5nBg",
 					"quqr32S5": "81iY4HAN",
 					"r6R0JUzX": "rs1mCRB5",
@@ -213,7 +213,7 @@ func TestFolderReadAll(t *testing.T) {
 			},
 			outputErr: false,
 		},
-		5: TestFolderReadData{
+		5: {
 			input: &PathInput{
 				Path:           "secretv1/doesnotexist",
 				TrimPathPrefix: false,
@@ -221,7 +221,7 @@ func TestFolderReadAll(t *testing.T) {
 			output:    nil,
 			outputErr: true,
 		},
-		6: TestFolderReadData{
+		6: {
 			input: &PathInput{
 				Path:           "secretv2/doesnotexist",
 				TrimPathPrefix: false,

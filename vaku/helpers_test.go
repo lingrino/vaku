@@ -130,22 +130,22 @@ type TestSliceKeyPrefixData struct {
 
 func TestSliceAddKeyPrefix(t *testing.T) {
 	tests := map[int]TestSliceKeyPrefixData{
-		1: TestSliceKeyPrefixData{
+		1: {
 			inputSlice:  []string{"a"},
 			inputPrefix: "b",
 			output:      []string{"b/a"},
 		},
-		2: TestSliceKeyPrefixData{
+		2: {
 			inputSlice:  []string{"/c/d/e/"},
 			inputPrefix: "/f/",
 			output:      []string{"f/c/d/e/"},
 		},
-		3: TestSliceKeyPrefixData{
+		3: {
 			inputSlice:  []string{"/g/"},
 			inputPrefix: "h",
 			output:      []string{"h/g/"},
 		},
-		4: TestSliceKeyPrefixData{
+		4: {
 			inputSlice:  []string{"i/j"},
 			inputPrefix: "i",
 			output:      []string{"i/i/j"},
@@ -161,22 +161,22 @@ func TestSliceAddKeyPrefix(t *testing.T) {
 
 func TestSliceTrimKeyPrefix(t *testing.T) {
 	tests := map[int]TestSliceKeyPrefixData{
-		1: TestSliceKeyPrefixData{
+		1: {
 			inputSlice:  []string{"a"},
 			inputPrefix: "b",
 			output:      []string{"a"},
 		},
-		2: TestSliceKeyPrefixData{
+		2: {
 			inputSlice:  []string{"/c/d/e/"},
 			inputPrefix: "/c/",
 			output:      []string{"d/e/"},
 		},
-		3: TestSliceKeyPrefixData{
+		3: {
 			inputSlice:  []string{"f/g"},
 			inputPrefix: "f",
 			output:      []string{"g"},
 		},
-		4: TestSliceKeyPrefixData{
+		4: {
 			inputSlice:  []string{"i/j"},
 			inputPrefix: "k",
 			output:      []string{"i/j"},

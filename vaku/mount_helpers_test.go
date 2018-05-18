@@ -17,7 +17,7 @@ func TestMountInfo(t *testing.T) {
 	c.SimpleInit()
 
 	tests := map[int]TestMountInfoData{
-		1: TestMountInfoData{
+		1: {
 			input: "secretv1/test",
 			output: &MountInfoOutput{
 				FullPath:      "secretv1/test",
@@ -27,7 +27,7 @@ func TestMountInfo(t *testing.T) {
 			},
 			outputErr: false,
 		},
-		2: TestMountInfoData{
+		2: {
 			input: "secretv2/test",
 			output: &MountInfoOutput{
 				FullPath:      "secretv2/test",
@@ -37,7 +37,7 @@ func TestMountInfo(t *testing.T) {
 			},
 			outputErr: false,
 		},
-		3: TestMountInfoData{
+		3: {
 			input: "secretv1/doesnotexist",
 			output: &MountInfoOutput{
 				FullPath:      "secretv1/doesnotexist",
@@ -47,7 +47,7 @@ func TestMountInfo(t *testing.T) {
 			},
 			outputErr: false,
 		},
-		4: TestMountInfoData{
+		4: {
 			input: "secretv2/doesnotexist",
 			output: &MountInfoOutput{
 				FullPath:      "secretv2/doesnotexist",
@@ -57,7 +57,7 @@ func TestMountInfo(t *testing.T) {
 			},
 			outputErr: false,
 		},
-		5: TestMountInfoData{
+		5: {
 			input:     "doesnotexist/test",
 			output:    nil,
 			outputErr: true,
