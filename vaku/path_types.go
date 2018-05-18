@@ -9,11 +9,11 @@ import (
 // PathInput is the input for List
 type PathInput struct {
 	Path           string
-	OpPath         string
-	OpType         string
-	MountPath      string
-	MountVersion   string
 	TrimPathPrefix bool
+	opPath         string
+	opType         string
+	mountPath      string
+	mountVersion   string
 }
 
 // NewPathInput takes in a Path and returns
@@ -21,11 +21,11 @@ type PathInput struct {
 func NewPathInput(p string) *PathInput {
 	return &PathInput{
 		Path:           p,
-		OpPath:         "",
-		OpType:         "",
-		MountPath:      "",
-		MountVersion:   "",
 		TrimPathPrefix: true,
+		opPath:         "",
+		opType:         "",
+		mountPath:      "",
+		mountVersion:   "",
 	}
 }
 
@@ -38,24 +38,24 @@ func (c *Client) InitPathInput(i *PathInput) error {
 		return fmt.Errorf("Path is required and not specified")
 	}
 
-	if i.OpPath == "" || i.MountPath == "" || i.MountVersion == "" {
+	if i.opPath == "" || i.mountPath == "" || i.mountVersion == "" {
 		m, err := c.MountInfo(i.Path)
 		if err != nil {
 			return errors.Wrapf(err, "Failed to describe mount for path %s", i.Path)
 		}
 
-		if m.MountVersion == "2" {
-			if i.OpType == "list" {
-				i.OpPath = c.PathJoin(m.MountPath, "metadata", m.MountlessPath)
-			} else if i.OpType == "read" {
-				i.OpPath = c.PathJoin(m.MountPath, "data", m.MountlessPath)
+		if m.mountVersion == "2" {
+			if i.opType == "list" {
+				i.opPath = c.PathJoin(m.mountPath, "metadata", m.MountlessPath)
+			} else if i.opType == "read" {
+				i.opPath = c.PathJoin(m.mountPath, "data", m.MountlessPath)
 			}
 		} else {
-			i.OpPath = c.PathJoin(i.Path)
+			i.opPath = c.PathJoin(i.Path)
 		}
 
-		i.MountPath = m.MountPath
-		i.MountVersion = m.MountVersion
+		i.mountPath = m.mountPath
+		i.mountVersion = m.mountVersion
 	}
 
 	return err

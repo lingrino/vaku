@@ -14,7 +14,7 @@ type TestFolderListData struct {
 
 func TestFolderList(t *testing.T) {
 	c := NewClient()
-	c.simpleInit()
+	c.SimpleInit()
 
 	tests := map[int]TestFolderListData{
 		1: TestFolderListData{

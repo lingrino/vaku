@@ -9,14 +9,14 @@ import (
 
 // MountInfoOutput holds output for MountInfo
 // FullPath is the original input path
-// MountPath is the path of the mount
-// MountlessPath is the FullPath with the MountPath removed
-// MountVersion is the version of the mount, or "unknown"
+// mountPath is the path of the mount
+// MountlessPath is the FullPath with the mountPath removed
+// mountVersion is the version of the mount, or "unknown"
 type MountInfoOutput struct {
 	FullPath      string
-	MountPath     string
+	mountPath     string
 	MountlessPath string
-	MountVersion  string
+	mountVersion  string
 }
 
 // MountInfo gets information for the mount of the specified path
@@ -39,9 +39,9 @@ func (c *Client) MountInfo(p string) (*MountInfoOutput, error) {
 			}
 
 			output.FullPath = c.PathJoin(p)
-			output.MountPath = c.PathJoin(mount)
+			output.mountPath = c.PathJoin(mount)
 			output.MountlessPath = c.PathJoin(strings.TrimPrefix(p, mount))
-			output.MountVersion = version
+			output.mountVersion = version
 			continue
 		}
 	}

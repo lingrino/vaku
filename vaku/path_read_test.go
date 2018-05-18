@@ -14,7 +14,7 @@ type TestPathReadData struct {
 
 func TestPathRead(t *testing.T) {
 	c := NewClient()
-	c.simpleInit()
+	c.SimpleInit()
 
 	tests := map[int]TestPathReadData{
 		1: TestPathReadData{

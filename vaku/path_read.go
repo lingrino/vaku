@@ -21,8 +21,8 @@ func (c *Client) initReadPath(p string) (string, error) {
 		return output, errors.Wrapf(err, "Failed to describe mount for path %s", p)
 	}
 
-	if m.MountVersion == "2" {
-		output = c.PathJoin(m.MountPath, "data", m.MountlessPath)
+	if m.mountVersion == "2" {
+		output = c.PathJoin(m.mountPath, "data", m.MountlessPath)
 	} else {
 		output = c.PathJoin(p)
 	}
@@ -37,24 +37,24 @@ func (c *Client) PathRead(i *PathInput) (map[string]interface{}, error) {
 	var output map[string]interface{}
 
 	// Initialize the input
-	i.OpType = "read"
+	i.opType = "read"
 	err = c.InitPathInput(i)
 	if err != nil {
 		return output, errors.Wrapf(err, "Failed to init read path %s", i.Path)
 	}
 
 	// Do the actual read
-	secret, err := c.client.Logical().Read(i.OpPath)
+	secret, err := c.client.Logical().Read(i.opPath)
 	if err != nil {
-		return output, errors.Wrapf(err, "Failed to read secret at %s", i.OpPath)
+		return output, errors.Wrapf(err, "Failed to read secret at %s", i.opPath)
 	}
 	if secret == nil || secret.Data == nil {
-		return output, fmt.Errorf("No value found at %s", i.OpPath)
+		return output, fmt.Errorf("No value found at %s", i.opPath)
 	}
 
 	// V2 Mounts return a nested map[string]interface{} at secret.Data["data"]
 	output = secret.Data
-	if i.MountVersion == "2" && output != nil {
+	if i.mountVersion == "2" && output != nil {
 		data := secret.Data["data"]
 		if data != nil {
 			output = data.(map[string]interface{})

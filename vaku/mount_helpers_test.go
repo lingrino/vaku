@@ -14,16 +14,16 @@ type TestMountInfoData struct {
 
 func TestMountInfo(t *testing.T) {
 	c := NewClient()
-	c.simpleInit()
+	c.SimpleInit()
 
 	tests := map[int]TestMountInfoData{
 		1: TestMountInfoData{
 			input: "secretv1/test",
 			output: &MountInfoOutput{
 				FullPath:      "secretv1/test",
-				MountPath:     "secretv1",
+				mountPath:     "secretv1",
 				MountlessPath: "test",
-				MountVersion:  "1",
+				mountVersion:  "1",
 			},
 			outputErr: false,
 		},
@@ -31,9 +31,9 @@ func TestMountInfo(t *testing.T) {
 			input: "secretv2/test",
 			output: &MountInfoOutput{
 				FullPath:      "secretv2/test",
-				MountPath:     "secretv2",
+				mountPath:     "secretv2",
 				MountlessPath: "test",
-				MountVersion:  "2",
+				mountVersion:  "2",
 			},
 			outputErr: false,
 		},
@@ -41,9 +41,9 @@ func TestMountInfo(t *testing.T) {
 			input: "secretv1/doesnotexist",
 			output: &MountInfoOutput{
 				FullPath:      "secretv1/doesnotexist",
-				MountPath:     "secretv1",
+				mountPath:     "secretv1",
 				MountlessPath: "doesnotexist",
-				MountVersion:  "1",
+				mountVersion:  "1",
 			},
 			outputErr: false,
 		},
@@ -51,9 +51,9 @@ func TestMountInfo(t *testing.T) {
 			input: "secretv2/doesnotexist",
 			output: &MountInfoOutput{
 				FullPath:      "secretv2/doesnotexist",
-				MountPath:     "secretv2",
+				mountPath:     "secretv2",
 				MountlessPath: "doesnotexist",
-				MountVersion:  "2",
+				mountVersion:  "2",
 			},
 			outputErr: false,
 		},
