@@ -2,6 +2,7 @@ package vaku
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -13,6 +14,7 @@ type PathInput struct {
 	opPath         string
 	opType         string
 	mountPath      string
+	mountlessPath  string
 	mountVersion   string
 }
 
@@ -25,6 +27,7 @@ func NewPathInput(p string) *PathInput {
 		opPath:         "",
 		opType:         "",
 		mountPath:      "",
+		mountlessPath:  "",
 		mountVersion:   "",
 	}
 }
@@ -34,28 +37,45 @@ func NewPathInput(p string) *PathInput {
 func (c *Client) InitPathInput(i *PathInput) error {
 	var err error
 
+	// Required values
 	if i.Path == "" {
 		return fmt.Errorf("Path is required and not specified")
 	}
+	if i.opType == "" {
+		return fmt.Errorf("opType is required and not specified")
+	}
 
-	if i.opPath == "" || i.mountPath == "" || i.mountVersion == "" {
+	// If mount info is already set don't get again. Only ensure that i.opPath is correct
+	// Otherwise populate based on MountInfo for the path
+	if i.mountPath != "" && i.mountVersion != "" {
+		i.mountlessPath = strings.TrimPrefix(i.Path, i.mountPath)
+		if i.mountVersion == "2" {
+			if i.opType == "list" {
+				i.opPath = c.PathJoin(i.mountPath, "metadata", i.mountlessPath)
+			} else if i.opType == "read" {
+				i.opPath = c.PathJoin(i.mountPath, "data", i.mountlessPath)
+			}
+		} else {
+			i.opPath = c.PathJoin(i.Path)
+		}
+	} else if i.opPath == "" || i.mountPath == "" || i.mountVersion == "" || i.mountlessPath == "" {
 		m, err := c.MountInfo(i.Path)
 		if err != nil {
 			return errors.Wrapf(err, "Failed to describe mount for path %s", i.Path)
 		}
-
-		if m.mountVersion == "2" {
+		if m.MountVersion == "2" {
 			if i.opType == "list" {
-				i.opPath = c.PathJoin(m.mountPath, "metadata", m.MountlessPath)
+				i.opPath = c.PathJoin(m.MountPath, "metadata", m.MountlessPath)
 			} else if i.opType == "read" {
-				i.opPath = c.PathJoin(m.mountPath, "data", m.MountlessPath)
+				i.opPath = c.PathJoin(m.MountPath, "data", m.MountlessPath)
 			}
 		} else {
 			i.opPath = c.PathJoin(i.Path)
 		}
 
-		i.mountPath = m.mountPath
-		i.mountVersion = m.mountVersion
+		i.mountPath = m.MountPath
+		i.mountVersion = m.MountVersion
+		i.mountlessPath = m.MountlessPath
 	}
 
 	return err

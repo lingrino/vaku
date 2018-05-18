@@ -48,9 +48,13 @@ func (c *Client) folderReadWorker(i *folderReadWorkerInput) {
 
 // folderReadCaller does the actual work of scheduling the reads and collecting the
 // results, since that work is shared for FolderRead and FolderReadAll
-func (c *Client) folderReadCaller(keys []string, startPath string, trimPrefix bool) (map[string]map[string]interface{}, error) {
+func (c *Client) folderReadCaller(i *PathInput, keys []string) (map[string]map[string]interface{}, error) {
 	var err error
 	var output map[string]map[string]interface{}
+
+	// Initialize the input
+	i.opType = "read"
+	c.InitPathInput(i)
 
 	// Remove folders (can't be read) from the list
 	keys = c.SliceRemoveFolders(keys)
@@ -71,7 +75,14 @@ func (c *Client) folderReadCaller(keys []string, startPath string, trimPrefix bo
 
 	// Add all paths to read to the inputs channel
 	for _, p := range keys {
-		inputsC <- NewPathInput(p)
+		inputsC <- &PathInput{
+			Path:           p,
+			opType:         i.opType,
+			mountPath:      i.mountPath,
+			mountlessPath:  i.mountlessPath,
+			mountVersion:   i.mountVersion,
+			TrimPathPrefix: false,
+		}
 	}
 	close(inputsC)
 
@@ -81,8 +92,8 @@ func (c *Client) folderReadCaller(keys []string, startPath string, trimPrefix bo
 		if o.err != nil {
 			err = errors.Wrapf(o.err, "Failed to read path %s", o.readPath)
 		} else {
-			if trimPrefix {
-				output[c.KeyJoin(strings.TrimPrefix(o.readPath, startPath))] = o.data
+			if i.TrimPathPrefix {
+				output[c.KeyJoin(strings.TrimPrefix(o.readPath, i.Path))] = o.data
 			} else {
 				output[o.readPath] = o.data
 			}
@@ -98,18 +109,17 @@ func (c *Client) FolderRead(i *PathInput) (map[string]map[string]interface{}, er
 	var err error
 	var output map[string]map[string]interface{}
 
-	// Don't trim prefix during indivudal reads, only at end
-	trimPrefix := i.TrimPathPrefix
-	i.TrimPathPrefix = false
-
 	// Get the keys to read
-	list, err := c.PathList(i)
+	list, err := c.PathList(&PathInput{
+		Path:           i.Path,
+		TrimPathPrefix: false,
+	})
 	if err != nil {
 		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
 	}
 
 	// Hand over to folderReadCaller
-	output, err = c.folderReadCaller(list, i.Path, trimPrefix)
+	output, err = c.folderReadCaller(i, list)
 	if err != nil {
 		return nil, errors.Wrapf(err, "Failed to read folder at %s", i.Path)
 	}
@@ -123,18 +133,17 @@ func (c *Client) FolderReadAll(i *PathInput) (map[string]map[string]interface{},
 	var err error
 	var output map[string]map[string]interface{}
 
-	// Don't trim prefix during indivudal reads, only at end
-	trimPrefix := i.TrimPathPrefix
-	i.TrimPathPrefix = false
-
 	// Get the keys to read
-	list, err := c.FolderList(i)
+	list, err := c.FolderList(&PathInput{
+		Path:           i.Path,
+		TrimPathPrefix: false,
+	})
 	if err != nil {
 		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
 	}
 
 	// Hand over to folderReadCaller
-	output, err = c.folderReadCaller(list, i.Path, trimPrefix)
+	output, err = c.folderReadCaller(i, list)
 	if err != nil {
 		return nil, errors.Wrapf(err, "Failed to read folder at %s", i.Path)
 	}

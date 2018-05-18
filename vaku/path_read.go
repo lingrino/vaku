@@ -6,30 +6,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-// initReadPath gets mount information and modifies the
-// read path if necessary for the version of the mount
-func (c *Client) initReadPath(p string) (string, error) {
-	var err error
-	var output string
-
-	if p == "" {
-		return output, fmt.Errorf("Path is required and not specified")
-	}
-
-	m, err := c.MountInfo(p)
-	if err != nil {
-		return output, errors.Wrapf(err, "Failed to describe mount for path %s", p)
-	}
-
-	if m.mountVersion == "2" {
-		output = c.PathJoin(m.mountPath, "data", m.MountlessPath)
-	} else {
-		output = c.PathJoin(p)
-	}
-
-	return output, err
-}
-
 // PathRead takes in a path, calls vault read, extracts
 // the secret, and returns it as a map of strings to values
 func (c *Client) PathRead(i *PathInput) (map[string]interface{}, error) {
