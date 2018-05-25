@@ -20,7 +20,7 @@ func (c *Client) PathRead(i *PathInput) (map[string]interface{}, error) {
 	}
 
 	// Do the actual read
-	secret, err := c.client.Logical().Read(i.opPath)
+	secret, err := c.Logical().Read(i.opPath)
 	if err != nil {
 		return output, errors.Wrapf(err, "Failed to read secret at %s", i.opPath)
 	}

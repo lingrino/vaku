@@ -7,7 +7,7 @@ import (
 
 // Client is a wrapper around a real Vault API client.
 type Client struct {
-	client *vapi.Client
+	*vapi.Client
 }
 
 // NewClient Returns a new empty Client type
@@ -24,7 +24,7 @@ func (c *Client) SimpleInit() error {
 	if err != nil {
 		return errors.Wrap(err, "Failed to init the vault client")
 	}
-	c.client = client
+	c.Client = client
 
 	return err
 }
@@ -36,7 +36,7 @@ func (c *Client) seed() error {
 	var mountPath string
 
 	// Turn on logging to stdout
-	c.client.Sys().EnableAuditWithOptions("audit_stdout", &vapi.EnableAuditOptions{
+	c.Sys().EnableAuditWithOptions("audit_stdout", &vapi.EnableAuditOptions{
 		Type: "file",
 		Options: map[string]string{
 			"file_path": "stdout",
@@ -76,7 +76,7 @@ func (c *Client) seed() error {
 
 	// Seed v1 mount
 	mountPath = "secretv1/"
-	err = c.client.Sys().Mount(mountPath, &vapi.MountInput{
+	err = c.Sys().Mount(mountPath, &vapi.MountInput{
 		Type: "kv",
 		Options: map[string]string{
 			"version": "1",
@@ -90,7 +90,7 @@ func (c *Client) seed() error {
 			data[k] = v
 		}
 
-		_, err = c.client.Logical().Write(writePath, data)
+		_, err = c.Logical().Write(writePath, data)
 		if err != nil {
 			return errors.Wrapf(err, "Failed to seed vault at path %s", writePath)
 		}
@@ -98,7 +98,7 @@ func (c *Client) seed() error {
 
 	// Seed v2 mount
 	mountPath = "secretv2/"
-	c.client.Sys().Mount(mountPath, &vapi.MountInput{
+	c.Sys().Mount(mountPath, &vapi.MountInput{
 		Type: "kv",
 		Options: map[string]string{
 			"version": "2",
@@ -113,12 +113,12 @@ func (c *Client) seed() error {
 		}
 
 		// For v2 API
-		// https://github.com/hashicorp/vault/blob/master/command/kv_put.go#L130-L142
+		// https://github.com/hashicorp/vault/blob/69b1cae9e252e9f2f8394675f8df5cd9dca8f5de/command/kv_put.go#L130-L142
 		data = map[string]interface{}{
 			"data": data,
 		}
 
-		_, err = c.client.Logical().Write(writePath, data)
+		_, err = c.Logical().Write(writePath, data)
 		if err != nil {
 			return errors.Wrapf(err, "Failed to seed vault at path %s", writePath)
 		}

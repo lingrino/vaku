@@ -1,7 +1,6 @@
 package vaku
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -17,33 +16,56 @@ type folderReadWorkerOutput struct {
 // folderReadWorkerInput takes input/output channels and
 // waitgroups to update as new work is discovered
 type folderReadWorkerInput struct {
-	inputsC  chan *PathInput
+	inputsC  <-chan *PathInput
 	resultsC chan<- *folderReadWorkerOutput
 }
 
-func (c *Client) folderReadWorker(i *folderReadWorkerInput) {
-	for {
-		pi, more := <-i.inputsC
-		if more {
-			read, err := c.PathRead(pi)
-			if err != nil {
-				i.resultsC <- &folderReadWorkerOutput{
-					readPath: "",
-					data:     nil,
-					err:      errors.Wrapf(err, "Failed to read path %s", pi.Path),
-				}
-				fmt.Println(err)
-				continue
-			}
-			i.resultsC <- &folderReadWorkerOutput{
-				readPath: pi.Path,
-				data:     read,
-				err:      nil,
-			}
-		} else {
-			return
-		}
+// FolderRead takes in a PathInput, reads all non-folders in that path
+// and outputs a map of paths to values at that path
+func (c *Client) FolderRead(i *PathInput) (map[string]map[string]interface{}, error) {
+	var err error
+	var output map[string]map[string]interface{}
+
+	// Get the keys to read
+	list, err := c.PathList(&PathInput{
+		Path:           i.Path,
+		TrimPathPrefix: false,
+	})
+	if err != nil {
+		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
 	}
+
+	// Hand over to folderReadCaller
+	output, err = c.folderReadCaller(i, list)
+	if err != nil {
+		return nil, errors.Wrapf(err, "Failed to read folder at %s", i.Path)
+	}
+
+	return output, err
+}
+
+// FolderReadAll takes in a PathInput, reads all keys in that path
+// and all nested paths and outputs a map of paths to values at that path
+func (c *Client) FolderReadAll(i *PathInput) (map[string]map[string]interface{}, error) {
+	var err error
+	var output map[string]map[string]interface{}
+
+	// Get the keys to read
+	list, err := c.FolderList(&PathInput{
+		Path:           i.Path,
+		TrimPathPrefix: false,
+	})
+	if err != nil {
+		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
+	}
+
+	// Hand over to folderReadCaller
+	output, err = c.folderReadCaller(i, list)
+	if err != nil {
+		return nil, errors.Wrapf(err, "Failed to read folder at %s", i.Path)
+	}
+
+	return output, err
 }
 
 // folderReadCaller does the actual work of scheduling the reads and collecting the
@@ -103,50 +125,26 @@ func (c *Client) folderReadCaller(i *PathInput, keys []string) (map[string]map[s
 	return output, err
 }
 
-// FolderRead takes in a PathInput, reads all non-folders in that path
-// and outputs a map of paths to values at that path
-func (c *Client) FolderRead(i *PathInput) (map[string]map[string]interface{}, error) {
-	var err error
-	var output map[string]map[string]interface{}
-
-	// Get the keys to read
-	list, err := c.PathList(&PathInput{
-		Path:           i.Path,
-		TrimPathPrefix: false,
-	})
-	if err != nil {
-		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
+func (c *Client) folderReadWorker(i *folderReadWorkerInput) {
+	for {
+		pi, more := <-i.inputsC
+		if more {
+			read, err := c.PathRead(pi)
+			if err != nil {
+				i.resultsC <- &folderReadWorkerOutput{
+					readPath: "",
+					data:     nil,
+					err:      errors.Wrapf(err, "Failed to read path %s", pi.Path),
+				}
+				continue
+			}
+			i.resultsC <- &folderReadWorkerOutput{
+				readPath: pi.Path,
+				data:     read,
+				err:      nil,
+			}
+		} else {
+			return
+		}
 	}
-
-	// Hand over to folderReadCaller
-	output, err = c.folderReadCaller(i, list)
-	if err != nil {
-		return nil, errors.Wrapf(err, "Failed to read folder at %s", i.Path)
-	}
-
-	return output, err
-}
-
-// FolderReadAll takes in a PathInput, reads all keys in that path
-// and all nested paths and outputs a map of paths to values at that path
-func (c *Client) FolderReadAll(i *PathInput) (map[string]map[string]interface{}, error) {
-	var err error
-	var output map[string]map[string]interface{}
-
-	// Get the keys to read
-	list, err := c.FolderList(&PathInput{
-		Path:           i.Path,
-		TrimPathPrefix: false,
-	})
-	if err != nil {
-		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
-	}
-
-	// Hand over to folderReadCaller
-	output, err = c.folderReadCaller(i, list)
-	if err != nil {
-		return nil, errors.Wrapf(err, "Failed to read folder at %s", i.Path)
-	}
-
-	return output, err
 }

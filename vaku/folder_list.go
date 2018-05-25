@@ -22,45 +22,6 @@ type folderListWorkerInput struct {
 	resultsWG *sync.WaitGroup
 }
 
-func (c *Client) folderListWorker(i *folderListWorkerInput) {
-	for {
-		l, more := <-i.inputsC
-		if more {
-			list, err := c.PathList(l)
-			if err != nil {
-				i.resultsWG.Add(1)
-				i.resultsC <- &folderListWorkerOutput{
-					key: "",
-					err: errors.Wrapf(err, "Failed to list path %s", l.Path),
-				}
-				i.inputsWG.Done()
-				continue
-			}
-			for _, key := range list {
-				if c.KeyIsFolder(key) {
-					i.inputsWG.Add(1)
-					i.inputsC <- &PathInput{
-						Path:           c.PathJoin(l.Path, c.KeyBase(key)),
-						opPath:         c.PathJoin(l.opPath, c.KeyBase(key)),
-						mountPath:      l.mountPath,
-						mountVersion:   l.mountVersion,
-						TrimPathPrefix: l.TrimPathPrefix,
-					}
-				} else {
-					i.resultsWG.Add(1)
-					i.resultsC <- &folderListWorkerOutput{
-						key: key,
-						err: nil,
-					}
-				}
-			}
-			i.inputsWG.Done()
-		} else {
-			return
-		}
-	}
-}
-
 // FolderList takes in a PathInput and recursively walks PathList,
 // listing all paths nested in the folder
 func (c *Client) FolderList(i *PathInput) ([]string, error) {
@@ -121,4 +82,43 @@ func (c *Client) FolderList(i *PathInput) ([]string, error) {
 	sort.Strings(output)
 
 	return output, err
+}
+
+func (c *Client) folderListWorker(i *folderListWorkerInput) {
+	for {
+		l, more := <-i.inputsC
+		if more {
+			list, err := c.PathList(l)
+			if err != nil {
+				i.resultsWG.Add(1)
+				i.resultsC <- &folderListWorkerOutput{
+					key: "",
+					err: errors.Wrapf(err, "Failed to list path %s", l.Path),
+				}
+				i.inputsWG.Done()
+				continue
+			}
+			for _, key := range list {
+				if c.KeyIsFolder(key) {
+					i.inputsWG.Add(1)
+					i.inputsC <- &PathInput{
+						Path:           c.PathJoin(l.Path, c.KeyBase(key)),
+						opPath:         c.PathJoin(l.opPath, c.KeyBase(key)),
+						mountPath:      l.mountPath,
+						mountVersion:   l.mountVersion,
+						TrimPathPrefix: l.TrimPathPrefix,
+					}
+				} else {
+					i.resultsWG.Add(1)
+					i.resultsC <- &folderListWorkerOutput{
+						key: key,
+						err: nil,
+					}
+				}
+			}
+			i.inputsWG.Done()
+		} else {
+			return
+		}
+	}
 }
