@@ -34,6 +34,8 @@ func (c *Client) PathRead(i *PathInput) (map[string]interface{}, error) {
 		data := secret.Data["data"]
 		if data != nil {
 			output = data.(map[string]interface{})
+		} else {
+			return output, fmt.Errorf("No value found at %s", i.opPath)
 		}
 	}
 
