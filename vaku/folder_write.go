@@ -4,16 +4,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-// folderWriteWorkerOutput holds any errors from a job
-type folderWriteWorkerOutput struct {
-	err error
-}
-
 // folderWriteWorkerInput takes input/output channels for input to the job
-
 type folderWriteWorkerInput struct {
 	inputsC  <-chan *writeInput
-	resultsC chan<- *folderWriteWorkerOutput
+	resultsC chan<- error
 }
 
 type writeInput struct {
@@ -39,7 +33,7 @@ func (c *Client) FolderWrite(d map[string]map[string]interface{}) error {
 
 	// Concurrency channels for workers
 	inputsC := make(chan *writeInput, len(d))
-	resultsC := make(chan *folderWriteWorkerOutput, len(d))
+	resultsC := make(chan error, len(d))
 
 	// Spawn workers equal to MaxConcurrency
 	for w := 1; w <= MaxConcurrency; w++ {
@@ -66,8 +60,8 @@ func (c *Client) FolderWrite(d map[string]map[string]interface{}) error {
 	// Empty the results channel into output
 	for j := 0; j < len(d); j++ {
 		o := <-resultsC
-		if o.err != nil {
-			err = errors.Wrap(o.err, "Failed to write path")
+		if o != nil {
+			err = errors.Wrap(o, "Failed to write path")
 		}
 	}
 
@@ -81,14 +75,10 @@ func (c *Client) folderWriteWorker(i *folderWriteWorkerInput) {
 		if more {
 			err = c.PathWrite(id.path, id.data)
 			if err != nil {
-				i.resultsC <- &folderWriteWorkerOutput{
-					err: errors.Wrapf(err, "Failed to write path %s", id.path),
-				}
+				i.resultsC <- errors.Wrapf(err, "Failed to write path %s", id.path)
 				continue
 			}
-			i.resultsC <- &folderWriteWorkerOutput{
-				err: nil,
-			}
+			i.resultsC <- nil
 		} else {
 			return
 		}

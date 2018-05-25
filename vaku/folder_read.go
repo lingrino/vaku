@@ -125,6 +125,7 @@ func (c *Client) folderReadCaller(i *PathInput, keys []string) (map[string]map[s
 	return output, err
 }
 
+// folderReadWorker does the actual work of reading the input from a channel and reading the path
 func (c *Client) folderReadWorker(i *folderReadWorkerInput) {
 	for {
 		pi, more := <-i.inputsC
