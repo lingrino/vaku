@@ -24,7 +24,7 @@ func (c *Client) MountInfo(p string) (*MountInfoOutput, error) {
 	var err error
 	var output MountInfoOutput
 
-	mounts, err := c.client.Sys().ListMounts()
+	mounts, err := c.Sys().ListMounts()
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to list mounts")
 	}

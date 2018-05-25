@@ -18,6 +18,8 @@ Terminology:
 Planned Functions:
 - Path List
 - Path Read
+- Path Write
+- Path Update
 - Path Search
 - Path Delete
 - Path Copy

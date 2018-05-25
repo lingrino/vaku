@@ -21,7 +21,7 @@ func (c *Client) PathList(i *PathInput) ([]string, error) {
 	}
 
 	// do the actual list
-	secret, err := c.client.Logical().List(i.opPath)
+	secret, err := c.Logical().List(i.opPath)
 	if err != nil {
 		return nil, errors.Wrapf(err, "Failed to list %s", i.opPath)
 	}
