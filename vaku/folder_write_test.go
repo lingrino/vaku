@@ -3,7 +3,7 @@ package vaku_test
 import (
 	"testing"
 
-	"vaku/vaku"
+	"github.com/Lingrino/vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
