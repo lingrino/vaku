@@ -15,6 +15,7 @@ type TestFolderReadData struct {
 }
 
 func TestFolderRead(t *testing.T) {
+	t.Parallel()
 	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderReadData{

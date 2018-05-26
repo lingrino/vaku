@@ -15,6 +15,7 @@ type TestFolderCopyData struct {
 }
 
 func TestFolderCopy(t *testing.T) {
+	t.Parallel()
 	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderCopyData{

@@ -14,6 +14,7 @@ type TestPathCopyData struct {
 }
 
 func TestPathCopy(t *testing.T) {
+	t.Parallel()
 	c := clientInitForTests(t)
 
 	tests := map[int]TestPathCopyData{

@@ -14,6 +14,7 @@ type TestMountInfoData struct {
 }
 
 func TestMountInfo(t *testing.T) {
+	t.Parallel()
 	c := clientInitForTests(t)
 
 	tests := map[int]TestMountInfoData{

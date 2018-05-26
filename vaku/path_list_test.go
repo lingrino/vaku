@@ -14,6 +14,7 @@ type TestPathListData struct {
 }
 
 func TestPathList(t *testing.T) {
+	t.Parallel()
 	c := clientInitForTests(t)
 
 	tests := map[int]TestPathListData{

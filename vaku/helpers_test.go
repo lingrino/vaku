@@ -8,6 +8,7 @@ import (
 )
 
 func TestKeyIsFolder(t *testing.T) {
+	t.Parallel()
 	inputToOutput := map[string]bool{
 		"/":       true,
 		"a/":      true,
@@ -25,6 +26,7 @@ func TestKeyIsFolder(t *testing.T) {
 }
 
 func TestKeyJoin(t *testing.T) {
+	t.Parallel()
 	outputToInput := map[string][]string{
 		"/":       {"/"},
 		"a/":      {"a/"},
@@ -42,6 +44,7 @@ func TestKeyJoin(t *testing.T) {
 }
 
 func TestPathJoin(t *testing.T) {
+	t.Parallel()
 	outputToInput := map[string][]string{
 		"":        {"/"},
 		"a":       {"a/"},
@@ -59,6 +62,7 @@ func TestPathJoin(t *testing.T) {
 }
 
 func TestKeyClean(t *testing.T) {
+	t.Parallel()
 	inputToOutput := map[string]string{
 		"":      "",
 		"/":     "/",
@@ -76,6 +80,7 @@ func TestKeyClean(t *testing.T) {
 }
 
 func TestPathClean(t *testing.T) {
+	t.Parallel()
 	inputToOutput := map[string]string{
 		"":      "",
 		"a":     "a",
@@ -92,6 +97,7 @@ func TestPathClean(t *testing.T) {
 }
 
 func TestKeyBase(t *testing.T) {
+	t.Parallel()
 	inputToOutput := map[string]string{
 		"":      "",
 		"/":     "",
@@ -108,6 +114,7 @@ func TestKeyBase(t *testing.T) {
 }
 
 func TestPathBase(t *testing.T) {
+	t.Parallel()
 	inputToOutput := map[string]string{
 		"":      "",
 		"/":     "",
@@ -130,6 +137,7 @@ type TestSliceKeyPrefixData struct {
 }
 
 func TestSliceAddKeyPrefix(t *testing.T) {
+	t.Parallel()
 	tests := map[int]TestSliceKeyPrefixData{
 		1: {
 			inputSlice:  []string{"a"},
@@ -161,6 +169,7 @@ func TestSliceAddKeyPrefix(t *testing.T) {
 }
 
 func TestSliceTrimKeyPrefix(t *testing.T) {
+	t.Parallel()
 	tests := map[int]TestSliceKeyPrefixData{
 		1: {
 			inputSlice:  []string{"a"},

@@ -14,6 +14,7 @@ type TestPathReadData struct {
 }
 
 func TestPathRead(t *testing.T) {
+	t.Parallel()
 	c := clientInitForTests(t)
 
 	tests := map[int]TestPathReadData{
