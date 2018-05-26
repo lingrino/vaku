@@ -16,19 +16,22 @@ Terminology:
 - In this repo all functions prefixed with `Path` act once on the path specified. `PathDelete()` calls delete on that path and stops. On the other hand, all function starting with `Folder` call their `Path` equivalent on all keys within, recursively. `PathDelete()` deletes a single `path` and `FolderDelete()` deletes an entire `folder`.
 
 Planned Functions:
-- Path List
-- Path Read
-- Path Write
-- Path Update
-- Path Search
-- Path Delete
-- Path Copy
-- Path Diff
-- Folder List
-- Folder Read
-- Folder Search
-- Folder Delete
-- Folder Copy
-- Folder Diff
-- Policy Enforce
-- Approle Enforce
+- [x] Path List
+- [x] Path Read
+- [x] Path Write
+- [x] Path Delete
+- [x] Path Copy
+- [x] Path Move
+- [ ] Path Update
+- [ ] Path Search
+- [ ] Path Diff
+- [x] Folder List
+- [x] Folder Read
+- [x] Folder Write
+- [x] Folder Delete
+- [x] Folder Copy
+- [x] Folder Move
+- [ ] Folder Search
+- [ ] Folder Diff
+- [ ] Policy Enforce
+- [ ] Approle Enforce
