@@ -1,13 +1,15 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+
+	"vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type TestFolderListData struct {
-	input     *PathInput
+	input     *vaku.PathInput
 	output    []string
 	outputErr bool
 }
@@ -17,17 +19,17 @@ func TestFolderList(t *testing.T) {
 
 	tests := map[int]TestFolderListData{
 		1: {
-			input:     NewPathInput("secretv1/test"),
+			input:     vaku.NewPathInput("secretv1/test"),
 			output:    []string{"HToOeKKD", "fizz", "foo", "inner/A2xlzTfE", "inner/WKNC3muM", "inner/again/inner/UCrt6sZT", "value"},
 			outputErr: false,
 		},
 		2: {
-			input:     NewPathInput("secretv2/test"),
+			input:     vaku.NewPathInput("secretv2/test"),
 			output:    []string{"HToOeKKD", "fizz", "foo", "inner/A2xlzTfE", "inner/WKNC3muM", "inner/again/inner/UCrt6sZT", "value"},
 			outputErr: false,
 		},
 		3: {
-			input: &PathInput{
+			input: &vaku.PathInput{
 				Path:           "secretv1/test/inner",
 				TrimPathPrefix: false,
 			},
@@ -35,7 +37,7 @@ func TestFolderList(t *testing.T) {
 			outputErr: false,
 		},
 		4: {
-			input: &PathInput{
+			input: &vaku.PathInput{
 				Path:           "secretv2/test/inner",
 				TrimPathPrefix: false,
 			},
@@ -43,22 +45,22 @@ func TestFolderList(t *testing.T) {
 			outputErr: false,
 		},
 		5: {
-			input:     NewPathInput("secretv1/test/inner/again/inner"),
+			input:     vaku.NewPathInput("secretv1/test/inner/again/inner"),
 			output:    []string{"UCrt6sZT"},
 			outputErr: false,
 		},
 		6: {
-			input:     NewPathInput("secretv2/test/inner/again/inner"),
+			input:     vaku.NewPathInput("secretv2/test/inner/again/inner"),
 			output:    []string{"UCrt6sZT"},
 			outputErr: false,
 		},
 		7: {
-			input:     NewPathInput("secretv1/doesnotexist"),
+			input:     vaku.NewPathInput("secretv1/doesnotexist"),
 			output:    nil,
 			outputErr: true,
 		},
 		8: {
-			input:     NewPathInput("secretv2/doesnotexist"),
+			input:     vaku.NewPathInput("secretv2/doesnotexist"),
 			output:    nil,
 			outputErr: true,
 		},

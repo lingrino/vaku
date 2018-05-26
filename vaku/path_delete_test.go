@@ -1,38 +1,40 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+	"vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type TestPathDeleteData struct {
-	input     *PathInput
+	input     *vaku.PathInput
 	outputErr bool
 }
 
 func TestPathDelete(t *testing.T) {
 	c := clientInitForTests(t)
+	defer seed(t, c)
 
 	tests := map[int]TestPathDeleteData{
 		1: {
-			input:     NewPathInput("secretv1/test/foo"),
+			input:     vaku.NewPathInput("secretv1/test/foo"),
 			outputErr: false,
 		},
 		2: {
-			input:     NewPathInput("secretv2/test/foo"),
+			input:     vaku.NewPathInput("secretv2/test/foo"),
 			outputErr: false,
 		},
 		3: {
-			input:     NewPathInput("secretv1/doesnotexist"),
+			input:     vaku.NewPathInput("secretv1/doesnotexist"),
 			outputErr: false,
 		},
 		4: {
-			input:     NewPathInput("secretv2/doesnotexist"),
+			input:     vaku.NewPathInput("secretv2/doesnotexist"),
 			outputErr: false,
 		},
 		5: {
-			input:     NewPathInput("secretdoesnotexist/test/foo"),
+			input:     vaku.NewPathInput("secretdoesnotexist/test/foo"),
 			outputErr: true,
 		},
 	}
@@ -47,7 +49,4 @@ func TestPathDelete(t *testing.T) {
 			assert.NoError(t, e)
 		}
 	}
-
-	// Reseed the vault server after tests end
-	seed(t, c)
 }

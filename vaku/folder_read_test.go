@@ -1,13 +1,15 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+
+	"vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type TestFolderReadData struct {
-	input     *PathInput
+	input     *vaku.PathInput
 	output    map[string]map[string]interface{}
 	outputErr bool
 }
@@ -17,7 +19,7 @@ func TestFolderRead(t *testing.T) {
 
 	tests := map[int]TestFolderReadData{
 		1: {
-			input: NewPathInput("secretv1/test"),
+			input: vaku.NewPathInput("secretv1/test"),
 			output: map[string]map[string]interface{}{
 				"foo": {
 					"value": "bar",
@@ -37,7 +39,7 @@ func TestFolderRead(t *testing.T) {
 			outputErr: false,
 		},
 		2: {
-			input: NewPathInput("secretv2/test"),
+			input: vaku.NewPathInput("secretv2/test"),
 			output: map[string]map[string]interface{}{
 				"foo": {
 					"value": "bar",
@@ -57,7 +59,7 @@ func TestFolderRead(t *testing.T) {
 			outputErr: false,
 		},
 		3: {
-			input: &PathInput{
+			input: &vaku.PathInput{
 				Path:           "secretv1/test/inner/again/inner/",
 				TrimPathPrefix: false,
 			},
@@ -71,7 +73,7 @@ func TestFolderRead(t *testing.T) {
 			outputErr: false,
 		},
 		4: {
-			input: &PathInput{
+			input: &vaku.PathInput{
 				Path:           "secretv2/test/inner/again/inner/",
 				TrimPathPrefix: false,
 			},
@@ -85,7 +87,7 @@ func TestFolderRead(t *testing.T) {
 			outputErr: false,
 		},
 		5: {
-			input: &PathInput{
+			input: &vaku.PathInput{
 				Path:           "secretv1/doesnotexist",
 				TrimPathPrefix: false,
 			},
@@ -93,7 +95,7 @@ func TestFolderRead(t *testing.T) {
 			outputErr: true,
 		},
 		6: {
-			input: &PathInput{
+			input: &vaku.PathInput{
 				Path:           "secretv2/doesnotexist",
 				TrimPathPrefix: false,
 			},
@@ -118,7 +120,7 @@ func TestFolderReadAll(t *testing.T) {
 
 	tests := map[int]TestFolderReadData{
 		1: {
-			input: NewPathInput("secretv1/test"),
+			input: vaku.NewPathInput("secretv1/test"),
 			output: map[string]map[string]interface{}{
 				"foo": {
 					"value": "bar",
@@ -151,7 +153,7 @@ func TestFolderReadAll(t *testing.T) {
 			outputErr: false,
 		},
 		2: {
-			input: NewPathInput("secretv2/test"),
+			input: vaku.NewPathInput("secretv2/test"),
 			output: map[string]map[string]interface{}{
 				"foo": {
 					"value": "bar",
@@ -184,7 +186,7 @@ func TestFolderReadAll(t *testing.T) {
 			outputErr: false,
 		},
 		3: {
-			input: &PathInput{
+			input: &vaku.PathInput{
 				Path:           "secretv1/test/inner/again/inner/",
 				TrimPathPrefix: false,
 			},
@@ -198,7 +200,7 @@ func TestFolderReadAll(t *testing.T) {
 			outputErr: false,
 		},
 		4: {
-			input: &PathInput{
+			input: &vaku.PathInput{
 				Path:           "secretv2/test/inner/again/inner/",
 				TrimPathPrefix: false,
 			},
@@ -212,7 +214,7 @@ func TestFolderReadAll(t *testing.T) {
 			outputErr: false,
 		},
 		5: {
-			input: &PathInput{
+			input: &vaku.PathInput{
 				Path:           "secretv1/doesnotexist",
 				TrimPathPrefix: false,
 			},
@@ -220,7 +222,7 @@ func TestFolderReadAll(t *testing.T) {
 			outputErr: true,
 		},
 		6: {
-			input: &PathInput{
+			input: &vaku.PathInput{
 				Path:           "secretv2/doesnotexist",
 				TrimPathPrefix: false,
 			},

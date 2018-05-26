@@ -1,14 +1,16 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+
+	"vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type TestFolderCopyData struct {
-	inputSource *PathInput
-	inputTarget *PathInput
+	inputSource *vaku.PathInput
+	inputTarget *vaku.PathInput
 	outputErr   bool
 }
 
@@ -17,33 +19,33 @@ func TestFolderCopy(t *testing.T) {
 
 	tests := map[int]TestFolderCopyData{
 		1: {
-			inputSource: NewPathInput("secretv1/test"),
-			inputTarget: NewPathInput("secretv1/foldercopy"),
+			inputSource: vaku.NewPathInput("secretv1/test"),
+			inputTarget: vaku.NewPathInput("secretv1/foldercopy"),
 			outputErr:   false,
 		},
 		2: {
-			inputSource: NewPathInput("secretv2/test"),
-			inputTarget: NewPathInput("secretv2/foldercopy"),
+			inputSource: vaku.NewPathInput("secretv2/test"),
+			inputTarget: vaku.NewPathInput("secretv2/foldercopy"),
 			outputErr:   false,
 		},
 		3: {
-			inputSource: NewPathInput("secretv1/test"),
-			inputTarget: NewPathInput("secretv2/foldercopy"),
+			inputSource: vaku.NewPathInput("secretv1/test"),
+			inputTarget: vaku.NewPathInput("secretv2/foldercopy"),
 			outputErr:   false,
 		},
 		4: {
-			inputSource: NewPathInput("secretv2/test"),
-			inputTarget: NewPathInput("secretv1/foldercopy"),
+			inputSource: vaku.NewPathInput("secretv2/test"),
+			inputTarget: vaku.NewPathInput("secretv1/foldercopy"),
 			outputErr:   false,
 		},
 		5: {
-			inputSource: NewPathInput("secretdoesnotexist/test"),
-			inputTarget: NewPathInput("secretv1/test"),
+			inputSource: vaku.NewPathInput("secretdoesnotexist/test"),
+			inputTarget: vaku.NewPathInput("secretv1/test"),
 			outputErr:   true,
 		},
 		6: {
-			inputSource: NewPathInput("secretv1/test"),
-			inputTarget: NewPathInput("secretdoesnotexist/test"),
+			inputSource: vaku.NewPathInput("secretv1/test"),
+			inputTarget: vaku.NewPathInput("secretdoesnotexist/test"),
 			outputErr:   true,
 		},
 	}

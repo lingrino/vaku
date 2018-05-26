@@ -73,6 +73,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/lingrino/vaku"
+  packages = ["vaku"]
+  revision = "16ab05f419dace2052cff0532fdd5f21c680266a"
+
+[[projects]]
+  branch = "master"
   name = "github.com/mitchellh/go-homedir"
   packages = ["."]
   revision = "b8bc1bf767474819792c23f32d8286a45736f1c6"
@@ -148,6 +154,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c49c20a66a3c89fcf73c4938512cdb714c3dd6f0ab8e5ffec42284f67cd6941f"
+  inputs-digest = "628bdce8f700751e1c5e16a795f571e6676d568bb12f52d2c209d14c31e5099a"
   solver-name = "gps-cdcl"
   solver-version = 1

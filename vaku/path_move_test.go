@@ -1,49 +1,51 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+	"vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type TestPathMoveData struct {
-	inputSource *PathInput
-	inputTarget *PathInput
+	inputSource *vaku.PathInput
+	inputTarget *vaku.PathInput
 	outputErr   bool
 }
 
 func TestPathMove(t *testing.T) {
 	c := clientInitForTests(t)
+	defer seed(t, c)
 
 	tests := map[int]TestPathMoveData{
 		1: {
-			inputSource: NewPathInput("secretv1/test/foo"),
-			inputTarget: NewPathInput("secretv1/pathmove/foo"),
+			inputSource: vaku.NewPathInput("secretv1/test/foo"),
+			inputTarget: vaku.NewPathInput("secretv1/pathmove/foo"),
 			outputErr:   false,
 		},
 		2: {
-			inputSource: NewPathInput("secretv2/test/foo"),
-			inputTarget: NewPathInput("secretv2/pathmove/foo"),
+			inputSource: vaku.NewPathInput("secretv2/test/foo"),
+			inputTarget: vaku.NewPathInput("secretv2/pathmove/foo"),
 			outputErr:   false,
 		},
 		3: {
-			inputSource: NewPathInput("secretv1/test/fizz"),
-			inputTarget: NewPathInput("secretv2/pathmove/fizz"),
+			inputSource: vaku.NewPathInput("secretv1/test/fizz"),
+			inputTarget: vaku.NewPathInput("secretv2/pathmove/fizz"),
 			outputErr:   false,
 		},
 		4: {
-			inputSource: NewPathInput("secretv2/test/fizz"),
-			inputTarget: NewPathInput("secretv1/pathmove/fizz"),
+			inputSource: vaku.NewPathInput("secretv2/test/fizz"),
+			inputTarget: vaku.NewPathInput("secretv1/pathmove/fizz"),
 			outputErr:   false,
 		},
 		5: {
-			inputSource: NewPathInput("secretdoesnotexist/test/foo"),
-			inputTarget: NewPathInput("secretv1/test/foo"),
+			inputSource: vaku.NewPathInput("secretdoesnotexist/test/foo"),
+			inputTarget: vaku.NewPathInput("secretv1/test/foo"),
 			outputErr:   true,
 		},
 		6: {
-			inputSource: NewPathInput("secretv1/test/foo"),
-			inputTarget: NewPathInput("secretdoesnotexist/foo"),
+			inputSource: vaku.NewPathInput("secretv1/test/foo"),
+			inputTarget: vaku.NewPathInput("secretdoesnotexist/foo"),
 			outputErr:   true,
 		},
 	}

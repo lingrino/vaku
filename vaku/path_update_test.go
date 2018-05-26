@@ -1,13 +1,14 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+	"vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type TestPathUpdateData struct {
-	inputPath    *PathInput
+	inputPath    *vaku.PathInput
 	inputData    map[string]interface{}
 	expectedData map[string]interface{}
 	outputErr    bool
@@ -15,10 +16,11 @@ type TestPathUpdateData struct {
 
 func TestPathUpdate(t *testing.T) {
 	c := clientInitForTests(t)
+	defer seed(t, c)
 
 	tests := map[int]TestPathUpdateData{
 		1: {
-			inputPath: NewPathInput("secretv1/test/foo"),
+			inputPath: vaku.NewPathInput("secretv1/test/foo"),
 			inputData: map[string]interface{}{
 				"value": "buzz",
 			},
@@ -28,7 +30,7 @@ func TestPathUpdate(t *testing.T) {
 			outputErr: false,
 		},
 		2: {
-			inputPath: NewPathInput("secretv2/test/foo"),
+			inputPath: vaku.NewPathInput("secretv2/test/foo"),
 			inputData: map[string]interface{}{
 				"value": "buzz",
 			},
@@ -38,36 +40,36 @@ func TestPathUpdate(t *testing.T) {
 			outputErr: false,
 		},
 		3: {
-			inputPath: NewPathInput("secretv1/test/fizz"),
+			inputPath: vaku.NewPathInput("secretv1/test/fizz"),
 			inputData: map[string]interface{}{
-				"foo": "buzz",
-				"new": "boo",
+				"foo":      "buzz",
+				"vaku.new": "boo",
 			},
 			expectedData: map[string]interface{}{
-				"fizz": "buzz",
-				"foo":  "buzz",
-				"new":  "boo",
+				"fizz":     "buzz",
+				"foo":      "buzz",
+				"vaku.new": "boo",
 			},
 			outputErr: false,
 		},
 		4: {
-			inputPath: NewPathInput("secretv2/test/fizz"),
+			inputPath: vaku.NewPathInput("secretv2/test/fizz"),
 			inputData: map[string]interface{}{
-				"foo": "buzz",
-				"new": "boo",
+				"foo":      "buzz",
+				"vaku.new": "boo",
 			},
 			expectedData: map[string]interface{}{
-				"fizz": "buzz",
-				"foo":  "buzz",
-				"new":  "boo",
+				"fizz":     "buzz",
+				"foo":      "buzz",
+				"vaku.new": "boo",
 			},
 			outputErr: false,
 		},
 		5: {
-			inputPath: NewPathInput("secretdoesnotexist/test/fizz"),
+			inputPath: vaku.NewPathInput("secretdoesnotexist/test/fizz"),
 			inputData: map[string]interface{}{
-				"foo": "buzz",
-				"new": "boo",
+				"foo":      "buzz",
+				"vaku.new": "boo",
 			},
 			expectedData: map[string]interface{}{},
 			outputErr:    true,

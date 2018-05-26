@@ -1,14 +1,15 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+	"vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type TestMountInfoData struct {
 	input     string
-	output    *MountInfoOutput
+	output    *vaku.MountInfoOutput
 	outputErr bool
 }
 
@@ -18,7 +19,7 @@ func TestMountInfo(t *testing.T) {
 	tests := map[int]TestMountInfoData{
 		1: {
 			input: "secretv1/test",
-			output: &MountInfoOutput{
+			output: &vaku.MountInfoOutput{
 				FullPath:      "secretv1/test",
 				MountPath:     "secretv1",
 				MountlessPath: "test",
@@ -28,7 +29,7 @@ func TestMountInfo(t *testing.T) {
 		},
 		2: {
 			input: "secretv2/test",
-			output: &MountInfoOutput{
+			output: &vaku.MountInfoOutput{
 				FullPath:      "secretv2/test",
 				MountPath:     "secretv2",
 				MountlessPath: "test",
@@ -38,7 +39,7 @@ func TestMountInfo(t *testing.T) {
 		},
 		3: {
 			input: "secretv1/doesnotexist",
-			output: &MountInfoOutput{
+			output: &vaku.MountInfoOutput{
 				FullPath:      "secretv1/doesnotexist",
 				MountPath:     "secretv1",
 				MountlessPath: "doesnotexist",
@@ -48,7 +49,7 @@ func TestMountInfo(t *testing.T) {
 		},
 		4: {
 			input: "secretv2/doesnotexist",
-			output: &MountInfoOutput{
+			output: &vaku.MountInfoOutput{
 				FullPath:      "secretv2/doesnotexist",
 				MountPath:     "secretv2",
 				MountlessPath: "doesnotexist",

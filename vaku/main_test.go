@@ -1,13 +1,16 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+	"vaku/vaku"
 
 	vapi "github.com/hashicorp/vault/api"
 	"github.com/pkg/errors"
 )
 
-func clientInitForTests(t *testing.T) *Client {
+var SeededOnce = false
+
+func clientInitForTests(t *testing.T) *vaku.Client {
 	// Initialize a new vault client
 	vclient, err := vapi.NewClient(vapi.DefaultConfig())
 	if err != nil {
@@ -15,25 +18,27 @@ func clientInitForTests(t *testing.T) *Client {
 	}
 
 	// Initialize a new vaku client and attach the vault client
-	client := NewClient()
+	client := vaku.NewClient()
 	client.Client = vclient
 
 	// Set the address and token to the test values
 	client.SetToken(VaultToken)
 	client.SetAddress(VaultAddr)
 
-	// Seed the client
-	err = seed(t, client)
-	if err != nil {
-		t.Fatal(errors.Wrapf(err, "Failed to seed the vault client"))
+	// Seed the client if it has never been seeded
+	if !SeededOnce {
+		err = seed(t, client)
+		if err != nil {
+			t.Fatal(errors.Wrapf(err, "Failed to seed the vault client"))
+		}
+		SeededOnce = true
 	}
-
 	return client
 }
 
 // seed uses a client to write dummy data used for testing to vault.
 // Strings generated here: https://www.random.org/strings
-func seed(t *testing.T, c *Client) error {
+func seed(t *testing.T, c *vaku.Client) error {
 	t.Helper()
 	var err error
 
