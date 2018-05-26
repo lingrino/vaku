@@ -22,7 +22,7 @@ Planned Functions:
 - [x] Path Delete
 - [x] Path Copy
 - [x] Path Move
-- [ ] Path Update
+- [x] Path Update
 - [ ] Path Search
 - [ ] Path Diff
 - [x] Folder List
