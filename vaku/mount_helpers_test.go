@@ -13,8 +13,7 @@ type TestMountInfoData struct {
 }
 
 func TestMountInfo(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestMountInfoData{
 		1: {

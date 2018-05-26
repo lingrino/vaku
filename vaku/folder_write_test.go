@@ -12,8 +12,7 @@ type TestFolderWriteData struct {
 }
 
 func TestFolderWrite(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderWriteData{
 		1: {

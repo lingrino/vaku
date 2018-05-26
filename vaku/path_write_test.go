@@ -13,8 +13,7 @@ type TestPathWriteData struct {
 }
 
 func TestPathWrite(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestPathWriteData{
 		1: {

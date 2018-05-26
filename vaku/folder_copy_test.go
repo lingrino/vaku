@@ -13,8 +13,7 @@ type TestFolderCopyData struct {
 }
 
 func TestFolderCopy(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderCopyData{
 		1: {

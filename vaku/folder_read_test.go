@@ -13,8 +13,7 @@ type TestFolderReadData struct {
 }
 
 func TestFolderRead(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderReadData{
 		1: {
@@ -115,8 +114,7 @@ func TestFolderRead(t *testing.T) {
 }
 
 func TestFolderReadAll(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderReadData{
 		1: {

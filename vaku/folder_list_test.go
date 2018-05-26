@@ -13,8 +13,7 @@ type TestFolderListData struct {
 }
 
 func TestFolderList(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderListData{
 		1: {

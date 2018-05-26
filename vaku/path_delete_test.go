@@ -12,8 +12,7 @@ type TestPathDeleteData struct {
 }
 
 func TestPathDelete(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestPathDeleteData{
 		1: {
@@ -50,5 +49,5 @@ func TestPathDelete(t *testing.T) {
 	}
 
 	// Reseed the vault server after tests end
-	c.seed()
+	seed(t, c)
 }

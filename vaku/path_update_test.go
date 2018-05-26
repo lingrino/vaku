@@ -14,8 +14,7 @@ type TestPathUpdateData struct {
 }
 
 func TestPathUpdate(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestPathUpdateData{
 		1: {
@@ -88,5 +87,5 @@ func TestPathUpdate(t *testing.T) {
 	}
 
 	// Reseed the vault server after tests end
-	c.seed()
+	seed(t, c)
 }

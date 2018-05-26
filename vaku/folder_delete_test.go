@@ -12,8 +12,7 @@ type TestFolderDeleteData struct {
 }
 
 func TestFolderDelete(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderDeleteData{
 		1: {
@@ -42,5 +41,5 @@ func TestFolderDelete(t *testing.T) {
 	}
 
 	// Reseed the vault server after tests end
-	c.seed()
+	seed(t, c)
 }

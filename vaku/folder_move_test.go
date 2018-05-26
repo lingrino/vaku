@@ -13,8 +13,7 @@ type TestFolderMoveData struct {
 }
 
 func TestFolderMove(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderMoveData{
 		1: {
@@ -63,6 +62,6 @@ func TestFolderMove(t *testing.T) {
 			assert.NoError(t, e)
 		}
 		// Reseed the vault server after each test
-		c.seed()
+		seed(t, c)
 	}
 }

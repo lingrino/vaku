@@ -13,8 +13,7 @@ type TestPathListData struct {
 }
 
 func TestPathList(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestPathListData{
 		1: {
