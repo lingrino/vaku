@@ -1,7 +1,7 @@
 .PHONY: test
 
 fmt:
-	gofmt -l -w -s .
+	gofmt -l -w -s vaku/
 
 test:
 	docker-compose up -d

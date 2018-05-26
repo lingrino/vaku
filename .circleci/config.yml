@@ -17,7 +17,7 @@ jobs:
       - checkout
       - run:
           name: Make sure there's nothing to go fmt
-          command: test -z $(go fmt ./...)
+          command: test -z $(gofmt -l -w -s vaku/)
       - run:
           name: Install dep
           command: go get -u github.com/golang/dep/cmd/dep

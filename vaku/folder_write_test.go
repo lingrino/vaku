@@ -18,10 +18,10 @@ func TestFolderWrite(t *testing.T) {
 	tests := map[int]TestFolderWriteData{
 		1: {
 			input: map[string]map[string]interface{}{
-				"secretv1/writetest/foo": map[string]interface{}{
+				"secretv1/writetest/foo": {
 					"value": "bar",
 				},
-				"secretv1/writetest/bar": map[string]interface{}{
+				"secretv1/writetest/bar": {
 					"value": "foo",
 				},
 			},
@@ -29,10 +29,10 @@ func TestFolderWrite(t *testing.T) {
 		},
 		2: {
 			input: map[string]map[string]interface{}{
-				"secretv2/writetest/foo": map[string]interface{}{
+				"secretv2/writetest/foo": {
 					"value": "bar",
 				},
-				"secretv2/writetest/bar": map[string]interface{}{
+				"secretv2/writetest/bar": {
 					"value": "foo",
 				},
 			},
@@ -40,13 +40,13 @@ func TestFolderWrite(t *testing.T) {
 		},
 		3: {
 			input: map[string]map[string]interface{}{
-				"secretv1/writetest/foo": map[string]interface{}{
+				"secretv1/writetest/foo": {
 					"value": "bar",
 				},
-				"secretv1/writetest/bar": map[string]interface{}{
+				"secretv1/writetest/bar": {
 					"value": "foo",
 				},
-				"secretv1/writetesttwo/foo/": map[string]interface{}{
+				"secretv1/writetesttwo/foo/": {
 					"value": "bar",
 				},
 			},
@@ -54,13 +54,13 @@ func TestFolderWrite(t *testing.T) {
 		},
 		4: {
 			input: map[string]map[string]interface{}{
-				"secretv2/writetest/foo": map[string]interface{}{
+				"secretv2/writetest/foo": {
 					"value": "bar",
 				},
-				"secretv2/writetest/bar": map[string]interface{}{
+				"secretv2/writetest/bar": {
 					"value": "foo",
 				},
-				"secretv2/writetesttwo/foo/": map[string]interface{}{
+				"secretv2/writetesttwo/foo/": {
 					"value": "bar",
 				},
 			},
@@ -68,10 +68,10 @@ func TestFolderWrite(t *testing.T) {
 		},
 		5: {
 			input: map[string]map[string]interface{}{
-				"secretdoesnotexist/writetest/foo": map[string]interface{}{
+				"secretdoesnotexist/writetest/foo": {
 					"value": "bar",
 				},
-				"secretdoesnotexist/writetest/bar": map[string]interface{}{
+				"secretdoesnotexist/writetest/bar": {
 					"value": "foo",
 				},
 			},
