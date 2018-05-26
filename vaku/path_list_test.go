@@ -1,34 +1,36 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+
+	"github.com/Lingrino/vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type TestPathListData struct {
-	input     *PathInput
+	input     *vaku.PathInput
 	output    []string
 	outputErr bool
 }
 
 func TestPathList(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	t.Parallel()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestPathListData{
 		1: {
-			input:     NewPathInput("secretv1/test"),
+			input:     vaku.NewPathInput("secretv1/test"),
 			output:    []string{"HToOeKKD", "fizz", "foo", "inner/", "value"},
 			outputErr: false,
 		},
 		2: {
-			input:     NewPathInput("secretv2/test"),
+			input:     vaku.NewPathInput("secretv2/test"),
 			output:    []string{"HToOeKKD", "fizz", "foo", "inner/", "value"},
 			outputErr: false,
 		},
 		3: {
-			input: &PathInput{
+			input: &vaku.PathInput{
 				Path:           "secretv1/test/inner/again/",
 				TrimPathPrefix: false,
 			},
@@ -36,7 +38,7 @@ func TestPathList(t *testing.T) {
 			outputErr: false,
 		},
 		4: {
-			input: &PathInput{
+			input: &vaku.PathInput{
 				Path:           "secretv2/test/inner/again/",
 				TrimPathPrefix: false,
 			},
@@ -44,12 +46,12 @@ func TestPathList(t *testing.T) {
 			outputErr: false,
 		},
 		5: {
-			input:     NewPathInput("secretv1/doesnotexist"),
+			input:     vaku.NewPathInput("secretv1/doesnotexist"),
 			output:    nil,
 			outputErr: true,
 		},
 		6: {
-			input:     NewPathInput("secretv2/doesnotexist"),
+			input:     vaku.NewPathInput("secretv2/doesnotexist"),
 			output:    nil,
 			outputErr: true,
 		},

@@ -1,12 +1,15 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+
+	"github.com/Lingrino/vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestKeyIsFolder(t *testing.T) {
+	t.Parallel()
 	inputToOutput := map[string]bool{
 		"/":       true,
 		"a/":      true,
@@ -17,13 +20,14 @@ func TestKeyIsFolder(t *testing.T) {
 		"123/456": false,
 	}
 
-	c := NewClient()
+	c := vaku.NewClient()
 	for i, o := range inputToOutput {
 		assert.Equal(t, o, c.KeyIsFolder(i))
 	}
 }
 
 func TestKeyJoin(t *testing.T) {
+	t.Parallel()
 	outputToInput := map[string][]string{
 		"/":       {"/"},
 		"a/":      {"a/"},
@@ -34,13 +38,14 @@ func TestKeyJoin(t *testing.T) {
 		"j/k/l/m": {"/j/", "/k/l", "m"},
 	}
 
-	c := NewClient()
+	c := vaku.NewClient()
 	for o, i := range outputToInput {
 		assert.Equal(t, o, c.KeyJoin(i...))
 	}
 }
 
 func TestPathJoin(t *testing.T) {
+	t.Parallel()
 	outputToInput := map[string][]string{
 		"":        {"/"},
 		"a":       {"a/"},
@@ -51,13 +56,14 @@ func TestPathJoin(t *testing.T) {
 		"j/k/l/m": {"/j/", "/k/l", "m"},
 	}
 
-	c := NewClient()
+	c := vaku.NewClient()
 	for o, i := range outputToInput {
 		assert.Equal(t, o, c.PathJoin(i...))
 	}
 }
 
 func TestKeyClean(t *testing.T) {
+	t.Parallel()
 	inputToOutput := map[string]string{
 		"":      "",
 		"/":     "/",
@@ -68,13 +74,14 @@ func TestKeyClean(t *testing.T) {
 		"/e/f/": "e/f/",
 	}
 
-	c := NewClient()
+	c := vaku.NewClient()
 	for i, o := range inputToOutput {
 		assert.Equal(t, o, c.KeyClean(i))
 	}
 }
 
 func TestPathClean(t *testing.T) {
+	t.Parallel()
 	inputToOutput := map[string]string{
 		"":      "",
 		"a":     "a",
@@ -84,13 +91,14 @@ func TestPathClean(t *testing.T) {
 		"/e/f/": "e/f",
 	}
 
-	c := NewClient()
+	c := vaku.NewClient()
 	for i, o := range inputToOutput {
 		assert.Equal(t, o, c.PathClean(i))
 	}
 }
 
 func TestKeyBase(t *testing.T) {
+	t.Parallel()
 	inputToOutput := map[string]string{
 		"":      "",
 		"/":     "",
@@ -100,13 +108,14 @@ func TestKeyBase(t *testing.T) {
 		"/e/f/": "f/",
 	}
 
-	c := NewClient()
+	c := vaku.NewClient()
 	for i, o := range inputToOutput {
 		assert.Equal(t, o, c.KeyBase(i))
 	}
 }
 
 func TestPathBase(t *testing.T) {
+	t.Parallel()
 	inputToOutput := map[string]string{
 		"":      "",
 		"/":     "",
@@ -116,7 +125,7 @@ func TestPathBase(t *testing.T) {
 		"/e/f/": "f",
 	}
 
-	c := NewClient()
+	c := vaku.NewClient()
 	for i, o := range inputToOutput {
 		assert.Equal(t, o, c.PathBase(i))
 	}
@@ -129,6 +138,7 @@ type TestSliceKeyPrefixData struct {
 }
 
 func TestSliceAddKeyPrefix(t *testing.T) {
+	t.Parallel()
 	tests := map[int]TestSliceKeyPrefixData{
 		1: {
 			inputSlice:  []string{"a"},
@@ -152,7 +162,7 @@ func TestSliceAddKeyPrefix(t *testing.T) {
 		},
 	}
 
-	c := NewClient()
+	c := vaku.NewClient()
 	for _, d := range tests {
 		c.SliceAddKeyPrefix(d.inputSlice, d.inputPrefix)
 		assert.Equal(t, d.output, d.inputSlice)
@@ -160,6 +170,7 @@ func TestSliceAddKeyPrefix(t *testing.T) {
 }
 
 func TestSliceTrimKeyPrefix(t *testing.T) {
+	t.Parallel()
 	tests := map[int]TestSliceKeyPrefixData{
 		1: {
 			inputSlice:  []string{"a"},
@@ -183,7 +194,7 @@ func TestSliceTrimKeyPrefix(t *testing.T) {
 		},
 	}
 
-	c := NewClient()
+	c := vaku.NewClient()
 	for _, d := range tests {
 		c.SliceTrimKeyPrefix(d.inputSlice, d.inputPrefix)
 		assert.Equal(t, d.output, d.inputSlice)

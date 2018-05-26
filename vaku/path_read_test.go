@@ -1,38 +1,40 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+
+	"github.com/Lingrino/vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type TestPathReadData struct {
-	input     *PathInput
+	input     *vaku.PathInput
 	output    map[string]interface{}
 	outputErr bool
 }
 
 func TestPathRead(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	t.Parallel()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestPathReadData{
 		1: {
-			input: NewPathInput("secretv1/test/foo"),
+			input: vaku.NewPathInput("secretv1/test/foo"),
 			output: map[string]interface{}{
 				"value": "bar",
 			},
 			outputErr: false,
 		},
 		2: {
-			input: NewPathInput("secretv2/test/foo"),
+			input: vaku.NewPathInput("secretv2/test/foo"),
 			output: map[string]interface{}{
 				"value": "bar",
 			},
 			outputErr: false,
 		},
 		3: {
-			input: NewPathInput("secretv1/test/inner/again/inner/UCrt6sZT"),
+			input: vaku.NewPathInput("secretv1/test/inner/again/inner/UCrt6sZT"),
 			output: map[string]interface{}{
 				"Eg5ljS7t": "6F1B5nBg",
 				"quqr32S5": "81iY4HAN",
@@ -41,7 +43,7 @@ func TestPathRead(t *testing.T) {
 			outputErr: false,
 		},
 		4: {
-			input: NewPathInput("secretv2/test/inner/again/inner/UCrt6sZT"),
+			input: vaku.NewPathInput("secretv2/test/inner/again/inner/UCrt6sZT"),
 			output: map[string]interface{}{
 				"Eg5ljS7t": "6F1B5nBg",
 				"quqr32S5": "81iY4HAN",
@@ -50,12 +52,12 @@ func TestPathRead(t *testing.T) {
 			outputErr: false,
 		},
 		5: {
-			input:     NewPathInput("secretv1/doesnotexist"),
+			input:     vaku.NewPathInput("secretv1/doesnotexist"),
 			output:    nil,
 			outputErr: true,
 		},
 		6: {
-			input:     NewPathInput("secretv2/doesnotexist"),
+			input:     vaku.NewPathInput("secretv2/doesnotexist"),
 			output:    nil,
 			outputErr: true,
 		},

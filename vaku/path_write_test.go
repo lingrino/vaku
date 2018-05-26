@@ -1,38 +1,39 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+
+	"github.com/Lingrino/vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type TestPathWriteData struct {
-	inputPath *PathInput
+	inputPath *vaku.PathInput
 	inputData map[string]interface{}
 	outputErr bool
 }
 
 func TestPathWrite(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestPathWriteData{
 		1: {
-			inputPath: NewPathInput("secretv1/writetest/foo"),
+			inputPath: vaku.NewPathInput("secretv1/writetest/foo"),
 			inputData: map[string]interface{}{
 				"value": "bar",
 			},
 			outputErr: false,
 		},
 		2: {
-			inputPath: NewPathInput("secretv2/writetest/foo"),
+			inputPath: vaku.NewPathInput("secretv2/writetest/foo"),
 			inputData: map[string]interface{}{
 				"value": "bar",
 			},
 			outputErr: false,
 		},
 		3: {
-			inputPath: NewPathInput("secretv1/writetest/bar/"),
+			inputPath: vaku.NewPathInput("secretv1/writetest/bar/"),
 			inputData: map[string]interface{}{
 				"Eg5ljS7t": "6F1B5nBg",
 				"quqr32S5": "81iY4HAN",
@@ -41,7 +42,7 @@ func TestPathWrite(t *testing.T) {
 			outputErr: false,
 		},
 		4: {
-			inputPath: NewPathInput("secretv2/writetest/bar/"),
+			inputPath: vaku.NewPathInput("secretv2/writetest/bar/"),
 			inputData: map[string]interface{}{
 				"Eg5ljS7t": "6F1B5nBg",
 				"quqr32S5": "81iY4HAN",
@@ -50,7 +51,7 @@ func TestPathWrite(t *testing.T) {
 			outputErr: false,
 		},
 		5: {
-			inputPath: NewPathInput("secretdoesnotexist/writetest/bar"),
+			inputPath: vaku.NewPathInput("secretdoesnotexist/writetest/bar"),
 			inputData: map[string]interface{}{
 				"Eg5ljS7t": "6F1B5nBg",
 				"quqr32S5": "81iY4HAN",

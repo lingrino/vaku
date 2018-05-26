@@ -1,7 +1,9 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+
+	"github.com/Lingrino/vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -12,8 +14,7 @@ type TestFolderWriteData struct {
 }
 
 func TestFolderWrite(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderWriteData{
 		1: {
@@ -83,7 +84,7 @@ func TestFolderWrite(t *testing.T) {
 		e := c.FolderWrite(d.input)
 		readBack := make(map[string]map[string]interface{})
 		for k := range d.input {
-			rb, _ := c.PathRead(NewPathInput(k))
+			rb, _ := c.PathRead(vaku.NewPathInput(k))
 			readBack[k] = rb
 		}
 		if d.outputErr {

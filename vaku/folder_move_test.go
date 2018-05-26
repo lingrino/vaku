@@ -1,50 +1,51 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+
+	"github.com/Lingrino/vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type TestFolderMoveData struct {
-	inputSource *PathInput
-	inputTarget *PathInput
+	inputSource *vaku.PathInput
+	inputTarget *vaku.PathInput
 	outputErr   bool
 }
 
 func TestFolderMove(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderMoveData{
 		1: {
-			inputSource: NewPathInput("secretv1/test/inner"),
-			inputTarget: NewPathInput("secretv1/foldermove"),
+			inputSource: vaku.NewPathInput("secretv1/test/inner"),
+			inputTarget: vaku.NewPathInput("secretv1/foldermove"),
 			outputErr:   false,
 		},
 		2: {
-			inputSource: NewPathInput("secretv2/test/inner"),
-			inputTarget: NewPathInput("secretv2/foldermove/inner"),
+			inputSource: vaku.NewPathInput("secretv2/test/inner"),
+			inputTarget: vaku.NewPathInput("secretv2/foldermove/inner"),
 			outputErr:   false,
 		},
 		3: {
-			inputSource: NewPathInput("secretv1/test"),
-			inputTarget: NewPathInput("secretv2/foldermove"),
+			inputSource: vaku.NewPathInput("secretv1/test"),
+			inputTarget: vaku.NewPathInput("secretv2/foldermove"),
 			outputErr:   false,
 		},
 		4: {
-			inputSource: NewPathInput("secretv2/test"),
-			inputTarget: NewPathInput("secretv1/foldermove"),
+			inputSource: vaku.NewPathInput("secretv2/test"),
+			inputTarget: vaku.NewPathInput("secretv1/foldermove"),
 			outputErr:   false,
 		},
 		5: {
-			inputSource: NewPathInput("secretdoesnotexist/test"),
-			inputTarget: NewPathInput("secretv1/test"),
+			inputSource: vaku.NewPathInput("secretdoesnotexist/test"),
+			inputTarget: vaku.NewPathInput("secretv1/test"),
 			outputErr:   true,
 		},
 		6: {
-			inputSource: NewPathInput("secretv1/test"),
-			inputTarget: NewPathInput("secretdoesnotexist/test"),
+			inputSource: vaku.NewPathInput("secretv1/test"),
+			inputTarget: vaku.NewPathInput("secretdoesnotexist/test"),
 			outputErr:   true,
 		},
 	}
@@ -62,7 +63,6 @@ func TestFolderMove(t *testing.T) {
 			assert.Error(t, sre)
 			assert.NoError(t, e)
 		}
-		// Reseed the vault server after each test
-		c.seed()
+		seed(t, c) // reseed every time for this test
 	}
 }

@@ -1,50 +1,52 @@
-package vaku
+package vaku_test
 
 import (
 	"testing"
+
+	"github.com/Lingrino/vaku/vaku"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type TestPathCopyData struct {
-	inputSource *PathInput
-	inputTarget *PathInput
+	inputSource *vaku.PathInput
+	inputTarget *vaku.PathInput
 	outputErr   bool
 }
 
 func TestPathCopy(t *testing.T) {
-	c := NewClient()
-	c.SimpleInit()
+	t.Parallel()
+	c := clientInitForTests(t)
 
 	tests := map[int]TestPathCopyData{
 		1: {
-			inputSource: NewPathInput("secretv1/test/foo"),
-			inputTarget: NewPathInput("secretv1/pathcopy/foo"),
+			inputSource: vaku.NewPathInput("secretv1/test/foo"),
+			inputTarget: vaku.NewPathInput("secretv1/pathcopy/foo"),
 			outputErr:   false,
 		},
 		2: {
-			inputSource: NewPathInput("secretv2/test/foo"),
-			inputTarget: NewPathInput("secretv2/pathcopy/foo"),
+			inputSource: vaku.NewPathInput("secretv2/test/foo"),
+			inputTarget: vaku.NewPathInput("secretv2/pathcopy/foo"),
 			outputErr:   false,
 		},
 		3: {
-			inputSource: NewPathInput("secretv1/test/fizz"),
-			inputTarget: NewPathInput("secretv2/pathcopy/fizz"),
+			inputSource: vaku.NewPathInput("secretv1/test/fizz"),
+			inputTarget: vaku.NewPathInput("secretv2/pathcopy/fizz"),
 			outputErr:   false,
 		},
 		4: {
-			inputSource: NewPathInput("secretv2/test/fizz"),
-			inputTarget: NewPathInput("secretv1/pathcopy/fizz"),
+			inputSource: vaku.NewPathInput("secretv2/test/fizz"),
+			inputTarget: vaku.NewPathInput("secretv1/pathcopy/fizz"),
 			outputErr:   false,
 		},
 		5: {
-			inputSource: NewPathInput("secretdoesnotexist/test/foo"),
-			inputTarget: NewPathInput("secretv1/test/foo"),
+			inputSource: vaku.NewPathInput("secretdoesnotexist/test/foo"),
+			inputTarget: vaku.NewPathInput("secretv1/test/foo"),
 			outputErr:   true,
 		},
 		6: {
-			inputSource: NewPathInput("secretv1/test/foo"),
-			inputTarget: NewPathInput("secretdoesnotexist/foo"),
+			inputSource: vaku.NewPathInput("secretv1/test/foo"),
+			inputTarget: vaku.NewPathInput("secretdoesnotexist/foo"),
 			outputErr:   true,
 		},
 	}
