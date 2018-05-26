@@ -9,7 +9,7 @@ jobs:
           VAULT_DEV_ROOT_TOKEN_ID: hunter2
           VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8300
     parallelism: 4
-    working_directory: /go/src/github.com/lingrino/vaku
+    working_directory: /go/src/vaku
     steps:
       - checkout
       - run:
