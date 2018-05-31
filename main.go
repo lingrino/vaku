@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -47,5 +48,13 @@ func main() {
 		},
 	}
 
-	search(data, "ls")
+	for _, v := range data {
+		js, _ := json.Marshal(v)
+		jss := string(js)
+		fmt.Println(jss)
+		// os.Stdout.Write(js)
+	}
+
+	// search(data, "ls")
+	// fmt.Printf("%#v", data)
 }
