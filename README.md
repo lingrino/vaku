@@ -20,7 +20,7 @@ exported functions are still subject to change.
 - [x] Path Copy
 - [x] Path Move
 - [x] Path Update
-- [ ] Path Search
+- [x] Path Search
 - [ ] Path Diff
 - [x] Folder List
 - [x] Folder Read
@@ -29,7 +29,7 @@ exported functions are still subject to change.
 - [ ] Folder Destroy (v2 mounts only)
 - [x] Folder Copy
 - [x] Folder Move
-- [ ] Folder Search
+- [x] Folder Search
 - [ ] Folder Diff
 - [ ] Folder Map
 - [ ] Policy Enforce
