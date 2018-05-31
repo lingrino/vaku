@@ -7,8 +7,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-// PathList takes in a PathInput, calls vault list, extracts
-// the secret, and returns a slice of strings
+// PathList takes in a PathInput, calls the native vault list on it, extracts
+// the secret (list of keys), and returns it. Note that any metadata or other
+// information returned by the list is thrown away.
 func (c *Client) PathList(i *PathInput) ([]string, error) {
 	var err error
 	var output []string

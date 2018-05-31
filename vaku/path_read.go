@@ -6,8 +6,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-// PathRead takes in a path, calls vault read, extracts
-// the secret, and returns it as a map of strings to values
+// PathRead takes in a PathInput, calls the native vault read on it, extracts the secret,
+// and returns it as a map of strings to values. Note that this is the way secrets
+// are represented in Vault, as map[string]interface{} (JSON)
 func (c *Client) PathRead(i *PathInput) (map[string]interface{}, error) {
 	var err error
 	var output map[string]interface{}

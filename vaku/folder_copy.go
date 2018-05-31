@@ -10,9 +10,10 @@ type folderCopyWorkerInput struct {
 	resultsC chan<- error
 }
 
-// FolderCopy takes in a source PathInput and target PathInput and copies
-// every key in the source to the target. Note that this will overwrite
-// any existing keys at the target paths.
+// FolderCopy takes in a source PathInput and target PathInput and copies every path in
+// the source to the target. Note that this will copy the input path if it is a secret and
+// all paths under the input path that result from calling FolderList() on that path. Also
+// note that this will overwrite any existing keys at the target paths.
 func (c *Client) FolderCopy(s *PathInput, t *PathInput) error {
 	var err error
 

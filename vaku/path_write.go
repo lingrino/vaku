@@ -4,8 +4,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// PathWrite takes in a path and data to write, and writes that
-// data to the specified path
+// PathWrite takes in a PathInput and data to written to that path. It then
+// calls the native vault write with that data at the specified path.
 func (c *Client) PathWrite(i *PathInput, d map[string]interface{}) error {
 	var err error
 

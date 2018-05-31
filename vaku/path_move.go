@@ -4,10 +4,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-// PathMove takes in a source PathInput and a target PathInput.
-// It then moves (destructively) the data from one path to another.
-// PathMove can move from one mount to another by default. Note that
-// this will overwrite any existing key at the target path.
+// PathMove calls PathCopy() with the same inputs followed by PathDelete() on
+// the source if the copy was successful. Note that this will overwrite any existing
+// keys at the target Path.
 func (c *Client) PathMove(s *PathInput, t *PathInput) error {
 	var err error
 

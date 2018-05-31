@@ -20,33 +20,10 @@ type folderReadWorkerInput struct {
 	resultsC chan<- *folderReadWorkerOutput
 }
 
-// FolderRead takes in a PathInput, reads all non-folders in that path
-// and outputs a map of paths to values at that path
+// FolderRead takes in a PathInput and calls PathRead() on all paths in that path
+// and all nested paths. It outputs a map of paths (strings) to PathRead() outputs
+// (map[string]interface{}).
 func (c *Client) FolderRead(i *PathInput) (map[string]map[string]interface{}, error) {
-	var err error
-	var output map[string]map[string]interface{}
-
-	// Get the keys to read
-	list, err := c.PathList(&PathInput{
-		Path:           i.Path,
-		TrimPathPrefix: false,
-	})
-	if err != nil {
-		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
-	}
-
-	// Hand over to folderReadCaller
-	output, err = c.folderReadCaller(i, list)
-	if err != nil {
-		return nil, errors.Wrapf(err, "Failed to read folder at %s", i.Path)
-	}
-
-	return output, err
-}
-
-// FolderReadAll takes in a PathInput, reads all keys in that path
-// and all nested paths and outputs a map of paths to values at that path
-func (c *Client) FolderReadAll(i *PathInput) (map[string]map[string]interface{}, error) {
 	var err error
 	var output map[string]map[string]interface{}
 
@@ -68,8 +45,34 @@ func (c *Client) FolderReadAll(i *PathInput) (map[string]map[string]interface{},
 	return output, err
 }
 
+// FolderReadOnce takes in a PathInput and calls PathRead() on all non-folders in that path.
+// It outputs a map of paths (strings) to PathRead() outputs (map[string]interface{}). This
+// function is different from FolderRead in that it reads the immediately nested keys, instead
+// of all keys in the folder and its subfolders.
+func (c *Client) FolderReadOnce(i *PathInput) (map[string]map[string]interface{}, error) {
+	var err error
+	var output map[string]map[string]interface{}
+
+	// Get the keys to read
+	list, err := c.PathList(&PathInput{
+		Path:           i.Path,
+		TrimPathPrefix: false,
+	})
+	if err != nil {
+		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
+	}
+
+	// Hand over to folderReadCaller
+	output, err = c.folderReadCaller(i, list)
+	if err != nil {
+		return nil, errors.Wrapf(err, "Failed to read folder at %s", i.Path)
+	}
+
+	return output, err
+}
+
 // folderReadCaller does the actual work of scheduling the reads and collecting the
-// results, since that work is shared for FolderRead and FolderReadAll
+// results, since that work is shared for FolderRead and FolderRead
 func (c *Client) folderReadCaller(i *PathInput, keys []string) (map[string]map[string]interface{}, error) {
 	var err error
 	var output map[string]map[string]interface{}

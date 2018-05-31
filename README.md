@@ -5,21 +5,18 @@
 
 Useful functions in Go for Hashicorp Vault.
 
-Currently under active devlopment.
+Please read the [godoc documentation](https://godoc.org/github.com/Lingrino/vaku/vaku) for all usage
+information and examples.
 
-[Documentation](https://godoc.org/github.com/Lingrino/vaku/vaku)
+Critical path and folder functions are finished. This project is currently under active devlopment and
+exported functions are still subject to change.
 
-Terminology:
-- A `path` in vault references a location. This location can either be a secret itself or a folder containing secrets. A clean path does not start or end with a `/`
-- A `key` is the same as a path *except* that it can end in a `/`, signifying for certain that it is a folder
-- A `folder` is a `key` that ends in a `/`. Folders are not secrets, but they contain secrets and/or other folders
-- In this repo all functions prefixed with `Path` act once on the path specified. `PathDelete()` calls delete on that path and stops. On the other hand, all function starting with `Folder` call their `Path` equivalent on all keys within, recursively. `PathDelete()` deletes a single `path` and `FolderDelete()` deletes an entire `folder`.
-
-Planned Functions:
+**Planned Functions:**
 - [x] Path List
 - [x] Path Read
 - [x] Path Write
 - [x] Path Delete
+- [ ] Path Destroy (v2 mounts only)
 - [x] Path Copy
 - [x] Path Move
 - [x] Path Update
@@ -29,9 +26,21 @@ Planned Functions:
 - [x] Folder Read
 - [x] Folder Write
 - [x] Folder Delete
+- [ ] Folder Destroy (v2 mounts only)
 - [x] Folder Copy
 - [x] Folder Move
 - [ ] Folder Search
 - [ ] Folder Diff
+- [ ] Folder Map
 - [ ] Policy Enforce
 - [ ] Approle Enforce
+- [ ] Userpass Enforce
+- [ ] Add to Vault CLI
+
+**Running Tests:**
+
+Tests are meant to be run side by side with a real Vault server docker image. This
+creates an external dependency for the tests but makes it much simpler to test different
+Vault versions and key/value mounts. With docker and docker-compose installed tests
+can be run with a simple `make test`. CircleCI will also build all commits and report
+status on all PRs.
