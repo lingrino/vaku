@@ -9,8 +9,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-var SeededOnce = false
+var seededOnce = false
 
+// Initialize a new simple vault client to be used for tets
 func clientInitForTests(t *testing.T) *vaku.Client {
 	// Initialize a new vault client
 	vclient, err := vapi.NewClient(vapi.DefaultConfig())
@@ -23,16 +24,16 @@ func clientInitForTests(t *testing.T) *vaku.Client {
 	client.Client = vclient
 
 	// Set the address and token to the test values
-	client.SetToken(VaultToken)
-	client.SetAddress(VaultAddr)
+	client.SetToken(vaultToken)
+	client.SetAddress(vaultAddr)
 
 	// Seed the client if it has never been seeded
-	if !SeededOnce {
+	if !seededOnce {
 		err = seed(t, client)
 		if err != nil {
 			t.Fatal(errors.Wrapf(err, "Failed to seed the vault client"))
 		}
-		SeededOnce = true
+		seededOnce = true
 	}
 	return client
 }

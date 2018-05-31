@@ -7,7 +7,11 @@ import (
 	"github.com/pkg/errors"
 )
 
-// PathInput is the input for List
+// PathInput is the standard way of representing a Vault path with Vaku. The only
+// required input is the Path itself. You can also specify TrimPathPrefix which
+// determines if returned paths include the full input Path or only the nested paths.
+// This struct also holds unexported data about the version of the key/value mount
+// that the path is in.
 type PathInput struct {
 	Path           string
 	TrimPathPrefix bool
@@ -18,8 +22,9 @@ type PathInput struct {
 	mountVersion   string
 }
 
-// NewPathInput takes in a Path and returns
-// the default PathInput. Only Path is required
+// NewPathInput takes in a Path and returns the default PathInput. This function can be
+// used to easily take a path string and use it as input for a Vaku function. TrimPathPrefix
+// is true by default, which produces behavior similar to the Vault API.
 func NewPathInput(p string) *PathInput {
 	return &PathInput{
 		Path:           p,
@@ -32,8 +37,10 @@ func NewPathInput(p string) *PathInput {
 	}
 }
 
-// InitPathInput fills in missing values from PathInput
-// with defaults and mount information
+// InitPathInput fills in missing values from PathInput with defaults and mount information. This
+// function will rarely be useful by end-users, but could lead to performance gain if multiple actions
+// are being taken on the same PathInput by preventing repeats of the relatively expensive task of
+// determining mount information about the path
 func (c *Client) InitPathInput(i *PathInput) error {
 	var err error
 

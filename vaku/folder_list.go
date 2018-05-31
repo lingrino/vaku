@@ -22,8 +22,9 @@ type folderListWorkerInput struct {
 	resultsWG *sync.WaitGroup
 }
 
-// FolderList takes in a PathInput and recursively walks PathList,
-// listing all paths nested in the folder
+// FolderList takes in a PathInput and walks the path by calling PathList
+// on the input path and all folders within that path as well. Returns the
+// results as a sorted slice of paths.
 func (c *Client) FolderList(i *PathInput) ([]string, error) {
 	var err error
 	var output []string

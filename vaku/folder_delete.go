@@ -10,7 +10,9 @@ type folderDeleteWorkerInput struct {
 	resultsC chan<- error
 }
 
-// FolderDelete takes in a path and deletes every key in that folder and all sub-folders
+// FolderDelete takes in a path and deletes every key in that folder and all sub-folders.
+// Note that this calls PathDelete() on every path found in the folder, and for v2 secret
+// mounts that means deleting the active version, but not all versions.
 func (c *Client) FolderDelete(i *PathInput) error {
 	var err error
 

@@ -4,9 +4,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-// PathUpdate takes in a path and new data to write. If then dates the data
-// at the existing path with the new data, merging the two with precedence given
-// to the new data.
+// PathUpdate takes in a path with existing data and new data to write to that path.
+// It then merges the data at the existing path with the new data, with precedence given
+// to the new data, and writes the merged data back to Vault
 func (c *Client) PathUpdate(i *PathInput, d map[string]interface{}) error {
 	var err error
 
