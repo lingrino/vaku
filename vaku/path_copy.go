@@ -4,10 +4,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-// PathCopy takes in a source PathInput and a target PathInput.
-// It then copies the data from one path to another. PathCopy can
-// copy from one mount to another by default. Note that this will
-// overwrite an existing key at the target path.
+// PathCopy takes in a source PathInput and a target PathInput. It then copies the data
+// from one path to another. Note that PathCopy can copy can be used to copy data from one
+// mount to another. Note also that this will overwrite any existing key at the target path.
 func (c *Client) PathCopy(s *PathInput, t *PathInput) error {
 	var err error
 

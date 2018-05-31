@@ -7,19 +7,18 @@ import (
 	"github.com/pkg/errors"
 )
 
-// MountInfoOutput holds output for MountInfo
-// FullPath is the original input path
-// mountPath is the path of the mount
-// MountlessPath is the FullPath with the mountPath removed
-// mountVersion is the version of the mount, or "unknown"
+// MountInfoOutput holds output for MountInfo. This data can be useful for
+// determining which key/value engine version a path is mounted on and acting
+// accordingly.
 type MountInfoOutput struct {
-	FullPath      string
-	MountPath     string
-	MountlessPath string
-	MountVersion  string
+	FullPath      string // The original input path
+	MountPath     string // The path of the mount
+	MountlessPath string // The FullPath with the MountPath removed
+	MountVersion  string // The version of the mount, default "unknown"
 }
 
-// MountInfo gets information for the mount of the specified path
+// MountInfo gets information about the mount at the specified path that can be
+// used to determine what actions to take on that path.
 func (c *Client) MountInfo(p string) (*MountInfoOutput, error) {
 	var err error
 	var output MountInfoOutput

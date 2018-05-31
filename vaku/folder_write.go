@@ -15,9 +15,11 @@ type writeInput struct {
 	data map[string]interface{}
 }
 
-// FolderWrite takes in a map of paths to data that should be written to that path.
-// Note that mount/version information is determined only once using a random path in the map
-// and cached for all future writes. Therefore this function cannot write to two mounts of
+// FolderWrite takes in a map of paths to data that should be written to that path. Users may
+// find this function difficult to call on its own because the input can be large and specific,
+// however the output of FolderRead matches the input of FolderWrite(), making them easy to use
+// together. Note that mount/version information is determined only once using a random path in
+// the map and cached for all future writes. Therefore this function cannot write to two mounts of
 // different versions in the same call.
 func (c *Client) FolderWrite(d map[string]map[string]interface{}) error {
 	var err error

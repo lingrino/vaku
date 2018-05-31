@@ -4,9 +4,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-// PathDelete takes in a path and deletes it. For v2
-// mounts this function only "marks the path as deleted",
-// it does nothing with the versions of the path
+// PathDelete takes in a PathInput and calls the native Vault delete on it. For v2
+// mounts this function only "marks the path as deleted", it does nothing with the
+// versions of the path
 func (c *Client) PathDelete(i *PathInput) error {
 	var err error
 

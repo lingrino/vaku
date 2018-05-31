@@ -10,9 +10,8 @@ type folderMoveWorkerInput struct {
 	resultsC chan<- error
 }
 
-// FolderMove takes in a source PathInput and target PathInput and moves
-// every key in the source to the target. Note that this will overwrite
-// any existing keys at the target paths.
+// FolderMove calls FolderCopy() with the same inputs followed by FolderDelete()
+// on the source path if the copy was successful.
 func (c *Client) FolderMove(s *PathInput, t *PathInput) error {
 	var err error
 

@@ -14,7 +14,7 @@ type TestFolderReadData struct {
 	outputErr bool
 }
 
-func TestFolderRead(t *testing.T) {
+func TestFolderReadOnce(t *testing.T) {
 	t.Parallel()
 	c := clientInitForTests(t)
 
@@ -106,7 +106,7 @@ func TestFolderRead(t *testing.T) {
 	}
 
 	for _, d := range tests {
-		o, e := c.FolderRead(d.input)
+		o, e := c.FolderReadOnce(d.input)
 		assert.Equal(t, d.output, o)
 		if d.outputErr {
 			assert.Error(t, e)
@@ -116,7 +116,7 @@ func TestFolderRead(t *testing.T) {
 	}
 }
 
-func TestFolderReadAll(t *testing.T) {
+func TestFolderRead(t *testing.T) {
 	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderReadData{
@@ -233,7 +233,7 @@ func TestFolderReadAll(t *testing.T) {
 	}
 
 	for _, d := range tests {
-		o, e := c.FolderReadAll(d.input)
+		o, e := c.FolderRead(d.input)
 		assert.Equal(t, d.output, o)
 		if d.outputErr {
 			assert.Error(t, e)
