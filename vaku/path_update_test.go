@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/Lingrino/vaku/vaku"
-
 	"github.com/stretchr/testify/assert"
 )
 

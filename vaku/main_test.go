@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	"github.com/Lingrino/vaku/vaku"
+	"github.com/pkg/errors"
 
 	vapi "github.com/hashicorp/vault/api"
-	"github.com/pkg/errors"
 )
 
 var seededOnce = false
