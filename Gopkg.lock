@@ -11,7 +11,7 @@
   branch = "master"
   name = "github.com/golang/snappy"
   packages = ["."]
-  revision = "553a641470496b2327abcac10b36396bd98e45c9"
+  revision = "2e65f85255dbc3072edf28d6b5b8efc472979f5a"
 
 [[projects]]
   branch = "master"
@@ -72,10 +72,16 @@
   version = "v0.10.1"
 
 [[projects]]
+  name = "github.com/inconshreveable/mousetrap"
+  packages = ["."]
+  revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
+  version = "v1.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/mitchellh/go-homedir"
   packages = ["."]
-  revision = "b8bc1bf767474819792c23f32d8286a45736f1c6"
+  revision = "3864e76763d94a6df2f9960b16a20a33da9f9a66"
 
 [[projects]]
   branch = "master"
@@ -108,6 +114,18 @@
   version = "1.0.0"
 
 [[projects]]
+  name = "github.com/spf13/cobra"
+  packages = ["."]
+  revision = "ef82de70bb3f60c65fb8eebacbb2d122ef517385"
+  version = "v0.0.3"
+
+[[projects]]
+  name = "github.com/spf13/pflag"
+  packages = ["."]
+  revision = "583c0c0531f06d5278b7d917446061adc344b5cd"
+  version = "v1.0.1"
+
+[[projects]]
   name = "github.com/stretchr/testify"
   packages = ["assert"]
   revision = "12b6f73e6084dad08a7c6e575284b177ecafbc71"
@@ -122,7 +140,7 @@
     "http2/hpack",
     "idna"
   ]
-  revision = "2491c5de3490fced2f6cff376127c667efeed857"
+  revision = "1e491301e022f8f977054da4c2d852decd59571f"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -148,6 +166,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c49c20a66a3c89fcf73c4938512cdb714c3dd6f0ab8e5ffec42284f67cd6941f"
+  inputs-digest = "81ead24d54d46485e1d153a74b614067c16d38d6e5350d78631ef22c13ad86cb"
   solver-name = "gps-cdcl"
   solver-version = 1
