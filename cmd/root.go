@@ -13,11 +13,17 @@ var rootCmd = &cobra.Command{
 	Long: `Vaku CLI extends the official Vault CLI with useful high-level functions
 
 Built by Sean Lingren <srlingren@gmail.com>
-CLI documentation is available using --help
+CLI documentation is available using 'vaku help [cmd]'
 API documentation is available at https://godoc.org/github.com/Lingrino/vaku/vaku`,
+
+	// Auth to vault on all commands
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		authVGC()
+	},
 }
 
-// Execute initializes and runs the vaku command
+// Execute adds all child commands to the root command and sets flags appropriately.
+// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

@@ -5,11 +5,14 @@
 
 Useful functions in Go for Hashicorp Vault.
 
-Please read the [godoc documentation](https://godoc.org/github.com/Lingrino/vaku/vaku) for all usage
-information and examples.
+Please read the [godoc documentation](https://godoc.org/github.com/Lingrino/vaku/vaku)
+for all API usage information and examples.
 
-Critical path and folder functions are finished. This project is currently under active devlopment and
-exported functions are still subject to change.
+Please call `vaku help` in your terminal for all documentation and usage information
+regarding the Vaku CLI
+
+Vaku is now V1. The API and CLI will be backwards compatible until the next point release.
+See the checklist below for progress and upcoming features.
 
 **Planned Functions:**
 - [x] Path List
@@ -35,7 +38,7 @@ exported functions are still subject to change.
 - [ ] Policy Enforce
 - [ ] Approle Enforce
 - [ ] Userpass Enforce
-- [ ] Add to Vault CLI
+- [x] Add CLI commands
 
 **Running Tests:**
 
