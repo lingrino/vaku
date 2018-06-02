@@ -16,7 +16,6 @@ var pathReadCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		input := vaku.NewPathInput(args[0])
-		input.TrimPathPrefix = trimPathPrefix
 
 		output, err := vgc.PathRead(input)
 		if err != nil {
