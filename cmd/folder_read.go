@@ -10,7 +10,7 @@ import (
 
 var folderReadCmd = &cobra.Command{
 	Use:   "read [path]",
-	Short: "Read a vault key/value folder",
+	Short: "Recursively read a vault folder",
 
 	Args: cobra.ExactArgs(1),
 

@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/Lingrino/vaku/vaku"
 	"github.com/spf13/cobra"
 )
@@ -14,8 +12,10 @@ var versionCmd = &cobra.Command{
 	Args: cobra.NoArgs,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("CLI Version: 1.0")
-		fmt.Println("API Version:", vaku.Version())
+		print(map[string]interface{}{
+			"CLI": "1.0",
+			"API": vaku.Version(),
+		})
 	},
 }
 

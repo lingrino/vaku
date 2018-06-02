@@ -38,7 +38,10 @@ See the checklist below for progress and upcoming features.
 - [ ] Policy Enforce
 - [ ] Approle Enforce
 - [ ] Userpass Enforce
-- [x] Add CLI commands
+
+CLI Improvements:
+- [ ] Add write commands
+- [ ] Support more than JSON output
 
 **Running Tests:**
 

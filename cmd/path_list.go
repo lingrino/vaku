@@ -10,7 +10,7 @@ import (
 
 var pathListCmd = &cobra.Command{
 	Use:   "list [path]",
-	Short: "List a vault key/value path",
+	Short: "List a vault path",
 
 	Args: cobra.ExactArgs(1),
 

@@ -10,7 +10,7 @@ import (
 
 var pathDeleteCmd = &cobra.Command{
 	Use:   "delete [path]",
-	Short: "Delete a vault key/value path",
+	Short: "Delete a vault path",
 
 	Args: cobra.ExactArgs(1),
 

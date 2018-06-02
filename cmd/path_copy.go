@@ -10,7 +10,7 @@ import (
 
 var pathCopyCmd = &cobra.Command{
 	Use:   "copy [source folder] [target path]",
-	Short: "Copy a vault key/value path",
+	Short: "Copy a vault path from one location to another",
 
 	Args: cobra.ExactArgs(2),
 

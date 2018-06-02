@@ -11,7 +11,7 @@ import (
 
 var folderListCmd = &cobra.Command{
 	Use:   "list [path]",
-	Short: "List a vault key/value folder",
+	Short: "Recursively list a vault folder",
 
 	Args: cobra.ExactArgs(1),
 
@@ -23,10 +23,11 @@ var folderListCmd = &cobra.Command{
 		if err != nil {
 			fmt.Printf("%s", errors.Wrapf(err, "Failed to list folder %s", args[0]))
 			os.Exit(1)
+		} else {
+			print(map[string]interface{}{
+				args[0]: output,
+			})
 		}
-		print(map[string]interface{}{
-			args[0]: output,
-		})
 	},
 }
 

@@ -10,7 +10,7 @@ import (
 
 var pathReadCmd = &cobra.Command{
 	Use:   "read [path]",
-	Short: "Read a vault key/value path",
+	Short: "Read a vault path",
 
 	Args: cobra.ExactArgs(1),
 

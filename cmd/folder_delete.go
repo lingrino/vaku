@@ -10,7 +10,7 @@ import (
 
 var folderDeleteCmd = &cobra.Command{
 	Use:   "delete [path]",
-	Short: "Delete a vault key/value folder",
+	Short: "Recursively delete an entire vault folder",
 
 	Args: cobra.ExactArgs(1),
 

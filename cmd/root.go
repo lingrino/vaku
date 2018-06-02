@@ -12,6 +12,8 @@ var rootCmd = &cobra.Command{
 	Short: "Vaku CLI extends the official Vault CLI with useful high-level functions",
 	Long: `Vaku CLI extends the official Vault CLI with useful high-level functions
 
+Currently only supports json output
+
 Built by Sean Lingren <srlingren@gmail.com>
 CLI documentation is available using 'vaku help [cmd]'
 API documentation is available at https://godoc.org/github.com/Lingrino/vaku/vaku`,
