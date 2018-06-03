@@ -8,7 +8,7 @@ Useful functions in Go for Hashicorp Vault.
 Please read the [godoc documentation](https://godoc.org/github.com/Lingrino/vaku/vaku)
 for all API usage information and examples.
 
-Please call `vaku help` in your terminal for all documentation and usage information
+Please use `vaku help` in your terminal for all documentation and usage information
 regarding the Vaku CLI
 
 Vaku is now V1. The API and CLI will be backwards compatible until the next point release.

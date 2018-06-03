@@ -6,6 +6,11 @@ builds:
       - linux
     goarch:
       - amd64
-
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - Merge pull request
+    - Merge branch
 git:
   short_hash: true
