@@ -5,13 +5,16 @@
 
 Useful functions in Go for Hashicorp Vault.
 
-Please read the [godoc documentation](https://godoc.org/github.com/Lingrino/vaku/vaku) for all usage
-information and examples.
+Please read the [godoc documentation](https://godoc.org/github.com/Lingrino/vaku/vaku)
+for all API usage information and examples.
 
-Critical path and folder functions are finished. This project is currently under active devlopment and
-exported functions are still subject to change.
+Please call `vaku help` in your terminal for all documentation and usage information
+regarding the Vaku CLI
 
-**Planned Functions:**
+Vaku is now V1. The API and CLI will be backwards compatible until the next point release.
+See the checklist below for progress and upcoming features.
+
+**API Functionality:**
 - [x] Path List
 - [x] Path Read
 - [x] Path Write
@@ -35,7 +38,16 @@ exported functions are still subject to change.
 - [ ] Policy Enforce
 - [ ] Approle Enforce
 - [ ] Userpass Enforce
-- [ ] Add to Vault CLI
+- [ ] Add Timeouts to Workers
+- [ ] Support Wrapped Secrets
+
+**CLI Improvements:**
+- [ ] Add tests
+- [ ] Add to homebrew
+- [ ] Add example usage
+- [ ] Support concurrency flag
+- [ ] Support more than JSON output
+- [ ] Add write/update commands (native CLI probably better for writing data)
 
 **Running Tests:**
 

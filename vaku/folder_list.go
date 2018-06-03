@@ -34,8 +34,13 @@ func (c *Client) FolderList(i *PathInput) ([]string, error) {
 	i.TrimPathPrefix = false
 
 	// Concurrency tools for waiting on workers
-	inputsC := make(chan *PathInput, 5)
-	resultsC := make(chan *folderListWorkerOutput, 5)
+	// NOTE - The '500' chosen here is rather arbitrary, the value used to be only '5'
+	// but it could cause deadlock if there were more than 5 folders to be listed in a row
+	// technically this means for a VERY large list with 500 folders in a row this will
+	// also deadlock. This can be mitigated with timeouts and solved by looping better across
+	// the inputs channel and breaking up the work more so as not to fill the channel
+	inputsC := make(chan *PathInput, 500)
+	resultsC := make(chan *folderListWorkerOutput, 500)
 	var inputsWG sync.WaitGroup
 	var resultsWG sync.WaitGroup
 

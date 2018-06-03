@@ -6,3 +6,6 @@ fmt:
 test:
 	docker-compose up -d
 	go test -cover -v ./...
+
+release:
+	goreleaser

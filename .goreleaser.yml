@@ -1,0 +1,11 @@
+builds:
+  - binary: vaku
+    goos:
+      - windows
+      - darwin
+      - linux
+    goarch:
+      - amd64
+
+git:
+  short_hash: true
