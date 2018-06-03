@@ -15,3 +15,6 @@
 
 # Vendored dependencies
 vendor/
+
+# Binaries
+dist/
