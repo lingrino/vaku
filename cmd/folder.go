@@ -10,5 +10,5 @@ var folderCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(folderCmd)
+	vakuCmd.AddCommand(folderCmd)
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
+var vakuCmd = &cobra.Command{
 	Use:   "vaku",
 	Short: "Vaku CLI extends the official Vault CLI with useful high-level functions",
 	Long: `Vaku CLI extends the official Vault CLI with useful high-level functions
@@ -31,9 +31,9 @@ API documentation is available at https://godoc.org/github.com/Lingrino/vaku/vak
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
+// This is called by main.main(). It only needs to happen once to the vakuCmd.
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
+	if err := vakuCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}

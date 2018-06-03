@@ -10,5 +10,5 @@ var pathCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(pathCmd)
+	vakuCmd.AddCommand(pathCmd)
 }
