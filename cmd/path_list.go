@@ -16,7 +16,7 @@ var pathListCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		input := vaku.NewPathInput(args[0])
-		input.TrimPathPrefix = trimPathPrefix
+		input.TrimPathPrefix = !noTrimPathPrefix
 
 		output, err := vgc.PathList(input)
 		if err != nil {
@@ -31,5 +31,5 @@ var pathListCmd = &cobra.Command{
 
 func init() {
 	pathCmd.AddCommand(pathListCmd)
-	pathListCmd.PersistentFlags().BoolVarP(&trimPathPrefix, "trim-path-prefix", "t", true, "Output paths with the input path trimmed (like Vault CLI)")
+	pathListCmd.PersistentFlags().BoolVarP(&noTrimPathPrefix, "no-trim-path-prefix", "T", true, "Output full paths instead of paths with the input path trimmed")
 }
