@@ -1,26 +1,45 @@
 version: 2
 jobs:
-  build:
-    docker:
-      - image: circleci/golang:1.10.1
-      - image: vault:0.10.1
-        environment:
-          SKIP_SETCAP: true
-          VAULT_DEV_ROOT_TOKEN_ID: hunter2
-          VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8300
-    parallelism: 4
-    working_directory: /go/src/github.com/Lingrino/vaku
-    steps:
-      - checkout
-      - run:
-          name: Make sure there's nothing to go fmt
-          command: test -z $(gofmt -l -w -s vaku/)
-      - run:
-          name: Install dep
-          command: go get -u github.com/golang/dep/cmd/dep
-      - run:
-          name: Get Packages
-          command: dep ensure
-      - run:
-          name: Run Tests
-          command: go test -cover -v ./...
+    build:
+        docker:
+            - image: circleci/golang:1.10.1
+            - image: vault:0.10.1
+            environment:
+                SKIP_SETCAP: true
+                VAULT_DEV_ROOT_TOKEN_ID: hunter2
+                VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8300
+        parallelism: 4
+        working_directory: /go/src/github.com/Lingrino/vaku
+        steps:
+            - checkout
+            - run:
+                name: Make sure there's nothing to go fmt
+                command: test -z $(gofmt -l -w -s vaku/)
+            - run:
+                name: Install dep
+                command: go get -u github.com/golang/dep/cmd/dep
+            - run:
+                name: Get Packages
+                command: dep ensure
+            - run:
+                name: Run Tests
+                command: go test -cover -v ./...
+    deploy:
+        working_directory: /go/src/github.com/Lingrino/vaku
+        steps:
+            - checkout
+            - run:
+                name: Build and deploy a new version
+                command: curl -sL https://git.io/goreleaser | bash
+
+workflows:
+    version: 2
+    build-and-deploy:
+        jobs:
+            - build
+            - deploy:
+                requires:
+                    - build
+                filters:
+                    tags:
+                        only: /v[0-9]+(\.[0-9]+)*(-.*)*/
