@@ -14,7 +14,7 @@ regarding the Vaku CLI
 Vaku is now V1. The API and CLI will be backwards compatible until the next point release.
 See the checklist below for progress and upcoming features.
 
-**Planned Functions:**
+**API Functionality:**
 - [x] Path List
 - [x] Path Read
 - [x] Path Write
@@ -38,10 +38,14 @@ See the checklist below for progress and upcoming features.
 - [ ] Policy Enforce
 - [ ] Approle Enforce
 - [ ] Userpass Enforce
+- [ ] Support Wrapped Secrets
 
-CLI Improvements:
-- [ ] Add write commands
+**CLI Improvements:**
+- [ ] Add tests
+- [ ] Add to homebrew
+- [ ] Add example usage
 - [ ] Support more than JSON output
+- [ ] Add write/update commands (native CLI probably better for writing data)
 
 **Running Tests:**
 

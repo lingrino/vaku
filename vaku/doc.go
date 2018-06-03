@@ -17,7 +17,7 @@ Summary
 
 Vaku is intended to provide useful functions for Vault that let users operate securely and efficiently. Using
 the official Vault API and CLI it is only possible to take CRUD actions on individual paths, however normal
-usage of vault will eventually lead to a desire for more advanced function like the ability to copy or move
+usage of vault will eventually lead to a desire for more advanced functions like the ability to copy or move
 paths or even entire folders. The functions in this package can be broken into the distinct categroies below.
 
 Helpers

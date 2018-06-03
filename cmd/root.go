@@ -12,7 +12,13 @@ var rootCmd = &cobra.Command{
 	Short: "Vaku CLI extends the official Vault CLI with useful high-level functions",
 	Long: `Vaku CLI extends the official Vault CLI with useful high-level functions
 
-Currently only supports json output
+The Vaku CLI is intended to be used side by side with the official Vault CLI,
+and only provides functions to extend the existing functionality.
+
+Vaku does not log you in to vault or help you with getting a token. Like the CLI,
+it will look for a token first at the VAULT_TOKEN env var and then in ~/.vault-token
+
+Currently only supports json output.
 
 Built by Sean Lingren <srlingren@gmail.com>
 CLI documentation is available using 'vaku help [cmd]'
