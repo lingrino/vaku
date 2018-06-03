@@ -38,12 +38,14 @@ See the checklist below for progress and upcoming features.
 - [ ] Policy Enforce
 - [ ] Approle Enforce
 - [ ] Userpass Enforce
+- [ ] Add Timeouts to Workers
 - [ ] Support Wrapped Secrets
 
 **CLI Improvements:**
 - [ ] Add tests
 - [ ] Add to homebrew
 - [ ] Add example usage
+- [ ] Support concurrency flag
 - [ ] Support more than JSON output
 - [ ] Add write/update commands (native CLI probably better for writing data)
 
