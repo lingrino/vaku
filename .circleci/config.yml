@@ -25,6 +25,8 @@ jobs:
           name: Run Tests
           command: go test -cover -v ./...
   deploy:
+    docker:
+      image: circleci/golang:1.10.1
     working_directory: /go/src/github.com/Lingrino/vaku
     steps:
       - checkout
