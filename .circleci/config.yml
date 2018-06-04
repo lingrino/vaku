@@ -45,7 +45,6 @@ jobs:
   deploy-www:
     docker:
       - image: circleci/python:3.6
-    working_directory: /go/src/github.com/Lingrino/vaku
     steps:
       - checkout
       - run:
@@ -75,6 +74,6 @@ workflows:
             branches:
               ignore: /.*/
       - deploy-www:
-          filters:
-            branches:
-              only: master
+          # filters:
+          #   branches:
+          #     only: master
