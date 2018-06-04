@@ -42,6 +42,21 @@ jobs:
       - run:
           name: Build and deploy a new version
           command: curl -sL https://git.io/goreleaser | bash
+  deploy-www:
+    docker:
+      - image: circleci/python:3.6
+    working_directory: /go/src/github.com/Lingrino/vaku
+    steps:
+      - checkout
+      - run:
+          name: Install awscli
+          command: pip install --no-warn-script-location --user awscli
+      - run:
+          name: Upload the new site to S3
+          command: /home/circleci/.local/bin/aws --region us-east-2 s3 sync www/ s3://vaku.io-20180604033539915400000001
+      - run:
+          name: Invalidate the cloudfront cache
+          command: /home/circleci/.local/bin/aws cloudfront create-invalidation --distribution-id E2F9NPK13ZLB4G --paths "/*"
 
 workflows:
   version: 2
@@ -59,3 +74,7 @@ workflows:
               only: /v[0-9]+(\.[0-9]+)*(-.*)*/
             branches:
               ignore: /.*/
+      - deploy-www:
+          filters:
+            branches:
+              only: master
