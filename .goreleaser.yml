@@ -14,20 +14,19 @@ builds:
       - linux
     goarch:
       - amd64
-brew:
-  name: vaku
-  github:
-    owner: lingrino
-    name: homebrew-tap
-  commit_author:
-    name: lingrino
-    email: srlingren@gmail.com
-  folder: Formula
-  homepage: "https://vaku.io"
-  description: "A CLI and Go API to extend the official Vault client"
-  skip_upload: true
-  dependencies:
-    - vault
-  build_dependencies:
-    - make
-    - gcc
+# brew:
+#   name: vaku
+#   homepage: "https://vaku.io"
+#   description: "A CLI and Go API to extend the official Vault client"
+#   skip_upload: true
+#   github:
+#     owner: lingrino
+#     name: homebrew-vaku
+#   commit_author:
+#     name: lingrino
+#     email: srlingren@gmail.com
+#   dependencies:
+#     - vault
+#   build_dependencies:
+#     - make
+#     - gcc

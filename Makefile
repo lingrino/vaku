@@ -1,4 +1,4 @@
-.PHONY: test
+.PHONY: fmt test release install
 
 fmt:
 	gofmt -l -w -s vaku/
@@ -9,3 +9,6 @@ test:
 
 release:
 	goreleaser
+
+install:
+	go install github.com/Lingrino/vaku
