@@ -74,6 +74,6 @@ workflows:
             branches:
               ignore: /.*/
       - deploy-www:
-          # filters:
-          #   branches:
-          #     only: master
+          filters:
+            branches:
+              only: master
