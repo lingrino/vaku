@@ -1,11 +1,3 @@
-builds:
-  - binary: vaku
-    goos:
-      - windows
-      - darwin
-      - linux
-    goarch:
-      - amd64
 changelog:
   sort: asc
   filters:
@@ -14,3 +6,28 @@ changelog:
     - Merge branch
 git:
   short_hash: true
+builds:
+  - binary: vaku
+    goos:
+      - windows
+      - darwin
+      - linux
+    goarch:
+      - amd64
+brew:
+  name: vaku
+  github:
+    owner: lingrino
+    name: homebrew-tap
+  commit_author:
+    name: lingrino
+    email: srlingren@gmail.com
+  folder: Formula
+  homepage: "https://vaku.io"
+  description: "A CLI and Go API to extend the official Vault client"
+  skip_upload: true
+  dependencies:
+    - vault
+  build_dependencies:
+    - make
+    - gcc
