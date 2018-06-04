@@ -45,7 +45,6 @@ jobs:
   deploy-www:
     docker:
       - image: circleci/python:3.6
-    working_directory: /go/src/github.com/Lingrino/vaku
     steps:
       - checkout
       - run:
