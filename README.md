@@ -3,7 +3,7 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/Lingrino/vaku)](https://goreportcard.com/report/github.com/Lingrino/vaku)
 
-Useful functions in Go for Hashicorp Vault.
+A CLI and Go API that add useful functions on top of Hashicorp Vault.
 
 Please read the [godoc documentation](https://godoc.org/github.com/Lingrino/vaku/vaku)
 for all API usage information and examples.
