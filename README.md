@@ -1,5 +1,6 @@
+[![Vaku](www/assets/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
+
 # vaku
-[![Vaku](www/assets/logo-vaku.png?raw=true)](www/assets/logo-vaku.png "Vaku")
 
 [![CircleCI](https://circleci.com/gh/Lingrino/vaku.svg?style=svg)](https://circleci.com/gh/Lingrino/vaku)
 
