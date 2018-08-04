@@ -20,7 +20,7 @@ jobs:
           command: go get -u github.com/golang/dep/cmd/dep
       - run:
           name: Make sure there's no packages to update
-          command: test -z $(dep ensure -update -dry-run)
+          command: test -z $(dep ensure -no-vendor -dry-run)
       - run:
           name: Get Packages
           command: dep ensure
