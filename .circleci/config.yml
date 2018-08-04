@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.10.3
-      - image: vault:0.10.3
+      - image: vault:0.10.4
         environment:
           SKIP_SETCAP: true
           VAULT_DEV_ROOT_TOKEN_ID: hunter2
@@ -20,7 +20,7 @@ jobs:
           command: go get -u github.com/golang/dep/cmd/dep
       - run:
           name: Make sure there's no packages to update
-          command: test -z $(dep ensure -update -dry-run)
+          command: test -z $(dep ensure -no-vendor -dry-run)
       - run:
           name: Get Packages
           command: dep ensure
@@ -44,7 +44,7 @@ jobs:
           command: curl -sL https://git.io/goreleaser | bash
   deploy-www:
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.7
     steps:
       - checkout
       - run:
