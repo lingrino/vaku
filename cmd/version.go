@@ -13,7 +13,7 @@ var versionCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		print(map[string]interface{}{
-			"CLI": "1.0.0",
+			"CLI": version,
 			"API": vaku.Version(),
 		})
 	},
