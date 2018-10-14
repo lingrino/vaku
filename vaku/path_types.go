@@ -57,12 +57,15 @@ func (c *Client) InitPathInput(i *PathInput) error {
 	if i.mountPath != "" && i.mountVersion != "" {
 		i.mountlessPath = strings.TrimPrefix(i.Path, i.mountPath)
 		if i.mountVersion == "2" {
-			if i.opType == "list" {
+			if i.opType == "list" || i.opType == "destroy" {
 				i.opPath = c.PathJoin(i.mountPath, "metadata", i.mountlessPath)
 			} else if i.opType == "read" || i.opType == "write" || i.opType == "delete" {
 				i.opPath = c.PathJoin(i.mountPath, "data", i.mountlessPath)
 			}
 		} else {
+			if i.opType == "destroy" {
+				return fmt.Errorf("The 'destroy' command is only supported on V2 mounts")
+			}
 			i.opPath = c.PathJoin(i.Path)
 		}
 	} else if i.opPath == "" || i.mountPath == "" || i.mountVersion == "" || i.mountlessPath == "" {
@@ -71,12 +74,15 @@ func (c *Client) InitPathInput(i *PathInput) error {
 			return errors.Wrapf(err, "Failed to describe mount for path %s", i.Path)
 		}
 		if m.MountVersion == "2" {
-			if i.opType == "list" {
+			if i.opType == "list" || i.opType == "destroy" {
 				i.opPath = c.PathJoin(m.MountPath, "metadata", m.MountlessPath)
 			} else if i.opType == "read" || i.opType == "write" || i.opType == "delete" {
 				i.opPath = c.PathJoin(m.MountPath, "data", m.MountlessPath)
 			}
 		} else {
+			if i.opType == "destroy" {
+				return fmt.Errorf("The 'destroy' command is only supported on V2 mounts")
+			}
 			i.opPath = c.PathJoin(i.Path)
 		}
 

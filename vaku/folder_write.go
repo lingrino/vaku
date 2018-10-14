@@ -77,7 +77,7 @@ func (c *Client) folderWriteWorker(i *folderWriteWorkerInput) {
 		if more {
 			err = c.PathWrite(id.path, id.data)
 			if err != nil {
-				i.resultsC <- errors.Wrapf(err, "Failed to write path %s", id.path)
+				i.resultsC <- errors.Wrapf(err, "Failed to write path %s", id.path.Path)
 				continue
 			}
 			i.resultsC <- nil

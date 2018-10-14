@@ -4,19 +4,18 @@ import (
 	"github.com/pkg/errors"
 )
 
-// folderDeleteWorkerInput takes input/output channels for input to the job
-type folderDeleteWorkerInput struct {
+// folderDestroyWorkerInput takes input/output channels for input to the job
+type folderDestroyWorkerInput struct {
 	inputsC  <-chan *PathInput
 	resultsC chan<- error
 }
 
-// FolderDelete takes in a path and deletes every key in that folder and all sub-folders.
-// Note that this calls PathDelete() on every path found in the folder, and for v2 secret
-// mounts that means deleting the active version, but not all versions.
-func (c *Client) FolderDelete(i *PathInput) error {
+// FolderDestroy takes in a path and destroys every key in that folder and all sub-folders.
+// Note that this function only works on V2 mounts and that it destroys ALL versions of ALL keys
+func (c *Client) FolderDestroy(i *PathInput) error {
 	var err error
 
-	// Get the keys to delete
+	// Get the keys to destroy
 	list, err := c.FolderList(&PathInput{
 		Path:           i.Path,
 		TrimPathPrefix: false,
@@ -26,7 +25,7 @@ func (c *Client) FolderDelete(i *PathInput) error {
 	}
 
 	// Init the path
-	i.opType = "delete"
+	i.opType = "destroy"
 	c.InitPathInput(i)
 
 	// Concurrency channels for workers
@@ -35,13 +34,13 @@ func (c *Client) FolderDelete(i *PathInput) error {
 
 	// Spawn workers equal to MaxConcurrency
 	for w := 1; w <= MaxConcurrency; w++ {
-		go c.folderDeleteWorker(&folderDeleteWorkerInput{
+		go c.folderDestroyWorker(&folderDestroyWorkerInput{
 			inputsC:  inputsC,
 			resultsC: resultsC,
 		})
 	}
 
-	// Add all paths to delete to the inputs channel
+	// Add all paths to destroy to the inputs channel
 	for _, p := range list {
 		inputsC <- &PathInput{
 			Path:          p,
@@ -56,22 +55,22 @@ func (c *Client) FolderDelete(i *PathInput) error {
 	for j := 0; j < len(list); j++ {
 		o := <-resultsC
 		if o != nil {
-			err = errors.Wrap(o, "Failed to delete path")
+			err = errors.Wrap(o, "Failed to destroy path")
 		}
 	}
 
 	return err
 }
 
-// folderDeleteWorker does the work of reading a path from a channel and deleting it
-func (c *Client) folderDeleteWorker(i *folderDeleteWorkerInput) {
+// folderDestroyWorker does the work of reading a path from a channel and destroying it
+func (c *Client) folderDestroyWorker(i *folderDestroyWorkerInput) {
 	var err error
 	for {
 		path, more := <-i.inputsC
 		if more {
-			err = c.PathDelete(path)
+			err = c.PathDestroy(path)
 			if err != nil {
-				i.resultsC <- errors.Wrapf(err, "Failed to delete path %s", path.Path)
+				i.resultsC <- errors.Wrapf(err, "Failed to destroy path %s", path.Path)
 				continue
 			}
 			i.resultsC <- nil
