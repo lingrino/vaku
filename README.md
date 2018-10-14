@@ -1,6 +1,6 @@
-[![Vaku](www/assets/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
-
 # vaku
+
+[![Vaku](www/assets/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
 
 [![CircleCI](https://circleci.com/gh/Lingrino/vaku.svg?style=svg)](https://circleci.com/gh/Lingrino/vaku)
 
@@ -18,11 +18,12 @@ Vaku is now V1. The API and CLI will be backwards compatible until the next poin
 See the checklist below for progress and upcoming features.
 
 **API Functionality:**
+
 - [x] Path List
 - [x] Path Read
 - [x] Path Write
 - [x] Path Delete
-- [ ] Path Destroy (v2 mounts only)
+- [x] Path Destroy (v2 mounts only)
 - [x] Path Copy
 - [x] Path Move
 - [x] Path Update
@@ -32,25 +33,21 @@ See the checklist below for progress and upcoming features.
 - [x] Folder Read
 - [x] Folder Write
 - [x] Folder Delete
-- [ ] Folder Destroy (v2 mounts only)
+- [x] Folder Destroy (v2 mounts only)
 - [x] Folder Copy
 - [x] Folder Move
 - [x] Folder Search
 - [ ] Folder Diff
 - [ ] Folder Map
-- [ ] Policy Enforce
-- [ ] Approle Enforce
-- [ ] Userpass Enforce
 - [ ] Add Timeouts to Workers
-- [ ] Support Wrapped Secrets
 
 **CLI Improvements:**
+
 - [ ] Add tests
 - [ ] Add to homebrew
 - [ ] Add example usage
 - [ ] Support concurrency flag
 - [ ] Support more than JSON output
-- [ ] Add write/update commands (native CLI probably better for writing data)
 
 **Running Tests:**
 
