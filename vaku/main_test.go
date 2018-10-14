@@ -4,9 +4,8 @@ import (
 	"testing"
 
 	"github.com/Lingrino/vaku/vaku"
+	"github.com/hashicorp/vault/api"
 	"github.com/pkg/errors"
-
-	vapi "github.com/hashicorp/vault/api"
 )
 
 var seededOnce = false
@@ -14,7 +13,7 @@ var seededOnce = false
 // Initialize a new simple vault client to be used for tets
 func clientInitForTests(t *testing.T) *vaku.Client {
 	// Initialize a new vault client
-	vclient, err := vapi.NewClient(vapi.DefaultConfig())
+	vclient, err := api.NewClient(api.DefaultConfig())
 	if err != nil {
 		t.Fatal(errors.Wrapf(err, "Failed to create a vault client for testing"))
 	}
@@ -45,7 +44,7 @@ func seed(t *testing.T, c *vaku.Client) error {
 	var err error
 
 	// Turn on logging to stdout
-	c.Sys().EnableAuditWithOptions("audit_stdout", &vapi.EnableAuditOptions{
+	c.Sys().EnableAuditWithOptions("audit_stdout", &api.EnableAuditOptions{
 		Type: "file",
 		Options: map[string]string{
 			"file_path": "stdout",
@@ -54,12 +53,12 @@ func seed(t *testing.T, c *vaku.Client) error {
 	})
 
 	// Mount the two secret backends
-	c.Sys().Mount("secretv1/", &vapi.MountInput{
+	c.Sys().Mount("secretv1/", &api.MountInput{
 		Type: "kv",
 		Options: map[string]string{
 			"version": "1"},
 	})
-	c.Sys().Mount("secretv2/", &vapi.MountInput{
+	c.Sys().Mount("secretv2/", &api.MountInput{
 		Type: "kv",
 		Options: map[string]string{
 			"version": "2",

@@ -31,5 +31,5 @@ var pathListCmd = &cobra.Command{
 
 func init() {
 	pathCmd.AddCommand(pathListCmd)
-	pathListCmd.PersistentFlags().BoolVarP(&noTrimPathPrefix, "no-trim-path-prefix", "T", false, "Output full paths instead of paths with the input path trimmed")
+	pathListCmd.Flags().BoolVarP(&noTrimPathPrefix, "no-trim-path-prefix", "T", false, "Output full paths instead of paths with the input path trimmed")
 }
