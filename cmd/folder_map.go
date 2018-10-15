@@ -25,7 +25,7 @@ var folderMapCmd = &cobra.Command{
 			fmt.Printf("%s", errors.Wrapf(err, "Failed to list folder %s", args[0]))
 			os.Exit(1)
 		} else {
-			var output string
+			var output []string
 			var prevPS []string
 			var written bool
 
@@ -44,7 +44,7 @@ var folderMapCmd = &cobra.Command{
 					if len(ps) != psi+1 {
 						word = word + "/"
 					}
-					output = output + strings.Repeat(indentString, psi) + word + "\n"
+					output = append(output, strings.Repeat(indentString, psi)+word)
 					written = true
 				}
 				prevPS = ps
