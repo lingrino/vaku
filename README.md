@@ -43,6 +43,7 @@ See the checklist below for progress and upcoming features.
 
 **CLI Improvements:**
 
+- [ ] Add docs
 - [ ] Add tests
 - [ ] Add to homebrew
 - [ ] Add example usage
