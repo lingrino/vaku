@@ -3,8 +3,8 @@
 [![Vaku](www/assets/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
 
 [![CircleCI](https://circleci.com/gh/Lingrino/vaku.svg?style=svg)](https://circleci.com/gh/Lingrino/vaku)
-
 [![Go Report Card](https://goreportcard.com/badge/github.com/Lingrino/vaku)](https://goreportcard.com/report/github.com/Lingrino/vaku)
+[![GoDoc](https://godoc.org/github.com/Lingrino/vaku/vaku?status.svg)](https://godoc.org/github.com/Lingrino/vaku/vaku)
 
 A CLI and Go API that add useful functions on top of Hashicorp Vault.
 

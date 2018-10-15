@@ -28,7 +28,7 @@ API documentation is available at https://godoc.org/github.com/Lingrino/vaku/vak
 }
 
 func init() {
-	vakuCmd.PersistentFlags().StringVarP(&format, "format", "o", "json", "The output format to use. One of: \"json\", \"text\"")
+	vakuCmd.PersistentFlags().StringVarP(&format, "format", "o", "text", "The output format to use. One of: \"json\", \"text\"")
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
