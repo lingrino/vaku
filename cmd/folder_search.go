@@ -31,5 +31,5 @@ var folderSearchCmd = &cobra.Command{
 
 func init() {
 	folderCmd.AddCommand(folderSearchCmd)
-	folderSearchCmd.PersistentFlags().BoolVarP(&noTrimPathPrefix, "no-trim-path-prefix", "T", true, "Output full paths instead of paths with the input path trimmed")
+	folderSearchCmd.Flags().BoolVarP(&noTrimPathPrefix, "no-trim-path-prefix", "T", false, "Output full paths instead of paths with the input path trimmed")
 }

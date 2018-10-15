@@ -32,6 +32,15 @@ func (c *Client) PathRead(i *PathInput) (map[string]interface{}, error) {
 	// V2 Mounts return a nested map[string]interface{} at secret.Data["data"]
 	output = secret.Data
 	if i.mountVersion == "2" && output != nil {
+		metadata := secret.Data["metadata"].(map[string]interface{})
+		if metadata["deletion_time"].(string) != "" {
+			// Note that path_search and folder_search depend on this VAKU_STATUS
+			outputS := map[string]interface{}{
+				"VAKU_STATUS": "SECRET_HAS_BEEN_DELETED",
+			}
+			return outputS, nil
+		}
+
 		data := secret.Data["data"]
 		if data != nil {
 			output = data.(map[string]interface{})

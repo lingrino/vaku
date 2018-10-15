@@ -41,11 +41,15 @@ func TestPathDelete(t *testing.T) {
 
 	for _, d := range tests {
 		e := c.PathDelete(d.input)
-		_, re := c.PathRead(d.input)
+		r, re := c.PathRead(d.input)
 		if d.outputErr {
 			assert.Error(t, e)
 		} else {
-			assert.Error(t, re)
+			if re == nil {
+				assert.Equal(t, "SECRET_HAS_BEEN_DELETED", r["VAKU_STATUS"])
+			} else {
+				assert.Error(t, re)
+			}
 			assert.NoError(t, e)
 		}
 	}

@@ -1,10 +1,10 @@
-[![Vaku](www/assets/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
-
 # vaku
 
-[![CircleCI](https://circleci.com/gh/Lingrino/vaku.svg?style=svg)](https://circleci.com/gh/Lingrino/vaku)
+[![Vaku](www/assets/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
 
+[![CircleCI](https://circleci.com/gh/Lingrino/vaku.svg?style=svg)](https://circleci.com/gh/Lingrino/vaku)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Lingrino/vaku)](https://goreportcard.com/report/github.com/Lingrino/vaku)
+[![GoDoc](https://godoc.org/github.com/Lingrino/vaku/vaku?status.svg)](https://godoc.org/github.com/Lingrino/vaku/vaku)
 
 A CLI and Go API that add useful functions on top of Hashicorp Vault.
 
@@ -17,40 +17,37 @@ regarding the Vaku CLI
 Vaku is now V1. The API and CLI will be backwards compatible until the next point release.
 See the checklist below for progress and upcoming features.
 
-**API Functionality:**
+**API/CLI Functionality:**
+
 - [x] Path List
 - [x] Path Read
-- [x] Path Write
+- [x] Path Write (API only)
 - [x] Path Delete
-- [ ] Path Destroy (v2 mounts only)
+- [x] Path Destroy (v2 mounts only)
 - [x] Path Copy
 - [x] Path Move
-- [x] Path Update
+- [x] Path Update (API only)
 - [x] Path Search
 - [ ] Path Diff
 - [x] Folder List
 - [x] Folder Read
-- [x] Folder Write
+- [x] Folder Write (API only)
 - [x] Folder Delete
-- [ ] Folder Destroy (v2 mounts only)
+- [x] Folder Destroy (v2 mounts only)
 - [x] Folder Copy
 - [x] Folder Move
 - [x] Folder Search
 - [ ] Folder Diff
-- [ ] Folder Map
-- [ ] Policy Enforce
-- [ ] Approle Enforce
-- [ ] Userpass Enforce
+- [x] Folder Map (CLI Only)
 - [ ] Add Timeouts to Workers
-- [ ] Support Wrapped Secrets
 
 **CLI Improvements:**
+
+- [ ] Add docs
 - [ ] Add tests
 - [ ] Add to homebrew
 - [ ] Add example usage
 - [ ] Support concurrency flag
-- [ ] Support more than JSON output
-- [ ] Add write/update commands (native CLI probably better for writing data)
 
 **Running Tests:**
 

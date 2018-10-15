@@ -53,13 +53,19 @@ func TestFolderMove(t *testing.T) {
 		c.FolderDelete(d.inputTarget)
 		bsr, _ := c.FolderRead(d.inputSource)
 		e := c.FolderMove(d.inputSource, d.inputTarget)
-		_, sre := c.FolderRead(d.inputSource)
+		sr, sre := c.FolderRead(d.inputSource)
 		tr, _ := c.FolderRead(d.inputTarget)
 		if d.outputErr {
 			assert.Error(t, e)
 		} else {
+			if sre == nil {
+				for _, data := range sr {
+					assert.Equal(t, "SECRET_HAS_BEEN_DELETED", data["VAKU_STATUS"])
+				}
+			} else {
+				assert.Error(t, sre)
+			}
 			assert.Equal(t, bsr, tr)
-			assert.Error(t, sre)
 			assert.NoError(t, e)
 		}
 		seed(t, c) // reseed every time for this test

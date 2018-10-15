@@ -9,10 +9,9 @@ import (
 	"strings"
 
 	"github.com/Lingrino/vaku/vaku"
-	"github.com/pkg/errors"
-
 	vapi "github.com/hashicorp/vault/api"
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/pkg/errors"
 )
 
 // vgc is the vaku client used by CLI commands
@@ -51,10 +50,41 @@ func authVGC() {
 }
 
 func print(i map[string]interface{}) {
-	json, err := json.MarshalIndent(i, "", "    ")
-	if err != nil {
-		log.Fatal(err)
-	}
+	if format == "json" {
+		json, err := json.MarshalIndent(i, "", "    ")
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	fmt.Println(string(json))
+		fmt.Println(string(json))
+	} else if format == "text" {
+		for _, v := range i {
+			textPrint(v)
+		}
+	} else {
+		fmt.Printf("ERROR: %s is not a valid or supported output format", format)
+	}
+}
+
+func textPrint(i interface{}) {
+	switch t := i.(type) {
+	case map[string]map[string]interface{}:
+		for k, v := range t {
+			fmt.Printf("\n%+v\n", k)
+			fmt.Println(strings.Repeat("-", len(k)))
+			textPrint(v)
+		}
+	case map[string]interface{}:
+		for k, v := range t {
+			fmt.Printf("%s => %+v\n", k, v)
+		}
+	case []string:
+		for _, v := range t {
+			fmt.Println(v)
+		}
+	case string:
+		fmt.Println(t)
+	default:
+		fmt.Printf("%+v\n", t)
+	}
 }
