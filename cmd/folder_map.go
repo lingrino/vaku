@@ -50,8 +50,9 @@ var folderMapCmd = &cobra.Command{
 				prevPS = ps
 				written = false
 			}
-
-			fmt.Println(output)
+			print(map[string]interface{}{
+				args[0]: output,
+			})
 		}
 	},
 }

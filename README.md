@@ -17,28 +17,28 @@ regarding the Vaku CLI
 Vaku is now V1. The API and CLI will be backwards compatible until the next point release.
 See the checklist below for progress and upcoming features.
 
-**API Functionality:**
+**API/CLI Functionality:**
 
 - [x] Path List
 - [x] Path Read
-- [x] Path Write
+- [x] Path Write (API only)
 - [x] Path Delete
 - [x] Path Destroy (v2 mounts only)
 - [x] Path Copy
 - [x] Path Move
-- [x] Path Update
+- [x] Path Update (API only)
 - [x] Path Search
 - [ ] Path Diff
 - [x] Folder List
 - [x] Folder Read
-- [x] Folder Write
+- [x] Folder Write (API only)
 - [x] Folder Delete
 - [x] Folder Destroy (v2 mounts only)
 - [x] Folder Copy
 - [x] Folder Move
 - [x] Folder Search
 - [ ] Folder Diff
-- [ ] Folder Map
+- [x] Folder Map (CLI Only)
 - [ ] Add Timeouts to Workers
 
 **CLI Improvements:**
@@ -47,7 +47,6 @@ See the checklist below for progress and upcoming features.
 - [ ] Add to homebrew
 - [ ] Add example usage
 - [ ] Support concurrency flag
-- [ ] Support more than JSON output
 
 **Running Tests:**
 

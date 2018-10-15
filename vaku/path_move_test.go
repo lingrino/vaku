@@ -53,13 +53,17 @@ func TestPathMove(t *testing.T) {
 	for _, d := range tests {
 		bsr, _ := c.PathRead(d.inputSource)
 		e := c.PathMove(d.inputSource, d.inputTarget)
-		_, sre := c.PathRead(d.inputSource)
+		sr, sre := c.PathRead(d.inputSource)
 		tr, _ := c.PathRead(d.inputTarget)
 		if d.outputErr {
 			assert.Error(t, e)
 		} else {
+			if sre == nil {
+				assert.Equal(t, "SECRET_HAS_BEEN_DELETED", sr["VAKU_STATUS"])
+			} else {
+				assert.Error(t, sre)
+			}
 			assert.Equal(t, bsr, tr)
-			assert.Error(t, sre)
 			assert.NoError(t, e)
 		}
 	}

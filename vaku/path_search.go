@@ -10,7 +10,8 @@ import (
 // PathSearch takes in a PathInput and a search string, reads the path, and searches
 // the read data for a match on the search string. Returns true if the string is found
 // in the data. Note that this is a simple search that just checks if the secret
-// contains the search string anywhere.
+// contains the search string anywhere. Also note that if this is a KV version 2 mount
+// and the input path has been deleted (but not destroyed) this returns false with no error.
 func (c *Client) PathSearch(i *PathInput, s string) (bool, error) {
 	var err error
 
@@ -26,6 +27,9 @@ func (c *Client) PathSearch(i *PathInput, s string) (bool, error) {
 	// is not the fastest or "right" way to search but it's the least complex and works
 	// in this limited space.
 	for k, v := range read {
+		if strings.Contains(k, "VAKU_STATUS") {
+			return false, err
+		}
 		if strings.Contains(k, s) {
 			return true, err
 		}

@@ -33,11 +33,17 @@ func TestFolderDelete(t *testing.T) {
 
 	for _, d := range tests {
 		e := c.FolderDelete(d.input)
-		_, re := c.FolderRead(d.input)
+		r, re := c.FolderRead(d.input)
 		if d.outputErr {
 			assert.Error(t, e)
 		} else {
-			assert.Error(t, re)
+			if re == nil {
+				for _, data := range r {
+					assert.Equal(t, "SECRET_HAS_BEEN_DELETED", data["VAKU_STATUS"])
+				}
+			} else {
+				assert.Error(t, re)
+			}
 			assert.NoError(t, e)
 		}
 	}
