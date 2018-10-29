@@ -9,6 +9,7 @@ import (
 
 var version = "dev"
 
+// VakuCmd is the root command for the Vaku CLI
 var VakuCmd = &cobra.Command{
 	Use:   "vaku",
 	Short: "Vaku CLI extends the official Vault CLI with useful high-level functions",
