@@ -11,6 +11,11 @@ import (
 var folderDestroyCmd = &cobra.Command{
 	Use:   "destroy [path]",
 	Short: "Recursively destroy an entire vault folder (V2 mounts only)",
+	Long: `Takes in a path and destroys every key in that folder and all sub-folders. Note that this
+function only works on V2 mounts and that it destroys ALL versions of ALL keys
+
+Example:
+  vaku folder destroy secret/foo`,
 
 	Args: cobra.ExactArgs(1),
 

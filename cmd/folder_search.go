@@ -11,6 +11,11 @@ import (
 var folderSearchCmd = &cobra.Command{
 	Use:   "search [folder] [search-string]",
 	Short: "Search a vault folder for a string, returning all paths where it is found",
+	Long: `Searches a vault folder for a specified string. Note that a match can occur in the path name
+OR in the secret itself. Returns a list of paths that matched (does not return actual secrets).
+
+Example:
+  vaku folder search secret/foo "bar"`,
 
 	Args: cobra.ExactArgs(2),
 

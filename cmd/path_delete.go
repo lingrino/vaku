@@ -11,6 +11,11 @@ import (
 var pathDeleteCmd = &cobra.Command{
 	Use:   "delete [path]",
 	Short: "Delete a vault path",
+	Long: `Deletes a secret at a specified path. Note that for V2 mounts this only deletes the current version.
+Functionally very similar to the 'vault delete' command, but works on v1 and v2 mounts.
+
+Example:
+  vaku path delete secret/foo`,
 
 	Args: cobra.ExactArgs(1),
 

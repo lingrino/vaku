@@ -11,6 +11,11 @@ import (
 var pathMoveCmd = &cobra.Command{
 	Use:   "move [source folder] [target path]",
 	Short: "Move a vault path from one location to another",
+	Long: `Moves a path from one location to another. This is equivalent to 'vaku path copy' followed
+by 'vaku path delete (not destroy)' on the target.
+
+Example:
+  vaku path move secret/foo secret/bar`,
 
 	Args: cobra.ExactArgs(2),
 

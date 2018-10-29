@@ -12,6 +12,11 @@ import (
 var folderListCmd = &cobra.Command{
 	Use:   "list [path]",
 	Short: "Recursively list a vault folder",
+	Long: `Takes in a path and walks the path by calling 'vaku path list' on the input path and all
+folders within that path as well. Returns the results as a sorted list of paths.
+
+Example:
+  vaku folder list secret/foo`,
 
 	Args: cobra.ExactArgs(1),
 

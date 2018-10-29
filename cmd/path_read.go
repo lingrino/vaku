@@ -11,6 +11,10 @@ import (
 var pathReadCmd = &cobra.Command{
 	Use:   "read [path]",
 	Short: "Read a vault path",
+	Long: `Reads a secret at a path. Functionally similar to 'vault read' but works on v1 and v2 mounts.
+
+Example:
+  vaku path read secret/foo`,
 
 	Args: cobra.ExactArgs(1),
 

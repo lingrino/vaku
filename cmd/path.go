@@ -6,7 +6,7 @@ import (
 
 var pathCmd = &cobra.Command{
 	Use:   "path [cmd]",
-	Short: "Contains the vaku path functions, does nothing on its own",
+	Short: "Contains all vaku path functions, does nothing on its own",
 
 	// Auth to vault on all commands
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
@@ -15,5 +15,5 @@ var pathCmd = &cobra.Command{
 }
 
 func init() {
-	vakuCmd.AddCommand(pathCmd)
+	VakuCmd.AddCommand(pathCmd)
 }

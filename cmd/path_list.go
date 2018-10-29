@@ -11,6 +11,10 @@ import (
 var pathListCmd = &cobra.Command{
 	Use:   "list [path]",
 	Short: "List a vault path",
+	Long: `Lists all keys at a vault path. Functionally similar to 'vault list path' but works on v1 and v2 mounts.
+
+Example:
+  vaku path list secret/foo`,
 
 	Args: cobra.ExactArgs(1),
 

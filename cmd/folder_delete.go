@@ -11,6 +11,12 @@ import (
 var folderDeleteCmd = &cobra.Command{
 	Use:   "delete [path]",
 	Short: "Recursively delete an entire vault folder",
+	Long: `Takes in a path and deletes every key in that folder and all sub-folders. Note that this calls 'vaku path delete'
+on every path found in the folder, and for v2 secret mounts that means deleting the active version, but not all versions.
+Use 'vaku folder destroy' for removing all versions from v2 mounts
+
+Example:
+  vaku folder delete secret/foo`,
 
 	Args: cobra.ExactArgs(1),
 
