@@ -11,6 +11,11 @@ import (
 var pathCopyCmd = &cobra.Command{
 	Use:   "copy [source folder] [target path]",
 	Short: "Copy a vault path from one location to another",
+	Long: `Takes in a source path and a target path and copies the data from one path to another.
+Note that you can use this to copy data from one mount to another. Note also that this will overwrite any existing key at the target path.
+
+Example:
+  vaku path copy secret/foo secret/bar`,
 
 	Args: cobra.ExactArgs(2),
 

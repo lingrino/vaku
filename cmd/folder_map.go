@@ -13,6 +13,11 @@ import (
 var folderMapCmd = &cobra.Command{
 	Use:   "map [path]",
 	Short: "Return a text map of the folder, with subfolders indented by depth",
+	Long: `Takes in a path and returns a text map of paths and keys. Useful as a visual representation
+of all data in vault.
+
+Example:
+  vaku folder map secret/foo`,
 
 	Args: cobra.ExactArgs(1),
 

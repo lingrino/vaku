@@ -11,6 +11,11 @@ import (
 var pathDestroyCmd = &cobra.Command{
 	Use:   "destroy [path]",
 	Short: "Destroy a vault path (V2 mounts only)",
+	Long: `Destroys a secret at a specified path. Note that this only works on v2 mounts and that it
+will delete ALL data about ALL versions of the secret at the specified path.
+
+Example:
+  vaku path destroy secret/foo`,
 
 	Args: cobra.ExactArgs(1),
 

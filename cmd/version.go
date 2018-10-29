@@ -20,5 +20,5 @@ var versionCmd = &cobra.Command{
 }
 
 func init() {
-	vakuCmd.AddCommand(versionCmd)
+	VakuCmd.AddCommand(versionCmd)
 }

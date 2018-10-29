@@ -11,6 +11,10 @@ import (
 var folderReadCmd = &cobra.Command{
 	Use:   "read [path]",
 	Short: "Recursively read a vault folder",
+	Long: `Recursively reads an entire vault folder, returning a map of paths to their values.
+
+Example:
+  vaku folder read secret/foo`,
 
 	Args: cobra.ExactArgs(1),
 

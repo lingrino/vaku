@@ -11,6 +11,13 @@ import (
 var folderMoveCmd = &cobra.Command{
 	Use:   "move [source folder] [target path]",
 	Short: "Move a vault folder from one location to another",
+	Long: `Takes in a source path and target path and moves every path in the source to the target.
+Note that this will move the input path if it is a secret and all paths under the input path that
+result from calling 'vaku folder list' on that path. Also note that this will overwrite any existing
+keys at the target paths. Note that this deletes (not destroys) the source folder after a successful copy.
+
+Example:
+  vaku folder move secret/foo secret/bar`,
 
 	Args: cobra.ExactArgs(2),
 
