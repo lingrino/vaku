@@ -16,9 +16,6 @@ jobs:
           command: "curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | bash"
       - checkout
       - run:
-          name: Run fossa
-          command: fossa
-      - run:
           name: Make sure there's nothing to go fmt
           command: test -z $(gofmt -l -w -s vaku/)
       - run:
@@ -30,6 +27,9 @@ jobs:
       - run:
           name: Get Packages
           command: dep ensure
+      - run:
+          name: Run fossa
+          command: fossa
       - run:
           name: Run Tests
           command: go test -cover -v ./...
