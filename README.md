@@ -5,6 +5,7 @@
 [![CircleCI](https://circleci.com/gh/Lingrino/vaku.svg?style=svg)](https://circleci.com/gh/Lingrino/vaku)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Lingrino/vaku)](https://goreportcard.com/report/github.com/Lingrino/vaku)
 [![GoDoc](https://godoc.org/github.com/Lingrino/vaku/vaku?status.svg)](https://godoc.org/github.com/Lingrino/vaku/vaku)
+[![FOSSA Status](https://app.fossa.io/api/projects/custom%2B6950%2Fgit%40github.com%3ALingrino%2Fvaku.git.svg?type=shield)](https://app.fossa.io/projects/custom%2B6950%2Fgit%40github.com%3ALingrino%2Fvaku.git?ref=badge_shield)
 
 Vaku is a CLI and Go API that add useful functions on top of Hashicorp Vault.
 
@@ -93,3 +94,7 @@ creates an external dependency for the tests but makes it much simpler to test d
 Vault versions and key/value mounts. With docker and docker-compose installed tests
 can be run with a simple `make test`. CircleCI will also build all commits and report
 status on all PRs.
+
+## Miscellaneous
+
+[![FOSSA Status](https://app.fossa.io/api/projects/custom%2B6950%2Fgit%40github.com%3ALingrino%2Fvaku.git.svg?type=large)](https://app.fossa.io/projects/custom%2B6950%2Fgit%40github.com%3ALingrino%2Fvaku.git?ref=badge_large)
