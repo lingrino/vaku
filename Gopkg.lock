@@ -50,12 +50,12 @@
   version = "v1.0.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:183f00c472fb9b2446659618eebf4899872fa267b92f926539411abdc8b941df"
+  digest = "1:4112546e6964796e1c92a9ffdea8fd7ae81ffbf81eda4f946f50937e178f53da"
   name = "github.com/hashicorp/go-retryablehttp"
   packages = ["."]
   pruneopts = "UT"
-  revision = "e651d75abec6fbd4f2c09508f72ae7af8a8b7171"
+  revision = "4502c0ecdaf0b50d857611af23831260f99be6bf"
+  version = "v0.5.0"
 
 [[projects]]
   branch = "master"
@@ -104,8 +104,8 @@
     "helper/strutil",
   ]
   pruneopts = "UT"
-  revision = "612120e76de651ef669c9af5e77b27a749b0dba3"
-  version = "v0.11.4"
+  revision = "a59ffa4a0f09bbf198241fe6793a96722789b639"
+  version = "v0.11.5"
 
 [[projects]]
   digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
@@ -203,17 +203,16 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:b41f13f4d5dbbd63abe9bf646575e4f83d2637ca243b97ea79b7807242518e8c"
+  digest = "1:67c2a615ba674115933f3ee56daa132974de340a9573937a97d14039f8544e8b"
   name = "golang.org/x/net"
   packages = [
-    "context",
     "http/httpguts",
     "http2",
     "http2/hpack",
     "idna",
   ]
   pruneopts = "UT"
-  revision = "9b4f9f5ad5197c79fd623a3638e70d8b26cef344"
+  revision = "adae6a3d119ae4890b46832a2e88a95adc62b8e7"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -240,11 +239,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:c9e7a4b4d47c0ed205d257648b0e5b0440880cb728506e318f8ac7cd36270bc4"
+  digest = "1:9fdc2b55e8e0fafe4b41884091e51e77344f7dc511c5acedcfd98200003bff90"
   name = "golang.org/x/time"
   packages = ["rate"]
   pruneopts = "UT"
-  revision = "fbb02b2291d28baffd63558aa44b4b56f178d650"
+  revision = "85acf8d2951cb2a3bde7632f9ff273ef0379bcbd"
 
 [[projects]]
   digest = "1:342378ac4dcb378a5448dd723f0784ae519383532f5e70ade24132c4c8693202"

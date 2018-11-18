@@ -2,8 +2,8 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/golang:1.11.1
-      - image: vault:0.11.4
+      - image: circleci/golang:1.11.2
+      - image: vault:0.11.5
         environment:
           SKIP_SETCAP: true
           VAULT_DEV_ROOT_TOKEN_ID: hunter2
@@ -35,7 +35,7 @@ jobs:
           command: go test -cover -v ./...
   deploy:
     docker:
-      - image: circleci/golang:1.11.1
+      - image: circleci/golang:1.11.2
     working_directory: /go/src/github.com/Lingrino/vaku
     steps:
       - checkout

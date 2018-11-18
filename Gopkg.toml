@@ -1,6 +1,6 @@
 [[constraint]]
   name = "github.com/hashicorp/vault"
-  version = "0.11.4"
+  version = "0.11.5"
 
 [[constraint]]
   name = "github.com/pkg/errors"
