@@ -92,7 +92,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:0935050931cdcd69030f5649b1418f17b409b4b0f73bc882e1c346c86cb9586d"
+  digest = "1:855a0cb08277efb9b18fee68f6f94259775df36350276257df8c96e9d51dbaaf"
   name = "github.com/hashicorp/vault"
   packages = [
     "api",
@@ -104,8 +104,8 @@
     "helper/strutil",
   ]
   pruneopts = "UT"
-  revision = "a59ffa4a0f09bbf198241fe6793a96722789b639"
-  version = "v0.11.5"
+  revision = "c19cef14891751a23eaa9b41fd456d1f99e7e856"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
@@ -203,7 +203,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:67c2a615ba674115933f3ee56daa132974de340a9573937a97d14039f8544e8b"
+  digest = "1:f8292d035e3f59cbcf39fecb9ca1dd24ec20ae4f8a06750609ee4b71d60d0045"
   name = "golang.org/x/net"
   packages = [
     "http/httpguts",
@@ -212,7 +212,7 @@
     "idna",
   ]
   pruneopts = "UT"
-  revision = "adae6a3d119ae4890b46832a2e88a95adc62b8e7"
+  revision = "351d144fa1fc0bd934e2408202be0c29f25e35a0"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -246,12 +246,12 @@
   revision = "85acf8d2951cb2a3bde7632f9ff273ef0379bcbd"
 
 [[projects]]
-  digest = "1:342378ac4dcb378a5448dd723f0784ae519383532f5e70ade24132c4c8693202"
+  digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
   pruneopts = "UT"
-  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
-  version = "v2.2.1"
+  revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
+  version = "v2.2.2"
 
 [solve-meta]
   analyzer-name = "dep"
