@@ -11,9 +11,6 @@ jobs:
     parallelism: 4
     working_directory: /go/src/github.com/Lingrino/vaku
     steps:
-      - run:
-          name: Install fossa
-          command: "curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | bash"
       - checkout
       - run:
           name: Make sure there's nothing to go fmt
@@ -27,9 +24,6 @@ jobs:
       - run:
           name: Get Packages
           command: dep ensure
-      - run:
-          name: Run fossa
-          command: fossa
       - run:
           name: Run Tests
           command: go test -cover -v ./...
