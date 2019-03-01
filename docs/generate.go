@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Lingrino/vaku/cmd"
+	"github.com/lingrino/vaku/cmd"
 	"github.com/spf13/cobra/doc"
 )
 

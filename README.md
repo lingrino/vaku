@@ -2,9 +2,9 @@
 
 [![Vaku](www/assets/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
 
-[![CircleCI](https://circleci.com/gh/Lingrino/vaku.svg?style=svg)](https://circleci.com/gh/Lingrino/vaku)
-[![Go Report Card](https://goreportcard.com/badge/github.com/Lingrino/vaku)](https://goreportcard.com/report/github.com/Lingrino/vaku)
-[![GoDoc](https://godoc.org/github.com/Lingrino/vaku/vaku?status.svg)](https://godoc.org/github.com/Lingrino/vaku/vaku)
+[![CircleCI](https://circleci.com/gh/lingrino/vaku.svg?style=svg)](https://circleci.com/gh/lingrino/vaku)
+[![Go Report Card](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
+[![GoDoc](https://godoc.org/github.com/lingrino/vaku/vaku?status.svg)](https://godoc.org/github.com/lingrino/vaku/vaku)
 
 Vaku is a CLI and Go API that add useful functions on top of Hashicorp Vault.
 
@@ -14,13 +14,13 @@ Use `go get` to install the latest version of the API and CLI. This command will
 and the latest version of the Vault API.
 
 ```bash
-go get -u github.com/Lingrino/vaku
+go get -u github.com/lingrino/vaku
 ```
 
 Next, import vaku in your project like so:
 
 ```go
-import "github.com/Lingrino/vaku/vaku"
+import "github.com/lingrino/vaku/vaku"
 ```
 
 ## CLI
@@ -46,7 +46,7 @@ addition, the API adds path and folder level functions not fouund in the officia
 
 ### API Documentation
 
-The API is well documented and can be read on [godoc](https://godoc.org/github.com/Lingrino/vaku/vaku). Please use
+The API is well documented and can be read on [godoc](https://godoc.org/github.com/lingrino/vaku/vaku). Please use
 the godoc documentation for all reference and example information.
 
 ## Contributing

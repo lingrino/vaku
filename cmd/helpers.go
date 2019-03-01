@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/Lingrino/vaku/vaku"
+	"github.com/lingrino/vaku/vaku"
 	vapi "github.com/hashicorp/vault/api"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
