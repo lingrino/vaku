@@ -3,8 +3,8 @@ package vaku_test
 import (
 	"testing"
 
-	"github.com/lingrino/vaku/vaku"
 	"github.com/hashicorp/vault/api"
+	"github.com/lingrino/vaku/vaku"
 	"github.com/pkg/errors"
 )
 
