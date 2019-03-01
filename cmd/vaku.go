@@ -25,7 +25,7 @@ it will look for a token first at the VAULT_TOKEN env var and then in ~/.vault-t
 
 Built by Sean Lingren <srlingren@gmail.com>
 CLI documentation is available using 'vaku help [cmd]'
-API documentation is available at https://godoc.org/github.com/Lingrino/vaku/vaku`,
+API documentation is available at https://godoc.org/github.com/lingrino/vaku/vaku`,
 }
 
 func init() {

@@ -14,4 +14,4 @@ release:
 	goreleaser
 
 install:
-	go install github.com/Lingrino/vaku
+	go install github.com/lingrino/vaku

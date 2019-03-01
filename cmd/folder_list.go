@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Lingrino/vaku/vaku"
+	"github.com/lingrino/vaku/vaku"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )

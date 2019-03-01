@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Lingrino/vaku/cmd"
+	"github.com/lingrino/vaku/cmd"
 )
 
 // version is populated at build time by goreleaser
