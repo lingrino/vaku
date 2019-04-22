@@ -9,7 +9,7 @@ stages:
 variables:
   SKIP_SETCAP: "true"
   VAULT_DEV_ROOT_TOKEN_ID: hunter2
-  VAULT_DEV_LISTEN_ADDRESS: vault:8300
+  VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8300
 
 services:
   - vault:1.1.1
