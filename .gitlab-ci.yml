@@ -31,7 +31,10 @@ www:
   image: python:3-alpine
   stage: www
   only:
-    - master
+    refs:
+      - master
+    changes:
+      - www/*
   script:
     - pip install awscli
     - aws --region us-east-2 s3 sync www/ s3://vaku.io-20180604033539915400000001
