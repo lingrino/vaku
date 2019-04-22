@@ -12,11 +12,12 @@ variables:
   VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8300
 
 services:
-  - name: vault:1.1.1
-    alias: 0.0.0.0
+  - vault:1.1.1
 
 validate:
   stage: validate
+  variables:
+    VAKU_VAULT_ADDR: http://vault:8300
   script:
     - test -z $(gofmt -l -w -s vaku/) # Make sure no formatting is needed
     - go test -cover -race -v ./...   # Run tests
