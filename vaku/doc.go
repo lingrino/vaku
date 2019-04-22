@@ -40,12 +40,5 @@ not be used on folders outside of those engines. In general, a folder function a
 by listing the input path recursively. For example, FolderDelete() on "secret/test" will list all paths
 within "secret/test" and its subfolders and then call PathDelete() on each one. Folder functions are
 executed concurrently using a worker pool of goroutines and channels.
-
-Policy and Role Functions
-
-Policy and role functions are intended to provide an opinionated and easy way of enforcing configuration
-in code. When setup properly you can run these functions daily (or as often as you like) to ensure that all
-policies and roles in Vault are defined in code. These functions will create all resources as defined in
-code and then delete any resources not defined.
 */
 package vaku

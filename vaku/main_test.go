@@ -1,6 +1,7 @@
 package vaku_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/hashicorp/vault/api"
@@ -22,9 +23,16 @@ func clientInitForTests(t *testing.T) *vaku.Client {
 	client := vaku.NewClient()
 	client.Client = vclient
 
-	// Set the address and token to the test values
+	// Set the token to the test value
 	client.SetToken(vaultToken)
+
+	// Set the address to the env var VAKU_VAULT_ADDR or the default constant
 	client.SetAddress(vaultAddr)
+	if os.Getenv("VAKU_VAULT_ADDR") != "" {
+		client.SetAddress(os.Getenv("VAKU_VAULT_ADDR"))
+	} else {
+		client.SetAddress(vaultAddr)
+	}
 
 	// Seed the client if it has never been seeded
 	if !seededOnce {

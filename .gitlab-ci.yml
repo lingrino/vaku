@@ -1,0 +1,42 @@
+image: golang:1.12.4
+
+stages:
+  - validate
+  - release
+  - www
+
+# These 3 variables are used by the `vault` service
+variables:
+  SKIP_SETCAP: "true"
+  VAULT_DEV_ROOT_TOKEN_ID: hunter2
+  VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8300
+
+services:
+  - vault:1.1.1
+
+validate:
+  stage: validate
+  variables:
+    VAKU_VAULT_ADDR: http://vault:8300
+  script:
+    - test -z $(gofmt -l -w -s vaku/) # Make sure no formatting is needed
+    - go test -cover -race -v ./...   # Run tests
+
+release:
+  stage: release
+  only:
+    - tags
+  except:
+    - branches
+  script:
+    - curl -sL https://git.io/goreleaser | bash
+
+www:
+  image: python:3-alpine
+  stage: www
+  only:
+    - master
+  script:
+    - pip install --no-warn-script-location --user awscli
+    - aws --region us-east-2 s3 sync www/ s3://vaku.io-20180604033539915400000001
+    - aws cloudfront create-invalidation --distribution-id E2F9NPK13ZLB4G --paths "/*"

@@ -1,4 +1,4 @@
-.PHONY: fmt docs test release install
+.PHONY: fmt docs test release
 
 fmt:
 	gofmt -l -w -s vaku/
@@ -8,10 +8,7 @@ docs:
 
 test:
 	docker-compose up -d
-	go test -cover -v ./...
+	go test -cover -race -v ./...
 
 release:
 	goreleaser
-
-install:
-	go install github.com/lingrino/vaku
