@@ -9,5 +9,5 @@ import (
 
 func TestVersion(t *testing.T) {
 	t.Parallel()
-	assert.Equal(t, vaku.Version(), "1.1.0")
+	assert.Equal(t, vaku.Version(), "1.1.1")
 }

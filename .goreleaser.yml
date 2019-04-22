@@ -1,32 +1,37 @@
+project_name: vaku
+env:
+  - CGO_ENABLED=0
+  - GO111MODULE=on
+before:
+  hooks:
+    - go mod download
+archives:
+  - id: vaku
+    replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
 changelog:
   sort: asc
-  filters:
-    exclude:
-    - Merge pull request
-    - Merge branch
-git:
-  short_hash: true
-builds:
-  - binary: vaku
-    goos:
-      - windows
-      - darwin
-      - linux
-    goarch:
-      - amd64
-# brew:
-#   name: vaku
-#   homepage: "https://vaku.io"
-#   description: "A CLI and Go API to extend the official Vault client"
-#   skip_upload: true
-#   github:
-#     owner: lingrino
-#     name: homebrew-vaku
-#   commit_author:
-#     name: lingrino
-#     email: srlingren@gmail.com
-#   dependencies:
-#     - vault
-#   build_dependencies:
-#     - make
-#     - gcc
+brew:
+  name: vaku
+  description: "A CLI and Go API to extend the official Vault client"
+  homepage: https://vaku.io/
+  skip_upload: auto
+  github:
+    owner: lingrino
+    name: homebrew-tap
+  commit_author:
+    name: Sean Lingren
+    email: srlingren@gmail.com
+  folder: Formula
+  dependencies:
+    - vault
+  test: |
+    system "#{bin}/vaku version"
