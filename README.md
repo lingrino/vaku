@@ -2,7 +2,6 @@
 
 [![Vaku](www/assets/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
 
-[![CircleCI](https://circleci.com/gh/lingrino/vaku.svg?style=svg)](https://circleci.com/gh/lingrino/vaku)
 [![Go Report Card](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
 [![GoDoc](https://godoc.org/github.com/lingrino/vaku/vaku?status.svg)](https://godoc.org/github.com/lingrino/vaku/vaku)
 
