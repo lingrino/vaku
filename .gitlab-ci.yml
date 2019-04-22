@@ -7,7 +7,7 @@ stages:
 
 # These 3 variables are used by the `vault` service
 variables:
-  SKIP_SETCAP: true
+  SKIP_SETCAP: "true"
   VAULT_DEV_ROOT_TOKEN_ID: hunter2
   VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8300
 
