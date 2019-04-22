@@ -12,7 +12,8 @@ variables:
   VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8300
 
 services:
-  - vault:1.1.1
+  - name: vault:1.1.1
+    alias: 0.0.0.0
 
 validate:
   stage: validate
