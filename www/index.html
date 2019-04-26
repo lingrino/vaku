@@ -2,64 +2,68 @@
 <html lang="en">
 
     <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-
         <title>Vaku</title>
+        <meta name="Description" content="Vaku is a CLI and API that extends existing Vault functionality">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta charset="utf-8">
+
+        <link rel="shortcut icon" href="assets/favicon.webp" type="image/webp"/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     </head>
 
-    <body style="background-color: #bbc4d6">
+    <body style="background-color: #f5f5f5">
         <div class="container-fluid" style="margin-top: 10%">
             <div class="row">
                 <div class="col-md-1">
                 </div>
                 <div class="col-md-4">
-                    <img src="assets/logo-vaku.png" class="img-fluid">
+                    <picture>
+                        <source type="image/webp" srcset="assets/logo-vaku.webp">
+                        <source type="image/png"  srcset="assets/logo-vaku.png">
+                        <img src="assets/logo-vaku.png" alt="Vaku Logo" class="img-fluid">
+                    </picture>
                 </div>
                 <div class="col-md-6">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <h1 class="display-3">Vaku</h1>
-                        </div>
-                        <div class="row mb-5">
-                            <p class="lead">
-                                Vaku is a CLI and Go API that extends the official Hashicorp Vault CLI and API with
-                                useful high-level functions such as
-                                the ability to copy, move, and search vault paths and folders. The CLI and API are
-                                purpose-built
-                                to deal with the actual secret content of paths and folders, and they therefore do not
-                                make
-                                use of or reveal Vault features like metadata and wrapping. Use the tools as you see
-                                fit
-                                and file issues for anything you think could be improved. Thanks!
-                            </p>
-                        </div>
-                        <div class="row text-left">
-                            <div class="col h-100">
-                                <pre class="py-3"><code class="bg-dark text-white p-3">$ brew install lingrino/tap/vaku</code></pre>
+                    <main>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <h1 class="display-3">Vaku</h1>
+                            </div>
+                            <div class="row mb-5">
+                                <p class="lead">
+                                    Vaku is a CLI and Go API that extends the official Hashicorp Vault CLI and API with
+                                    useful high-level functions such as
+                                    the ability to copy, move, and search vault paths and folders. The CLI and API are
+                                    purpose-built
+                                    to deal with the actual secret content of paths and folders, and they therefore do not
+                                    make
+                                    use of or reveal Vault features like metadata and wrapping. Use the tools as you see
+                                    fit
+                                    and file issues for anything you think could be improved. Thanks!
+                                </p>
+                            </div>
+                            <div class="row text-left">
+                                <div class="col h-100">
+                                    <pre class="py-3"><code class="bg-dark text-white p-3">$ brew install lingrino/tap/vaku</code></pre>
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <div class="col-3 text-left">
+                                    <a href="https://github.com/lingrino/vaku">GitHub</a>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <a href="https://github.com/lingrino/vaku/blob/master/docs/vaku.md">CLI Docs</a>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <a href="https://godoc.org/github.com/lingrino/vaku/vaku">API Docs</a>
+                                </div>
+                                <div class="col-3 text-right">
+                                    Built by
+                                    <a href="https://srlingren.com/">Sean Lingren</a>
+                                </div>
                             </div>
                         </div>
-                        <div class="row mt-5">
-                            <div class="col-3 text-left">
-                                <a href="https://github.com/lingrino/vaku">GitHub</a>
-                            </div>
-                            <div class="col-3 text-center">
-                                <a href="https://github.com/lingrino/vaku/blob/master/docs/vaku.md">CLI Docs</a>
-                            </div>
-                            <div class="col-3 text-center">
-                                <a href="https://godoc.org/github.com/lingrino/vaku/vaku">API Docs</a>
-                            </div>
-                            <div class="col-3 text-right">
-                                Built by
-                                <a href="https://srlingren.com/">Sean Lingren</a>
-                            </div>
-                        </div>
-                    </div>
+                    </main>
                 </div>
                 <div class="col-md-1">
                 </div>
