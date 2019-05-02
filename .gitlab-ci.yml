@@ -37,5 +37,5 @@ www:
       - www/*
   script:
     - pip install awscli
-    - aws --region us-east-2 s3 sync www/ s3://vaku.io-20180604033539915400000001
-    - aws cloudfront create-invalidation --distribution-id E2F9NPK13ZLB4G --paths "/*"
+    - aws --region "${S3_REGION}" s3 sync . "s3://${S3_BUCKET_NAME}" --sse AES256
+    - aws cloudfront create-invalidation --distribution-id "${CF_DISTRIBUTION_ID}" --paths "/*"
