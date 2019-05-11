@@ -1,4 +1,4 @@
-image: golang:1.12.4
+image: registry.gitlab.com/lingrino/docker/ci:latest
 
 stages:
   - validate
@@ -28,7 +28,6 @@ release:
     - curl -sL https://git.io/goreleaser | bash
 
 www:
-  image: python:3-alpine
   stage: www
   only:
     refs:
