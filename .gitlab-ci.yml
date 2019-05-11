@@ -25,7 +25,7 @@ release:
   except:
     - branches
   script:
-    - curl -sL https://git.io/goreleaser | bash
+    - goreleaser
 
 www:
   stage: www
