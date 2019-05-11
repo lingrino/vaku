@@ -35,6 +35,5 @@ www:
     changes:
       - www/*
   script:
-    - pip install awscli
     - aws --region "${S3_REGION}" s3 sync www/ "s3://${S3_BUCKET_NAME}" --sse AES256
     - aws cloudfront create-invalidation --distribution-id "${CF_DISTRIBUTION_ID}" --paths "/*"
