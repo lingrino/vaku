@@ -8,7 +8,7 @@ stages:
 validate:
   stage: validate
   services:
-    - vault:1.1.1
+    - vault:1.2.0
   variables:
     SKIP_SETCAP: "true"                     # Used in `vault` service
     VAULT_DEV_ROOT_TOKEN_ID: hunter2        # Used in `vault` service
