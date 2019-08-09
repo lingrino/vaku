@@ -7,6 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta charset="utf-8">
 
+    <!-- Headers -->
+    <!-- https://infosec.mozilla.org/guidelines/web_security -->
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com">
+    <meta http-equiv="Strict-Transport-Security" content="max-age=63072000; includeSubDomains; preload">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
     <link rel="shortcut icon" href="assets/favicon.webp" type="image/webp" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
