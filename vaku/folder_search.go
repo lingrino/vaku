@@ -30,7 +30,11 @@ func (c *Client) FolderSearch(i *PathInput, s string) ([]string, error) {
 	var output []string
 
 	// Init the path to get mount info
-	c.InitPathInput(i)
+	i.opType = "read"
+	err = c.InitPathInput(i)
+	if err != nil {
+		return output, errors.Wrapf(err, "failed to init path %s", i.Path)
+	}
 
 	// Get all of the paths to search
 	list, err := c.FolderList(&PathInput{

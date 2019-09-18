@@ -2,6 +2,7 @@ package vaku_test
 
 import (
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/vault/api"
@@ -13,6 +14,8 @@ var seededOnce = false
 
 // Initialize a new simple vault client to be used for tets
 func clientInitForTests(t *testing.T) *vaku.Client {
+	var err error
+
 	// Initialize a new vault client
 	vclient, err := api.NewClient(api.DefaultConfig())
 	if err != nil {
@@ -27,11 +30,21 @@ func clientInitForTests(t *testing.T) *vaku.Client {
 	client.SetToken(vaultToken)
 
 	// Set the address to the env var VAKU_VAULT_ADDR or the default constant
-	client.SetAddress(vaultAddr)
+	err = client.SetAddress(vaultAddr)
+	if err != nil {
+		t.Errorf("Failed to set client address to %s", vaultAddr)
+	}
+
 	if os.Getenv("VAKU_VAULT_ADDR") != "" {
-		client.SetAddress(os.Getenv("VAKU_VAULT_ADDR"))
+		err = client.SetAddress(os.Getenv("VAKU_VAULT_ADDR"))
+		if err != nil {
+			t.Errorf("Failed to set client address to %s", os.Getenv("VAKU_VAULT_ADDR"))
+		}
 	} else {
-		client.SetAddress(vaultAddr)
+		err = client.SetAddress(vaultAddr)
+		if err != nil {
+			t.Errorf("Failed to set client address to %s", vaultAddr)
+		}
 	}
 
 	// Seed the client if it has never been seeded
@@ -52,26 +65,45 @@ func seed(t *testing.T, c *vaku.Client) error {
 	var err error
 
 	// Turn on logging to stdout
-	c.Sys().EnableAuditWithOptions("audit_stdout", &api.EnableAuditOptions{
+	err = c.Sys().EnableAuditWithOptions("audit_stdout", &api.EnableAuditOptions{
 		Type: "file",
 		Options: map[string]string{
 			"file_path": "stdout",
 			"log_raw":   "true",
 		},
 	})
+	if err != nil {
+		// We don't care about errors trying to mount to a path that we have already
+		// mounted to. A better option here would be to check if the mount exists
+		// before attempting the mount, but this is only used in tests so it's not
+		// worth the effort. Same with the next two error checks.
+		if !strings.Contains(err.Error(), "path already in use") {
+			t.Error(errors.Wrap(err, "Failed to turn on vault logging"))
+		}
+	}
 
 	// Mount the two secret backends
-	c.Sys().Mount("secretv1/", &api.MountInput{
+	err = c.Sys().Mount("secretv1/", &api.MountInput{
 		Type: "kv",
 		Options: map[string]string{
 			"version": "1"},
 	})
-	c.Sys().Mount("secretv2/", &api.MountInput{
+	if err != nil {
+		if !strings.Contains(err.Error(), "path is already in use at secretv1/") {
+			t.Error(errors.Wrap(err, "Failed to mount secretv1/"))
+		}
+	}
+	err = c.Sys().Mount("secretv2/", &api.MountInput{
 		Type: "kv",
 		Options: map[string]string{
 			"version": "2",
 		},
 	})
+	if err != nil {
+		if !strings.Contains(err.Error(), "path is already in use at secretv2/") {
+			t.Error(errors.Wrap(err, "Failed to mount secretv2/"))
+		}
+	}
 
 	seeds := map[string]map[string]interface{}{
 		"test/foo": {

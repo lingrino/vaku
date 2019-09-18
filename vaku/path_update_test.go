@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/lingrino/vaku/vaku"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,8 +16,16 @@ type TestPathUpdateData struct {
 }
 
 func TestPathUpdate(t *testing.T) {
+	var err error
+
 	c := clientInitForTests(t)
-	defer seed(t, c)
+
+	defer func() {
+		err = seed(t, c)
+		if err != nil {
+			t.Error(errors.Wrap(err, "Failed to reseed"))
+		}
+	}()
 
 	tests := map[int]TestPathUpdateData{
 		1: {
@@ -89,5 +98,8 @@ func TestPathUpdate(t *testing.T) {
 	}
 
 	// Reseed the vault server after tests end
-	seed(t, c)
+	err = seed(t, c)
+	if err != nil {
+		t.Error(errors.Wrap(err, "Failed to reseed"))
+	}
 }

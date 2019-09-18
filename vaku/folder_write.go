@@ -31,7 +31,10 @@ func (c *Client) FolderWrite(d map[string]map[string]interface{}) error {
 		break
 	}
 	basePathInfo.opType = "write"
-	c.InitPathInput(basePathInfo)
+	err = c.InitPathInput(basePathInfo)
+	if err != nil {
+		return errors.Wrapf(err, "Failed to init path %s", basePathInfo.Path)
+	}
 
 	// Concurrency channels for workers
 	inputsC := make(chan *writeInput, len(d))

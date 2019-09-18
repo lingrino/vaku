@@ -59,7 +59,7 @@ func (c *Client) InitPathInput(i *PathInput) error {
 		if i.mountVersion == "2" {
 			if i.opType == "list" || i.opType == "destroy" {
 				i.opPath = c.PathJoin(i.mountPath, "metadata", i.mountlessPath)
-			} else if i.opType == "read" || i.opType == "write" || i.opType == "delete" {
+			} else if i.opType == "read" || i.opType == "write" || i.opType == "readwrite" || i.opType == "delete" {
 				i.opPath = c.PathJoin(i.mountPath, "data", i.mountlessPath)
 			}
 		} else {
@@ -76,7 +76,7 @@ func (c *Client) InitPathInput(i *PathInput) error {
 		if m.MountVersion == "2" {
 			if i.opType == "list" || i.opType == "destroy" {
 				i.opPath = c.PathJoin(m.MountPath, "metadata", m.MountlessPath)
-			} else if i.opType == "read" || i.opType == "write" || i.opType == "delete" {
+			} else if i.opType == "read" || i.opType == "write" || i.opType == "readwrite" || i.opType == "delete" {
 				i.opPath = c.PathJoin(m.MountPath, "data", m.MountlessPath)
 			}
 		} else {

@@ -27,7 +27,10 @@ func (c *Client) FolderDelete(i *PathInput) error {
 
 	// Init the path
 	i.opType = "delete"
-	c.InitPathInput(i)
+	err = c.InitPathInput(i)
+	if err != nil {
+		return errors.Wrapf(err, "Failed to init path %s", i.Path)
+	}
 
 	// Concurrency channels for workers
 	inputsC := make(chan *PathInput, len(list))
@@ -66,6 +69,7 @@ func (c *Client) FolderDelete(i *PathInput) error {
 // folderDeleteWorker does the work of reading a path from a channel and deleting it
 func (c *Client) folderDeleteWorker(i *folderDeleteWorkerInput) {
 	var err error
+
 	for {
 		path, more := <-i.inputsC
 		if more {

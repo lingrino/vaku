@@ -18,8 +18,16 @@ func (c *Client) FolderCopy(s *PathInput, t *PathInput) error {
 	var err error
 
 	// Init both paths to get mount info
-	c.InitPathInput(s)
-	c.InitPathInput(t)
+	s.opType = "readwrite"
+	err = c.InitPathInput(s)
+	if err != nil {
+		return errors.Wrapf(err, "failed to init path %s", s.Path)
+	}
+	t.opType = "readwrite"
+	err = c.InitPathInput(t)
+	if err != nil {
+		return errors.Wrapf(err, "failed to init path %s", t.Path)
+	}
 
 	// Get the keys to copy
 	list, err := c.FolderList(&PathInput{
