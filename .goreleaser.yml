@@ -19,19 +19,19 @@ snapshot:
   name_template: "{{ .Tag }}-next"
 changelog:
   sort: asc
-brew:
-  name: vaku
-  description: "A CLI and Go API to extend the official Vault client"
-  homepage: https://vaku.io/
-  skip_upload: auto
-  github:
-    owner: lingrino
-    name: homebrew-tap
-  commit_author:
-    name: Sean Lingren
-    email: srlingren@gmail.com
-  folder: Formula
-  dependencies:
-    - vault
-  test: |
-    system "#{bin}/vaku version"
+brews:
+  - name: vaku
+    description: "A CLI and Go API to extend the official Vault client"
+    homepage: https://vaku.io/
+    skip_upload: auto
+    github:
+      owner: lingrino
+      name: homebrew-tap
+    commit_author:
+      name: Sean Lingren
+      email: sean@lingrino.com
+    folder: Formula
+    dependencies:
+      - vault
+    test: |
+      system "#{bin}/vaku version"

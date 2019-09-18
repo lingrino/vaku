@@ -1,0 +1,26 @@
+name: WWW
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    container: lingrino/ci:latest
+    steps:
+      - name: Code - Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Release
+        run: |
+          aws --region "${S3_REGION}" s3 sync www/ "s3://${S3_BUCKET_NAME}" --sse AES256
+          aws cloudfront create-invalidation --distribution-id "${CF_DISTRIBUTION_ID}" --paths "/*"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CF_DISTRIBUTION_ID: ${{ secrets.CF_DISTRIBUTION_ID }}
+          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+          S3_REGION: ${{ secrets.S3_REGION }}

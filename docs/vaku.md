@@ -14,7 +14,7 @@ vaku works on both v1 and v2 secret mounts, and can even copy/move secrets betwe
 Vaku does not log you in to vault or help you with getting a token. Like the CLI,
 it will look for a token first at the VAULT_TOKEN env var and then in ~/.vault-token
 
-Built by Sean Lingren <srlingren@gmail.com>
+Built by Sean Lingren <sean@lingrino.com>
 CLI documentation is available using 'vaku help [cmd]'
 API documentation is available at https://godoc.org/github.com/lingrino/vaku/vaku
 
