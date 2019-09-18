@@ -53,14 +53,11 @@ func TestFolderMove(t *testing.T) {
 	}
 
 	for _, d := range tests {
-		err = c.FolderDelete(d.inputTarget)
-		if err != nil {
-			if d.outputErr {
-				assert.Error(t, err)
-			} else {
-				t.Error(errors.Wrapf(err, "Failed to delete folder %s", d.inputTarget.Path))
-			}
-		}
+		// We don't check errors here because this is just a precautionary
+		// delete in order to ensure that the target is empty. We expect that
+		// sometimes the target will not even exist and then produce an error.
+		_ = c.FolderDelete(d.inputTarget)
+
 		bsr, _ := c.FolderRead(d.inputSource)
 		e := c.FolderMove(d.inputSource, d.inputTarget)
 		sr, sre := c.FolderRead(d.inputSource)
