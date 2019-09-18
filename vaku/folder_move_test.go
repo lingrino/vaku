@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/lingrino/vaku/vaku"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,6 +15,8 @@ type TestFolderMoveData struct {
 }
 
 func TestFolderMove(t *testing.T) {
+	var err error
+
 	c := clientInitForTests(t)
 
 	tests := map[int]TestFolderMoveData{
@@ -50,7 +53,11 @@ func TestFolderMove(t *testing.T) {
 	}
 
 	for _, d := range tests {
-		c.FolderDelete(d.inputTarget)
+		// We don't check errors here because this is just a precautionary
+		// delete in order to ensure that the target is empty. We expect that
+		// sometimes the target will not even exist and then produce an error.
+		_ = c.FolderDelete(d.inputTarget)
+
 		bsr, _ := c.FolderRead(d.inputSource)
 		e := c.FolderMove(d.inputSource, d.inputTarget)
 		sr, sre := c.FolderRead(d.inputSource)
@@ -68,6 +75,9 @@ func TestFolderMove(t *testing.T) {
 			assert.Equal(t, bsr, tr)
 			assert.NoError(t, e)
 		}
-		seed(t, c) // reseed every time for this test
+		err = seed(t, c) // reseed every time for this test
+		if err != nil {
+			t.Error(errors.Wrap(err, "Failed to reseed"))
+		}
 	}
 }

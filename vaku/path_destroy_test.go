@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/lingrino/vaku/vaku"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,8 +14,16 @@ type TestPathDestroyData struct {
 }
 
 func TestPathDestroy(t *testing.T) {
+	var err error
+
 	c := clientInitForTests(t)
-	defer seed(t, c)
+
+	defer func() {
+		err = seed(t, c)
+		if err != nil {
+			t.Error(errors.Wrapf(err, "Failed to reseed"))
+		}
+	}()
 
 	tests := map[int]TestPathDestroyData{
 		1: {

@@ -79,7 +79,10 @@ func (c *Client) folderReadCaller(i *PathInput, keys []string) (map[string]map[s
 
 	// Initialize the input
 	i.opType = "read"
-	c.InitPathInput(i)
+	err = c.InitPathInput(i)
+	if err != nil {
+		return output, errors.Wrapf(err, "failed to init path %s", i.Path)
+	}
 
 	// Remove folders (can't be read) from the list
 	keys = c.SliceRemoveFolders(keys)

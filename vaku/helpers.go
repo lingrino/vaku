@@ -7,10 +7,7 @@ import (
 
 // KeyIsFolder returns true if the string ends in a '/'.
 func (c *Client) KeyIsFolder(k string) bool {
-	if strings.HasSuffix(k, "/") {
-		return true
-	}
-	return false
+	return strings.HasSuffix(k, "/")
 }
 
 // KeyJoin takes n strings and combines them into a clean Vault key. Vault keys

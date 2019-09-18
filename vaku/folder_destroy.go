@@ -26,7 +26,10 @@ func (c *Client) FolderDestroy(i *PathInput) error {
 
 	// Init the path
 	i.opType = "destroy"
-	c.InitPathInput(i)
+	err = c.InitPathInput(i)
+	if err != nil {
+		return errors.Wrapf(err, "Failed to init path %s", i.Path)
+	}
 
 	// Concurrency channels for workers
 	inputsC := make(chan *PathInput, len(list))
