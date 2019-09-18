@@ -1,0 +1,28 @@
+name: Validate
+
+on: push
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    container: lingrino/ci:latest
+    services:
+      vault:
+        image: vault:1.2.3
+        ports:
+          - 8300:8300
+        env:
+          SKIP_SETCAP: "true"
+          VAULT_DEV_ROOT_TOKEN_ID: hunter2
+          VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8300
+    steps:
+      - name: Code - Checkout
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Go fmt
+        run: test -z $(gofmt -l -w -s vaku/)
+      - name: Run Tests
+        run: go test -cover -race -v ./...
+        env:
+          VAKU_VAULT_ADDR: http://vault:8300
