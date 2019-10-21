@@ -18,3 +18,7 @@ vendor/
 
 # Binaries
 dist/
+
+# Various IDE settings
+.idea/
+.vscode/
