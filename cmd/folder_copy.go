@@ -51,5 +51,5 @@ func init() {
 	folderCopyCmd.Flags().StringVarP(&sourceToken, "source-token", "", "", "The Vault token to access the source folder")
 	folderCopyCmd.Flags().StringVarP(&targetAddress, "target-address", "", "", "The Vault address for the target folder")
 	folderCopyCmd.Flags().StringVarP(&targetNamespace, "target-namespace", "", "", "The Vault namespace for the target folder")
-	folderCopyCmd.Flags().StringVarP(&targetAddress, "target-token", "", "", "The Vault token to access the target folder")
+	folderCopyCmd.Flags().StringVarP(&targetToken, "target-token", "", "", "The Vault token to access the target folder")
 }

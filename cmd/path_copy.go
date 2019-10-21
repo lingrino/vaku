@@ -49,5 +49,5 @@ func init() {
 	pathCopyCmd.Flags().StringVarP(&sourceToken, "source-token", "", "", "The Vault token to access the source path")
 	pathCopyCmd.Flags().StringVarP(&targetAddress, "target-address", "", "", "The Vault address for the target path")
 	pathCopyCmd.Flags().StringVarP(&targetNamespace, "target-namespace", "", "", "The Vault namespace for the target path")
-	pathCopyCmd.Flags().StringVarP(&targetAddress, "target-token", "", "", "The Vault token to access the target path")
+	pathCopyCmd.Flags().StringVarP(&targetToken, "target-token", "", "", "The Vault token to access the target path")
 }
