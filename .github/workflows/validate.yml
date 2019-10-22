@@ -21,7 +21,7 @@ jobs:
         image: vault:1.2.3
         ports:
           - 8400:8400
-        environment:
+        env:
           SKIP_SETCAP: "true"
           VAULT_DEV_ROOT_TOKEN_ID: targethunter2
           VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8400
