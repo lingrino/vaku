@@ -63,7 +63,6 @@ func TestPathCopy(t *testing.T) {
 	}
 }
 
-
 func TestCopyClientPathCopy(t *testing.T) {
 	t.Parallel()
 	c := copyClientInitForTests(t)

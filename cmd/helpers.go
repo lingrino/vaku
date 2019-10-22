@@ -16,7 +16,7 @@ import (
 
 // vgc is the vaku client used by CLI commands
 var vgc *vaku.Client
-var copyClient  *vaku.CopyClient
+var copyClient *vaku.CopyClient
 
 // authVGC initializes the vgc (vaku global client) to be used by all CLI commands
 func authVGC() {
