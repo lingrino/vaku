@@ -15,21 +15,10 @@ var targetSeededOnce = false
 
 // Initialize a new simple vault client to be used for tests
 func clientInitForTests(t *testing.T) *vaku.Client {
-	client := clientInitForTestsCommon(t, vaultToken, vaultAddr)
-
-	// Seed the client if it has never been seeded
-	if !seededOnce {
-		err := seed(t, client)
-		if err != nil {
-			t.Fatal(errors.Wrapf(err, "Failed to seed the vault client"))
-		}
-		seededOnce = true
-	}
-
-	return client
+	return clientInitForTestsCommon(t, vaultToken, vaultAddr, "VAKU_VAULT_ADDR", &seededOnce)
 }
 
-func clientInitForTestsCommon(t *testing.T, token string, address string) *vaku.Client {
+func clientInitForTestsCommon(t *testing.T, token string, address string, addressEnvVar string, seeded *bool) *vaku.Client {
 	var err error
 	// Initialize a new vault client
 	vclient, err := api.NewClient(api.DefaultConfig())
@@ -46,16 +35,25 @@ func clientInitForTestsCommon(t *testing.T, token string, address string) *vaku.
 	if err != nil {
 		t.Errorf("Failed to set client address to %s", address)
 	}
-	if os.Getenv("VAKU_VAULT_ADDR") != "" {
-		err = client.SetAddress(os.Getenv("VAKU_VAULT_ADDR"))
+	if os.Getenv(addressEnvVar) != "" {
+		err = client.SetAddress(os.Getenv(addressEnvVar))
 		if err != nil {
-			t.Errorf("Failed to set client address to %s", os.Getenv("VAKU_VAULT_ADDR"))
+			t.Errorf("Failed to set client address to %s", os.Getenv(addressEnvVar))
 		}
 	} else {
 		err = client.SetAddress(address)
 		if err != nil {
 			t.Errorf("Failed to set client address to %s", address)
 		}
+	}
+
+	// Seed the client if it has never been seeded
+	if !*seeded {
+		err := seed(t, client)
+		if err != nil {
+			t.Fatal(errors.Wrapf(err, "Failed to seed the vault client"))
+		}
+		*seeded = true
 	}
 
 	return client
@@ -66,25 +64,8 @@ func copyClientInitForTests(t *testing.T) *vaku.CopyClient {
 	// Initialize a new copy client and attach the source and target client
 	copyClient := vaku.NewCopyClient()
 
-	copyClient.Source = clientInitForTestsCommon(t, vaultToken, vaultAddr)
-	copyClient.Target = clientInitForTestsCommon(t, targetVaultToken, targetVaultAddr)
-
-	// Seed the client if it has never been seeded
-	if !seededOnce {
-		err := seed(t, copyClient.Source)
-		if err != nil {
-			t.Fatal(errors.Wrapf(err, "Failed to seed the source vault client"))
-		}
-		seededOnce = true
-	}
-
-	if !targetSeededOnce {
-		err := seed(t, copyClient.Target)
-		if err != nil {
-			t.Fatal(errors.Wrapf(err, "Failed to seed the target vault client"))
-		}
-		targetSeededOnce = true
-	}
+	copyClient.Source = clientInitForTestsCommon(t, vaultToken, vaultAddr, "VAKU_VAULT_ADDR", &seededOnce)
+	copyClient.Target = clientInitForTestsCommon(t, targetVaultToken, targetVaultAddr, "VAKU_TARGET_VAULT_ADDR", &targetSeededOnce)
 	return copyClient
 }
 

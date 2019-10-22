@@ -64,7 +64,6 @@ func TestFolderCopy(t *testing.T) {
 }
 
 func TestCopyClientFolderCopy(t *testing.T) {
-	t.Parallel()
 	c := copyClientInitForTests(t)
 
 	tests := map[int]TestFolderCopyData{

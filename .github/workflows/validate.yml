@@ -36,3 +36,4 @@ jobs:
         run: go test -cover -race -v ./...
         env:
           VAKU_VAULT_ADDR: http://vault:8300
+          VAKU_TARGET_VAULT_ADDR: http://vault:8400
