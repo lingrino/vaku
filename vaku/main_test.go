@@ -11,51 +11,62 @@ import (
 )
 
 var seededOnce = false
+var targetSeededOnce = false
 
-// Initialize a new simple vault client to be used for tets
+// Initialize a new simple vault client to be used for tests
 func clientInitForTests(t *testing.T) *vaku.Client {
-	var err error
+	return clientInitForTestsCommon(t, vaultToken, vaultAddr, "VAKU_VAULT_ADDR", &seededOnce)
+}
 
+func clientInitForTestsCommon(t *testing.T, token string, address string, addressEnvVar string, seeded *bool) *vaku.Client {
+	var err error
 	// Initialize a new vault client
 	vclient, err := api.NewClient(api.DefaultConfig())
 	if err != nil {
 		t.Fatal(errors.Wrapf(err, "Failed to create a vault client for testing"))
 	}
-
 	// Initialize a new vaku client and attach the vault client
 	client := vaku.NewClient()
 	client.Client = vclient
-
 	// Set the token to the test value
-	client.SetToken(vaultToken)
-
+	client.SetToken(token)
 	// Set the address to the env var VAKU_VAULT_ADDR or the default constant
-	err = client.SetAddress(vaultAddr)
+	err = client.SetAddress(address)
 	if err != nil {
-		t.Errorf("Failed to set client address to %s", vaultAddr)
+		t.Errorf("Failed to set client address to %s", address)
 	}
-
-	if os.Getenv("VAKU_VAULT_ADDR") != "" {
-		err = client.SetAddress(os.Getenv("VAKU_VAULT_ADDR"))
+	if os.Getenv(addressEnvVar) != "" {
+		err = client.SetAddress(os.Getenv(addressEnvVar))
 		if err != nil {
-			t.Errorf("Failed to set client address to %s", os.Getenv("VAKU_VAULT_ADDR"))
+			t.Errorf("Failed to set client address to %s", os.Getenv(addressEnvVar))
 		}
 	} else {
-		err = client.SetAddress(vaultAddr)
+		err = client.SetAddress(address)
 		if err != nil {
-			t.Errorf("Failed to set client address to %s", vaultAddr)
+			t.Errorf("Failed to set client address to %s", address)
 		}
 	}
 
 	// Seed the client if it has never been seeded
-	if !seededOnce {
-		err = seed(t, client)
+	if !*seeded {
+		err := seed(t, client)
 		if err != nil {
 			t.Fatal(errors.Wrapf(err, "Failed to seed the vault client"))
 		}
-		seededOnce = true
+		*seeded = true
 	}
+
 	return client
+}
+
+// Initialize a new copy client to be used for tests
+func copyClientInitForTests(t *testing.T) *vaku.CopyClient {
+	// Initialize a new copy client and attach the source and target client
+	copyClient := vaku.NewCopyClient()
+
+	copyClient.Source = clientInitForTestsCommon(t, vaultToken, vaultAddr, "VAKU_VAULT_ADDR", &seededOnce)
+	copyClient.Target = clientInitForTestsCommon(t, targetVaultToken, targetVaultAddr, "VAKU_TARGET_VAULT_ADDR", &targetSeededOnce)
+	return copyClient
 }
 
 // seed uses a client to write dummy data used for testing to vault.

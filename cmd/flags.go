@@ -10,3 +10,13 @@ var indentString string
 
 // format is the format of our string output. Defaults to json
 var format string
+
+var sourceAddress string
+var sourceToken string
+var sourceNamespace string
+
+var targetAddress string
+var targetToken string
+var targetNamespace string
+
+var useSourceTarget bool

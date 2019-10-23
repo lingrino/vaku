@@ -23,7 +23,14 @@ Example:
 		inputSource := vaku.NewPathInput(args[0])
 		inputTarget := vaku.NewPathInput(args[1])
 
-		err := vgc.PathCopy(inputSource, inputTarget)
+		var err error
+		if !useSourceTarget {
+			err = vgc.PathCopy(inputSource, inputTarget)
+		} else {
+			authCopyClient()
+			err = copyClient.PathCopy(inputSource, inputTarget)
+		}
+
 		if err != nil {
 			fmt.Printf("%s", errors.Wrapf(err, "Failed to copy path %s to %s", args[0], args[1]))
 		} else {
@@ -36,4 +43,11 @@ Example:
 
 func init() {
 	pathCmd.AddCommand(pathCopyCmd)
+	pathCopyCmd.Flags().BoolVarP(&useSourceTarget, "use-source-target-params", "", false, "Use source|target address/namespace/token parameters")
+	pathCopyCmd.Flags().StringVarP(&sourceAddress, "source-address", "", "", "The Vault address for the source path")
+	pathCopyCmd.Flags().StringVarP(&sourceNamespace, "source-namespace", "", "", "The Vault namespace for the source path")
+	pathCopyCmd.Flags().StringVarP(&sourceToken, "source-token", "", "", "The Vault token to access the source path")
+	pathCopyCmd.Flags().StringVarP(&targetAddress, "target-address", "", "", "The Vault address for the target path")
+	pathCopyCmd.Flags().StringVarP(&targetNamespace, "target-namespace", "", "", "The Vault namespace for the target path")
+	pathCopyCmd.Flags().StringVarP(&targetToken, "target-token", "", "", "The Vault token to access the target path")
 }

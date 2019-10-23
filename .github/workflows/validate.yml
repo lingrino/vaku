@@ -17,6 +17,14 @@ jobs:
           SKIP_SETCAP: "true"
           VAULT_DEV_ROOT_TOKEN_ID: hunter2
           VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8300
+      targetvault:
+        image: vault:1.2.3
+        ports:
+          - 8400:8400
+        env:
+          SKIP_SETCAP: "true"
+          VAULT_DEV_ROOT_TOKEN_ID: targethunter2
+          VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8400
     steps:
       - name: Code - Checkout
         uses: actions/checkout@master
@@ -28,3 +36,4 @@ jobs:
         run: go test -cover -race -v ./...
         env:
           VAKU_VAULT_ADDR: http://vault:8300
+          VAKU_TARGET_VAULT_ADDR: http://targetvault:8400

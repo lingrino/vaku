@@ -62,3 +62,52 @@ func TestFolderCopy(t *testing.T) {
 		}
 	}
 }
+
+func TestCopyClientFolderCopy(t *testing.T) {
+	c := copyClientInitForTests(t)
+
+	tests := map[int]TestFolderCopyData{
+		1: {
+			inputSource: vaku.NewPathInput("secretv1/test"),
+			inputTarget: vaku.NewPathInput("secretv1/foldercopy"),
+			outputErr:   false,
+		},
+		2: {
+			inputSource: vaku.NewPathInput("secretv2/test"),
+			inputTarget: vaku.NewPathInput("secretv2/foldercopy"),
+			outputErr:   false,
+		},
+		3: {
+			inputSource: vaku.NewPathInput("secretv1/test"),
+			inputTarget: vaku.NewPathInput("secretv2/foldercopy"),
+			outputErr:   false,
+		},
+		4: {
+			inputSource: vaku.NewPathInput("secretv2/test"),
+			inputTarget: vaku.NewPathInput("secretv1/foldercopy"),
+			outputErr:   false,
+		},
+		5: {
+			inputSource: vaku.NewPathInput("secretdoesnotexist/test"),
+			inputTarget: vaku.NewPathInput("secretv1/test"),
+			outputErr:   true,
+		},
+		6: {
+			inputSource: vaku.NewPathInput("secretv1/test"),
+			inputTarget: vaku.NewPathInput("secretdoesnotexist/test"),
+			outputErr:   true,
+		},
+	}
+
+	for _, d := range tests {
+		e := c.FolderCopy(d.inputSource, d.inputTarget)
+		sr, _ := c.Source.FolderRead(d.inputSource)
+		tr, _ := c.Target.FolderRead(d.inputTarget)
+		if d.outputErr {
+			assert.Error(t, e)
+		} else {
+			assert.Equal(t, sr, tr)
+			assert.NoError(t, e)
+		}
+	}
+}
