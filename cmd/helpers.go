@@ -30,7 +30,9 @@ func authVGC() {
 		if err != nil {
 			fmt.Println(errors.Wrap(err, "Could not find home directory to check ~/.vault-token"))
 		} else {
-			token, err := ioutil.ReadFile(home + "/.vault-token")
+			tokenBytes, err := ioutil.ReadFile(home + "/.vault-token")
+			token := string(tokenBytes)
+			token = strings.TrimSpace(token)
 			if err != nil {
 				if strings.Contains(err.Error(), "no such file or directory") {
 					fmt.Println("INFO: Attempted to read token at ~/.vault-token, but the file does not exist")
@@ -41,7 +43,7 @@ func authVGC() {
 					os.Exit(1)
 				}
 			}
-			vclient.SetToken(string(token))
+			vclient.SetToken(token)
 		}
 	}
 
