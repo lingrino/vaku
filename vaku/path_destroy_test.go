@@ -1,10 +1,10 @@
 package vaku_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,7 +21,7 @@ func TestPathDestroy(t *testing.T) {
 	defer func() {
 		err = seed(t, c)
 		if err != nil {
-			t.Error(errors.Wrapf(err, "Failed to reseed"))
+			t.Error(fmt.Errorf("failed to reseed: %w", err))
 		}
 	}()
 

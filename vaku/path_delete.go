@@ -1,8 +1,6 @@
 package vaku
 
-import (
-	"github.com/pkg/errors"
-)
+import "fmt"
 
 // PathDelete takes in a PathInput and calls the native Vault delete on it. For v2
 // mounts this function only "marks the path as deleted", it does nothing with the
@@ -14,13 +12,13 @@ func (c *Client) PathDelete(i *PathInput) error {
 	i.opType = "delete"
 	err = c.InitPathInput(i)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to init delete path %s", i.Path)
+		return fmt.Errorf("failed to init delete path %s: %w", i.Path, err)
 	}
 
 	// Do the actual delete
 	_, err = c.Logical().Delete(i.opPath)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to delete secret at %s", i.opPath)
+		return fmt.Errorf("failed to delete secret at %s: %w", i.opPath, err)
 	}
 
 	return err

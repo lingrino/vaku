@@ -1,10 +1,10 @@
 package vaku_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,7 +23,7 @@ func TestPathUpdate(t *testing.T) {
 	defer func() {
 		err = seed(t, c)
 		if err != nil {
-			t.Error(errors.Wrap(err, "Failed to reseed"))
+			t.Error(fmt.Errorf("failed to reseed: %w", err))
 		}
 	}()
 
@@ -100,6 +100,6 @@ func TestPathUpdate(t *testing.T) {
 	// Reseed the vault server after tests end
 	err = seed(t, c)
 	if err != nil {
-		t.Error(errors.Wrap(err, "Failed to reseed"))
+		t.Error(fmt.Errorf("failed to reseed: %w", err))
 	}
 }

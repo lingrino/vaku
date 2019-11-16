@@ -1,7 +1,7 @@
 package vaku
 
 import (
-	"github.com/pkg/errors"
+	"fmt"
 )
 
 // folderCopyWorkerInput takes input/output channels for input to the job
@@ -21,12 +21,12 @@ func (c *Client) FolderCopy(s *PathInput, t *PathInput) error {
 	s.opType = "readwrite"
 	err = c.InitPathInput(s)
 	if err != nil {
-		return errors.Wrapf(err, "failed to init path %s", s.Path)
+		return fmt.Errorf("failed to init path %s: %w", s.Path, err)
 	}
 	t.opType = "readwrite"
 	err = c.InitPathInput(t)
 	if err != nil {
-		return errors.Wrapf(err, "failed to init path %s", t.Path)
+		return fmt.Errorf("failed to init path %s: %w", t.Path, err)
 	}
 
 	// Get the keys to copy
@@ -35,7 +35,7 @@ func (c *Client) FolderCopy(s *PathInput, t *PathInput) error {
 		TrimPathPrefix: true,
 	})
 	if err != nil {
-		return errors.Wrapf(err, "Failed to list %s", s.Path)
+		return fmt.Errorf("failed to list %s: %w", s.Path, err)
 	}
 
 	// Concurrency channels for workers
@@ -73,7 +73,7 @@ func (c *Client) FolderCopy(s *PathInput, t *PathInput) error {
 	for j := 0; j < len(list); j++ {
 		o := <-resultsC
 		if o != nil {
-			err = errors.Wrap(o, "Failed to copy path")
+			err = fmt.Errorf("failed to copy path: %w", o)
 		}
 	}
 
@@ -88,7 +88,7 @@ func (c *Client) folderCopyWorker(i *folderCopyWorkerInput) {
 		if more {
 			err = c.PathCopy(inputs["source"], inputs["target"])
 			if err != nil {
-				i.resultsC <- errors.Wrapf(err, "Failed to copy path %s to %s", inputs["source"].Path, inputs["target"].Path)
+				i.resultsC <- fmt.Errorf("failed to copy path %s to %s: %w", inputs["source"].Path, inputs["target"].Path, err)
 				continue
 			}
 			i.resultsC <- nil
@@ -109,12 +109,12 @@ func (c *CopyClient) FolderCopy(s *PathInput, t *PathInput) error {
 	s.opType = "readwrite"
 	err = c.Source.InitPathInput(s)
 	if err != nil {
-		return errors.Wrapf(err, "failed to init path %s", s.Path)
+		return fmt.Errorf("failed to init path %s: %w", s.Path, err)
 	}
 	t.opType = "readwrite"
 	err = c.Target.InitPathInput(t)
 	if err != nil {
-		return errors.Wrapf(err, "failed to init path %s", t.Path)
+		return fmt.Errorf("failed to init path %s: %w", t.Path, err)
 	}
 
 	// Get the keys to copy
@@ -123,7 +123,7 @@ func (c *CopyClient) FolderCopy(s *PathInput, t *PathInput) error {
 		TrimPathPrefix: true,
 	})
 	if err != nil {
-		return errors.Wrapf(err, "Failed to list %s", s.Path)
+		return fmt.Errorf("failed to list %s: %w", s.Path, err)
 	}
 
 	// Concurrency channels for workers
@@ -161,7 +161,7 @@ func (c *CopyClient) FolderCopy(s *PathInput, t *PathInput) error {
 	for j := 0; j < len(list); j++ {
 		o := <-resultsC
 		if o != nil {
-			err = errors.Wrap(o, "Failed to copy path")
+			err = fmt.Errorf("failed to copy path: %w", o)
 		}
 	}
 
@@ -176,7 +176,7 @@ func (c *CopyClient) folderCopyWorker(i *folderCopyWorkerInput) {
 		if more {
 			err = c.PathCopy(inputs["source"], inputs["target"])
 			if err != nil {
-				i.resultsC <- errors.Wrapf(err, "Failed to copy path %s to %s", inputs["source"].Path, inputs["target"].Path)
+				i.resultsC <- fmt.Errorf("failed to copy path %s to %s: %w", inputs["source"].Path, inputs["target"].Path, err)
 				continue
 			}
 			i.resultsC <- nil

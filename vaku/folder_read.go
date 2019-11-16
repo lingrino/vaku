@@ -1,9 +1,8 @@
 package vaku
 
 import (
+	"fmt"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 // folderReadWorkerOutput holds the key and any errors from a job
@@ -33,13 +32,13 @@ func (c *Client) FolderRead(i *PathInput) (map[string]map[string]interface{}, er
 		TrimPathPrefix: false,
 	})
 	if err != nil {
-		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
+		return nil, fmt.Errorf("failed to list %s: %w", i.Path, err)
 	}
 
 	// Hand over to folderReadCaller
 	output, err = c.folderReadCaller(i, list)
 	if err != nil {
-		return nil, errors.Wrapf(err, "Failed to read folder at %s", i.Path)
+		return nil, fmt.Errorf("failed to read folder at %s: %w", i.Path, err)
 	}
 
 	return output, err
@@ -59,13 +58,13 @@ func (c *Client) FolderReadOnce(i *PathInput) (map[string]map[string]interface{}
 		TrimPathPrefix: false,
 	})
 	if err != nil {
-		return nil, errors.Wrapf(err, "Failed to list %s", i.Path)
+		return nil, fmt.Errorf("failed to list %s: %w", i.Path, err)
 	}
 
 	// Hand over to folderReadCaller
 	output, err = c.folderReadCaller(i, list)
 	if err != nil {
-		return nil, errors.Wrapf(err, "Failed to read folder at %s", i.Path)
+		return nil, fmt.Errorf("failed to read folder at %s: %w", i.Path, err)
 	}
 
 	return output, err
@@ -81,7 +80,7 @@ func (c *Client) folderReadCaller(i *PathInput, keys []string) (map[string]map[s
 	i.opType = "read"
 	err = c.InitPathInput(i)
 	if err != nil {
-		return output, errors.Wrapf(err, "failed to init path %s", i.Path)
+		return output, fmt.Errorf("failed to init path %s: %w", i.Path, err)
 	}
 
 	// Remove folders (can't be read) from the list
@@ -118,7 +117,7 @@ func (c *Client) folderReadCaller(i *PathInput, keys []string) (map[string]map[s
 	for j := 0; j < len(keys); j++ {
 		o := <-resultsC
 		if o.err != nil {
-			err = errors.Wrapf(o.err, "Failed to read path %s", o.readPath)
+			err = fmt.Errorf("failed to read path %s: %w", o.readPath, err)
 		} else {
 			if i.TrimPathPrefix {
 				output[c.KeyJoin(strings.TrimPrefix(o.readPath, i.Path))] = o.data
@@ -141,7 +140,7 @@ func (c *Client) folderReadWorker(i *folderReadWorkerInput) {
 				i.resultsC <- &folderReadWorkerOutput{
 					readPath: "",
 					data:     nil,
-					err:      errors.Wrapf(err, "Failed to read path %s", pi.Path),
+					err:      fmt.Errorf("failed to read path %s: %w", pi.Path, err),
 				}
 				continue
 			}

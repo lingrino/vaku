@@ -1,7 +1,7 @@
 package vaku
 
 import (
-	"github.com/pkg/errors"
+	"fmt"
 )
 
 // folderMoveWorkerInput takes input/output channels for input to the job
@@ -19,12 +19,12 @@ func (c *Client) FolderMove(s *PathInput, t *PathInput) error {
 	s.opType = "readwrite"
 	err = c.InitPathInput(s)
 	if err != nil {
-		return errors.Wrapf(err, "failed to init path %s", s.Path)
+		return fmt.Errorf("failed to init path %s: %w", s.Path, err)
 	}
 	t.opType = "readwrite"
 	err = c.InitPathInput(t)
 	if err != nil {
-		return errors.Wrapf(err, "failed to init path %s", t.Path)
+		return fmt.Errorf("failed to init path %s: %w", t.Path, err)
 	}
 
 	// Get the keys to move
@@ -33,7 +33,7 @@ func (c *Client) FolderMove(s *PathInput, t *PathInput) error {
 		TrimPathPrefix: true,
 	})
 	if err != nil {
-		return errors.Wrapf(err, "Failed to list %s", s.Path)
+		return fmt.Errorf("failed to list %s: %w", s.Path, err)
 	}
 
 	// Concurrency channels for workers
@@ -71,7 +71,7 @@ func (c *Client) FolderMove(s *PathInput, t *PathInput) error {
 	for j := 0; j < len(list); j++ {
 		o := <-resultsC
 		if o != nil {
-			err = errors.Wrap(o, "Failed to move path")
+			err = fmt.Errorf("failed to move path: %w", o)
 		}
 	}
 
@@ -86,7 +86,7 @@ func (c *Client) folderMoveWorker(i *folderMoveWorkerInput) {
 		if more {
 			err = c.PathMove(inputs["source"], inputs["target"])
 			if err != nil {
-				i.resultsC <- errors.Wrapf(err, "Failed to move path %s to %s", inputs["source"].Path, inputs["target"].Path)
+				i.resultsC <- fmt.Errorf("failed to move path %s to %s: %w", inputs["source"].Path, inputs["target"].Path, err)
 				continue
 			}
 			i.resultsC <- nil
