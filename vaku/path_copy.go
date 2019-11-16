@@ -1,8 +1,6 @@
 package vaku
 
-import (
-	"github.com/pkg/errors"
-)
+import "fmt"
 
 // PathCopy takes in a source PathInput and a target PathInput. It then copies the data
 // from one path to another. Note that PathCopy can be used to copy data from one mount
@@ -13,13 +11,13 @@ func (c *Client) PathCopy(s *PathInput, t *PathInput) error {
 	// Read the data from the source path
 	d, err := c.PathRead(s)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to read data at %s", s.Path)
+		return fmt.Errorf("failed to read data at %s: %w", s.Path, err)
 	}
 
 	// Write the data to the new path
 	err = c.PathWrite(t, d)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to write data to %s", t.Path)
+		return fmt.Errorf("failed to write data to %s: %w", t.Path, err)
 	}
 
 	return err
@@ -34,13 +32,13 @@ func (c *CopyClient) PathCopy(s *PathInput, t *PathInput) error {
 	// Read the data from the source path
 	d, err := c.Source.PathRead(s)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to read data at %s", s.Path)
+		return fmt.Errorf("failed to read data at %s: %w", s.Path, err)
 	}
 
 	// Write the data to the new path
 	err = c.Target.PathWrite(t, d)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to write data to %s", t.Path)
+		return fmt.Errorf("failed to write data to %s: %w", t.Path, err)
 	}
 
 	return err

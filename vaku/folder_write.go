@@ -1,7 +1,7 @@
 package vaku
 
 import (
-	"github.com/pkg/errors"
+	"fmt"
 )
 
 // folderWriteWorkerInput takes input/output channels for input to the job
@@ -33,7 +33,7 @@ func (c *Client) FolderWrite(d map[string]map[string]interface{}) error {
 	basePathInfo.opType = "write"
 	err = c.InitPathInput(basePathInfo)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to init path %s", basePathInfo.Path)
+		return fmt.Errorf("failed to init path %s: %w", basePathInfo.Path, err)
 	}
 
 	// Concurrency channels for workers
@@ -66,7 +66,7 @@ func (c *Client) FolderWrite(d map[string]map[string]interface{}) error {
 	for j := 0; j < len(d); j++ {
 		o := <-resultsC
 		if o != nil {
-			err = errors.Wrap(o, "Failed to write path")
+			err = fmt.Errorf("failed to write path: %w", o)
 		}
 	}
 
@@ -80,7 +80,7 @@ func (c *Client) folderWriteWorker(i *folderWriteWorkerInput) {
 		if more {
 			err = c.PathWrite(id.path, id.data)
 			if err != nil {
-				i.resultsC <- errors.Wrapf(err, "Failed to write path %s", id.path.Path)
+				i.resultsC <- fmt.Errorf("failed to write path %s: %w", id.path.Path, err)
 				continue
 			}
 			i.resultsC <- nil

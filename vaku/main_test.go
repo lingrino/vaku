@@ -1,13 +1,13 @@
 package vaku_test
 
 import (
+	"fmt"
 	"os"
 	"strings"
 	"testing"
 
 	"github.com/hashicorp/vault/api"
 	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 )
 
 var seededOnce = false
@@ -23,7 +23,7 @@ func clientInitForTestsCommon(t *testing.T, token string, address string, addres
 	// Initialize a new vault client
 	vclient, err := api.NewClient(api.DefaultConfig())
 	if err != nil {
-		t.Fatal(errors.Wrapf(err, "Failed to create a vault client for testing"))
+		t.Fatal(fmt.Errorf("failed to create a vault client for testing: %w", err))
 	}
 	// Initialize a new vaku client and attach the vault client
 	client := vaku.NewClient()
@@ -33,17 +33,17 @@ func clientInitForTestsCommon(t *testing.T, token string, address string, addres
 	// Set the address to the env var VAKU_VAULT_ADDR or the default constant
 	err = client.SetAddress(address)
 	if err != nil {
-		t.Errorf("Failed to set client address to %s", address)
+		t.Errorf("failed to set client address to %s", address)
 	}
 	if os.Getenv(addressEnvVar) != "" {
 		err = client.SetAddress(os.Getenv(addressEnvVar))
 		if err != nil {
-			t.Errorf("Failed to set client address to %s", os.Getenv(addressEnvVar))
+			t.Errorf("failed to set client address to %s", os.Getenv(addressEnvVar))
 		}
 	} else {
 		err = client.SetAddress(address)
 		if err != nil {
-			t.Errorf("Failed to set client address to %s", address)
+			t.Errorf("failed to set client address to %s", address)
 		}
 	}
 
@@ -51,7 +51,7 @@ func clientInitForTestsCommon(t *testing.T, token string, address string, addres
 	if !*seeded {
 		err := seed(t, client)
 		if err != nil {
-			t.Fatal(errors.Wrapf(err, "Failed to seed the vault client"))
+			t.Fatal(fmt.Errorf("failed to seed the vault client: %w", err))
 		}
 		*seeded = true
 	}
@@ -89,7 +89,7 @@ func seed(t *testing.T, c *vaku.Client) error {
 		// before attempting the mount, but this is only used in tests so it's not
 		// worth the effort. Same with the next two error checks.
 		if !strings.Contains(err.Error(), "path already in use") {
-			t.Error(errors.Wrap(err, "Failed to turn on vault logging"))
+			t.Error(fmt.Errorf("failed to turn on vault logging: %w", err))
 		}
 	}
 
@@ -101,7 +101,7 @@ func seed(t *testing.T, c *vaku.Client) error {
 	})
 	if err != nil {
 		if !strings.Contains(err.Error(), "path is already in use at secretv1/") {
-			t.Error(errors.Wrap(err, "Failed to mount secretv1/"))
+			t.Error(fmt.Errorf("failed to mount secretv1/: %w", err))
 		}
 	}
 	err = c.Sys().Mount("secretv2/", &api.MountInput{
@@ -112,7 +112,7 @@ func seed(t *testing.T, c *vaku.Client) error {
 	})
 	if err != nil {
 		if !strings.Contains(err.Error(), "path is already in use at secretv2/") {
-			t.Error(errors.Wrap(err, "Failed to mount secretv2/"))
+			t.Error(fmt.Errorf("failed to mount secretv2/: %w", err))
 		}
 	}
 
@@ -155,11 +155,11 @@ func seed(t *testing.T, c *vaku.Client) error {
 
 	err = c.FolderWrite(v1Seeds)
 	if err != nil {
-		return errors.Wrap(err, "Failed to seed secretv1 path")
+		return fmt.Errorf("failed to seed secretv1 path: %w", err)
 	}
 	err = c.FolderWrite(v2Seeds)
 	if err != nil {
-		return errors.Wrap(err, "Failed to seed secretv2 path")
+		return fmt.Errorf("failed to seed secretv2 path: %w", err)
 	}
 
 	return err

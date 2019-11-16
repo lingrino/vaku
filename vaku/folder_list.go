@@ -1,10 +1,9 @@
 package vaku
 
 import (
+	"fmt"
 	"sort"
 	"sync"
-
-	"github.com/pkg/errors"
 )
 
 // folderListWorkerOutput holds the key and any errors from a job
@@ -54,7 +53,7 @@ func (c *Client) FolderList(i *PathInput) ([]string, error) {
 			o, more := <-resultsC
 			if more {
 				if o.err != nil {
-					err = errors.Wrapf(o.err, "Failed to list path %s", i.Path)
+					err = fmt.Errorf("failed to list path %s: %w", i.Path, err)
 				} else {
 					output = append(output, o.key)
 				}
@@ -99,7 +98,7 @@ func (c *Client) folderListWorker(i *folderListWorkerInput) {
 				i.resultsWG.Add(1)
 				i.resultsC <- &folderListWorkerOutput{
 					key: "",
-					err: errors.Wrapf(err, "Failed to list path %s", l.Path),
+					err: fmt.Errorf("failed to list path %s: %w", l.Path, err),
 				}
 				i.inputsWG.Done()
 				continue
