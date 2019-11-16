@@ -7,6 +7,8 @@
 
 Vaku is a CLI and Go API that add useful functions on top of Hashicorp Vault.
 
+**NOTE:** Vaku is in a stable and supported state. New features will not be added *by me*, but I will review any issues or PRs that improve the tool or add new features.
+
 ## Installation
 
 The easiest way to install the vaku CLI is with [homebrew][]
@@ -112,20 +114,9 @@ please open an issue or pull request and I will be sure to address it.
 - Folder Search
 - Folder Map (CLI Only)
 
-## Planned Functionality
-
-Here is a list of all known and planned work.
-
-- [ ] CLI tests
-- [ ] CLI support for concurrency flag
-- [ ] Path/Folder `diff` function
-- [ ] Add timeouts to background workers
-- [ ] Make background workers more generic
-
 ## Running Tests
 
 Tests are meant to be run side by side with a real Vault server docker image. This
 creates an external dependency for the tests but makes it much simpler to test different
 Vault versions and key/value mounts. With docker and docker-compose installed tests
-can be run with a simple `make test`. CircleCI will also build all commits and report
-status on all PRs.
+can be run with a simple `make test`.
