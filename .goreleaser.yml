@@ -22,7 +22,7 @@ changelog:
 brews:
   - name: vaku
     description: "A CLI and Go API to extend the official Vault client"
-    homepage: https://vaku.io/
+    homepage: https://vaku.dev/
     skip_upload: auto
     github:
       owner: lingrino
