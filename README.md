@@ -2,8 +2,9 @@
 
 [![Vaku](www/assets/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
-[![GoDoc](https://godoc.org/github.com/lingrino/vaku/vaku?status.svg)](https://godoc.org/github.com/lingrino/vaku/vaku)
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat)](https://pkg.go.dev/github.com/lingrino/vaku/vaku)
+[![goreportcard](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
+[![codecov](https://codecov.io/gh/lingrino/vaku/branch/master/graph/badge.svg)](https://codecov.io/gh/lingrino/vaku)
 
 Vaku is a CLI and Go API that add useful functions on top of Hashicorp Vault.
 
