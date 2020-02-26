@@ -154,12 +154,15 @@ func TestCopyClientPathDeleted(t *testing.T) {
 			"r6R0JUzX": "rs1mCRB5",
 		}
 
-		c.Source.PathWrite(d.inputSource, secret)
+		err := c.Source.PathWrite(d.inputSource, secret)
+		assert.NoError(t, err)
 
 		if d.oppath == "delete" {
-			c.Source.PathDelete(d.inputSource)
+			err = c.Source.PathDelete(d.inputSource)
+			assert.NoError(t, err)
 		} else if d.oppath == "destroy" {
-			c.Source.PathDestroy(d.inputSource)
+			err = c.Source.PathDestroy(d.inputSource)
+			assert.NoError(t, err)
 		}
 
 		copyErr := c.PathCopy(d.inputSource, d.inputTarget)
