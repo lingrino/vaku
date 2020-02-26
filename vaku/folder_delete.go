@@ -1,7 +1,7 @@
 package vaku
 
 import (
-	"github.com/pkg/errors"
+	"fmt"
 )
 
 // folderDeleteWorkerInput takes input/output channels for input to the job
@@ -22,14 +22,14 @@ func (c *Client) FolderDelete(i *PathInput) error {
 		TrimPathPrefix: false,
 	})
 	if err != nil {
-		return errors.Wrapf(err, "Failed to list %s", i.Path)
+		return fmt.Errorf("failed to list %s: %w", i.Path, err)
 	}
 
 	// Init the path
 	i.opType = "delete"
 	err = c.InitPathInput(i)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to init path %s", i.Path)
+		return fmt.Errorf("failed to init path %s: %w", i.Path, err)
 	}
 
 	// Concurrency channels for workers
@@ -59,7 +59,7 @@ func (c *Client) FolderDelete(i *PathInput) error {
 	for j := 0; j < len(list); j++ {
 		o := <-resultsC
 		if o != nil {
-			err = errors.Wrap(o, "Failed to delete path")
+			err = fmt.Errorf("failed to delete path: %w", o)
 		}
 	}
 
@@ -75,7 +75,7 @@ func (c *Client) folderDeleteWorker(i *folderDeleteWorkerInput) {
 		if more {
 			err = c.PathDelete(path)
 			if err != nil {
-				i.resultsC <- errors.Wrapf(err, "Failed to delete path %s", path.Path)
+				i.resultsC <- fmt.Errorf("failed to delete path %s: %w", path.Path, err)
 				continue
 			}
 			i.resultsC <- nil

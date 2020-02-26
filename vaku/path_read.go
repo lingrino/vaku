@@ -2,8 +2,6 @@ package vaku
 
 import (
 	"fmt"
-
-	"github.com/pkg/errors"
 )
 
 // PathRead takes in a PathInput, calls the native vault read on it, extracts the secret,
@@ -17,13 +15,13 @@ func (c *Client) PathRead(i *PathInput) (map[string]interface{}, error) {
 	i.opType = "read"
 	err = c.InitPathInput(i)
 	if err != nil {
-		return output, errors.Wrapf(err, "Failed to init read path %s", i.Path)
+		return output, fmt.Errorf("failed to init read path %s: %w", i.Path, err)
 	}
 
 	// Do the actual read
 	secret, err := c.Logical().Read(i.opPath)
 	if err != nil {
-		return output, errors.Wrapf(err, "Failed to read secret at %s", i.opPath)
+		return output, fmt.Errorf("failed to read secret at %s: %w", i.opPath, err)
 	}
 	if secret == nil || secret.Data == nil {
 		return output, fmt.Errorf("No value found at %s", i.opPath)

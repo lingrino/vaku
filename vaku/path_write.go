@@ -1,8 +1,6 @@
 package vaku
 
-import (
-	"github.com/pkg/errors"
-)
+import "fmt"
 
 // PathWrite takes in a PathInput and data to written to that path. It then
 // calls the native vault write with that data at the specified path.
@@ -13,7 +11,7 @@ func (c *Client) PathWrite(i *PathInput, d map[string]interface{}) error {
 	i.opType = "write"
 	err = c.InitPathInput(i)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to init write path %s", i.Path)
+		return fmt.Errorf("failed to init write path %s: %w", i.Path, err)
 	}
 
 	// V2 mounts nest the actual data in another map[string]interface{}
@@ -27,7 +25,7 @@ func (c *Client) PathWrite(i *PathInput, d map[string]interface{}) error {
 	// Do the actual write
 	_, err = c.Logical().Write(i.opPath, d)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to write secret to %s", i.opPath)
+		return fmt.Errorf("failed to write secret to %s: %w", i.opPath, err)
 	}
 
 	return err

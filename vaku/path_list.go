@@ -3,8 +3,6 @@ package vaku
 import (
 	"fmt"
 	"sort"
-
-	"github.com/pkg/errors"
 )
 
 // PathList takes in a PathInput, calls the native vault list on it, extracts
@@ -18,13 +16,13 @@ func (c *Client) PathList(i *PathInput) ([]string, error) {
 	i.opType = "list"
 	err = c.InitPathInput(i)
 	if err != nil {
-		return nil, errors.Wrap(err, "Failed to initialize PathInput")
+		return nil, fmt.Errorf("failed to initialize PathInput: %w", err)
 	}
 
 	// do the actual list
 	secret, err := c.Logical().List(i.opPath)
 	if err != nil {
-		return nil, errors.Wrapf(err, "Failed to list %s", i.opPath)
+		return nil, fmt.Errorf("failed to list %s: %w", i.opPath, err)
 	}
 
 	// extract list data from the returned secret
@@ -38,14 +36,14 @@ func (c *Client) PathList(i *PathInput) ([]string, error) {
 	}
 	keys, ok := data.([]interface{})
 	if !ok {
-		return nil, fmt.Errorf("Failed to convert keys to interface at %s", i.opPath)
+		return nil, fmt.Errorf("failed to convert keys to interface at %s", i.opPath)
 	}
 
 	// Make sure every key is a string and append to output
 	for _, k := range keys {
 		key, ok := k.(string)
 		if !ok {
-			return nil, fmt.Errorf("Failed to assert %s as a string at %s", key, i.opPath)
+			return nil, fmt.Errorf("failed to assert %s as a string at %s", key, i.opPath)
 		}
 		output = append(output, key)
 	}

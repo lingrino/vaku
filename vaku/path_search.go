@@ -2,9 +2,8 @@ package vaku
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 // PathSearch takes in a PathInput and a search string, reads the path, and searches
@@ -18,7 +17,7 @@ func (c *Client) PathSearch(i *PathInput, s string) (bool, error) {
 	// Read the data at the path
 	read, err := c.PathRead(i)
 	if err != nil {
-		return false, errors.Wrapf(err, "Failed to read data at path %s", i.Path)
+		return false, fmt.Errorf("failed to read data at path %s: %w", i.Path, err)
 	}
 
 	// We know that read returns map[string]interface{} and that the interface{}
@@ -35,7 +34,7 @@ func (c *Client) PathSearch(i *PathInput, s string) (bool, error) {
 		}
 		vjson, err := json.Marshal(v)
 		if err != nil {
-			return false, errors.Wrapf(err, "failed to marshall value into json for search at path %s", i.Path)
+			return false, fmt.Errorf("failed to marshall value into json for search at path %s: %w", i.Path, err)
 		}
 		vstr := string(vjson)
 		if strings.Contains(vstr, s) {

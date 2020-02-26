@@ -3,8 +3,6 @@ package vaku
 import (
 	"fmt"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 // PathInput is the standard way of representing a Vault path with Vaku. The only
@@ -71,7 +69,7 @@ func (c *Client) InitPathInput(i *PathInput) error {
 	} else if i.opPath == "" || i.mountPath == "" || i.mountVersion == "" || i.mountlessPath == "" {
 		m, err := c.MountInfo(i.Path)
 		if err != nil {
-			return errors.Wrapf(err, "Failed to describe mount for path %s", i.Path)
+			return fmt.Errorf("failed to describe mount for path %s: %w", i.Path, err)
 		}
 		if m.MountVersion == "2" {
 			if i.opType == "list" || i.opType == "destroy" {

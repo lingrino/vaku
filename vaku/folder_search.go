@@ -1,10 +1,9 @@
 package vaku
 
 import (
+	"fmt"
 	"sort"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 // folderSearchWorkerInput takes input/output channels for input to the job
@@ -33,7 +32,7 @@ func (c *Client) FolderSearch(i *PathInput, s string) ([]string, error) {
 	i.opType = "read"
 	err = c.InitPathInput(i)
 	if err != nil {
-		return output, errors.Wrapf(err, "failed to init path %s", i.Path)
+		return output, fmt.Errorf("failed to init path %s: %w", i.Path, err)
 	}
 
 	// Get all of the paths to search
@@ -42,7 +41,7 @@ func (c *Client) FolderSearch(i *PathInput, s string) ([]string, error) {
 		TrimPathPrefix: true,
 	})
 	if err != nil {
-		return output, errors.Wrapf(err, "failed to list folder at %s", i.Path)
+		return output, fmt.Errorf("failed to list folder at %s: %w", i.Path, err)
 	}
 
 	// Concurrency channels for workers
@@ -73,7 +72,7 @@ func (c *Client) FolderSearch(i *PathInput, s string) ([]string, error) {
 	for j := 0; j < len(list); j++ {
 		o := <-resultsC
 		if o.err != nil {
-			err = errors.Wrapf(o.err, "Failed to search path %s", o.path)
+			err = fmt.Errorf("failed to search path %s: %w", o.path, err)
 		}
 		if o.match {
 			if i.TrimPathPrefix {
@@ -102,7 +101,7 @@ func (c *Client) folderSearchWorker(i *folderSearchWorkerInput) {
 				match: false,
 			}
 			if err != nil {
-				output.err = errors.Wrapf(err, "Failed to search path %s", input.Path)
+				output.err = fmt.Errorf("failed to search path %s: %w", input.Path, err)
 				i.resultsC <- output
 				continue
 			}

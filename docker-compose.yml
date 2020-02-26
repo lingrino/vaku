@@ -1,7 +1,7 @@
-version: '3'
+version: "3"
 services:
   vault:
-    image: vault:1.2.3
+    image: vault:1.3.2
     ports:
       - 8300:8300
     environment:
@@ -10,7 +10,7 @@ services:
       - VAULT_DEV_ROOT_TOKEN_ID=hunter2
       - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8300
   targetVault:
-    image: vault:1.2.3
+    image: vault:1.3.2
     ports:
       - 8400:8400
     environment:

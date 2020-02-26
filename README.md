@@ -2,10 +2,13 @@
 
 [![Vaku](www/assets/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
-[![GoDoc](https://godoc.org/github.com/lingrino/vaku/vaku?status.svg)](https://godoc.org/github.com/lingrino/vaku/vaku)
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat)](https://pkg.go.dev/github.com/lingrino/vaku/vaku)
+[![goreportcard](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
+[![codecov](https://codecov.io/gh/lingrino/vaku/branch/master/graph/badge.svg)](https://codecov.io/gh/lingrino/vaku)
 
 Vaku is a CLI and Go API that add useful functions on top of Hashicorp Vault.
+
+**NOTE:** Vaku is in a stable and supported state. New features will not be added *by me*, but I will review any issues or PRs that improve the tool or add new features.
 
 ## Installation
 
@@ -112,20 +115,9 @@ please open an issue or pull request and I will be sure to address it.
 - Folder Search
 - Folder Map (CLI Only)
 
-## Planned Functionality
-
-Here is a list of all known and planned work.
-
-- [ ] CLI tests
-- [ ] CLI support for concurrency flag
-- [ ] Path/Folder `diff` function
-- [ ] Add timeouts to background workers
-- [ ] Make background workers more generic
-
 ## Running Tests
 
 Tests are meant to be run side by side with a real Vault server docker image. This
 creates an external dependency for the tests but makes it much simpler to test different
 Vault versions and key/value mounts. With docker and docker-compose installed tests
-can be run with a simple `make test`. CircleCI will also build all commits and report
-status on all PRs.
+can be run with a simple `make test`.

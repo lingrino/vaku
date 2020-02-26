@@ -1,10 +1,10 @@
 package vaku_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -77,7 +77,7 @@ func TestFolderMove(t *testing.T) {
 		}
 		err = seed(t, c) // reseed every time for this test
 		if err != nil {
-			t.Error(errors.Wrap(err, "Failed to reseed"))
+			t.Error(fmt.Errorf("failed to reseed: %w", err))
 		}
 	}
 }

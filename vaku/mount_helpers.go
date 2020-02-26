@@ -3,8 +3,6 @@ package vaku
 import (
 	"fmt"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 // MountInfoOutput holds output for MountInfo. This data can be useful for
@@ -25,7 +23,7 @@ func (c *Client) MountInfo(p string) (*MountInfoOutput, error) {
 
 	mounts, err := c.Sys().ListMounts()
 	if err != nil {
-		return nil, errors.Wrap(err, "Failed to list mounts")
+		return nil, fmt.Errorf("failed to list mounts: %w", err)
 	}
 
 	// Assumes that all mounts have unique prefixes

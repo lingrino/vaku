@@ -1,8 +1,6 @@
 package vaku
 
-import (
-	"github.com/pkg/errors"
-)
+import "fmt"
 
 // PathDestroy takes in a PathInput and calls the native delete on 'mount/metadata/path'
 // This function only works on versioned (V2) key/value mounts. Note that this destroys ALL
@@ -14,13 +12,13 @@ func (c *Client) PathDestroy(i *PathInput) error {
 	i.opType = "destroy"
 	err = c.InitPathInput(i)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to init destroy path %s", i.Path)
+		return fmt.Errorf("failed to init destroy path %s: %w", i.Path, err)
 	}
 
 	// Do the actual destroy
 	_, err = c.Logical().Delete(i.opPath)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to destroy secret at %s", i.opPath)
+		return fmt.Errorf("failed to destroy secret at %s: %w", i.opPath, err)
 	}
 
 	return err
