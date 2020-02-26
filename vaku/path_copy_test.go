@@ -113,10 +113,10 @@ func TestCopyClientPathCopy(t *testing.T) {
 }
 
 type TestPathCopyDeletedData struct {
-	inputSource   *vaku.PathInput
-	inputTarget   *vaku.PathInput
-	copyErr       bool
-	oppath        string
+	inputSource *vaku.PathInput
+	inputTarget *vaku.PathInput
+	copyErr     bool
+	oppath      string
 }
 
 func TestCopyClientPathDeleted(t *testing.T) {
@@ -124,22 +124,22 @@ func TestCopyClientPathDeleted(t *testing.T) {
 
 	tests := map[int]TestPathCopyDeletedData{
 		1: {
-			inputSource:   vaku.NewPathInput("secretv1/copydeleted/test"),
-			inputTarget:   vaku.NewPathInput("secretv1/copydeleted/test"),
-			copyErr:       true,
-			oppath:        "delete",
+			inputSource: vaku.NewPathInput("secretv1/copydeleted/test"),
+			inputTarget: vaku.NewPathInput("secretv1/copydeleted/test"),
+			copyErr:     true,
+			oppath:      "delete",
 		},
 		2: {
-			inputSource:   vaku.NewPathInput("secretv2/copydeleted/test"),
-			inputTarget:   vaku.NewPathInput("secretv2/copydeleted/test"),
-			copyErr:       false,
-			oppath:        "delete",
+			inputSource: vaku.NewPathInput("secretv2/copydeleted/test"),
+			inputTarget: vaku.NewPathInput("secretv2/copydeleted/test"),
+			copyErr:     false,
+			oppath:      "delete",
 		},
 		3: {
-			inputSource:   vaku.NewPathInput("secretv2/copydestroyed/test"),
-			inputTarget:   vaku.NewPathInput("secretv2/copydestroyed/test"),
-			copyErr:       true,
-			oppath:        "destroy",
+			inputSource: vaku.NewPathInput("secretv2/copydestroyed/test"),
+			inputTarget: vaku.NewPathInput("secretv2/copydestroyed/test"),
+			copyErr:     true,
+			oppath:      "destroy",
 		},
 	}
 
