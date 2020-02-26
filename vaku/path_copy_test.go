@@ -116,7 +116,6 @@ type TestPathCopyDeletedData struct {
 	inputSource   *vaku.PathInput
 	inputTarget   *vaku.PathInput
 	copyErr       bool
-	readTargetErr bool
 	oppath        string
 }
 
@@ -128,21 +127,18 @@ func TestCopyClientPathDeleted(t *testing.T) {
 			inputSource:   vaku.NewPathInput("secretv1/copydeleted/test"),
 			inputTarget:   vaku.NewPathInput("secretv1/copydeleted/test"),
 			copyErr:       true,
-			readTargetErr: true,
 			oppath:        "delete",
 		},
 		2: {
 			inputSource:   vaku.NewPathInput("secretv2/copydeleted/test"),
 			inputTarget:   vaku.NewPathInput("secretv2/copydeleted/test"),
 			copyErr:       false,
-			readTargetErr: true,
 			oppath:        "delete",
 		},
 		3: {
 			inputSource:   vaku.NewPathInput("secretv2/copydestroyed/test"),
 			inputTarget:   vaku.NewPathInput("secretv2/copydestroyed/test"),
 			copyErr:       true,
-			readTargetErr: true,
 			oppath:        "destroy",
 		},
 	}
