@@ -111,3 +111,65 @@ func TestCopyClientPathCopy(t *testing.T) {
 		}
 	}
 }
+
+type TestPathCopyDeletedData struct {
+	inputSource *vaku.PathInput
+	inputTarget *vaku.PathInput
+	copyErr     bool
+	oppath      string
+}
+
+func TestCopyClientPathDeleted(t *testing.T) {
+	c := copyClientInitForTests(t)
+
+	tests := map[int]TestPathCopyDeletedData{
+		1: {
+			inputSource: vaku.NewPathInput("secretv1/copydeleted/test"),
+			inputTarget: vaku.NewPathInput("secretv1/copydeleted/test"),
+			copyErr:     true,
+			oppath:      "delete",
+		},
+		2: {
+			inputSource: vaku.NewPathInput("secretv2/copydeleted/test"),
+			inputTarget: vaku.NewPathInput("secretv2/copydeleted/test"),
+			copyErr:     false,
+			oppath:      "delete",
+		},
+		3: {
+			inputSource: vaku.NewPathInput("secretv2/copydestroyed/test"),
+			inputTarget: vaku.NewPathInput("secretv2/copydestroyed/test"),
+			copyErr:     true,
+			oppath:      "destroy",
+		},
+	}
+
+	for _, d := range tests {
+		secret := map[string]interface{}{
+			"Eg5ljS7t": "6F1B5nBg",
+			"quqr32S5": "81iY4HAN",
+			"r6R0JUzX": "rs1mCRB5",
+		}
+
+		err := c.Source.PathWrite(d.inputSource, secret)
+		assert.NoError(t, err)
+
+		if d.oppath == "delete" {
+			err = c.Source.PathDelete(d.inputSource)
+			assert.NoError(t, err)
+		} else if d.oppath == "destroy" {
+			err = c.Source.PathDestroy(d.inputSource)
+			assert.NoError(t, err)
+		}
+
+		copyErr := c.PathCopy(d.inputSource, d.inputTarget)
+		tr, readTargetErr := c.Target.PathRead(d.inputTarget)
+		if d.copyErr {
+			assert.Error(t, copyErr)
+			assert.Error(t, readTargetErr)
+		} else {
+			assert.NoError(t, copyErr)
+			assert.Nil(t, tr)
+			assert.Error(t, readTargetErr)
+		}
+	}
+}

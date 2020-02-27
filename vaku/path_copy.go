@@ -35,6 +35,11 @@ func (c *CopyClient) PathCopy(s *PathInput, t *PathInput) error {
 		return fmt.Errorf("failed to read data at %s: %w", s.Path, err)
 	}
 
+	// Do not copy KV v2 secrets that are deleted
+	if s.mountVersion == "2" && d["VAKU_STATUS"] == "SECRET_HAS_BEEN_DELETED" {
+		return nil
+	}
+
 	// Write the data to the new path
 	err = c.Target.PathWrite(t, d)
 	if err != nil {
