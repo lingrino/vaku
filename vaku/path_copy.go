@@ -36,7 +36,8 @@ func (c *CopyClient) PathCopy(s *PathInput, t *PathInput) error {
 	}
 
 	// Do not copy KV v2 secrets that are deleted
-	if s.mountVersion == "2" && d["VAKU_STATUS"] == "SECRET_HAS_BEEN_DELETED" {
+	if s.mountVersion == "2" && (d["VAKU_STATUS"] == "SECRET_HAS_BEEN_DELETED" ||
+		d["VAKU_STATUS"] == "SECRET_HAS_BEEN_DESTROYED") {
 		return nil
 	}
 
