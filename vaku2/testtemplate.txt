@@ -1,0 +1,39 @@
+package vaku
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+// TestNewClient tests NewClient.
+func TestNewClient(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name    string
+		give    string
+		want    string
+		wantErr error
+	}{
+		{
+			name:    "name",
+			give:    "yes",
+			want:    "yes",
+			wantErr: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			// do the thing
+
+			// assert the outputs
+			assert.Equal(t, tt.wantErr, err)
+			assert.Equal(t, tt.want, want)
+		})
+	}
+}
