@@ -6,8 +6,13 @@ import (
 
 // Client holds Vaku functions and wraps Vault API clients.
 type Client struct {
+	// vault clients used to call the API
+	// source is also the client used when there is no dest set
 	source *api.Client
 	dest   *api.Client
+
+	// number of concurrent operations we'll run at once
+	workers uint
 }
 
 // Option configures a Client.
@@ -50,9 +55,23 @@ func WithVaultDestClient(c *api.Client) Option {
 	return withDestVaultClient{c}
 }
 
+type withWorkers uint
+
+func (o withWorkers) apply(c *Client) error {
+	c.workers = uint(o)
+	return nil
+}
+
+func WithWorkers(n uint) Option {
+	return withWorkers(n)
+}
+
 // NewClient returns a new empty Vaku Client based on the Vault API config
 func NewClient(opts ...Option) (*Client, error) {
-	client := &Client{}
+	// set defaults
+	client := &Client{
+		workers: 10,
+	}
 
 	// apply options
 	for _, opt := range opts {

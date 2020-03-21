@@ -58,6 +58,13 @@ func assertClientsEqual(t *testing.T, expected *Client, actual *Client) {
 	} else {
 		assert.Nil(t, actual.dest)
 	}
+
+	// zero out clients and assert equal
+	expected.source = nil
+	expected.dest = nil
+	actual.source = nil
+	actual.dest = nil
+	assert.Equal(t, expected, actual)
 }
 
 // TestNewClient tests NewClient.
@@ -71,18 +78,22 @@ func TestNewClient(t *testing.T) {
 		wantErr error
 	}{
 		{
-			name:    "nil",
-			give:    []Option{},
-			want:    &Client{},
+			name: "nil",
+			give: []Option{},
+			want: &Client{
+				workers: 10,
+			},
 			wantErr: nil,
 		},
 		{
 			name: "vault client",
 			give: []Option{
 				WithVaultClient(newDefaultVaultClient(t)),
+				WithWorkers(100),
 			},
 			want: &Client{
-				source: newDefaultVaultClient(t),
+				source:  newDefaultVaultClient(t),
+				workers: 100,
 			},
 			wantErr: nil,
 		},
@@ -93,8 +104,9 @@ func TestNewClient(t *testing.T) {
 				WithVaultDestClient(newDefaultVaultClient(t)),
 			},
 			want: &Client{
-				source: newDefaultVaultClient(t),
-				dest:   newDefaultVaultClient(t),
+				source:  newDefaultVaultClient(t),
+				dest:    newDefaultVaultClient(t),
+				workers: 10,
 			},
 			wantErr: nil,
 		},
