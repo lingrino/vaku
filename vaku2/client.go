@@ -6,12 +6,11 @@ import (
 
 // Client holds Vaku functions and wraps Vault API clients.
 type Client struct {
-	// vault clients used to call the API
-	// source is also the client used when there is no dest set
+	// source is the default client and also used as dest when dest is nil.
 	source *api.Client
 	dest   *api.Client
 
-	// number of concurrent operations we'll run at once
+	// max number of concurrent operations we'll run.
 	workers uint
 }
 
@@ -62,6 +61,10 @@ func (o withWorkers) apply(c *Client) error {
 	return nil
 }
 
+// WithWorkers sets the maximum number of goroutines that will be used to run folder based
+// functions. The default value is 10, but a stable and well-tuned Vault server should be able to
+// handle up to 100 without issues. Use with caution and tune specifically to your environment and
+// storage backend.
 func WithWorkers(n uint) Option {
 	return withWorkers(n)
 }
