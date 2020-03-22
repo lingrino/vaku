@@ -18,6 +18,7 @@ func TestPathList(t *testing.T) {
 		giveOptions []Option
 		want        []string
 		wantErr     error
+		skipMount   bool
 	}{
 		{
 			name:    "list test",
@@ -26,15 +27,27 @@ func TestPathList(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name:        "full path",
+			name:        "full path prefix",
 			give:        "test/inner/again/",
 			giveOptions: []Option{WithFullPath(true)},
 			want:        []string{"test/inner/again/inner/"},
 			wantErr:     nil,
 		},
 		{
+			name:    "single secret",
+			give:    "test/foo",
+			want:    nil,
+			wantErr: nil,
+		},
+		{
 			name:    "list bad path",
 			give:    "doesnotexist",
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name:    "no mount",
+			give:    noMountPrefix,
 			want:    nil,
 			wantErr: nil,
 		},
@@ -126,7 +139,12 @@ func TestPathList(t *testing.T) {
 			}
 
 			for _, ver := range kvMountVersions {
-				list, err := client.PathList(PathJoin(ver, tt.give))
+				path := tt.give
+				if tt.give != noMountPrefix {
+					path = PathJoin(ver, tt.give)
+				}
+
+				list, err := client.PathList(path)
 				TrimListPrefix(list, ver)
 
 				assert.True(t, errors.Is(err, tt.wantErr))

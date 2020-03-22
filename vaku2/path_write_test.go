@@ -19,15 +19,7 @@ func TestPathWrite(t *testing.T) {
 		wantErr     error
 	}{
 		{
-			name: "write/foo",
-			give: "write/foo",
-			giveData: map[string]interface{}{
-				"foo": "bar",
-			},
-			wantErr: nil,
-		},
-		{
-			name: "write/bar",
+			name: "new path",
 			give: "write/bar",
 			giveData: map[string]interface{}{
 				"Eg5ljS7t": "6F1B5nBg",
@@ -37,8 +29,22 @@ func TestPathWrite(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name:     "bad mount",
-			give:     "mountdoesnotexist",
+			name: "overwrite",
+			give: "test/foo",
+			giveData: map[string]interface{}{
+				"foo": "bar",
+			},
+			wantErr: nil,
+		},
+		{
+			name:     "nil data",
+			give:     "write/foo",
+			giveData: nil,
+			wantErr:  ErrVaultWrite,
+		},
+		{
+			name:     "no mount",
+			give:     noMountPrefix,
 			giveData: nil,
 			wantErr:  ErrVaultWrite,
 		},
@@ -55,18 +61,30 @@ func TestPathWrite(t *testing.T) {
 			client, err := NewClient(append(tt.giveOptions, WithVaultClient(apiClient))...)
 			assert.NoError(t, err)
 
+			backupL := client.sourceL
 			if tt.giveLogical != nil {
 				client.sourceL = tt.giveLogical
 			}
 
 			for _, ver := range kvMountVersions {
-				err := client.PathWrite(PathJoin(ver, tt.give), tt.giveData)
+				path := tt.give
+				if tt.give != noMountPrefix {
+					path = PathJoin(ver, tt.give)
+				}
+
+				err := client.PathWrite(path, tt.giveData)
 				assert.True(t, errors.Is(err, tt.wantErr))
 
-				readBack, err := client.PathRead(PathJoin(ver, tt.give))
-				assert.NoError(t, err)
+				if tt.give == noMountPrefix {
+					client.sourceL = backupL
+					readBack, err := client.PathRead(PathJoin(ver, tt.give))
+					if tt.giveLogical != nil {
+						client.sourceL = tt.giveLogical
+					}
+					assert.NoError(t, err)
 
-				assert.Equal(t, tt.giveData, readBack)
+					assert.Equal(t, tt.giveData, readBack)
+				}
 			}
 		})
 	}

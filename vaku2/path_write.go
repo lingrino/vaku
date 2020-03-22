@@ -16,5 +16,5 @@ func (c *Client) PathWrite(p string, d map[string]interface{}) error {
 		return fmt.Errorf("%q: %w", p, ErrVaultWrite)
 	}
 
-	return err
+	return nil
 }

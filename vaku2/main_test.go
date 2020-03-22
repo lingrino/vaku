@@ -17,6 +17,10 @@ var (
 	errInject = errors.New("injected error")
 )
 
+// When tests are looping over kvMountVersions and the path is noMountPrefix they will not prefix
+// the path with the mount version to allow testing on a nonexistent mount.
+var noMountPrefix = "nomount"
+
 // kvMountVersions lists the types of kv mounts for vault. There are currently two k/v mount types
 // and vaku supports both. Tests should run against each version and return the same results.
 var kvMountVersions = []string{"1", "2"}

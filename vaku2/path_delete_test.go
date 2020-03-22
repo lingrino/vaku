@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPathRead(t *testing.T) {
+func TestPathDelete(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -15,47 +15,30 @@ func TestPathRead(t *testing.T) {
 		give        string
 		giveLogical logical
 		giveOptions []Option
-		want        map[string]interface{}
 		wantErr     error
 	}{
 		{
-			name: "test/foo",
-			give: "test/foo",
-			want: map[string]interface{}{
-				"value": "bar",
-			},
+			name:    "delete path",
+			give:    "test/foo",
 			wantErr: nil,
 		},
 		{
-			name: "test/inner/again/inner/UCrt6sZT",
-			give: "test/inner/again/inner/UCrt6sZT",
-			want: map[string]interface{}{
-				"Eg5ljS7t": "6F1B5nBg",
-				"quqr32S5": "81iY4HAN",
-				"r6R0JUzX": "rs1mCRB5",
-			},
-			wantErr: nil,
-		},
-		{
-			name:    "no secret",
+			name:    "nonexistent path",
 			give:    "doesnotexist",
-			want:    nil,
 			wantErr: nil,
 		},
 		{
 			name:    "no mount",
 			give:    noMountPrefix,
-			want:    nil,
-			wantErr: nil,
+			wantErr: ErrVaultDelete,
 		},
 		{
 			name: "error",
-			give: "test/foo",
+			give: "delete/foo",
 			giveLogical: &errLogical{
 				err: errInject,
 			},
-			want:    nil,
-			wantErr: ErrVaultRead,
+			wantErr: ErrVaultDelete,
 		},
 	}
 
@@ -70,6 +53,7 @@ func TestPathRead(t *testing.T) {
 			client, err := NewClient(append(tt.giveOptions, WithVaultClient(apiClient))...)
 			assert.NoError(t, err)
 
+			backupL := client.sourceL
 			if tt.giveLogical != nil {
 				client.sourceL = tt.giveLogical
 			}
@@ -80,10 +64,19 @@ func TestPathRead(t *testing.T) {
 					path = PathJoin(ver, tt.give)
 				}
 
-				read, err := client.PathRead(path)
-
+				err := client.PathDelete(path)
 				assert.True(t, errors.Is(err, tt.wantErr))
-				assert.Equal(t, tt.want, read)
+
+				if tt.give == noMountPrefix {
+					client.sourceL = backupL
+					readBack, err := client.PathRead(PathJoin(ver, tt.give))
+					if tt.giveLogical != nil {
+						client.sourceL = tt.giveLogical
+					}
+
+					assert.NoError(t, err)
+					assert.Nil(t, readBack)
+				}
 			}
 		})
 	}
