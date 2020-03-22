@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	ErrVaultRead = errors.New("vault list")
+	ErrVaultRead = errors.New("vault read")
 )
 
 // PathRead takes a path, calls vault read, extracts the secret, and returns it.
