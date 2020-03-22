@@ -13,10 +13,6 @@ const (
 	tokenVerifyString = "this token used to verify client equality"
 )
 
-var (
-	errTestNewClient = errors.New("test error when creating a new client")
-)
-
 type withErrorOpt struct {
 	err error
 }
@@ -25,7 +21,7 @@ func (o withErrorOpt) apply(c *Client) error {
 	return o.err
 }
 
-// withError returns the passed in error
+// withError returns the passed in error for Option error injection
 func withError(e error) Option {
 	return withErrorOpt{e}
 }
@@ -61,13 +57,16 @@ func assertClientsEqual(t *testing.T, expected *Client, actual *Client) {
 
 	// zero out clients and assert equal
 	expected.source = nil
+	expected.sourceL = nil
 	expected.dest = nil
+	expected.destL = nil
 	actual.source = nil
+	actual.sourceL = nil
 	actual.dest = nil
+	actual.destL = nil
 	assert.Equal(t, expected, actual)
 }
 
-// TestNewClient tests NewClient.
 func TestNewClient(t *testing.T) {
 	t.Parallel()
 
@@ -113,10 +112,10 @@ func TestNewClient(t *testing.T) {
 		{
 			name: "error",
 			give: []Option{
-				withError(errTestNewClient),
+				withError(errInject),
 			},
 			want:    nil,
-			wantErr: errTestNewClient,
+			wantErr: errInject,
 		},
 	}
 
@@ -127,8 +126,7 @@ func TestNewClient(t *testing.T) {
 
 			client, err := NewClient(tt.give...)
 
-			// assert the outputs
-			assert.Equal(t, tt.wantErr, err)
+			assert.True(t, errors.Is(err, tt.wantErr))
 			assertClientsEqual(t, tt.want, client)
 		})
 	}

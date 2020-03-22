@@ -97,7 +97,8 @@ func seed(t *testing.T, c *vaku.Client) error {
 	err = c.Sys().Mount("secretv1/", &api.MountInput{
 		Type: "kv",
 		Options: map[string]string{
-			"version": "1"},
+			"version": "1",
+		},
 	})
 	if err != nil {
 		if !strings.Contains(err.Error(), "path is already in use at secretv1/") {

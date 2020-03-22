@@ -4,11 +4,23 @@ import (
 	"github.com/hashicorp/vault/api"
 )
 
+// logical has all functions from api.Logical() that I use
+type logical interface {
+	Delete(path string) (*api.Secret, error)
+	List(path string) (*api.Secret, error)
+	Read(path string) (*api.Secret, error)
+	Write(path string, data map[string]interface{}) (*api.Secret, error)
+}
+
 // Client holds Vaku functions and wraps Vault API clients.
 type Client struct {
 	// source is the default client and also used as dest when dest is nil.
 	source *api.Client
 	dest   *api.Client
+
+	// wrap api.Client.Logical() in an interface for mocking
+	sourceL logical
+	destL   logical
 
 	// max number of concurrent operations we'll run.
 	workers uint
@@ -25,6 +37,7 @@ type withVaultClient struct {
 
 func (o withVaultClient) apply(c *Client) error {
 	c.source = o.client
+	c.sourceL = o.client.Logical()
 	return nil
 }
 
@@ -44,6 +57,7 @@ type withDestVaultClient struct {
 
 func (o withDestVaultClient) apply(c *Client) error {
 	c.dest = o.client
+	c.destL = o.client.Logical()
 	return nil
 }
 
