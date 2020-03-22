@@ -17,3 +17,17 @@ func KeyJoin(k ...string) string {
 func PathJoin(p ...string) string {
 	return strings.TrimSuffix(KeyJoin(p...), "/")
 }
+
+// PrefixList adds a prefix to every item in a list
+func PrefixList(list []string, prefix string) {
+	for i, v := range list {
+		list[i] = KeyJoin(prefix, v)
+	}
+}
+
+// TrimListPrefix removes a prefix from every item in a list
+func TrimListPrefix(list []string, prefix string) {
+	for i, v := range list {
+		list[i] = KeyJoin(strings.TrimPrefix(v, prefix))
+	}
+}

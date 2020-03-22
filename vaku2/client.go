@@ -24,6 +24,9 @@ type Client struct {
 
 	// max number of concurrent operations we'll run.
 	workers uint
+
+	// set for the full path to be returned instead of the trimmed path
+	fullPath bool
 }
 
 // Option configures a Client.
@@ -81,6 +84,20 @@ func (o withWorkers) apply(c *Client) error {
 // storage backend.
 func WithWorkers(n uint) Option {
 	return withWorkers(n)
+}
+
+type withFullPath bool
+
+func (o withFullPath) apply(c *Client) error {
+	c.fullPath = bool(o)
+	return nil
+}
+
+// WithFullPath sets the output format for all returned paths. By default path output is trimmed up
+// to the path input. Pass WithFullPath(true) to set path output to the entire path. Example:
+// List(secret/foo) -> "bar" OR "secret/foo/bar"
+func WithFullPath(b bool) Option {
+	return withFullPath(b)
 }
 
 // NewClient returns a new empty Vaku Client based on the Vault API config

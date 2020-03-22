@@ -15,6 +15,7 @@ func TestPathList(t *testing.T) {
 		name        string
 		give        string
 		giveLogical logical
+		giveOptions []Option
 		want        []string
 		wantErr     error
 	}{
@@ -25,10 +26,11 @@ func TestPathList(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name:    "list inner",
-			give:    "test/inner/again/",
-			want:    []string{"inner/"},
-			wantErr: nil,
+			name:        "full path",
+			give:        "test/inner/again/",
+			giveOptions: []Option{WithFullPath(true)},
+			want:        []string{"test/inner/again/inner/"},
+			wantErr:     nil,
 		},
 		{
 			name:    "list bad path",
@@ -116,7 +118,7 @@ func TestPathList(t *testing.T) {
 			ln, apiClient := testServer(t)
 			defer ln.Close()
 
-			client, err := NewClient(WithVaultClient(apiClient))
+			client, err := NewClient(append(tt.giveOptions, WithVaultClient(apiClient))...)
 			assert.NoError(t, err)
 
 			if tt.giveLogical != nil {
@@ -125,6 +127,7 @@ func TestPathList(t *testing.T) {
 
 			for _, ver := range kvMountVersions {
 				l, err := client.PathList(PathJoin(ver, tt.give))
+				TrimListPrefix(l, ver)
 
 				assert.True(t, errors.Is(err, tt.wantErr))
 				assert.Equal(t, tt.want, l)

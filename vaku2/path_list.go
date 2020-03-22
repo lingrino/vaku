@@ -41,6 +41,10 @@ func (c *Client) PathList(p string) ([]string, error) {
 		output[i] = key
 	}
 
+	if c.fullPath {
+		PrefixList(output, p)
+	}
+
 	sort.Strings(output)
 	return output, err
 }
