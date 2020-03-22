@@ -12,7 +12,6 @@ var (
 )
 
 // PathList takes a path, calls vault list, extracts the secret as a list of keys, and returns it.
-// TODO - add trimprefix
 func (c *Client) PathList(p string) ([]string, error) {
 	secret, err := c.sourceL.List(p)
 	if err != nil {
