@@ -8,7 +8,7 @@ import (
 
 var (
 	ErrVaultList    = errors.New("vault list")
-	ErrDecodeSecret = errors.New("failed to decode secret")
+	ErrDecodeSecret = errors.New("decode secret")
 )
 
 // PathList takes a path, calls vault list, extracts the secret as a list of keys, and returns it.
@@ -45,5 +45,5 @@ func (c *Client) PathList(p string) ([]string, error) {
 	}
 
 	sort.Strings(output)
-	return output, err
+	return output, nil
 }

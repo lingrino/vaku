@@ -126,11 +126,11 @@ func TestPathList(t *testing.T) {
 			}
 
 			for _, ver := range kvMountVersions {
-				l, err := client.PathList(PathJoin(ver, tt.give))
-				TrimListPrefix(l, ver)
+				list, err := client.PathList(PathJoin(ver, tt.give))
+				TrimListPrefix(list, ver)
 
 				assert.True(t, errors.Is(err, tt.wantErr))
-				assert.Equal(t, tt.want, l)
+				assert.Equal(t, tt.want, list)
 			}
 		})
 	}
