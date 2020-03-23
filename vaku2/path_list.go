@@ -11,9 +11,21 @@ var (
 	ErrDecodeSecret = errors.New("decode secret")
 )
 
-// PathList takes a path, calls vault list, extracts the secret as a list of keys, and returns it.
+// PathList takes a path, calls vault list with the source client, extracts the secret as a list of
+// keys, and returns it.
 func (c *Client) PathList(p string) ([]string, error) {
-	secret, err := c.sourceL.List(p)
+	return c.pathList(c.sourceL, p)
+}
+
+// PathListDest takes a path, calls vault list with the dest client, extracts the secret as a list
+// of keys, and returns it.
+func (c *Client) PathListDest(p string) ([]string, error) {
+	return c.pathList(c.destL, p)
+}
+
+// pathList takes a path, calls vault list, extracts the secret as a list of keys, and returns it.
+func (c *Client) pathList(apiL logical, p string) ([]string, error) {
+	secret, err := apiL.List(p)
 	if err != nil {
 		return nil, fmt.Errorf("%q: %w", p, ErrVaultList)
 	}

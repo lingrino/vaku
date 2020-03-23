@@ -92,6 +92,7 @@ func TestNewClient(t *testing.T) {
 			},
 			want: &Client{
 				source:  newDefaultVaultClient(t),
+				dest:    newDefaultVaultClient(t),
 				workers: 100,
 			},
 			wantErr: nil,

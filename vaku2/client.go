@@ -115,5 +115,11 @@ func NewClient(opts ...Option) (*Client, error) {
 		}
 	}
 
+	// set dest to source if dest is unspecified
+	if client.dest == nil && client.source != nil {
+		client.dest = client.source
+		client.destL = client.sourceL
+	}
+
 	return client, nil
 }

@@ -47,36 +47,26 @@ func TestPathDelete(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			ln, apiClient := testServer(t)
+			ln, client := testClient(t, tt.giveOptions...)
 			defer ln.Close()
+			readbackClient := cloneCLient(t, client)
 
-			client, err := NewClient(append(tt.giveOptions, WithVaultClient(apiClient))...)
-			assert.NoError(t, err)
-
-			backupL := client.sourceL
-			if tt.giveLogical != nil {
-				client.sourceL = tt.giveLogical
-			}
+			updateLogical(t, client, tt.giveLogical)
 
 			for _, ver := range kvMountVersions {
-				path := tt.give
-				if tt.give != noMountPrefix {
-					path = PathJoin(ver, tt.give)
-				}
+				path := addMountToPath(t, tt.give, ver)
 
 				err := client.PathDelete(path)
+				errD := client.PathDeleteDest(path)
 				assert.True(t, errors.Is(err, tt.wantErr))
+				assert.True(t, errors.Is(errD, tt.wantErr))
 
-				if tt.give == noMountPrefix {
-					client.sourceL = backupL
-					readBack, err := client.PathRead(PathJoin(ver, tt.give))
-					if tt.giveLogical != nil {
-						client.sourceL = tt.giveLogical
-					}
-
-					assert.NoError(t, err)
-					assert.Nil(t, readBack)
-				}
+				readBack, err := readbackClient.PathRead(path)
+				readBackD, errD := readbackClient.PathReadDest(path)
+				assert.NoError(t, err)
+				assert.NoError(t, errD)
+				assert.Nil(t, readBack)
+				assert.Nil(t, readBackD)
 			}
 		})
 	}
