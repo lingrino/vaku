@@ -138,21 +138,37 @@ func cloneCLient(t *testing.T, c *Client) *Client {
 type errLogical struct {
 	secret *api.Secret
 	err    error
+
+	// if op != "" all functions will pass to the real client except the one named in op
+	op         string
+	realClient logical
+}
+
+func (e *errLogical) Delete(path string) (*api.Secret, error) {
+	if e.op != "Delete" && e.op != "" {
+		return e.realClient.Delete(path)
+	}
+	return e.secret, e.err
 }
 
 func (e *errLogical) List(path string) (*api.Secret, error) {
+	if e.op != "List" && e.op != "" {
+		return e.realClient.List(path)
+	}
 	return e.secret, e.err
 }
 
 func (e *errLogical) Read(path string) (*api.Secret, error) {
+	if e.op != "Read" && e.op != "" {
+		return e.realClient.Read(path)
+	}
 	return e.secret, e.err
 }
 
 func (e *errLogical) Write(path string, data map[string]interface{}) (*api.Secret, error) {
-	return e.secret, e.err
-}
-
-func (e *errLogical) Delete(path string) (*api.Secret, error) {
+	if e.op != "Write" && e.op != "" {
+		return e.realClient.Write(path, data)
+	}
 	return e.secret, e.err
 }
 
@@ -161,8 +177,15 @@ func updateLogical(t *testing.T, c *Client, l logical) {
 	t.Helper()
 
 	if l != nil {
-		c.sourceL = l
-		c.destL = l
+		el, ok := l.(*errLogical)
+		if ok {
+			el.realClient = c.sourceL
+			c.sourceL = el
+			c.destL = el
+		} else {
+			c.sourceL = l
+			c.destL = l
+		}
 	}
 }
 

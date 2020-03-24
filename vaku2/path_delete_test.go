@@ -58,8 +58,8 @@ func TestPathDelete(t *testing.T) {
 
 				err := client.PathDelete(path)
 				errD := client.PathDeleteDest(path)
-				assert.True(t, errors.Is(err, tt.wantErr))
-				assert.True(t, errors.Is(errD, tt.wantErr))
+				assert.True(t, errors.Is(err, tt.wantErr), err)
+				assert.True(t, errors.Is(errD, tt.wantErr), err)
 
 				readBack, err := readbackClient.PathRead(path)
 				readBackD, errD := readbackClient.PathReadDest(path)

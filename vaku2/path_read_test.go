@@ -75,8 +75,8 @@ func TestPathRead(t *testing.T) {
 				read, err := client.PathRead(path)
 				readD, errD := client.PathReadDest(path)
 
-				assert.True(t, errors.Is(err, tt.wantErr))
-				assert.True(t, errors.Is(errD, tt.wantErr))
+				assert.True(t, errors.Is(err, tt.wantErr), err)
+				assert.True(t, errors.Is(errD, tt.wantErr), err)
 				assert.Equal(t, tt.want, read)
 				assert.Equal(t, tt.want, readD)
 			}

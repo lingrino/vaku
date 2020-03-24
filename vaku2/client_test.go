@@ -127,7 +127,7 @@ func TestNewClient(t *testing.T) {
 
 			client, err := NewClient(tt.give...)
 
-			assert.True(t, errors.Is(err, tt.wantErr))
+			assert.True(t, errors.Is(err, tt.wantErr), err)
 			assertClientsEqual(t, tt.want, client)
 		})
 	}

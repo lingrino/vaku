@@ -141,8 +141,8 @@ func TestPathList(t *testing.T) {
 				TrimListPrefix(list, ver)
 				TrimListPrefix(listD, ver)
 
-				assert.True(t, errors.Is(err, tt.wantErr))
-				assert.True(t, errors.Is(errD, tt.wantErr))
+				assert.True(t, errors.Is(err, tt.wantErr), err)
+				assert.True(t, errors.Is(errD, tt.wantErr), err)
 
 				assert.Equal(t, tt.want, list)
 				assert.Equal(t, tt.want, listD)
