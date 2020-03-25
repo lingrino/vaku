@@ -66,19 +66,22 @@ func TestPathRead(t *testing.T) {
 
 			ln, client := testClient(t, tt.giveOptions...)
 			defer ln.Close()
-
 			updateLogical(t, client, tt.giveLogical)
 
+			funcs := []func(string) (map[string]interface{}, error){
+				client.PathRead,
+				client.PathReadDest,
+			}
+
 			for _, ver := range kvMountVersions {
-				path := addMountToPath(t, tt.give, ver)
+				for _, f := range funcs {
+					path := addMountToPath(t, tt.give, ver)
 
-				read, err := client.PathRead(path)
-				readD, errD := client.PathReadDest(path)
+					read, err := f(path)
 
-				assert.True(t, errors.Is(err, tt.wantErr), err)
-				assert.True(t, errors.Is(errD, tt.wantErr), err)
-				assert.Equal(t, tt.want, read)
-				assert.Equal(t, tt.want, readD)
+					assert.True(t, errors.Is(err, tt.wantErr), err)
+					assert.Equal(t, tt.want, read)
+				}
 			}
 		})
 	}

@@ -130,22 +130,23 @@ func TestPathList(t *testing.T) {
 
 			ln, client := testClient(t, tt.giveOptions...)
 			defer ln.Close()
-
 			updateLogical(t, client, tt.giveLogical)
 
+			funcs := []func(string) ([]string, error){
+				client.PathList,
+				client.PathListDest,
+			}
+
 			for _, ver := range kvMountVersions {
-				path := addMountToPath(t, tt.give, ver)
+				for _, f := range funcs {
+					path := addMountToPath(t, tt.give, ver)
 
-				list, err := client.PathList(path)
-				listD, errD := client.PathListDest(path)
-				TrimListPrefix(list, ver)
-				TrimListPrefix(listD, ver)
+					list, err := f(path)
+					TrimListPrefix(list, ver)
 
-				assert.True(t, errors.Is(err, tt.wantErr), err)
-				assert.True(t, errors.Is(errD, tt.wantErr), err)
-
-				assert.Equal(t, tt.want, list)
-				assert.Equal(t, tt.want, listD)
+					assert.True(t, errors.Is(err, tt.wantErr), err)
+					assert.Equal(t, tt.want, list)
+				}
 			}
 		})
 	}

@@ -74,22 +74,27 @@ func TestPathCopy(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			// Tests with the same source/destination
-			ln, client := testClient(t, tt.giveOptions...)
-			defer ln.Close()
-			readbackClient := cloneCLient(t, client)
+			versionProduct := [][2]string{
+				{"1", "1"},
+				{"2", "2"},
+				{"1", "2"},
+				{"2", "1"},
+			}
 
-			updateLogical(t, client, tt.giveLogical)
+			for _, ver := range versionProduct {
+				ln, client := testClient(t, tt.giveOptions...)
+				defer ln.Close()
+				readbackClient := cloneCLient(t, client)
+				updateLogical(t, client, tt.giveLogical)
 
-			for _, ver := range kvMountVersions {
-				pathS := addMountToPath(t, tt.giveSource, ver)
-				pathD := addMountToPath(t, tt.giveDest, ver)
+				pathS := addMountToPath(t, tt.giveSource, ver[0])
+				pathD := addMountToPath(t, tt.giveDest, ver[1])
 
 				err := client.PathCopy(pathS, pathD)
 				assert.True(t, errors.Is(err, tt.wantErr), err)
 
 				readBackS, errS := readbackClient.PathRead(pathS)
-				readBackD, errD := readbackClient.PathRead(pathD)
+				readBackD, errD := readbackClient.PathReadDest(pathD)
 				assert.NoError(t, errS)
 				assert.NoError(t, errD)
 
@@ -98,80 +103,6 @@ func TestPathCopy(t *testing.T) {
 				} else {
 					assert.Equal(t, readBackS, readBackD)
 				}
-			}
-
-			// Tests with different source/destination
-			lnS, lnD, client := testClientDiffDest(t, tt.giveOptions...)
-			defer lnS.Close()
-			defer lnD.Close()
-
-			updateLogical(t, client, tt.giveLogical)
-
-			for _, ver := range kvMountVersions {
-				pathS := addMountToPath(t, tt.giveSource, ver)
-				pathD := addMountToPath(t, tt.giveDest, ver)
-
-				err := client.PathCopy(pathS, pathD)
-				assert.True(t, errors.Is(err, tt.wantErr), err)
-
-				readBackS, errS := readbackClient.PathRead(pathS)
-				readBackD, errD := readbackClient.PathRead(pathD)
-				assert.NoError(t, errS)
-				assert.NoError(t, errD)
-
-				if tt.wantNilDest {
-					assert.Nil(t, readBackD)
-				} else {
-					assert.Equal(t, readBackS, readBackD)
-				}
-			}
-
-			// Tests with different source/destination and ver 1 -> 2
-			lnS, lnD, client = testClientDiffDest(t, tt.giveOptions...)
-			defer lnS.Close()
-			defer lnD.Close()
-
-			updateLogical(t, client, tt.giveLogical)
-
-			pathS := addMountToPath(t, tt.giveSource, "1")
-			pathD := addMountToPath(t, tt.giveDest, "2")
-
-			err := client.PathCopy(pathS, pathD)
-			assert.True(t, errors.Is(err, tt.wantErr), err)
-
-			readBackS, errS := readbackClient.PathRead(pathS)
-			readBackD, errD := readbackClient.PathRead(pathD)
-			assert.NoError(t, errS)
-			assert.NoError(t, errD)
-
-			if tt.wantNilDest {
-				assert.Nil(t, readBackD)
-			} else {
-				assert.Equal(t, readBackS, readBackD)
-			}
-
-			// Tests with different source/destination and ver 2 -> 1
-			lnS, lnD, client = testClientDiffDest(t, tt.giveOptions...)
-			defer lnS.Close()
-			defer lnD.Close()
-
-			updateLogical(t, client, tt.giveLogical)
-
-			pathS = addMountToPath(t, tt.giveSource, "2")
-			pathD = addMountToPath(t, tt.giveDest, "1")
-
-			err = client.PathCopy(pathS, pathD)
-			assert.True(t, errors.Is(err, tt.wantErr), err)
-
-			readBackS, errS = readbackClient.PathRead(pathS)
-			readBackD, errD = readbackClient.PathRead(pathD)
-			assert.NoError(t, errS)
-			assert.NoError(t, errD)
-
-			if tt.wantNilDest {
-				assert.Nil(t, readBackD)
-			} else {
-				assert.Equal(t, readBackS, readBackD)
 			}
 		})
 	}

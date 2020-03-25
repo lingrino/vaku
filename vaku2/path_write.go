@@ -21,8 +21,10 @@ func (c *Client) PathWriteDest(p string, d map[string]interface{}) error {
 
 // pathWrite writes data to a path.
 func (c *Client) pathWrite(apiL logical, p string, d map[string]interface{}) error {
+	fmt.Printf("%+v\n", d)
 	_, err := apiL.Write(p, d)
 	if err != nil {
+		fmt.Println(err)
 		return fmt.Errorf("%q: %w", p, ErrVaultWrite)
 	}
 

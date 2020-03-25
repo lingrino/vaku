@@ -58,23 +58,24 @@ func TestPathWrite(t *testing.T) {
 			ln, client := testClient(t, tt.giveOptions...)
 			defer ln.Close()
 			readbackClient := cloneCLient(t, client)
-
 			updateLogical(t, client, tt.giveLogical)
 
+			funcs := []func(string, map[string]interface{}) error{
+				client.PathWrite,
+				client.PathWriteDest,
+			}
+
 			for _, ver := range kvMountVersions {
-				path := addMountToPath(t, tt.give, ver)
+				for _, f := range funcs {
+					path := addMountToPath(t, tt.give, ver)
 
-				err := client.PathWrite(path, tt.giveData)
-				errD := client.PathWriteDest(path, tt.giveData)
-				assert.True(t, errors.Is(err, tt.wantErr), err)
-				assert.True(t, errors.Is(errD, tt.wantErr), err)
+					err := f(path, tt.giveData)
+					assert.True(t, errors.Is(err, tt.wantErr), err)
 
-				readBack, err := readbackClient.PathRead(path)
-				readBackD, errD := readbackClient.PathReadDest(path)
-				assert.NoError(t, err)
-				assert.NoError(t, errD)
-				assert.Equal(t, tt.giveData, readBack)
-				assert.Equal(t, tt.giveData, readBackD)
+					readBack, err := readbackClient.PathRead(path)
+					assert.NoError(t, err)
+					assert.Equal(t, tt.giveData, readBack)
+				}
 			}
 		})
 	}
