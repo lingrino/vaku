@@ -14,13 +14,13 @@ var (
 func (c *Client) PathCopy(source, dest string) error {
 	secret, err := c.PathRead(source)
 	if err != nil {
-		// fmt.Println(err)
-		return fmt.Errorf("read: %w", ErrPathCopy)
+		return fmt.Errorf("%v%w", ErrPathCopy, err)
+		// return fmt.Errorf("read: %w", ErrPathCopy)
+		// return fmt.Errorf("%v: %w", ErrPathCopy, err)
 	}
 
 	err = c.PathWriteDest(dest, secret)
 	if err != nil {
-		// fmt.Println(err)
 		return fmt.Errorf("write: %w", ErrPathCopy)
 	}
 

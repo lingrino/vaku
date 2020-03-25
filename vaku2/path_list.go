@@ -27,7 +27,7 @@ func (c *Client) PathListDest(p string) ([]string, error) {
 func (c *Client) pathList(apiL logical, p string) ([]string, error) {
 	secret, err := apiL.List(p)
 	if err != nil {
-		return nil, fmt.Errorf("%q: %w", p, ErrVaultList)
+		return nil, fmt.Errorf("%q: %w: %v", p, ErrVaultList, err)
 	}
 
 	if secret == nil || secret.Data == nil {
