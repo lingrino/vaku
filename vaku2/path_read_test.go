@@ -1,7 +1,6 @@
 package vaku2
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -16,7 +15,7 @@ func TestPathRead(t *testing.T) {
 		giveLogical logical
 		giveOptions []Option
 		want        map[string]interface{}
-		wantErr     error
+		wantErr     []error
 	}{
 		{
 			name: "test/foo",
@@ -55,7 +54,7 @@ func TestPathRead(t *testing.T) {
 				err: errInject,
 			},
 			want:    nil,
-			wantErr: ErrVaultRead,
+			wantErr: []error{ErrVaultRead},
 		},
 	}
 
@@ -66,7 +65,7 @@ func TestPathRead(t *testing.T) {
 
 			ln, client := testClient(t, tt.giveOptions...)
 			defer ln.Close()
-			updateLogical(t, client, tt.giveLogical)
+			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
 
 			funcs := []func(string) (map[string]interface{}, error){
 				client.PathRead,
@@ -79,7 +78,7 @@ func TestPathRead(t *testing.T) {
 
 					read, err := f(path)
 
-					assert.True(t, errors.Is(err, tt.wantErr), err)
+					compareErrors(t, err, tt.wantErr)
 					assert.Equal(t, tt.want, read)
 				}
 			}

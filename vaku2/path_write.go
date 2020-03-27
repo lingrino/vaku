@@ -23,7 +23,7 @@ func (c *Client) PathWriteDest(p string, d map[string]interface{}) error {
 func (c *Client) pathWrite(apiL logical, p string, d map[string]interface{}) error {
 	_, err := apiL.Write(p, d)
 	if err != nil {
-		return fmt.Errorf("%q: %w: %v", p, ErrVaultWrite, err)
+		return newWrapErr(fmt.Sprintf("%q: %v: %v", p, ErrVaultWrite, err), ErrVaultWrite, nil)
 	}
 
 	return nil

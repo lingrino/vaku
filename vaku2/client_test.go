@@ -1,7 +1,6 @@
 package vaku2
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/hashicorp/vault/api"
@@ -74,7 +73,7 @@ func TestNewClient(t *testing.T) {
 		name    string
 		give    []Option
 		want    *Client
-		wantErr error
+		wantErr []error
 	}{
 		{
 			name: "nil",
@@ -116,7 +115,7 @@ func TestNewClient(t *testing.T) {
 				withError(errInject),
 			},
 			want:    nil,
-			wantErr: errInject,
+			wantErr: []error{errInject},
 		},
 	}
 
@@ -127,7 +126,7 @@ func TestNewClient(t *testing.T) {
 
 			client, err := NewClient(tt.give...)
 
-			assert.True(t, errors.Is(err, tt.wantErr), err)
+			compareErrors(t, err, tt.wantErr)
 			assertClientsEqual(t, tt.want, client)
 		})
 	}

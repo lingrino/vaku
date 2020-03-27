@@ -1,7 +1,6 @@
 package vaku2
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,13 +10,14 @@ func TestPathCopy(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name        string
-		giveSource  string
-		giveDest    string
-		giveLogical logical
-		giveOptions []Option
-		wantErr     error
-		wantNilDest bool
+		name              string
+		giveSource        string
+		giveDest          string
+		giveSourceLogical logical
+		giveDestLogical   logical
+		giveOptions       []Option
+		wantErr           []error
+		wantNilDest       bool
 	}{
 		{
 			name:       "copy",
@@ -35,36 +35,36 @@ func TestPathCopy(t *testing.T) {
 			name:        "bad source mount",
 			giveSource:  noMountPrefix,
 			giveDest:    "copy/test/foo",
-			wantErr:     ErrPathCopy,
+			wantErr:     []error{ErrPathCopy, ErrVaultWrite},
 			wantNilDest: true,
 		},
 		{
 			name:        "bad dest mount",
 			giveSource:  "test/foo",
 			giveDest:    noMountPrefix,
-			wantErr:     ErrPathCopy,
+			wantErr:     []error{ErrPathCopy, ErrVaultWrite},
 			wantNilDest: true,
 		},
 		{
 			name:       "inject read",
 			giveSource: "test/foo",
 			giveDest:   "copy/injectread",
-			giveLogical: &errLogical{
+			giveSourceLogical: &errLogical{
 				err: errInject,
 				op:  "Read",
 			},
-			wantErr:     ErrPathCopy,
+			wantErr:     []error{ErrPathCopy, ErrVaultRead},
 			wantNilDest: true,
 		},
 		{
 			name:       "inject write",
 			giveSource: "test/foo",
 			giveDest:   "copy/injectwrite",
-			giveLogical: &errLogical{
+			giveDestLogical: &errLogical{
 				err: errInject,
 				op:  "Write",
 			},
-			wantErr:     ErrPathCopy,
+			wantErr:     []error{ErrPathCopy, ErrVaultWrite},
 			wantNilDest: true,
 		},
 	}
@@ -74,34 +74,34 @@ func TestPathCopy(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			versionProduct := [][2]string{
-				{"1", "1"},
-				{"2", "2"},
-				{"1", "2"},
-				{"2", "1"},
-			}
-
 			for _, ver := range versionProduct {
 				ln, client := testClient(t, tt.giveOptions...)
 				defer ln.Close()
-				readbackClient := cloneCLient(t, client)
-				updateLogical(t, client, tt.giveLogical)
 
-				pathS := addMountToPath(t, tt.giveSource, ver[0])
-				pathD := addMountToPath(t, tt.giveDest, ver[1])
+				lnS, lnD, clientDD := testClientDiffDest(t, tt.giveOptions...)
+				defer lnS.Close()
+				defer lnD.Close()
 
-				err := client.PathCopy(pathS, pathD)
-				assert.True(t, errors.Is(err, tt.wantErr), err)
+				for _, c := range []*Client{client, clientDD} {
+					readbackClient := cloneCLient(t, c)
+					updateLogical(t, c, tt.giveSourceLogical, tt.giveDestLogical)
 
-				readBackS, errS := readbackClient.PathRead(pathS)
-				readBackD, errD := readbackClient.PathReadDest(pathD)
-				assert.NoError(t, errS)
-				assert.NoError(t, errD)
+					pathS := addMountToPath(t, tt.giveSource, ver[0])
+					pathD := addMountToPath(t, tt.giveDest, ver[1])
 
-				if tt.wantNilDest {
-					assert.Nil(t, readBackD)
-				} else {
-					assert.Equal(t, readBackS, readBackD)
+					err := c.PathCopy(pathS, pathD)
+					compareErrors(t, err, tt.wantErr)
+
+					readBackS, errS := readbackClient.PathRead(pathS)
+					readBackD, errD := readbackClient.PathReadDest(pathD)
+					assert.NoError(t, errS)
+					assert.NoError(t, errD)
+
+					if tt.wantNilDest {
+						assert.Nil(t, readBackD)
+					} else {
+						assert.Equal(t, readBackS, readBackD)
+					}
 				}
 			}
 		})

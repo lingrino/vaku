@@ -23,7 +23,7 @@ func (c *Client) PathDeleteDest(p string) error {
 func (c *Client) pathDelete(apiL logical, p string) error {
 	_, err := apiL.Delete(p)
 	if err != nil {
-		return fmt.Errorf("%q: %w: %v", p, ErrVaultDelete, err)
+		return newWrapErr(fmt.Sprintf("%q: %v: %v", p, ErrVaultDelete, err), ErrVaultDelete, nil)
 	}
 
 	return nil

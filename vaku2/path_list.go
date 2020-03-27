@@ -27,7 +27,7 @@ func (c *Client) PathListDest(p string) ([]string, error) {
 func (c *Client) pathList(apiL logical, p string) ([]string, error) {
 	secret, err := apiL.List(p)
 	if err != nil {
-		return nil, fmt.Errorf("%q: %w: %v", p, ErrVaultList, err)
+		return nil, newWrapErr(fmt.Sprintf("%q: %v: %v", p, ErrVaultList, err), ErrVaultList, nil)
 	}
 
 	if secret == nil || secret.Data == nil {
@@ -36,18 +36,18 @@ func (c *Client) pathList(apiL logical, p string) ([]string, error) {
 
 	data, ok := secret.Data["keys"]
 	if !ok || data == nil {
-		return nil, fmt.Errorf("%w", ErrDecodeSecret)
+		return nil, newWrapErr(fmt.Sprintf("%v", ErrDecodeSecret), ErrDecodeSecret, nil)
 	}
 	keys, ok := data.([]interface{})
 	if !ok {
-		return nil, fmt.Errorf("%w", ErrDecodeSecret)
+		return nil, newWrapErr(fmt.Sprintf("%v", ErrDecodeSecret), ErrDecodeSecret, nil)
 	}
 
 	output := make([]string, len(keys))
 	for i, k := range keys {
 		key, ok := k.(string)
 		if !ok {
-			return nil, fmt.Errorf("%w", ErrDecodeSecret)
+			return nil, newWrapErr(fmt.Sprintf("%v", ErrDecodeSecret), ErrDecodeSecret, nil)
 		}
 		output[i] = key
 	}

@@ -1,7 +1,6 @@
 package vaku2
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/hashicorp/vault/api"
@@ -17,7 +16,7 @@ func TestPathList(t *testing.T) {
 		giveLogical logical
 		giveOptions []Option
 		want        []string
-		wantErr     error
+		wantErr     []error
 		skipMount   bool
 	}{
 		{
@@ -58,7 +57,7 @@ func TestPathList(t *testing.T) {
 				err: errInject,
 			},
 			want:    nil,
-			wantErr: ErrVaultList,
+			wantErr: []error{ErrVaultList},
 		},
 		{
 			name: "nil secret",
@@ -91,7 +90,7 @@ func TestPathList(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: ErrDecodeSecret,
+			wantErr: []error{ErrDecodeSecret},
 		},
 		{
 			name: "keys not []interface{}",
@@ -104,7 +103,7 @@ func TestPathList(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: ErrDecodeSecret,
+			wantErr: []error{ErrDecodeSecret},
 		},
 		{
 			name: "keys not string",
@@ -119,7 +118,7 @@ func TestPathList(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: ErrDecodeSecret,
+			wantErr: []error{ErrDecodeSecret},
 		},
 	}
 
@@ -130,7 +129,7 @@ func TestPathList(t *testing.T) {
 
 			ln, client := testClient(t, tt.giveOptions...)
 			defer ln.Close()
-			updateLogical(t, client, tt.giveLogical)
+			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
 
 			funcs := []func(string) ([]string, error){
 				client.PathList,
@@ -144,7 +143,7 @@ func TestPathList(t *testing.T) {
 					list, err := f(path)
 					TrimListPrefix(list, ver)
 
-					assert.True(t, errors.Is(err, tt.wantErr), err)
+					compareErrors(t, err, tt.wantErr)
 					assert.Equal(t, tt.want, list)
 				}
 			}

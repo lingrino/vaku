@@ -1,7 +1,6 @@
 package vaku2
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -16,7 +15,7 @@ func TestPathWrite(t *testing.T) {
 		giveData    map[string]interface{}
 		giveLogical logical
 		giveOptions []Option
-		wantErr     error
+		wantErr     []error
 	}{
 		{
 			name: "new path",
@@ -40,13 +39,13 @@ func TestPathWrite(t *testing.T) {
 			name:     "nil data",
 			give:     "write/foo",
 			giveData: nil,
-			wantErr:  ErrVaultWrite,
+			wantErr:  []error{ErrVaultWrite},
 		},
 		{
 			name:     "no mount",
 			give:     noMountPrefix,
 			giveData: nil,
-			wantErr:  ErrVaultWrite,
+			wantErr:  []error{ErrVaultWrite},
 		},
 	}
 
@@ -58,7 +57,7 @@ func TestPathWrite(t *testing.T) {
 			ln, client := testClient(t, tt.giveOptions...)
 			defer ln.Close()
 			readbackClient := cloneCLient(t, client)
-			updateLogical(t, client, tt.giveLogical)
+			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
 
 			funcs := []func(string, map[string]interface{}) error{
 				client.PathWrite,
@@ -70,7 +69,7 @@ func TestPathWrite(t *testing.T) {
 					path := addMountToPath(t, tt.give, ver)
 
 					err := f(path, tt.giveData)
-					assert.True(t, errors.Is(err, tt.wantErr), err)
+					compareErrors(t, err, tt.wantErr)
 
 					readBack, err := readbackClient.PathRead(path)
 					assert.NoError(t, err)

@@ -14,12 +14,12 @@ var (
 func (c *Client) PathMove(source, dest string) error {
 	err := c.PathCopy(source, dest)
 	if err != nil {
-		return fmt.Errorf("copy: %w", ErrPathMove)
+		return newWrapErr(fmt.Sprintf("%v: %v", ErrPathMove, err), ErrPathMove, err)
 	}
 
 	err = c.PathDelete(source)
 	if err != nil {
-		return fmt.Errorf("delete: %w", ErrPathMove)
+		return newWrapErr(fmt.Sprintf("%v: %v", ErrPathMove, err), ErrPathMove, err)
 	}
 
 	return nil

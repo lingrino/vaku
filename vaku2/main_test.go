@@ -2,7 +2,10 @@ package vaku2
 
 import (
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"net"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/go-hclog"
@@ -24,6 +27,15 @@ var noMountPrefix = "nomount"
 // kvMountVersions lists the types of kv mounts for vault. There are currently two k/v mount types
 // and vaku supports both. Tests should run against each version and return the same results.
 var kvMountVersions = []string{"1", "2"}
+
+// versionProduct is all possible to/from version combinations for testing functions that should
+// work across multiple mount versions.
+var versionProduct = [4][2]string{
+	{"1", "1"},
+	{"2", "2"},
+	{"1", "2"},
+	{"2", "1"},
+}
 
 // seeds holds the canonical secret seeds for every test.
 var seeds = map[string]map[string]interface{}{
@@ -56,11 +68,20 @@ var seeds = map[string]map[string]interface{}{
 	},
 }
 
+// It is necessary to to set up a TestMain here because vault.TestCoreUnsealedWithConfig() calls a
+// function further down that uses a logger with a default config intead of the config passed in.
+func TestMain(m *testing.M) {
+	hclog.DefaultOutput = ioutil.Discard
+	os.Exit(m.Run())
+}
+
 // testServer creates a new Vault server and returns a Vault API client that points to it.
 func testServer(t *testing.T) (net.Listener, *api.Client) {
 	t.Helper()
 
-	core, _, token := vault.TestCoreUnsealedWithConfig(t, &vault.CoreConfig{Logger: hclog.NewNullLogger()})
+	core, _, token := vault.TestCoreUnsealedWithConfig(t, &vault.CoreConfig{
+		Logger: hclog.NewNullLogger(),
+	})
 	ln, addr := http.TestServer(t, core)
 
 	apiClient, err := api.NewClient(api.DefaultConfig())
@@ -73,8 +94,7 @@ func testServer(t *testing.T) (net.Listener, *api.Client) {
 	return ln, apiClient
 }
 
-// testServerSeeded creates a new seeded Vault server and returns a Vault API client that points to
-// it.
+// testServerSeeded creates a seeded Vault server and returns an API client that points to it.
 func testServerSeeded(t *testing.T) (net.Listener, *api.Client) {
 	t.Helper()
 
@@ -126,10 +146,10 @@ func testClientDiffDest(t *testing.T, opts ...Option) (net.Listener, net.Listene
 	return ln, lnD, client
 }
 
-// cloneCLient takes a client and returns a new one with the API endpoints copied. Don't use this
-// outside of tests.
+// cloneCLient cpies a client. Don't use this outside of tests.
 func cloneCLient(t *testing.T, c *Client) *Client {
 	t.Helper()
+
 	cpy := *c
 	return &cpy
 }
@@ -140,51 +160,59 @@ type errLogical struct {
 	err    error
 
 	// if op != "" all functions will pass to the real client except the one named in op
-	op         string
-	realClient logical
+	op      string
+	realL   logical
+	useDest bool
 }
 
 func (e *errLogical) Delete(path string) (*api.Secret, error) {
 	if e.op != "Delete" && e.op != "" {
-		return e.realClient.Delete(path)
+		return e.realL.Delete(path)
 	}
 	return e.secret, e.err
 }
 
 func (e *errLogical) List(path string) (*api.Secret, error) {
 	if e.op != "List" && e.op != "" {
-		return e.realClient.List(path)
+		return e.realL.List(path)
 	}
 	return e.secret, e.err
 }
 
 func (e *errLogical) Read(path string) (*api.Secret, error) {
 	if e.op != "Read" && e.op != "" {
-		return e.realClient.Read(path)
+		return e.realL.Read(path)
 	}
 	return e.secret, e.err
 }
 
 func (e *errLogical) Write(path string, data map[string]interface{}) (*api.Secret, error) {
 	if e.op != "Write" && e.op != "" {
-		return e.realClient.Write(path, data)
+		return e.realL.Write(path, data)
 	}
 	return e.secret, e.err
 }
 
-// updateLogical is used in tests with tt.giveLogical.
-func updateLogical(t *testing.T, c *Client, l logical) {
+// updateLogical is used in tests with tt.giveSourceLogical.
+func updateLogical(t *testing.T, c *Client, sourceL logical, destL logical) {
 	t.Helper()
 
-	if l != nil {
-		el, ok := l.(*errLogical)
+	if sourceL != nil {
+		sl, ok := sourceL.(*errLogical)
 		if ok {
-			el.realClient = c.sourceL
-			c.sourceL = el
-			c.destL = el
+			sl.realL = c.sourceL
+			c.sourceL = sl
 		} else {
-			c.sourceL = l
-			c.destL = l
+			c.sourceL = sourceL
+		}
+	}
+	if destL != nil {
+		dl, ok := destL.(*errLogical)
+		if ok {
+			dl.realL = c.destL
+			c.destL = dl
+		} else {
+			c.destL = destL
 		}
 	}
 }
@@ -197,4 +225,13 @@ func addMountToPath(t *testing.T, path string, mount string) string {
 		return PathJoin(mount, path)
 	}
 	return path
+}
+
+// compareErrors asserts each error in the list matches the provided error using errors.Is()
+func compareErrors(t *testing.T, ev error, el []error) {
+	t.Helper()
+
+	for _, err := range el {
+		assert.True(t, errors.Is(ev, err), fmt.Sprintf("error %v is not of type %v", ev, err))
+	}
 }

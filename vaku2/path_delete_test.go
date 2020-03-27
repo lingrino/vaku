@@ -1,7 +1,6 @@
 package vaku2
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -15,7 +14,7 @@ func TestPathDelete(t *testing.T) {
 		give        string
 		giveLogical logical
 		giveOptions []Option
-		wantErr     error
+		wantErr     []error
 	}{
 		{
 			name:    "delete path",
@@ -30,7 +29,7 @@ func TestPathDelete(t *testing.T) {
 		{
 			name:    "no mount",
 			give:    noMountPrefix,
-			wantErr: ErrVaultDelete,
+			wantErr: []error{ErrVaultDelete},
 		},
 		{
 			name: "error",
@@ -38,7 +37,7 @@ func TestPathDelete(t *testing.T) {
 			giveLogical: &errLogical{
 				err: errInject,
 			},
-			wantErr: ErrVaultDelete,
+			wantErr: []error{ErrVaultDelete},
 		},
 	}
 
@@ -50,7 +49,7 @@ func TestPathDelete(t *testing.T) {
 			ln, client := testClient(t, tt.giveOptions...)
 			defer ln.Close()
 			readbackClient := cloneCLient(t, client)
-			updateLogical(t, client, tt.giveLogical)
+			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
 
 			funcs := []func(string) error{
 				client.PathDelete,
@@ -62,7 +61,7 @@ func TestPathDelete(t *testing.T) {
 					path := addMountToPath(t, tt.give, ver)
 
 					err := f(path)
-					assert.True(t, errors.Is(err, tt.wantErr), err)
+					compareErrors(t, err, tt.wantErr)
 
 					readBack, err := readbackClient.PathRead(path)
 					assert.NoError(t, err)

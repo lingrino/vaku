@@ -23,7 +23,7 @@ func (c *Client) PathReadDest(p string) (map[string]interface{}, error) {
 func (c *Client) pathRead(apiL logical, p string) (map[string]interface{}, error) {
 	secret, err := apiL.Read(p)
 	if err != nil {
-		return nil, fmt.Errorf("%q: %w: %v", p, ErrVaultRead, err)
+		return nil, newWrapErr(fmt.Sprintf("%q: %v: %v", p, ErrVaultRead, err), ErrVaultRead, nil)
 	}
 
 	if secret == nil || secret.Data == nil {
