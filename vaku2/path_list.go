@@ -7,8 +7,7 @@ import (
 )
 
 var (
-	ErrVaultList    = errors.New("vault list")
-	ErrDecodeSecret = errors.New("decode secret")
+	ErrVaultList = errors.New("vault list")
 )
 
 // PathList takes a path, calls vault list with the source client, extracts the secret as a list of

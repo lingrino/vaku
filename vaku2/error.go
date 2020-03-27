@@ -1,5 +1,15 @@
 package vaku2
 
+import "errors"
+
+// Here are errors that are not specific to one file/function
+var (
+	// ErrDecodeSecret secret data cannot be extracted from a vault secret.
+	ErrDecodeSecret = errors.New("decode secret")
+	// ErrNilData returns when passed data is nil.
+	ErrNilData = errors.New("nil data")
+)
+
 // wrapErr is a struct that implements the error interface and provides Is() and Unwrap() methods
 // that allow go 1.13+ error features. The fmt.Errorf function does something similar but does not
 // provide and Is() function which means you cannot use sentinel errors with added context and also

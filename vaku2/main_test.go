@@ -231,6 +231,9 @@ func addMountToPath(t *testing.T, path string, mount string) string {
 func compareErrors(t *testing.T, ev error, el []error) {
 	t.Helper()
 
+	if el == nil {
+		assert.NoError(t, ev)
+	}
 	for _, err := range el {
 		assert.True(t, errors.Is(ev, err), fmt.Sprintf("error %v is not of type %v", ev, err))
 	}

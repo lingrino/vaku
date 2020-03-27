@@ -38,7 +38,7 @@ func TestPathMove(t *testing.T) {
 			name:        "bad source mount",
 			giveSource:  noMountPrefix,
 			giveDest:    "move/test/foo",
-			wantErr:     []error{ErrPathMove, ErrPathCopy, ErrVaultWrite},
+			wantErr:     []error{ErrPathMove, ErrPathCopy, ErrPathWrite},
 			wantNilDest: true,
 		},
 		{

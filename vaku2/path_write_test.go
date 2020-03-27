@@ -10,12 +10,13 @@ func TestPathWrite(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name        string
-		give        string
-		giveData    map[string]interface{}
-		giveLogical logical
-		giveOptions []Option
-		wantErr     []error
+		name           string
+		give           string
+		giveData       map[string]interface{}
+		giveLogical    logical
+		giveOptions    []Option
+		wantErr        []error
+		wantNoReadback bool
 	}{
 		{
 			name: "new path",
@@ -39,13 +40,16 @@ func TestPathWrite(t *testing.T) {
 			name:     "nil data",
 			give:     "write/foo",
 			giveData: nil,
-			wantErr:  []error{ErrVaultWrite},
+			wantErr:  []error{ErrPathWrite, ErrNilData},
 		},
 		{
-			name:     "no mount",
-			give:     noMountPrefix,
-			giveData: nil,
-			wantErr:  []error{ErrVaultWrite},
+			name: "no mount",
+			give: noMountPrefix,
+			giveData: map[string]interface{}{
+				"foo": "bar",
+			},
+			wantErr:        []error{ErrVaultWrite},
+			wantNoReadback: true,
 		},
 	}
 
@@ -71,9 +75,11 @@ func TestPathWrite(t *testing.T) {
 					err := f(path, tt.giveData)
 					compareErrors(t, err, tt.wantErr)
 
-					readBack, err := readbackClient.PathRead(path)
-					assert.NoError(t, err)
-					assert.Equal(t, tt.giveData, readBack)
+					if !tt.wantNoReadback {
+						readBack, err := readbackClient.PathRead(path)
+						assert.NoError(t, err)
+						assert.Equal(t, tt.giveData, readBack)
+					}
 				}
 			}
 		})

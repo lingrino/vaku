@@ -6,6 +6,7 @@ import (
 )
 
 var (
+	ErrPathWrite  = errors.New("path write")
 	ErrVaultWrite = errors.New("vault write")
 )
 
@@ -21,6 +22,10 @@ func (c *Client) PathWriteDest(p string, d map[string]interface{}) error {
 
 // pathWrite writes data to a path.
 func (c *Client) pathWrite(apiL logical, p string, d map[string]interface{}) error {
+	if d == nil {
+		return newWrapErr(fmt.Sprintf("%v", ErrPathWrite), ErrPathWrite, ErrNilData)
+	}
+
 	_, err := apiL.Write(p, d)
 	if err != nil {
 		return newWrapErr(fmt.Sprintf("%q: %v: %v", p, ErrVaultWrite, err), ErrVaultWrite, nil)
