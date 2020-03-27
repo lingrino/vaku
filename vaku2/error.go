@@ -9,6 +9,8 @@ import (
 var (
 	// ErrDecodeSecret when secret data cannot be extracted from a vault secret.
 	ErrDecodeSecret = errors.New("decode secret")
+	// ErrJSONMarshall when secret data cannot be marshalled into json.
+	ErrJSONMarshall = errors.New("json marshall")
 	// ErrNilData when passed data is nil.
 	ErrNilData = errors.New("nil data")
 	// UnknownError when returning an error with no data.

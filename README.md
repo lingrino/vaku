@@ -104,7 +104,8 @@ TODO
 
 - Benchmarks
 - Example functions
-- API example in docs
+- API example in readme
+- doc.go
 - CLI tests
 - Update goreleaser, codecov, golangcilint, badges
 - man pages, autocomplete, other cobra features

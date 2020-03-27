@@ -13,12 +13,12 @@ var (
 func (c *Client) PathCopy(src, dst string) error {
 	secret, err := c.PathRead(src)
 	if err != nil {
-		return newWrapErr("read "+src, ErrPathCopy, err)
+		return newWrapErr(src, ErrPathCopy, err)
 	}
 
 	err = c.PathWriteDst(dst, secret)
 	if err != nil {
-		return newWrapErr("write "+dst, ErrPathCopy, err)
+		return newWrapErr(dst, ErrPathCopy, err)
 	}
 
 	return nil

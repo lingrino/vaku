@@ -2,7 +2,6 @@ package vaku2
 
 import (
 	"errors"
-	"fmt"
 )
 
 var (
@@ -18,7 +17,7 @@ func (c *Client) PathUpdate(p string, d map[string]interface{}) error {
 
 	read, err := c.PathRead(p)
 	if err != nil {
-		return newWrapErr(fmt.Sprintf("read "+p), ErrPathUpdate, err)
+		return newWrapErr(p, ErrPathUpdate, err)
 	}
 	if read == nil {
 		read = make(map[string]interface{}, len(d))
@@ -30,7 +29,7 @@ func (c *Client) PathUpdate(p string, d map[string]interface{}) error {
 
 	err = c.PathWrite(p, read)
 	if err != nil {
-		return newWrapErr(fmt.Sprintf("write "+p), ErrPathUpdate, err)
+		return newWrapErr(p, ErrPathUpdate, err)
 	}
 
 	return nil

@@ -13,12 +13,12 @@ var (
 func (c *Client) PathMove(src, dst string) error {
 	err := c.PathCopy(src, dst)
 	if err != nil {
-		return newWrapErr("copy "+src+" to "+dst, ErrPathMove, err)
+		return newWrapErr("", ErrPathMove, err)
 	}
 
 	err = c.PathDelete(src)
 	if err != nil {
-		return newWrapErr("delete "+dst, ErrPathMove, err)
+		return newWrapErr(dst, ErrPathMove, err)
 	}
 
 	return nil
