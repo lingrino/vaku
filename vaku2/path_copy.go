@@ -2,24 +2,23 @@ package vaku2
 
 import (
 	"errors"
-	"fmt"
 )
 
 var (
 	ErrPathCopy = errors.New("path copy")
 )
 
-// PathCopy reads a secret at a source path and copies it to the destination path. When copying from
-// one vault server to another the client must have been initialized using WithDestClient().
-func (c *Client) PathCopy(source, dest string) error {
-	secret, err := c.PathRead(source)
+// PathCopy copies data at a source path to a destination path. Client must have been initialized
+// using WithDstClient() when copying across vault servers.
+func (c *Client) PathCopy(src, dst string) error {
+	secret, err := c.PathRead(src)
 	if err != nil {
-		return newWrapErr(fmt.Sprintf("%v: %v", ErrPathCopy, err), ErrPathCopy, err)
+		return newWrapErr("read "+src, ErrPathCopy, err)
 	}
 
-	err = c.PathWriteDest(dest, secret)
+	err = c.PathWriteDst(dst, secret)
 	if err != nil {
-		return newWrapErr(fmt.Sprintf("%v: %v", ErrPathCopy, err), ErrPathCopy, err)
+		return newWrapErr("write "+dst, ErrPathCopy, err)
 	}
 
 	return nil

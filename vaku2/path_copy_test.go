@@ -10,62 +10,62 @@ func TestPathCopy(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name              string
-		giveSource        string
-		giveDest          string
-		giveSourceLogical logical
-		giveDestLogical   logical
-		giveOptions       []Option
-		wantErr           []error
-		wantNilDest       bool
+		name           string
+		giveSrc        string
+		giveDst        string
+		giveSrcLogical logical
+		giveDstLogical logical
+		giveOptions    []Option
+		wantErr        []error
+		wantNilDst     bool
 	}{
 		{
-			name:       "copy",
-			giveSource: "test/foo",
-			giveDest:   "copy/test/foo",
-			wantErr:    nil,
+			name:    "copy",
+			giveSrc: "test/foo",
+			giveDst: "copy/test/foo",
+			wantErr: nil,
 		},
 		{
-			name:       "overwrite",
-			giveSource: "test/foo",
-			giveDest:   "test/value",
-			wantErr:    nil,
+			name:    "overwrite",
+			giveSrc: "test/foo",
+			giveDst: "test/value",
+			wantErr: nil,
 		},
 		{
-			name:        "bad source mount",
-			giveSource:  noMountPrefix,
-			giveDest:    "copy/test/foo",
-			wantErr:     []error{ErrPathCopy, ErrPathWrite},
-			wantNilDest: true,
+			name:       "bad src mount",
+			giveSrc:    noMountPrefix,
+			giveDst:    "copy/test/foo",
+			wantErr:    []error{ErrPathCopy, ErrPathWrite},
+			wantNilDst: true,
 		},
 		{
-			name:        "bad dest mount",
-			giveSource:  "test/foo",
-			giveDest:    noMountPrefix,
-			wantErr:     []error{ErrPathCopy, ErrVaultWrite},
-			wantNilDest: true,
+			name:       "bad dst mount",
+			giveSrc:    "test/foo",
+			giveDst:    noMountPrefix,
+			wantErr:    []error{ErrPathCopy, ErrVaultWrite},
+			wantNilDst: true,
 		},
 		{
-			name:       "inject read",
-			giveSource: "test/foo",
-			giveDest:   "copy/injectread",
-			giveSourceLogical: &errLogical{
+			name:    "inject read",
+			giveSrc: "test/foo",
+			giveDst: "copy/injectread",
+			giveSrcLogical: &errLogical{
 				err: errInject,
 				op:  "Read",
 			},
-			wantErr:     []error{ErrPathCopy, ErrVaultRead},
-			wantNilDest: true,
+			wantErr:    []error{ErrPathCopy, ErrVaultRead},
+			wantNilDst: true,
 		},
 		{
-			name:       "inject write",
-			giveSource: "test/foo",
-			giveDest:   "copy/injectwrite",
-			giveDestLogical: &errLogical{
+			name:    "inject write",
+			giveSrc: "test/foo",
+			giveDst: "copy/injectwrite",
+			giveDstLogical: &errLogical{
 				err: errInject,
 				op:  "Write",
 			},
-			wantErr:     []error{ErrPathCopy, ErrVaultWrite},
-			wantNilDest: true,
+			wantErr:    []error{ErrPathCopy, ErrVaultWrite},
+			wantNilDst: true,
 		},
 	}
 
@@ -78,26 +78,26 @@ func TestPathCopy(t *testing.T) {
 				ln, client := testClient(t, tt.giveOptions...)
 				defer ln.Close()
 
-				lnS, lnD, clientDD := testClientDiffDest(t, tt.giveOptions...)
+				lnS, lnD, clientDD := testClientDiffDst(t, tt.giveOptions...)
 				defer lnS.Close()
 				defer lnD.Close()
 
 				for _, c := range []*Client{client, clientDD} {
 					readbackClient := cloneCLient(t, c)
-					updateLogical(t, c, tt.giveSourceLogical, tt.giveDestLogical)
+					updateLogical(t, c, tt.giveSrcLogical, tt.giveDstLogical)
 
-					pathS := addMountToPath(t, tt.giveSource, ver[0])
-					pathD := addMountToPath(t, tt.giveDest, ver[1])
+					pathS := addMountToPath(t, tt.giveSrc, ver[0])
+					pathD := addMountToPath(t, tt.giveDst, ver[1])
 
 					err := c.PathCopy(pathS, pathD)
 					compareErrors(t, err, tt.wantErr)
 
 					readBackS, errS := readbackClient.PathRead(pathS)
-					readBackD, errD := readbackClient.PathReadDest(pathD)
+					readBackD, errD := readbackClient.PathReadDst(pathD)
 					assert.NoError(t, errS)
 					assert.NoError(t, errD)
 
-					if tt.wantNilDest {
+					if tt.wantNilDst {
 						assert.Nil(t, readBackD)
 					} else {
 						assert.Equal(t, readBackS, readBackD)

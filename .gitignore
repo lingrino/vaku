@@ -1,21 +1,14 @@
-# Binaries for programs and plugins
-*.exe
-*.dll
-*.so
-*.dylib
-
-# Test binary, build with `go test -c`
-*.test
-
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
-
-# Vendored dependencies
-vendor/
-
 # Binaries
 dist/
+*.test
 
-# Various IDE settings
+# Coverage
+*.out
+coverage.txt
+
+# Benchmark
+bench.txt
+
+# IDE settings
 .idea/
 .vscode/

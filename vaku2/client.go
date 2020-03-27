@@ -4,7 +4,7 @@ import (
 	"github.com/hashicorp/vault/api"
 )
 
-// logical has all functions from api.Logical() that I use
+// logical is functions from api.Logical() used by Vaku.
 type logical interface {
 	Delete(path string) (*api.Secret, error)
 	List(path string) (*api.Secret, error)
@@ -12,20 +12,20 @@ type logical interface {
 	Write(path string, data map[string]interface{}) (*api.Secret, error)
 }
 
-// Client holds Vaku functions and wraps Vault API clients.
+// Client has all Vaku functions and wraps Vault API clients.
 type Client struct {
-	// source is the default client and also used as dest when dest is nil.
-	source *api.Client
-	dest   *api.Client
+	// src is the default client and also used as dst when dst is nil.
+	src *api.Client
+	dst *api.Client
 
-	// wrap api.Client.Logical() in an interface for mocking
-	sourceL logical
-	destL   logical
+	// wrap api.Client.Logical() in an interface.
+	srcL logical
+	dstL logical
 
-	// max number of concurrent operations we'll run.
+	// workers is the max number of concurrent operations we'll run.
 	workers uint
 
-	// set for the full path to be returned instead of the trimmed path
+	// fullPath if the full path is desired instead of the trimmed path.
 	fullPath bool
 }
 
@@ -34,41 +34,49 @@ type Option interface {
 	apply(c *Client) error
 }
 
+// WithVaultClient sets the default Vault client to be used.
+func WithVaultClient(c *api.Client) Option {
+	return withVaultClient{c}
+}
+
+// WithVaultSrcClient is an alias for WithVaultClient.
+func WithVaultSrcClient(c *api.Client) Option {
+	return withVaultClient{c}
+}
+
 type withVaultClient struct {
 	client *api.Client
 }
 
 func (o withVaultClient) apply(c *Client) error {
-	c.source = o.client
-	c.sourceL = o.client.Logical()
+	c.src = o.client
+	c.srcL = o.client.Logical()
 	return nil
 }
 
-// WithVaultClient sets the default vault client to be used
-func WithVaultClient(c *api.Client) Option {
-	return withVaultClient{c}
+// WithVaultDstClient sets a separate Vault client to be used only on operations that have a source
+// and destination (copy, move, etc...). If unset the default client will be used as the source and
+// destination.
+func WithVaultDstClient(c *api.Client) Option {
+	return withDstVaultClient{c}
 }
 
-// WithVaultSourceClient is an alias for WithVaultClient
-func WithVaultSourceClient(c *api.Client) Option {
-	return withVaultClient{c}
-}
-
-type withDestVaultClient struct {
+type withDstVaultClient struct {
 	client *api.Client
 }
 
-func (o withDestVaultClient) apply(c *Client) error {
-	c.dest = o.client
-	c.destL = o.client.Logical()
+func (o withDstVaultClient) apply(c *Client) error {
+	c.dst = o.client
+	c.dstL = o.client.Logical()
 	return nil
 }
 
-// WithVaultDestClient sets a separate vault client to be used only on operations that have a source
-// and destination (copy, move, etc...). If unset the default client will be used as the source and
-// destination.
-func WithVaultDestClient(c *api.Client) Option {
-	return withDestVaultClient{c}
+// WithWorkers sets the maximum number of goroutines that will be used to run folder based
+// operations. Default value is 10. A stable and well-operated Vault server should be able to handle
+// 100 or more without issue. Use with caution and tune specifically to your environment and storage
+// backend.
+func WithWorkers(n uint) Option {
+	return withWorkers(n)
 }
 
 type withWorkers uint
@@ -78,12 +86,11 @@ func (o withWorkers) apply(c *Client) error {
 	return nil
 }
 
-// WithWorkers sets the maximum number of goroutines that will be used to run folder based
-// functions. The default value is 10, but a stable and well-tuned Vault server should be able to
-// handle up to 100 without issues. Use with caution and tune specifically to your environment and
-// storage backend.
-func WithWorkers(n uint) Option {
-	return withWorkers(n)
+// WithFullPath sets the output format for all returned paths. Default path output is trimmed up to
+// the path input. Pass WithFullPath(true) to set path output to the entire path. Example:
+// List(secret/foo) -> "bar" OR "secret/foo/bar"
+func WithFullPath(b bool) Option {
+	return withFullPath(b)
 }
 
 type withFullPath bool
@@ -93,14 +100,7 @@ func (o withFullPath) apply(c *Client) error {
 	return nil
 }
 
-// WithFullPath sets the output format for all returned paths. By default path output is trimmed up
-// to the path input. Pass WithFullPath(true) to set path output to the entire path. Example:
-// List(secret/foo) -> "bar" OR "secret/foo/bar"
-func WithFullPath(b bool) Option {
-	return withFullPath(b)
-}
-
-// NewClient returns a new empty Vaku Client based on the Vault API config
+// NewClient returns a new Vaku Client based on the Vault API config.
 func NewClient(opts ...Option) (*Client, error) {
 	// set defaults
 	client := &Client{
@@ -115,10 +115,10 @@ func NewClient(opts ...Option) (*Client, error) {
 		}
 	}
 
-	// set dest to source if dest is unspecified
-	if client.dest == nil && client.source != nil {
-		client.dest = client.source
-		client.destL = client.sourceL
+	// set dst to src if dst is unspecified
+	if client.dst == nil && client.src != nil {
+		client.dst = client.src
+		client.dstL = client.srcL
 	}
 
 	return client, nil

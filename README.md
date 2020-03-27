@@ -8,8 +8,6 @@
 
 Vaku is a CLI and Go API that add useful functions on top of Hashicorp Vault.
 
-**NOTE:** Vaku is in a stable and supported state. New features will not be added *by me*, but I will review any issues or PRs that improve the tool or add new features.
-
 ## Installation
 
 The easiest way to install the vaku CLI is with [homebrew][]
@@ -89,35 +87,29 @@ addition, the API adds path and folder level functions not fouund in the officia
 The API is well documented and can be read on [godoc](https://godoc.org/github.com/lingrino/vaku/vaku). Please use
 the godoc documentation for all reference and example information.
 
+TODO - Example
+
 ## Contributing
 
 Suggestions and contributions of all kinds are welcome! If there is functionality you would like to see in Vaku
 please open an issue or pull request and I will be sure to address it.
 
-## Command Reference
-
-- Path List
-- Path Read
-- Path Write (API only)
-- Path Delete
-- Path Destroy (v2 mounts only)
-- Path Copy
-- Path Move
-- Path Update (API only)
-- Path Search
-- Folder List
-- Folder Read
-- Folder Write (API only)
-- Folder Delete
-- Folder Destroy (v2 mounts only)
-- Folder Copy
-- Folder Move
-- Folder Search
-- Folder Map (CLI Only)
+TODO - Link to contributing file
 
 ## Running Tests
 
-Tests are meant to be run side by side with a real Vault server docker image. This
-creates an external dependency for the tests but makes it much simpler to test different
-Vault versions and key/value mounts. With docker and docker-compose installed tests
-can be run with a simple `make test`.
+TODO
+
+## TODO
+
+- Benchmarks
+- Example functions
+- API example in docs
+- CLI tests
+- Update goreleaser, codecov, golangcilint, badges
+- man pages, autocomplete, other cobra features
+- how to test version functions?
+- www html linting, best practices, css?
+- update checkerrors to check every error and require the full error chain in tests
+- further parallelize tests?
+- update seeds to make more sense maybe?

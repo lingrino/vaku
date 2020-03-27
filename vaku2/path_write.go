@@ -6,29 +6,31 @@ import (
 )
 
 var (
-	ErrPathWrite  = errors.New("path write")
+	// ErrPathWrite when PathWrite/PathWriteDest errors
+	ErrPathWrite = errors.New("path write")
+	// ErrVaultWrite when the underlying Vault API write fails
 	ErrVaultWrite = errors.New("vault write")
 )
 
-// PathWrite writes data to a path using the source client.
+// PathWrite writes data to a path.
 func (c *Client) PathWrite(p string, d map[string]interface{}) error {
-	return c.pathWrite(c.sourceL, p, d)
+	return c.pathWrite(c.srcL, p, d)
 }
 
-// PathWriteDest writes data to a path using the dest client.
-func (c *Client) PathWriteDest(p string, d map[string]interface{}) error {
-	return c.pathWrite(c.destL, p, d)
+// PathWriteDst writes data to a path.
+func (c *Client) PathWriteDst(p string, d map[string]interface{}) error {
+	return c.pathWrite(c.dstL, p, d)
 }
 
-// pathWrite writes data to a path.
-func (c *Client) pathWrite(apiL logical, p string, d map[string]interface{}) error {
+// pathWrite does the actual write.
+func (c *Client) pathWrite(l logical, p string, d map[string]interface{}) error {
 	if d == nil {
-		return newWrapErr(fmt.Sprintf("%v", ErrPathWrite), ErrPathWrite, ErrNilData)
+		return newWrapErr(p, ErrPathWrite, ErrNilData)
 	}
 
-	_, err := apiL.Write(p, d)
+	_, err := l.Write(p, d)
 	if err != nil {
-		return newWrapErr(fmt.Sprintf("%q: %v: %v", p, ErrVaultWrite, err), ErrVaultWrite, nil)
+		return newWrapErr(p, ErrPathWrite, fmt.Errorf("%w: %v", ErrVaultWrite, err))
 	}
 
 	return nil

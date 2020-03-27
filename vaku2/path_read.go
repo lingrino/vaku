@@ -6,24 +6,25 @@ import (
 )
 
 var (
+	ErrPathRead  = errors.New("path read")
 	ErrVaultRead = errors.New("vault read")
 )
 
-// PathRead takes a path, calls vault read, extracts the secret, and returns it.
+// PathRead gets data at a path.
 func (c *Client) PathRead(p string) (map[string]interface{}, error) {
-	return c.pathRead(c.sourceL, p)
+	return c.pathRead(c.srcL, p)
 }
 
-// PathReadDest takes a path, calls vault read using the destination client, extracts the secret, and returns it.
-func (c *Client) PathReadDest(p string) (map[string]interface{}, error) {
-	return c.pathRead(c.destL, p)
+// PathReadDest gets data at a path.
+func (c *Client) PathReadDst(p string) (map[string]interface{}, error) {
+	return c.pathRead(c.dstL, p)
 }
 
-// pathRead takes a path, calls vault read, extracts the secret, and returns it.
-func (c *Client) pathRead(apiL logical, p string) (map[string]interface{}, error) {
-	secret, err := apiL.Read(p)
+// pathRead does the actual read.
+func (c *Client) pathRead(l logical, p string) (map[string]interface{}, error) {
+	secret, err := l.Read(p)
 	if err != nil {
-		return nil, newWrapErr(fmt.Sprintf("%q: %v: %v", p, ErrVaultRead, err), ErrVaultRead, nil)
+		return nil, newWrapErr(p, ErrPathRead, fmt.Errorf("%w: %v", ErrVaultRead, err))
 	}
 
 	if secret == nil || secret.Data == nil {

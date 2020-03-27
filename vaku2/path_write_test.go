@@ -65,7 +65,7 @@ func TestPathWrite(t *testing.T) {
 
 			funcs := []func(string, map[string]interface{}) error{
 				client.PathWrite,
-				client.PathWriteDest,
+				client.PathWriteDst,
 			}
 
 			for _, ver := range kvMountVersions {

@@ -15,13 +15,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	// errInject is used when injecting errors in tests
-	errInject = errors.New("injected error")
-)
-
-// When tests are looping over kvMountVersions and the path is noMountPrefix they will not prefix
-// the path with the mount version to allow testing on a nonexistent mount.
+// noMountPrefix is a special string that, when passed in tests, will not be prefixed with a mount
+// to allow testing on a nonexistent mount.
 var noMountPrefix = "nomount"
 
 // kvMountVersions lists the types of kv mounts for vault. There are currently two k/v mount types
@@ -29,7 +24,7 @@ var noMountPrefix = "nomount"
 var kvMountVersions = []string{"1", "2"}
 
 // versionProduct is all possible to/from version combinations for testing functions that should
-// work across multiple mount versions.
+// work across multiple mount versions and vault servers.
 var versionProduct = [4][2]string{
 	{"1", "1"},
 	{"2", "2"},
@@ -68,8 +63,8 @@ var seeds = map[string]map[string]interface{}{
 	},
 }
 
-// It is necessary to to set up a TestMain here because vault.TestCoreUnsealedWithConfig() calls a
-// function further down that uses a logger with a default config intead of the config passed in.
+// TestMain runs before any test. It is here because vault.TestCoreUnsealedWithConfig() calls a
+// function further down that uses a default logger intead of the logger passed.
 func TestMain(m *testing.M) {
 	hclog.DefaultOutput = ioutil.Discard
 	os.Exit(m.Run())
@@ -118,7 +113,7 @@ func testServerSeeded(t *testing.T) (net.Listener, *api.Client) {
 	return ln, client
 }
 
-// testClient returns a client that points to an seeded server.
+// testClient returns a client that points to a seeded server.
 func testClient(t *testing.T, opts ...Option) (net.Listener, *Client) {
 	t.Helper()
 
@@ -130,23 +125,23 @@ func testClient(t *testing.T, opts ...Option) (net.Listener, *Client) {
 	return ln, client
 }
 
-// testClientDiffDest returns a client that points source and dest at different seeded servers.
-func testClientDiffDest(t *testing.T, opts ...Option) (net.Listener, net.Listener, *Client) {
+// testClientDiffDst returns a client that points src and dst at different seeded servers.
+func testClientDiffDst(t *testing.T, opts ...Option) (net.Listener, net.Listener, *Client) {
 	t.Helper()
 
 	ln, apiClientS := testServerSeeded(t)
 	lnD, apiClientD := testServerSeeded(t)
 
 	client, err := NewClient(append(opts,
-		WithVaultSourceClient(apiClientS),
-		WithVaultDestClient(apiClientD),
+		WithVaultSrcClient(apiClientS),
+		WithVaultDstClient(apiClientD),
 	)...)
 	assert.NoError(t, err)
 
 	return ln, lnD, client
 }
 
-// cloneCLient cpies a client. Don't use this outside of tests.
+// cloneCLient copies a client.
 func cloneCLient(t *testing.T, c *Client) *Client {
 	t.Helper()
 
@@ -160,10 +155,12 @@ type errLogical struct {
 	err    error
 
 	// if op != "" all functions will pass to the real client except the one named in op
-	op      string
-	realL   logical
-	useDest bool
+	op    string
+	realL logical
 }
+
+// verify compliance with logical interface.
+var _ logical = (*errLogical)(nil)
 
 func (e *errLogical) Delete(path string) (*api.Secret, error) {
 	if e.op != "Delete" && e.op != "" {
@@ -193,31 +190,31 @@ func (e *errLogical) Write(path string, data map[string]interface{}) (*api.Secre
 	return e.secret, e.err
 }
 
-// updateLogical is used in tests with tt.giveSourceLogical.
-func updateLogical(t *testing.T, c *Client, sourceL logical, destL logical) {
+// updateLogical updates a client's real logical clients with passed errLogical clients.
+func updateLogical(t *testing.T, c *Client, srcL logical, dstL logical) {
 	t.Helper()
 
-	if sourceL != nil {
-		sl, ok := sourceL.(*errLogical)
+	if srcL != nil {
+		sl, ok := srcL.(*errLogical)
 		if ok {
-			sl.realL = c.sourceL
-			c.sourceL = sl
+			sl.realL = c.srcL
+			c.srcL = sl
 		} else {
-			c.sourceL = sourceL
+			c.srcL = srcL
 		}
 	}
-	if destL != nil {
-		dl, ok := destL.(*errLogical)
+	if dstL != nil {
+		dl, ok := dstL.(*errLogical)
 		if ok {
-			dl.realL = c.destL
-			c.destL = dl
+			dl.realL = c.dstL
+			c.dstL = dl
 		} else {
-			c.destL = destL
+			c.dstL = dstL
 		}
 	}
 }
 
-// addMountToPath prefixes a path with a mount if path is not the special noMountPrefix.
+// addMountToPath prefixes a path with a mount if path is not noMountPrefix.
 func addMountToPath(t *testing.T, path string, mount string) string {
 	t.Helper()
 

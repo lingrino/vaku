@@ -53,7 +53,7 @@ func TestPathDelete(t *testing.T) {
 
 			funcs := []func(string) error{
 				client.PathDelete,
-				client.PathDeleteDest,
+				client.PathDeleteDst,
 			}
 
 			for _, ver := range kvMountVersions {

@@ -12,17 +12,17 @@ const (
 	tokenVerifyString = "this token used to verify client equality"
 )
 
+// withError returns the passed in error for Option error injection
+func withError(e error) Option {
+	return withErrorOpt{e}
+}
+
 type withErrorOpt struct {
 	err error
 }
 
 func (o withErrorOpt) apply(c *Client) error {
 	return o.err
-}
-
-// withError returns the passed in error for Option error injection
-func withError(e error) Option {
-	return withErrorOpt{e}
 }
 
 // newDefaultVaultClient creates a default vault client and fails on error
@@ -36,33 +36,33 @@ func newDefaultVaultClient(t *testing.T) *api.Client {
 	return client
 }
 
-// assertClientsEqual compares two Client
+// assertClientsEqual compares two Clients
 func assertClientsEqual(t *testing.T, expected *Client, actual *Client) {
 	if expected == nil {
 		assert.Nil(t, actual)
 		return
 	}
 
-	if expected.source != nil {
-		assert.Equal(t, expected.source.Token(), actual.source.Token())
+	if expected.src != nil {
+		assert.Equal(t, expected.src.Token(), actual.src.Token())
 	} else {
-		assert.Nil(t, actual.source)
+		assert.Nil(t, actual.src)
 	}
-	if expected.dest != nil {
-		assert.Equal(t, expected.dest.Token(), actual.dest.Token())
+	if expected.dst != nil {
+		assert.Equal(t, expected.dst.Token(), actual.dst.Token())
 	} else {
-		assert.Nil(t, actual.dest)
+		assert.Nil(t, actual.dst)
 	}
 
 	// zero out clients and assert equal
-	expected.source = nil
-	expected.sourceL = nil
-	expected.dest = nil
-	expected.destL = nil
-	actual.source = nil
-	actual.sourceL = nil
-	actual.dest = nil
-	actual.destL = nil
+	expected.src = nil
+	expected.srcL = nil
+	expected.dst = nil
+	expected.dstL = nil
+	actual.src = nil
+	actual.srcL = nil
+	actual.dst = nil
+	actual.dstL = nil
 	assert.Equal(t, expected, actual)
 }
 
@@ -90,21 +90,21 @@ func TestNewClient(t *testing.T) {
 				WithWorkers(100),
 			},
 			want: &Client{
-				source:  newDefaultVaultClient(t),
-				dest:    newDefaultVaultClient(t),
+				src:     newDefaultVaultClient(t),
+				dst:     newDefaultVaultClient(t),
 				workers: 100,
 			},
 			wantErr: nil,
 		},
 		{
-			name: "source/dest",
+			name: "src/dst",
 			give: []Option{
-				WithVaultSourceClient(newDefaultVaultClient(t)),
-				WithVaultDestClient(newDefaultVaultClient(t)),
+				WithVaultSrcClient(newDefaultVaultClient(t)),
+				WithVaultDstClient(newDefaultVaultClient(t)),
 			},
 			want: &Client{
-				source:  newDefaultVaultClient(t),
-				dest:    newDefaultVaultClient(t),
+				src:     newDefaultVaultClient(t),
+				dst:     newDefaultVaultClient(t),
 				workers: 10,
 			},
 			wantErr: nil,

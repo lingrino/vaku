@@ -69,7 +69,7 @@ func TestPathRead(t *testing.T) {
 
 			funcs := []func(string) (map[string]interface{}, error){
 				client.PathRead,
-				client.PathReadDest,
+				client.PathReadDst,
 			}
 
 			for _, ver := range kvMountVersions {
