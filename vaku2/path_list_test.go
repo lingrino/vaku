@@ -57,7 +57,7 @@ func TestPathList(t *testing.T) {
 				err: errInject,
 			},
 			want:    nil,
-			wantErr: []error{ErrVaultList},
+			wantErr: []error{ErrPathList, ErrVaultList},
 		},
 		{
 			name: "nil secret",
@@ -90,7 +90,7 @@ func TestPathList(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: []error{ErrDecodeSecret},
+			wantErr: []error{ErrPathList, ErrDecodeSecret},
 		},
 		{
 			name: "keys not []interface{}",
@@ -103,7 +103,7 @@ func TestPathList(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: []error{ErrDecodeSecret},
+			wantErr: []error{ErrPathList, ErrDecodeSecret},
 		},
 		{
 			name: "keys not string",
@@ -118,7 +118,7 @@ func TestPathList(t *testing.T) {
 				},
 			},
 			want:    nil,
-			wantErr: []error{ErrDecodeSecret},
+			wantErr: []error{ErrPathList, ErrDecodeSecret},
 		},
 	}
 

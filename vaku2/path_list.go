@@ -2,7 +2,6 @@ package vaku2
 
 import (
 	"errors"
-	"fmt"
 	"sort"
 )
 
@@ -25,7 +24,7 @@ func (c *Client) PathListDst(p string) ([]string, error) {
 func (c *Client) pathList(l logical, p string) ([]string, error) {
 	secret, err := l.List(p)
 	if err != nil {
-		return nil, newWrapErr(p, ErrPathList, fmt.Errorf("%w: %v", ErrVaultList, err))
+		return nil, newWrapErr(p, ErrPathList, newWrapErr(err.Error(), ErrVaultList, nil))
 	}
 
 	if secret == nil || secret.Data == nil {

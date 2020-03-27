@@ -35,14 +35,14 @@ func TestPathCopy(t *testing.T) {
 			name:       "bad src mount",
 			giveSrc:    noMountPrefix,
 			giveDst:    "copy/test/foo",
-			wantErr:    []error{ErrPathCopy, ErrPathWrite},
+			wantErr:    []error{ErrPathCopy, ErrPathWrite, ErrNilData},
 			wantNilDst: true,
 		},
 		{
 			name:       "bad dst mount",
 			giveSrc:    "test/foo",
 			giveDst:    noMountPrefix,
-			wantErr:    []error{ErrPathCopy, ErrVaultWrite},
+			wantErr:    []error{ErrPathCopy, ErrPathWrite, ErrVaultWrite},
 			wantNilDst: true,
 		},
 		{
@@ -53,7 +53,7 @@ func TestPathCopy(t *testing.T) {
 				err: errInject,
 				op:  "Read",
 			},
-			wantErr:    []error{ErrPathCopy, ErrVaultRead},
+			wantErr:    []error{ErrPathCopy, ErrPathRead, ErrVaultRead},
 			wantNilDst: true,
 		},
 		{
@@ -64,7 +64,7 @@ func TestPathCopy(t *testing.T) {
 				err: errInject,
 				op:  "Write",
 			},
-			wantErr:    []error{ErrPathCopy, ErrVaultWrite},
+			wantErr:    []error{ErrPathCopy, ErrPathWrite, ErrVaultWrite},
 			wantNilDst: true,
 		},
 	}

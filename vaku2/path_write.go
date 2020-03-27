@@ -2,7 +2,6 @@ package vaku2
 
 import (
 	"errors"
-	"fmt"
 )
 
 var (
@@ -30,7 +29,7 @@ func (c *Client) pathWrite(l logical, p string, d map[string]interface{}) error 
 
 	_, err := l.Write(p, d)
 	if err != nil {
-		return newWrapErr(p, ErrPathWrite, fmt.Errorf("%w: %v", ErrVaultWrite, err))
+		return newWrapErr(p, ErrPathWrite, newWrapErr(err.Error(), ErrVaultWrite, nil))
 	}
 
 	return nil

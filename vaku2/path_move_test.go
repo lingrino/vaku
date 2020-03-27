@@ -38,14 +38,14 @@ func TestPathMove(t *testing.T) {
 			name:       "bad src mount",
 			giveSrc:    noMountPrefix,
 			giveDst:    "move/test/foo",
-			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathWrite},
+			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathWrite, ErrNilData},
 			wantNilDst: true,
 		},
 		{
 			name:       "bad dst mount",
 			giveSrc:    "test/foo",
 			giveDst:    noMountPrefix,
-			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrVaultWrite},
+			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathWrite, ErrVaultWrite},
 			wantNilDst: true,
 		},
 		{
@@ -56,7 +56,7 @@ func TestPathMove(t *testing.T) {
 				err: errInject,
 				op:  "Read",
 			},
-			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrVaultRead},
+			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathRead, ErrVaultRead},
 			wantNilDst: true,
 		},
 		{
@@ -67,7 +67,7 @@ func TestPathMove(t *testing.T) {
 				err: errInject,
 				op:  "Write",
 			},
-			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrVaultWrite},
+			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathWrite, ErrVaultWrite},
 			wantNilDst: true,
 		},
 		{
@@ -78,7 +78,7 @@ func TestPathMove(t *testing.T) {
 				err: errInject,
 				op:  "Delete",
 			},
-			wantErr:    []error{ErrPathMove, ErrVaultDelete},
+			wantErr:    []error{ErrPathMove, ErrPathDelete, ErrVaultDelete},
 			wantNilSrc: false,
 			wantNilDst: false,
 		},

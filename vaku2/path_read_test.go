@@ -54,7 +54,7 @@ func TestPathRead(t *testing.T) {
 				err: errInject,
 			},
 			want:    nil,
-			wantErr: []error{ErrVaultRead},
+			wantErr: []error{ErrPathRead, ErrVaultRead},
 		},
 	}
 

@@ -79,7 +79,7 @@ func TestPathUpate(t *testing.T) {
 				"foo":   "bar",
 				"value": "bar",
 			},
-			wantErr: []error{ErrPathUpdate, ErrVaultWrite},
+			wantErr: []error{ErrPathUpdate, ErrPathWrite, ErrVaultWrite},
 		},
 		{
 			name: "inject read",
@@ -95,7 +95,7 @@ func TestPathUpate(t *testing.T) {
 			wantData: map[string]interface{}{
 				"value": "bar",
 			},
-			wantErr: []error{ErrPathUpdate, ErrVaultRead},
+			wantErr: []error{ErrPathUpdate, ErrPathRead, ErrVaultRead},
 		},
 	}
 

@@ -2,7 +2,6 @@ package vaku2
 
 import (
 	"errors"
-	"fmt"
 )
 
 var (
@@ -24,7 +23,7 @@ func (c *Client) PathDeleteDst(p string) error {
 func (c *Client) pathDelete(l logical, p string) error {
 	_, err := l.Delete(p)
 	if err != nil {
-		return newWrapErr(p, ErrPathDelete, fmt.Errorf("%w: %v", ErrVaultDelete, err))
+		return newWrapErr(p, ErrPathDelete, newWrapErr(err.Error(), ErrVaultDelete, nil))
 	}
 
 	return nil

@@ -48,7 +48,7 @@ func TestPathWrite(t *testing.T) {
 			giveData: map[string]interface{}{
 				"foo": "bar",
 			},
-			wantErr:        []error{ErrVaultWrite},
+			wantErr:        []error{ErrPathWrite, ErrVaultWrite},
 			wantNoReadback: true,
 		},
 	}

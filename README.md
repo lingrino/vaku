@@ -108,8 +108,7 @@ TODO
 - CLI tests
 - Update goreleaser, codecov, golangcilint, badges
 - man pages, autocomplete, other cobra features
-- how to test version functions?
+- how to test version functions? best practices?
 - www html linting, best practices, css?
-- update checkerrors to check every error and require the full error chain in tests
 - further parallelize tests?
 - update seeds to make more sense maybe?

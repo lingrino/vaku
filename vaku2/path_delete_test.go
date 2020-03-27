@@ -29,7 +29,7 @@ func TestPathDelete(t *testing.T) {
 		{
 			name:    "no mount",
 			give:    noMountPrefix,
-			wantErr: []error{ErrVaultDelete},
+			wantErr: []error{ErrPathDelete, ErrVaultDelete},
 		},
 		{
 			name: "error",
@@ -37,7 +37,7 @@ func TestPathDelete(t *testing.T) {
 			giveLogical: &errLogical{
 				err: errInject,
 			},
-			wantErr: []error{ErrVaultDelete},
+			wantErr: []error{ErrPathDelete, ErrVaultDelete},
 		},
 	}
 

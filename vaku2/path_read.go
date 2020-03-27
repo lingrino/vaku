@@ -2,7 +2,6 @@ package vaku2
 
 import (
 	"errors"
-	"fmt"
 )
 
 var (
@@ -24,7 +23,7 @@ func (c *Client) PathReadDst(p string) (map[string]interface{}, error) {
 func (c *Client) pathRead(l logical, p string) (map[string]interface{}, error) {
 	secret, err := l.Read(p)
 	if err != nil {
-		return nil, newWrapErr(p, ErrPathRead, fmt.Errorf("%w: %v", ErrVaultRead, err))
+		return nil, newWrapErr(p, ErrPathRead, newWrapErr(err.Error(), ErrVaultRead, nil))
 	}
 
 	if secret == nil || secret.Data == nil {

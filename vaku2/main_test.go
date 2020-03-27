@@ -224,14 +224,29 @@ func addMountToPath(t *testing.T, path string, mount string) string {
 	return path
 }
 
-// compareErrors asserts each error in the list matches the provided error using errors.Is()
-func compareErrors(t *testing.T, ev error, el []error) {
+// compareErrors asserts that the error list is an ordered and complete list of errors returned by
+// repeatedly calling errors.Unwrap(err).
+func compareErrors(t *testing.T, err error, el []error) {
 	t.Helper()
 
-	if el == nil {
-		assert.NoError(t, ev)
+	for _, e := range el {
+		assert.True(t, errors.Is(err, e), fmt.Sprintf("error %v is not of type %v", err, e))
+		err = errors.Unwrap(err)
 	}
-	for _, err := range el {
-		assert.True(t, errors.Is(ev, err), fmt.Sprintf("error %v is not of type %v", ev, err))
-	}
+
+	assert.Nil(t, err)
+}
+
+func TestE(t *testing.T) {
+	var errOne = errors.New("one")
+	var errSecond = errors.New("second")
+	var errTree = errors.New("tree")
+
+	err := newWrapErr("1", errOne, nil)
+	err = newWrapErr("2", errSecond, err)
+	err = newWrapErr("3", errTree, err)
+
+	exp := []error{errTree, errSecond, errOne}
+
+	compareErrors(t, err, exp)
 }
