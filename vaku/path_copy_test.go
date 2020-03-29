@@ -141,6 +141,12 @@ func TestCopyClientPathDeleted(t *testing.T) {
 			copyErr:     true,
 			oppath:      "destroy",
 		},
+		4: {
+			inputSource: vaku.NewPathInput("secretv2/copydestroyedlatest/test"),
+			inputTarget: vaku.NewPathInput("secretv2/copydestroyedlatest/test"),
+			copyErr:     false,
+			oppath:      "destroyLatestVersion",
+		},
 	}
 
 	for _, d := range tests {
@@ -159,6 +165,8 @@ func TestCopyClientPathDeleted(t *testing.T) {
 		} else if d.oppath == "destroy" {
 			err = c.Source.PathDestroy(d.inputSource)
 			assert.NoError(t, err)
+		} else if d.oppath == "destroyLatestVersion" {
+			err = c.Source.PathDestroyVersions(d.inputSource, []int{1})
 		}
 
 		copyErr := c.PathCopy(d.inputSource, d.inputTarget)

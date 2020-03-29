@@ -59,11 +59,18 @@ func (c *Client) InitPathInput(i *PathInput) error {
 				i.opPath = c.PathJoin(i.mountPath, "metadata", i.mountlessPath)
 			} else if i.opType == "read" || i.opType == "write" || i.opType == "readwrite" || i.opType == "delete" {
 				i.opPath = c.PathJoin(i.mountPath, "data", i.mountlessPath)
+			} else if i.opType == "destroyversions" {
+				i.opPath = c.PathJoin(i.mountPath, "destroy", i.mountlessPath)
 			}
 		} else {
 			if i.opType == "destroy" {
 				return fmt.Errorf("The 'destroy' command is only supported on V2 mounts")
 			}
+
+			if i.opType == "destroyversions" {
+				return fmt.Errorf("The 'destroy' command is only supported on V2 mounts")
+			}
+
 			i.opPath = c.PathJoin(i.Path)
 		}
 	} else if i.opPath == "" || i.mountPath == "" || i.mountVersion == "" || i.mountlessPath == "" {
@@ -76,11 +83,18 @@ func (c *Client) InitPathInput(i *PathInput) error {
 				i.opPath = c.PathJoin(m.MountPath, "metadata", m.MountlessPath)
 			} else if i.opType == "read" || i.opType == "write" || i.opType == "readwrite" || i.opType == "delete" {
 				i.opPath = c.PathJoin(m.MountPath, "data", m.MountlessPath)
+			} else if i.opType == "destroyversions" {
+				i.opPath = c.PathJoin(m.MountPath, "destroy", m.MountlessPath)
 			}
 		} else {
 			if i.opType == "destroy" {
 				return fmt.Errorf("The 'destroy' command is only supported on V2 mounts")
 			}
+
+			if i.opType == "destroyversions" {
+				return fmt.Errorf("The 'destroyversions' command is only supported on V2 mounts")
+			}
+
 			i.opPath = c.PathJoin(i.Path)
 		}
 
