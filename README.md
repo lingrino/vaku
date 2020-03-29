@@ -4,7 +4,8 @@
 
 [![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat)](https://pkg.go.dev/github.com/lingrino/vaku/vaku)
 [![goreportcard](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
-[![codecov](https://codecov.io/gh/lingrino/vaku/branch/master/graph/badge.svg)](https://codecov.io/gh/lingrino/vaku)
+[![Maintainability](https://api.codeclimate.com/v1/badges/db6951b0aa53becf8c92/maintainability)](https://codeclimate.com/github/lingrino/vaku/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/db6951b0aa53becf8c92/test_coverage)](https://codeclimate.com/github/lingrino/vaku/test_coverage)
 
 Vaku is a CLI and Go API that add useful functions on top of Hashicorp Vault.
 
@@ -113,3 +114,7 @@ TODO
 - www html linting, best practices, css?
 - further parallelize tests?
 - update seeds to make more sense maybe?
+- add context and cancellations?
+- change full/prefixed path terms to absolute/relative
+- https://github.com/SimonBaeumer/commander or other way to test CLI?
+- cli option to sort output

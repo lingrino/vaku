@@ -2,7 +2,6 @@ name: Validate
 
 on:
   - push
-  - pull_request
 
 jobs:
   validate:
@@ -32,12 +31,15 @@ jobs:
           fetch-depth: 1
       - name: Go fmt
         run: test -z $(gofmt -l -w -s vaku/)
-      - name: Run Tests
-        run: go test -cover -race -v -coverprofile=coverage.txt -covermode=atomic ./...
+      - name: Prep Coverage
+        run: |
+          cc-test-reporter before-build
         env:
-          VAKU_VAULT_ADDR: http://vault:8300
-          VAKU_TARGET_VAULT_ADDR: http://targetvault:8400
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      - name: Run Tests
+        run: go test -cover -coverprofile=c.out -covermode=atomic -race -v ./...
       - name: Upload Coverage
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+        run: |
+          cc-test-reporter after-build -p "github.com/${GITHUB_REPOSITORY}"
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}

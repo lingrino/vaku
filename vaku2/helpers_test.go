@@ -6,6 +6,53 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestIsFolder(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		give string
+		want bool
+	}{
+		{
+			give: "/",
+			want: true,
+		},
+		{
+			give: "a/",
+			want: true,
+		},
+		{
+			give: "a/b/",
+			want: true,
+		},
+		{
+			give: "",
+			want: false,
+		},
+		{
+			give: "a",
+			want: false,
+		},
+		{
+			give: "a/b",
+			want: false,
+		},
+		{
+			give: "123/456",
+			want: false,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.give, func(t *testing.T) {
+			t.Parallel()
+
+			assert.Equal(t, tt.want, IsFolder(tt.give))
+		})
+	}
+}
+
 func TestKeyJoin(t *testing.T) {
 	t.Parallel()
 
