@@ -2,7 +2,7 @@ package vaku
 
 import "fmt"
 
-// PathDestroy takes in a PathInput and calls the destroy on 'mount/destroy/path'
+// PathDestroyVersions takes in a PathInput and calls the destroy on 'mount/destroy/path'
 // This function only works on versioned (V2) key/value mounts.
 func (c *Client) PathDestroyVersions(i *PathInput, versions []int) error {
 	var err error

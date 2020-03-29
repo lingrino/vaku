@@ -55,11 +55,12 @@ func (c *Client) InitPathInput(i *PathInput) error {
 	if i.mountPath != "" && i.mountVersion != "" {
 		i.mountlessPath = strings.TrimPrefix(i.Path, i.mountPath)
 		if i.mountVersion == "2" {
-			if i.opType == "list" || i.opType == "destroy" {
+			switch i.opType {
+			case "list", "destroy":
 				i.opPath = c.PathJoin(i.mountPath, "metadata", i.mountlessPath)
-			} else if i.opType == "read" || i.opType == "write" || i.opType == "readwrite" || i.opType == "delete" {
+			case "read", "write", "readwrite", "delete":
 				i.opPath = c.PathJoin(i.mountPath, "data", i.mountlessPath)
-			} else if i.opType == "destroyversions" {
+			case "destroyversions":
 				i.opPath = c.PathJoin(i.mountPath, "destroy", i.mountlessPath)
 			}
 		} else {
@@ -79,11 +80,12 @@ func (c *Client) InitPathInput(i *PathInput) error {
 			return fmt.Errorf("failed to describe mount for path %s: %w", i.Path, err)
 		}
 		if m.MountVersion == "2" {
-			if i.opType == "list" || i.opType == "destroy" {
+			switch i.opType {
+			case "list", "destroy":
 				i.opPath = c.PathJoin(m.MountPath, "metadata", m.MountlessPath)
-			} else if i.opType == "read" || i.opType == "write" || i.opType == "readwrite" || i.opType == "delete" {
+			case "read", "write", "readwrite", "delete":
 				i.opPath = c.PathJoin(m.MountPath, "data", m.MountlessPath)
-			} else if i.opType == "destroyversions" {
+			case "destroyversions":
 				i.opPath = c.PathJoin(m.MountPath, "destroy", m.MountlessPath)
 			}
 		} else {
