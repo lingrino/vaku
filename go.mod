@@ -12,12 +12,12 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pierrec/lz4 v2.4.1+incompatible // indirect
 	github.com/pkg/errors v0.9.1
-	github.com/spf13/cobra v0.0.6
+	github.com/spf13/cobra v0.0.7
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.5.1
 	golang.org/x/crypto v0.0.0-20200323165209-0ec3e9974c59 // indirect
 	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e // indirect
-	golang.org/x/sync v0.0.0-20190423024810-112230192c58
+	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a // indirect
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
 	gopkg.in/square/go-jose.v2 v2.4.1 // indirect
 )

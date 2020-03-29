@@ -6,6 +6,7 @@
 [![goreportcard](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
 [![Maintainability](https://api.codeclimate.com/v1/badges/db6951b0aa53becf8c92/maintainability)](https://codeclimate.com/github/lingrino/vaku/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/db6951b0aa53becf8c92/test_coverage)](https://codeclimate.com/github/lingrino/vaku/test_coverage)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/65802905eb8148e2ae9ae4c909673ee2)](https://www.codacy.com/manual/lingrino/vaku)
 
 Vaku is a CLI and Go API that add useful functions on top of Hashicorp Vault.
 
