@@ -116,9 +116,9 @@ TODO
 - update seeds to make more sense maybe?
 - add context and cancellations?
 - change full/prefixed path terms to absolute/relative
-- https://github.com/SimonBaeumer/commander or other way to test CLI?
+- <https://github.com/SimonBaeumer/commander> or other way to test CLI?
 - cli option to sort output
 - release on snapcraft
-- add installation instructions like https://goreleaser.com/install/
+- add installation instructions like <https://goreleaser.com/install/>
 - update tests to run on ./... instead of ./vaku
 - verify delete/destory behavior on real vault
