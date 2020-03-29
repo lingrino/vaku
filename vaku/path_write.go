@@ -1,32 +1,36 @@
 package vaku
 
-import "fmt"
+import (
+	"errors"
+)
 
-// PathWrite takes in a PathInput and data to written to that path. It then
-// calls the native vault write with that data at the specified path.
-func (c *Client) PathWrite(i *PathInput, d map[string]interface{}) error {
-	var err error
+var (
+	// ErrPathWrite when PathWrite/PathWriteDest errors
+	ErrPathWrite = errors.New("path write")
+	// ErrVaultWrite when the underlying Vault API write fails
+	ErrVaultWrite = errors.New("vault write")
+)
 
-	// Initialize the input
-	i.opType = "write"
-	err = c.InitPathInput(i)
+// PathWrite writes data to a path.
+func (c *Client) PathWrite(p string, d map[string]interface{}) error {
+	return c.pathWrite(c.srcL, p, d)
+}
+
+// PathWriteDst writes data to a path.
+func (c *Client) PathWriteDst(p string, d map[string]interface{}) error {
+	return c.pathWrite(c.dstL, p, d)
+}
+
+// pathWrite does the actual write.
+func (c *Client) pathWrite(l logical, p string, d map[string]interface{}) error {
+	if d == nil {
+		return newWrapErr(p, ErrPathWrite, ErrNilData)
+	}
+
+	_, err := l.Write(p, d)
 	if err != nil {
-		return fmt.Errorf("failed to init write path %s: %w", i.Path, err)
+		return newWrapErr(p, ErrPathWrite, newWrapErr(err.Error(), ErrVaultWrite, nil))
 	}
 
-	// V2 mounts nest the actual data in another map[string]interface{}
-	// https://github.com/hashicorp/vault/blob/69b1cae9e252e9f2f8394675f8df5cd9dca8f5de/command/kv_put.go#L130-L142
-	if i.mountVersion == "2" {
-		d = map[string]interface{}{
-			"data": d,
-		}
-	}
-
-	// Do the actual write
-	_, err = c.Logical().Write(i.opPath, d)
-	if err != nil {
-		return fmt.Errorf("failed to write secret to %s: %w", i.opPath, err)
-	}
-
-	return err
+	return nil
 }

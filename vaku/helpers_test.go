@@ -1,201 +1,232 @@
-package vaku_test
+package vaku
 
 import (
 	"testing"
 
-	"github.com/lingrino/vaku/vaku"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestKeyIsFolder(t *testing.T) {
+func TestIsFolder(t *testing.T) {
 	t.Parallel()
-	inputToOutput := map[string]bool{
-		"/":       true,
-		"a/":      true,
-		"a/b/":    true,
-		"":        false,
-		"a":       false,
-		"a/b":     false,
-		"123/456": false,
+
+	tests := []struct {
+		give string
+		want bool
+	}{
+		{
+			give: "/",
+			want: true,
+		},
+		{
+			give: "a/",
+			want: true,
+		},
+		{
+			give: "a/b/",
+			want: true,
+		},
+		{
+			give: "",
+			want: false,
+		},
+		{
+			give: "a",
+			want: false,
+		},
+		{
+			give: "a/b",
+			want: false,
+		},
+		{
+			give: "123/456",
+			want: false,
+		},
 	}
 
-	c := vaku.NewClient()
-	for i, o := range inputToOutput {
-		assert.Equal(t, o, c.KeyIsFolder(i))
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.give, func(t *testing.T) {
+			t.Parallel()
+
+			assert.Equal(t, tt.want, IsFolder(tt.give))
+		})
 	}
 }
 
 func TestKeyJoin(t *testing.T) {
 	t.Parallel()
-	outputToInput := map[string][]string{
-		"/":       {"/"},
-		"a/":      {"a/"},
-		"b":       {"b", ""},
-		"a/b/c":   {"a/b", "c"},
-		"d/e/f":   {"d/e/", "/f"},
-		"g/h/i/":  {"/g/h/", "/i/"},
-		"j/k/l/m": {"/j/", "/k/l", "m"},
+
+	tests := []struct {
+		give []string
+		want string
+	}{
+		{
+			give: []string{"/"},
+			want: "/",
+		},
+		{
+			give: []string{"a/"},
+			want: "a/",
+		},
+		{
+			give: []string{"b", ""},
+			want: "b",
+		},
+		{
+			give: []string{"a/b", "c"},
+			want: "a/b/c",
+		},
+		{
+			give: []string{"d/e/", "/f"},
+			want: "d/e/f",
+		},
+		{
+			give: []string{"/g/h/", "/i/"},
+			want: "g/h/i/",
+		},
+		{
+			give: []string{"/j/", "/k/l", "m"},
+			want: "j/k/l/m",
+		},
 	}
 
-	c := vaku.NewClient()
-	for o, i := range outputToInput {
-		assert.Equal(t, o, c.KeyJoin(i...))
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.want, func(t *testing.T) {
+			t.Parallel()
+
+			assert.Equal(t, tt.want, KeyJoin(tt.give...))
+		})
 	}
 }
 
 func TestPathJoin(t *testing.T) {
 	t.Parallel()
-	outputToInput := map[string][]string{
-		"":        {"/"},
-		"a":       {"a/"},
-		"b":       {"b", ""},
-		"a/b/c":   {"a/b", "c"},
-		"d/e/f":   {"d/e/", "/f"},
-		"g/h/i":   {"/g/h/", "/i/"},
-		"j/k/l/m": {"/j/", "/k/l", "m"},
+
+	tests := []struct {
+		give []string
+		want string
+	}{
+		{
+			give: []string{"/"},
+			want: "",
+		},
+		{
+			give: []string{"a/"},
+			want: "a",
+		},
+		{
+			give: []string{"b", ""},
+			want: "b",
+		},
+		{
+			give: []string{"a/b", "c"},
+			want: "a/b/c",
+		},
+		{
+			give: []string{"d/e/", "/f"},
+			want: "d/e/f",
+		},
+		{
+			give: []string{"/g/h/", "/i/"},
+			want: "g/h/i",
+		},
+		{
+			give: []string{"/j/", "/k/l", "m"},
+			want: "j/k/l/m",
+		},
 	}
 
-	c := vaku.NewClient()
-	for o, i := range outputToInput {
-		assert.Equal(t, o, c.PathJoin(i...))
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.want, func(t *testing.T) {
+			t.Parallel()
+
+			assert.Equal(t, tt.want, PathJoin(tt.give...))
+		})
 	}
 }
 
-func TestKeyClean(t *testing.T) {
+func TestPrefixList(t *testing.T) {
 	t.Parallel()
-	inputToOutput := map[string]string{
-		"":      "",
-		"/":     "/",
-		"a":     "a",
-		"b/":    "b/",
-		"/c":    "c",
-		"/d/":   "d/",
-		"/e/f/": "e/f/",
+
+	tests := []struct {
+		giveList   []string
+		givePrefix string
+		want       []string
+	}{
+		{
+			giveList:   []string{"a"},
+			givePrefix: "b",
+			want:       []string{"b/a"},
+		},
+		{
+			giveList:   []string{"/c/d/e/"},
+			givePrefix: "/f/",
+			want:       []string{"f/c/d/e/"},
+		},
+		{
+			giveList:   []string{"/g/"},
+			givePrefix: "h",
+			want:       []string{"h/g/"},
+		},
+		{
+			giveList:   []string{"i/j"},
+			givePrefix: "i",
+			want:       []string{"i/i/j"},
+		},
 	}
 
-	c := vaku.NewClient()
-	for i, o := range inputToOutput {
-		assert.Equal(t, o, c.KeyClean(i))
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.givePrefix, func(t *testing.T) {
+			t.Parallel()
+
+			PrefixList(tt.giveList, tt.givePrefix)
+
+			assert.Equal(t, tt.want, tt.giveList)
+		})
 	}
 }
 
-func TestPathClean(t *testing.T) {
+func TestTrimListPrefix(t *testing.T) {
 	t.Parallel()
-	inputToOutput := map[string]string{
-		"":      "",
-		"a":     "a",
-		"b/":    "b",
-		"/c":    "c",
-		"/d/":   "d",
-		"/e/f/": "e/f",
-	}
 
-	c := vaku.NewClient()
-	for i, o := range inputToOutput {
-		assert.Equal(t, o, c.PathClean(i))
-	}
-}
-
-func TestKeyBase(t *testing.T) {
-	t.Parallel()
-	inputToOutput := map[string]string{
-		"":      "",
-		"/":     "",
-		"a":     "a",
-		"b/":    "b/",
-		"c/d":   "d",
-		"/e/f/": "f/",
-	}
-
-	c := vaku.NewClient()
-	for i, o := range inputToOutput {
-		assert.Equal(t, o, c.KeyBase(i))
-	}
-}
-
-func TestPathBase(t *testing.T) {
-	t.Parallel()
-	inputToOutput := map[string]string{
-		"":      "",
-		"/":     "",
-		"a":     "a",
-		"b/":    "b",
-		"c/d":   "d",
-		"/e/f/": "f",
-	}
-
-	c := vaku.NewClient()
-	for i, o := range inputToOutput {
-		assert.Equal(t, o, c.PathBase(i))
-	}
-}
-
-type TestSliceKeyPrefixData struct {
-	inputSlice  []string
-	inputPrefix string
-	output      []string
-}
-
-func TestSliceAddKeyPrefix(t *testing.T) {
-	t.Parallel()
-	tests := map[int]TestSliceKeyPrefixData{
-		1: {
-			inputSlice:  []string{"a"},
-			inputPrefix: "b",
-			output:      []string{"b/a"},
+	tests := []struct {
+		giveList   []string
+		givePrefix string
+		want       []string
+	}{
+		{
+			giveList:   []string{"a"},
+			givePrefix: "b",
+			want:       []string{"a"},
 		},
-		2: {
-			inputSlice:  []string{"/c/d/e/"},
-			inputPrefix: "/f/",
-			output:      []string{"f/c/d/e/"},
+		{
+			giveList:   []string{"/c/d/e/"},
+			givePrefix: "/c/",
+			want:       []string{"d/e/"},
 		},
-		3: {
-			inputSlice:  []string{"/g/"},
-			inputPrefix: "h",
-			output:      []string{"h/g/"},
+		{
+			giveList:   []string{"f/g"},
+			givePrefix: "f",
+			want:       []string{"g"},
 		},
-		4: {
-			inputSlice:  []string{"i/j"},
-			inputPrefix: "i",
-			output:      []string{"i/i/j"},
+		{
+			giveList:   []string{"i/j"},
+			givePrefix: "k",
+			want:       []string{"i/j"},
 		},
 	}
 
-	c := vaku.NewClient()
-	for _, d := range tests {
-		c.SliceAddKeyPrefix(d.inputSlice, d.inputPrefix)
-		assert.Equal(t, d.output, d.inputSlice)
-	}
-}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.givePrefix, func(t *testing.T) {
+			t.Parallel()
 
-func TestSliceTrimKeyPrefix(t *testing.T) {
-	t.Parallel()
-	tests := map[int]TestSliceKeyPrefixData{
-		1: {
-			inputSlice:  []string{"a"},
-			inputPrefix: "b",
-			output:      []string{"a"},
-		},
-		2: {
-			inputSlice:  []string{"/c/d/e/"},
-			inputPrefix: "/c/",
-			output:      []string{"d/e/"},
-		},
-		3: {
-			inputSlice:  []string{"f/g"},
-			inputPrefix: "f",
-			output:      []string{"g"},
-		},
-		4: {
-			inputSlice:  []string{"i/j"},
-			inputPrefix: "k",
-			output:      []string{"i/j"},
-		},
-	}
+			TrimListPrefix(tt.giveList, tt.givePrefix)
 
-	c := vaku.NewClient()
-	for _, d := range tests {
-		c.SliceTrimKeyPrefix(d.inputSlice, d.inputPrefix)
-		assert.Equal(t, d.output, d.inputSlice)
+			assert.Equal(t, tt.want, tt.giveList)
+		})
 	}
 }

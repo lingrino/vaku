@@ -1,105 +1,124 @@
-package vaku_test
+package vaku
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/lingrino/vaku/vaku"
 	"github.com/stretchr/testify/assert"
 )
 
-type TestPathUpdateData struct {
-	inputPath    *vaku.PathInput
-	inputData    map[string]interface{}
-	expectedData map[string]interface{}
-	outputErr    bool
-}
+func TestPathUpate(t *testing.T) {
+	t.Parallel()
 
-func TestPathUpdate(t *testing.T) {
-	var err error
-
-	c := clientInitForTests(t)
-
-	defer func() {
-		err = seed(t, c)
-		if err != nil {
-			t.Error(fmt.Errorf("failed to reseed: %w", err))
-		}
-	}()
-
-	tests := map[int]TestPathUpdateData{
-		1: {
-			inputPath: vaku.NewPathInput("secretv1/test/foo"),
-			inputData: map[string]interface{}{
-				"value": "buzz",
+	tests := []struct {
+		name        string
+		give        string
+		giveData    map[string]interface{}
+		giveLogical logical
+		giveOptions []Option
+		wantData    map[string]interface{}
+		wantErr     []error
+	}{
+		{
+			name: "new path",
+			give: "update/bar",
+			giveData: map[string]interface{}{
+				"Eg5ljS7t": "6F1B5nBg",
+				"quqr32S5": "81iY4HAN",
+				"r6R0JUzX": "rs1mCRB5",
 			},
-			expectedData: map[string]interface{}{
-				"value": "buzz",
+			wantData: map[string]interface{}{
+				"Eg5ljS7t": "6F1B5nBg",
+				"quqr32S5": "81iY4HAN",
+				"r6R0JUzX": "rs1mCRB5",
 			},
-			outputErr: false,
+			wantErr: nil,
 		},
-		2: {
-			inputPath: vaku.NewPathInput("secretv2/test/foo"),
-			inputData: map[string]interface{}{
-				"value": "buzz",
+		{
+			name: "existing path",
+			give: "test/foo",
+			giveData: map[string]interface{}{
+				"foo": "bar",
 			},
-			expectedData: map[string]interface{}{
-				"value": "buzz",
+			wantData: map[string]interface{}{
+				"foo":   "bar",
+				"value": "bar",
 			},
-			outputErr: false,
+			wantErr: nil,
 		},
-		3: {
-			inputPath: vaku.NewPathInput("secretv1/test/fizz"),
-			inputData: map[string]interface{}{
-				"foo":      "buzz",
-				"vaku.new": "boo",
+		{
+			name: "partial overwrite",
+			give: "test/value",
+			giveData: map[string]interface{}{
+				"fizz": "bar",
 			},
-			expectedData: map[string]interface{}{
-				"fizz":     "buzz",
-				"foo":      "buzz",
-				"vaku.new": "boo",
+			wantData: map[string]interface{}{
+				"fizz": "bar",
+				"foo":  "bar",
 			},
-			outputErr: false,
+			wantErr: nil,
 		},
-		4: {
-			inputPath: vaku.NewPathInput("secretv2/test/fizz"),
-			inputData: map[string]interface{}{
-				"foo":      "buzz",
-				"vaku.new": "boo",
-			},
-			expectedData: map[string]interface{}{
-				"fizz":     "buzz",
-				"foo":      "buzz",
-				"vaku.new": "boo",
-			},
-			outputErr: false,
+		{
+			name:     "nil data new path",
+			give:     "update/nildata",
+			giveData: nil,
+			wantErr:  []error{ErrPathUpdate, ErrNilData},
 		},
-		5: {
-			inputPath: vaku.NewPathInput("secretdoesnotexist/test/fizz"),
-			inputData: map[string]interface{}{
-				"foo":      "buzz",
-				"vaku.new": "boo",
+		{
+			name:     "nil data existing path",
+			give:     "test/foo",
+			giveData: nil,
+			wantData: map[string]interface{}{
+				"value": "bar",
 			},
-			expectedData: map[string]interface{}{},
-			outputErr:    true,
+			wantErr: []error{ErrPathUpdate, ErrNilData},
+		},
+		{
+			name: "no mount",
+			give: noMountPrefix,
+			giveData: map[string]interface{}{
+				"foo":   "bar",
+				"value": "bar",
+			},
+			wantErr: []error{ErrPathUpdate, ErrPathWrite, ErrVaultWrite},
+		},
+		{
+			name: "inject read",
+			give: "test/foo",
+			giveData: map[string]interface{}{
+				"foo":   "bar",
+				"value": "bar",
+			},
+			giveLogical: &errLogical{
+				err: errInject,
+				op:  "Read",
+			},
+			wantData: map[string]interface{}{
+				"value": "bar",
+			},
+			wantErr: []error{ErrPathUpdate, ErrPathRead, ErrVaultRead},
 		},
 	}
 
-	for _, d := range tests {
-		e := c.PathUpdate(d.inputPath, d.inputData)
-		readBack, re := c.PathRead(d.inputPath)
-		if d.outputErr {
-			assert.Error(t, e)
-		} else {
-			assert.Equal(t, d.expectedData, readBack)
-			assert.NoError(t, e)
-			assert.NoError(t, re)
-		}
-	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 
-	// Reseed the vault server after tests end
-	err = seed(t, c)
-	if err != nil {
-		t.Error(fmt.Errorf("failed to reseed: %w", err))
+			ln, client := testClient(t, tt.giveOptions...)
+			defer ln.Close()
+			readbackClient := cloneCLient(t, client)
+			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
+
+			for _, ver := range kvMountVersions {
+				path := addMountToPath(t, tt.give, ver)
+
+				err := client.PathUpdate(path, tt.giveData)
+				compareErrors(t, err, tt.wantErr)
+
+				readBack, err := readbackClient.PathRead(path)
+				assert.NoError(t, err)
+				assert.Equal(t, tt.wantData, readBack)
+			}
+		})
 	}
 }

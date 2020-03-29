@@ -1,50 +1,25 @@
 package vaku
 
-import "fmt"
+import (
+	"errors"
+)
 
-// PathCopy takes in a source PathInput and a target PathInput. It then copies the data
-// from one path to another. Note that PathCopy can be used to copy data from one mount
-// to another. Note also that this will overwrite any existing key at the target path.
-func (c *Client) PathCopy(s *PathInput, t *PathInput) error {
-	var err error
+var (
+	ErrPathCopy = errors.New("path copy")
+)
 
-	// Read the data from the source path
-	d, err := c.PathRead(s)
+// PathCopy copies data at a source path to a destination path. Client must have been initialized
+// using WithDstClient() when copying across vault servers.
+func (c *Client) PathCopy(src, dst string) error {
+	secret, err := c.PathRead(src)
 	if err != nil {
-		return fmt.Errorf("failed to read data at %s: %w", s.Path, err)
+		return newWrapErr(src, ErrPathCopy, err)
 	}
 
-	// Write the data to the new path
-	err = c.PathWrite(t, d)
+	err = c.PathWriteDst(dst, secret)
 	if err != nil {
-		return fmt.Errorf("failed to write data to %s: %w", t.Path, err)
+		return newWrapErr(dst, ErrPathCopy, err)
 	}
 
-	return err
-}
-
-// PathCopy takes in a source PathInput and a target PathInput. It then copies the data
-// from one path to another. Note that PathCopy can be used to copy data from one mount
-// to another. Note also that this will overwrite any existing key at the target path.
-func (c *CopyClient) PathCopy(s *PathInput, t *PathInput) error {
-	var err error
-
-	// Read the data from the source path
-	d, err := c.Source.PathRead(s)
-	if err != nil {
-		return fmt.Errorf("failed to read data at %s: %w", s.Path, err)
-	}
-
-	// Do not copy KV v2 secrets that are deleted
-	if s.mountVersion == "2" && d["VAKU_STATUS"] == "SECRET_HAS_BEEN_DELETED" {
-		return nil
-	}
-
-	// Write the data to the new path
-	err = c.Target.PathWrite(t, d)
-	if err != nil {
-		return fmt.Errorf("failed to write data to %s: %w", t.Path, err)
-	}
-
-	return err
+	return nil
 }

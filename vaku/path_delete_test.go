@@ -1,65 +1,73 @@
-package vaku_test
+package vaku
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/lingrino/vaku/vaku"
 	"github.com/stretchr/testify/assert"
 )
 
-type TestPathDeleteData struct {
-	input     *vaku.PathInput
-	outputErr bool
-}
-
 func TestPathDelete(t *testing.T) {
-	var err error
+	t.Parallel()
 
-	c := clientInitForTests(t)
-
-	defer func() {
-		err = seed(t, c)
-		if err != nil {
-			t.Error(fmt.Errorf("failed to reseed: %w", err))
-		}
-	}()
-
-	tests := map[int]TestPathDeleteData{
-		1: {
-			input:     vaku.NewPathInput("secretv1/test/foo"),
-			outputErr: false,
+	tests := []struct {
+		name        string
+		give        string
+		giveLogical logical
+		giveOptions []Option
+		wantErr     []error
+	}{
+		{
+			name:    "delete path",
+			give:    "test/foo",
+			wantErr: nil,
 		},
-		2: {
-			input:     vaku.NewPathInput("secretv2/test/foo"),
-			outputErr: false,
+		{
+			name:    "nonexistent path",
+			give:    "doesnotexist",
+			wantErr: nil,
 		},
-		3: {
-			input:     vaku.NewPathInput("secretv1/doesnotexist"),
-			outputErr: false,
+		{
+			name:    "no mount",
+			give:    noMountPrefix,
+			wantErr: []error{ErrPathDelete, ErrVaultDelete},
 		},
-		4: {
-			input:     vaku.NewPathInput("secretv2/doesnotexist"),
-			outputErr: false,
-		},
-		5: {
-			input:     vaku.NewPathInput("secretdoesnotexist/test/foo"),
-			outputErr: true,
+		{
+			name: "error",
+			give: "delete/foo",
+			giveLogical: &errLogical{
+				err: errInject,
+			},
+			wantErr: []error{ErrPathDelete, ErrVaultDelete},
 		},
 	}
 
-	for _, d := range tests {
-		e := c.PathDelete(d.input)
-		r, re := c.PathRead(d.input)
-		if d.outputErr {
-			assert.Error(t, e)
-		} else {
-			if re == nil {
-				assert.Equal(t, "SECRET_HAS_BEEN_DELETED", r["VAKU_STATUS"])
-			} else {
-				assert.Error(t, re)
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			ln, client := testClient(t, tt.giveOptions...)
+			defer ln.Close()
+			readbackClient := cloneCLient(t, client)
+			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
+
+			funcs := []func(string) error{
+				client.PathDelete,
+				client.PathDeleteDst,
 			}
-			assert.NoError(t, e)
-		}
+
+			for _, ver := range kvMountVersions {
+				for _, f := range funcs {
+					path := addMountToPath(t, tt.give, ver)
+
+					err := f(path)
+					compareErrors(t, err, tt.wantErr)
+
+					readBack, err := readbackClient.PathRead(path)
+					assert.NoError(t, err)
+					assert.Nil(t, readBack)
+				}
+			}
+		})
 	}
 }

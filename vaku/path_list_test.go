@@ -1,68 +1,152 @@
-package vaku_test
+package vaku
 
 import (
 	"testing"
 
-	"github.com/lingrino/vaku/vaku"
+	"github.com/hashicorp/vault/api"
 	"github.com/stretchr/testify/assert"
 )
 
-type TestPathListData struct {
-	input     *vaku.PathInput
-	output    []string
-	outputErr bool
-}
-
 func TestPathList(t *testing.T) {
 	t.Parallel()
-	c := clientInitForTests(t)
 
-	tests := map[int]TestPathListData{
-		1: {
-			input:     vaku.NewPathInput("secretv1/test"),
-			output:    []string{"HToOeKKD", "fizz", "foo", "inner/", "value"},
-			outputErr: false,
+	tests := []struct {
+		name        string
+		give        string
+		giveLogical logical
+		giveOptions []Option
+		want        []string
+		wantErr     []error
+		skipMount   bool
+	}{
+		{
+			name:    "list test",
+			give:    "test",
+			want:    []string{"HToOeKKD", "fizz", "foo", "inner/", "value"},
+			wantErr: nil,
 		},
-		2: {
-			input:     vaku.NewPathInput("secretv2/test"),
-			output:    []string{"HToOeKKD", "fizz", "foo", "inner/", "value"},
-			outputErr: false,
+		{
+			name:        "full path prefix",
+			give:        "test/inner/again/",
+			giveOptions: []Option{WithFullPath(true)},
+			want:        []string{"test/inner/again/inner/"},
+			wantErr:     nil,
 		},
-		3: {
-			input: &vaku.PathInput{
-				Path:           "secretv1/test/inner/again/",
-				TrimPathPrefix: false,
+		{
+			name:    "single secret",
+			give:    "test/foo",
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name:    "list bad path",
+			give:    "doesnotexist",
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name:    "no mount",
+			give:    noMountPrefix,
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name: "list error",
+			give: "test",
+			giveLogical: &errLogical{
+				err: errInject,
 			},
-			output:    []string{"secretv1/test/inner/again/inner/"},
-			outputErr: false,
+			want:    nil,
+			wantErr: []error{ErrPathList, ErrVaultList},
 		},
-		4: {
-			input: &vaku.PathInput{
-				Path:           "secretv2/test/inner/again/",
-				TrimPathPrefix: false,
+		{
+			name: "nil secret",
+			give: "test",
+			giveLogical: &errLogical{
+				secret: nil,
 			},
-			output:    []string{"secretv2/test/inner/again/inner/"},
-			outputErr: false,
+			want:    nil,
+			wantErr: nil,
 		},
-		5: {
-			input:     vaku.NewPathInput("secretv1/doesnotexist"),
-			output:    nil,
-			outputErr: true,
+		{
+			name: "nil data",
+			give: "test",
+			giveLogical: &errLogical{
+				secret: &api.Secret{
+					Data: nil,
+				},
+			},
+			want:    nil,
+			wantErr: nil,
 		},
-		6: {
-			input:     vaku.NewPathInput("secretv2/doesnotexist"),
-			output:    nil,
-			outputErr: true,
+		{
+			name: "no keys",
+			give: "test",
+			giveLogical: &errLogical{
+				secret: &api.Secret{
+					Data: map[string]interface{}{
+						"notkeys": "notkeys",
+					},
+				},
+			},
+			want:    nil,
+			wantErr: []error{ErrPathList, ErrDecodeSecret},
+		},
+		{
+			name: "keys not []interface{}",
+			give: "test",
+			giveLogical: &errLogical{
+				secret: &api.Secret{
+					Data: map[string]interface{}{
+						"keys": 1,
+					},
+				},
+			},
+			want:    nil,
+			wantErr: []error{ErrPathList, ErrDecodeSecret},
+		},
+		{
+			name: "keys not string",
+			give: "test",
+			giveLogical: &errLogical{
+				secret: &api.Secret{
+					Data: map[string]interface{}{
+						"keys": []interface{}{
+							1,
+						},
+					},
+				},
+			},
+			want:    nil,
+			wantErr: []error{ErrPathList, ErrDecodeSecret},
 		},
 	}
 
-	for _, d := range tests {
-		o, e := c.PathList(d.input)
-		assert.Equal(t, d.output, o)
-		if d.outputErr {
-			assert.Error(t, e)
-		} else {
-			assert.NoError(t, e)
-		}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			ln, client := testClient(t, tt.giveOptions...)
+			defer ln.Close()
+			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
+
+			funcs := []func(string) ([]string, error){
+				client.PathList,
+				client.PathListDst,
+			}
+
+			for _, ver := range kvMountVersions {
+				for _, f := range funcs {
+					path := addMountToPath(t, tt.give, ver)
+
+					list, err := f(path)
+					TrimListPrefix(list, ver)
+
+					compareErrors(t, err, tt.wantErr)
+					assert.Equal(t, tt.want, list)
+				}
+			}
+		})
 	}
 }

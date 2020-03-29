@@ -1,13 +1,12 @@
-package vaku_test
+package vaku
 
 import (
 	"testing"
 
-	"github.com/lingrino/vaku/vaku"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestVersion(t *testing.T) {
 	t.Parallel()
-	assert.Equal(t, vaku.Version(), "1.4.1")
+	assert.Equal(t, "2.0.0", Version())
 }

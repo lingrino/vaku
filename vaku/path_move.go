@@ -1,24 +1,25 @@
 package vaku
 
-import "fmt"
+import (
+	"errors"
+)
 
-// PathMove calls PathCopy() with the same inputs followed by PathDelete() on
-// the source if the copy was successful. Note that this will overwrite any existing
-// keys at the target Path.
-func (c *Client) PathMove(s *PathInput, t *PathInput) error {
-	var err error
+var (
+	ErrPathMove = errors.New("path move")
+)
 
-	// Copy the data to the new path
-	err = c.PathCopy(s, t)
+// PathMove moves data at a source path to a destination path (copy + delete). Client must
+// have been initialized using WithDstClient() when moving across vault servers.
+func (c *Client) PathMove(src, dst string) error {
+	err := c.PathCopy(src, dst)
 	if err != nil {
-		return fmt.Errorf("failed to copy data from %s to %s: %w", s.Path, t.Path, err)
+		return newWrapErr("", ErrPathMove, err)
 	}
 
-	// Delete the data at the old path
-	err = c.PathDelete(s)
+	err = c.PathDelete(src)
 	if err != nil {
-		return fmt.Errorf("failed to delete source path %s. This means that the path was copied instead of deleted: %w", s.Path, err)
+		return newWrapErr(dst, ErrPathMove, err)
 	}
 
-	return err
+	return nil
 }

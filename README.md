@@ -109,7 +109,6 @@ TODO
 - API example in readme
 - doc.go
 - CLI tests
-- Update goreleaser, codecov, golangcilint, badges
 - man pages, autocomplete, other cobra features
 - how to test version functions? best practices?
 - www html linting, best practices, css?
@@ -119,3 +118,7 @@ TODO
 - change full/prefixed path terms to absolute/relative
 - https://github.com/SimonBaeumer/commander or other way to test CLI?
 - cli option to sort output
+- release on snapcraft
+- add installation instructions like https://goreleaser.com/install/
+- update tests to run on ./... instead of ./vaku
+- verify delete/destory behavior on real vault

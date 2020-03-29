@@ -1,175 +1,109 @@
-package vaku_test
+package vaku
 
 import (
 	"testing"
 
-	"github.com/lingrino/vaku/vaku"
 	"github.com/stretchr/testify/assert"
 )
 
-type TestPathCopyData struct {
-	inputSource *vaku.PathInput
-	inputTarget *vaku.PathInput
-	outputErr   bool
-}
-
 func TestPathCopy(t *testing.T) {
 	t.Parallel()
-	c := clientInitForTests(t)
 
-	tests := map[int]TestPathCopyData{
-		1: {
-			inputSource: vaku.NewPathInput("secretv1/test/foo"),
-			inputTarget: vaku.NewPathInput("secretv1/pathcopy/foo"),
-			outputErr:   false,
+	tests := []struct {
+		name           string
+		giveSrc        string
+		giveDst        string
+		giveSrcLogical logical
+		giveDstLogical logical
+		giveOptions    []Option
+		wantErr        []error
+		wantNilDst     bool
+	}{
+		{
+			name:    "copy",
+			giveSrc: "test/foo",
+			giveDst: "copy/test/foo",
+			wantErr: nil,
 		},
-		2: {
-			inputSource: vaku.NewPathInput("secretv2/test/foo"),
-			inputTarget: vaku.NewPathInput("secretv2/pathcopy/foo"),
-			outputErr:   false,
+		{
+			name:    "overwrite",
+			giveSrc: "test/foo",
+			giveDst: "test/value",
+			wantErr: nil,
 		},
-		3: {
-			inputSource: vaku.NewPathInput("secretv1/test/fizz"),
-			inputTarget: vaku.NewPathInput("secretv2/pathcopy/fizz"),
-			outputErr:   false,
+		{
+			name:       "bad src mount",
+			giveSrc:    noMountPrefix,
+			giveDst:    "copy/test/foo",
+			wantErr:    []error{ErrPathCopy, ErrPathWrite, ErrNilData},
+			wantNilDst: true,
 		},
-		4: {
-			inputSource: vaku.NewPathInput("secretv2/test/fizz"),
-			inputTarget: vaku.NewPathInput("secretv1/pathcopy/fizz"),
-			outputErr:   false,
+		{
+			name:       "bad dst mount",
+			giveSrc:    "test/foo",
+			giveDst:    noMountPrefix,
+			wantErr:    []error{ErrPathCopy, ErrPathWrite, ErrVaultWrite},
+			wantNilDst: true,
 		},
-		5: {
-			inputSource: vaku.NewPathInput("secretdoesnotexist/test/foo"),
-			inputTarget: vaku.NewPathInput("secretv1/test/foo"),
-			outputErr:   true,
+		{
+			name:    "inject read",
+			giveSrc: "test/foo",
+			giveDst: "copy/injectread",
+			giveSrcLogical: &errLogical{
+				err: errInject,
+				op:  "Read",
+			},
+			wantErr:    []error{ErrPathCopy, ErrPathRead, ErrVaultRead},
+			wantNilDst: true,
 		},
-		6: {
-			inputSource: vaku.NewPathInput("secretv1/test/foo"),
-			inputTarget: vaku.NewPathInput("secretdoesnotexist/foo"),
-			outputErr:   true,
+		{
+			name:    "inject write",
+			giveSrc: "test/foo",
+			giveDst: "copy/injectwrite",
+			giveDstLogical: &errLogical{
+				err: errInject,
+				op:  "Write",
+			},
+			wantErr:    []error{ErrPathCopy, ErrPathWrite, ErrVaultWrite},
+			wantNilDst: true,
 		},
 	}
 
-	for _, d := range tests {
-		e := c.PathCopy(d.inputSource, d.inputTarget)
-		sr, _ := c.PathRead(d.inputSource)
-		tr, _ := c.PathRead(d.inputTarget)
-		if d.outputErr {
-			assert.Error(t, e)
-		} else {
-			assert.Equal(t, sr, tr)
-			assert.NoError(t, e)
-		}
-	}
-}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 
-func TestCopyClientPathCopy(t *testing.T) {
-	c := copyClientInitForTests(t)
+			for _, ver := range versionProduct {
+				ln, client := testClient(t, tt.giveOptions...)
+				defer ln.Close()
 
-	tests := map[int]TestPathCopyData{
-		1: {
-			inputSource: vaku.NewPathInput("secretv1/test/foo"),
-			inputTarget: vaku.NewPathInput("secretv1/pathcopy/foo"),
-			outputErr:   false,
-		},
-		2: {
-			inputSource: vaku.NewPathInput("secretv2/test/foo"),
-			inputTarget: vaku.NewPathInput("secretv2/pathcopy/foo"),
-			outputErr:   false,
-		},
-		3: {
-			inputSource: vaku.NewPathInput("secretv1/test/fizz"),
-			inputTarget: vaku.NewPathInput("secretv2/pathcopy/fizz"),
-			outputErr:   false,
-		},
-		4: {
-			inputSource: vaku.NewPathInput("secretv2/test/fizz"),
-			inputTarget: vaku.NewPathInput("secretv1/pathcopy/fizz"),
-			outputErr:   false,
-		},
-		5: {
-			inputSource: vaku.NewPathInput("secretdoesnotexist/test/foo"),
-			inputTarget: vaku.NewPathInput("secretv1/test/foo"),
-			outputErr:   true,
-		},
-		6: {
-			inputSource: vaku.NewPathInput("secretv1/test/foo"),
-			inputTarget: vaku.NewPathInput("secretdoesnotexist/foo"),
-			outputErr:   true,
-		},
-	}
+				lnS, lnD, clientDD := testClientDiffDst(t, tt.giveOptions...)
+				defer lnS.Close()
+				defer lnD.Close()
 
-	for _, d := range tests {
-		e := c.PathCopy(d.inputSource, d.inputTarget)
-		sr, _ := c.Source.PathRead(d.inputSource)
-		tr, _ := c.Target.PathRead(d.inputTarget)
-		if d.outputErr {
-			assert.Error(t, e)
-		} else {
-			assert.Equal(t, sr, tr)
-			assert.NoError(t, e)
-		}
-	}
-}
+				for _, c := range []*Client{client, clientDD} {
+					readbackClient := cloneCLient(t, c)
+					updateLogical(t, c, tt.giveSrcLogical, tt.giveDstLogical)
 
-type TestPathCopyDeletedData struct {
-	inputSource *vaku.PathInput
-	inputTarget *vaku.PathInput
-	copyErr     bool
-	oppath      string
-}
+					pathS := addMountToPath(t, tt.giveSrc, ver[0])
+					pathD := addMountToPath(t, tt.giveDst, ver[1])
 
-func TestCopyClientPathDeleted(t *testing.T) {
-	c := copyClientInitForTests(t)
+					err := c.PathCopy(pathS, pathD)
+					compareErrors(t, err, tt.wantErr)
 
-	tests := map[int]TestPathCopyDeletedData{
-		1: {
-			inputSource: vaku.NewPathInput("secretv1/copydeleted/test"),
-			inputTarget: vaku.NewPathInput("secretv1/copydeleted/test"),
-			copyErr:     true,
-			oppath:      "delete",
-		},
-		2: {
-			inputSource: vaku.NewPathInput("secretv2/copydeleted/test"),
-			inputTarget: vaku.NewPathInput("secretv2/copydeleted/test"),
-			copyErr:     false,
-			oppath:      "delete",
-		},
-		3: {
-			inputSource: vaku.NewPathInput("secretv2/copydestroyed/test"),
-			inputTarget: vaku.NewPathInput("secretv2/copydestroyed/test"),
-			copyErr:     true,
-			oppath:      "destroy",
-		},
-	}
+					readBackS, errS := readbackClient.PathRead(pathS)
+					readBackD, errD := readbackClient.PathReadDst(pathD)
+					assert.NoError(t, errS)
+					assert.NoError(t, errD)
 
-	for _, d := range tests {
-		secret := map[string]interface{}{
-			"Eg5ljS7t": "6F1B5nBg",
-			"quqr32S5": "81iY4HAN",
-			"r6R0JUzX": "rs1mCRB5",
-		}
-
-		err := c.Source.PathWrite(d.inputSource, secret)
-		assert.NoError(t, err)
-
-		if d.oppath == "delete" {
-			err = c.Source.PathDelete(d.inputSource)
-			assert.NoError(t, err)
-		} else if d.oppath == "destroy" {
-			err = c.Source.PathDestroy(d.inputSource)
-			assert.NoError(t, err)
-		}
-
-		copyErr := c.PathCopy(d.inputSource, d.inputTarget)
-		tr, readTargetErr := c.Target.PathRead(d.inputTarget)
-		if d.copyErr {
-			assert.Error(t, copyErr)
-			assert.Error(t, readTargetErr)
-		} else {
-			assert.NoError(t, copyErr)
-			assert.Nil(t, tr)
-			assert.Error(t, readTargetErr)
-		}
+					if tt.wantNilDst {
+						assert.Nil(t, readBackD)
+					} else {
+						assert.Equal(t, readBackS, readBackD)
+					}
+				}
+			}
+		})
 	}
 }

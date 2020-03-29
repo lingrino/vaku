@@ -1,58 +1,58 @@
 package vaku
 
 import (
-	"fmt"
+	"errors"
 	"sort"
 )
 
-// PathList takes in a PathInput, calls the native vault list on it, extracts
-// the secret (list of keys), and returns it. Note that any metadata or other
-// information returned by the list is thrown away.
-func (c *Client) PathList(i *PathInput) ([]string, error) {
-	var err error
-	var output []string
+var (
+	ErrPathList  = errors.New("path list")
+	ErrVaultList = errors.New("vault list")
+)
 
-	// initialize the input
-	i.opType = "list"
-	err = c.InitPathInput(i)
+// PathList lists paths at a path.
+func (c *Client) PathList(p string) ([]string, error) {
+	return c.pathList(c.srcL, p)
+}
+
+// PathListDest lists paths at a path.
+func (c *Client) PathListDst(p string) ([]string, error) {
+	return c.pathList(c.dstL, p)
+}
+
+// pathList does the actual list.
+func (c *Client) pathList(l logical, p string) ([]string, error) {
+	secret, err := l.List(p)
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize PathInput: %w", err)
+		return nil, newWrapErr(p, ErrPathList, newWrapErr(err.Error(), ErrVaultList, nil))
 	}
 
-	// do the actual list
-	secret, err := c.Logical().List(i.opPath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to list %s: %w", i.opPath, err)
-	}
-
-	// extract list data from the returned secret
 	if secret == nil || secret.Data == nil {
-		return nil, fmt.Errorf("Secret at %s was nil", i.opPath)
-
+		return nil, nil
 	}
+
 	data, ok := secret.Data["keys"]
 	if !ok || data == nil {
-		return nil, fmt.Errorf("No Data[\"keys\"] in secret at %s", i.opPath)
+		return nil, newWrapErr(p, ErrPathList, ErrDecodeSecret)
 	}
 	keys, ok := data.([]interface{})
 	if !ok {
-		return nil, fmt.Errorf("failed to convert keys to interface at %s", i.opPath)
+		return nil, newWrapErr(p, ErrPathList, ErrDecodeSecret)
 	}
 
-	// Make sure every key is a string and append to output
-	for _, k := range keys {
+	output := make([]string, len(keys))
+	for i, k := range keys {
 		key, ok := k.(string)
 		if !ok {
-			return nil, fmt.Errorf("failed to assert %s as a string at %s", key, i.opPath)
+			return nil, newWrapErr(p, ErrPathList, ErrDecodeSecret)
 		}
-		output = append(output, key)
+		output[i] = key
 	}
 
-	if !i.TrimPathPrefix {
-		c.SliceAddKeyPrefix(output, i.Path)
+	if c.fullPath {
+		PrefixList(output, p)
 	}
 
 	sort.Strings(output)
-
-	return output, err
+	return output, nil
 }

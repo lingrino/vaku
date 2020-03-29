@@ -1,74 +1,87 @@
-package vaku_test
+package vaku
 
 import (
 	"testing"
 
-	"github.com/lingrino/vaku/vaku"
 	"github.com/stretchr/testify/assert"
 )
 
-type TestPathReadData struct {
-	input     *vaku.PathInput
-	output    map[string]interface{}
-	outputErr bool
-}
-
 func TestPathRead(t *testing.T) {
 	t.Parallel()
-	c := clientInitForTests(t)
 
-	tests := map[int]TestPathReadData{
-		1: {
-			input: vaku.NewPathInput("secretv1/test/foo"),
-			output: map[string]interface{}{
+	tests := []struct {
+		name        string
+		give        string
+		giveLogical logical
+		giveOptions []Option
+		want        map[string]interface{}
+		wantErr     []error
+	}{
+		{
+			name: "test/foo",
+			give: "test/foo",
+			want: map[string]interface{}{
 				"value": "bar",
 			},
-			outputErr: false,
+			wantErr: nil,
 		},
-		2: {
-			input: vaku.NewPathInput("secretv2/test/foo"),
-			output: map[string]interface{}{
-				"value": "bar",
-			},
-			outputErr: false,
-		},
-		3: {
-			input: vaku.NewPathInput("secretv1/test/inner/again/inner/UCrt6sZT"),
-			output: map[string]interface{}{
+		{
+			name: "test/inner/again/inner/UCrt6sZT",
+			give: "test/inner/again/inner/UCrt6sZT",
+			want: map[string]interface{}{
 				"Eg5ljS7t": "6F1B5nBg",
 				"quqr32S5": "81iY4HAN",
 				"r6R0JUzX": "rs1mCRB5",
 			},
-			outputErr: false,
+			wantErr: nil,
 		},
-		4: {
-			input: vaku.NewPathInput("secretv2/test/inner/again/inner/UCrt6sZT"),
-			output: map[string]interface{}{
-				"Eg5ljS7t": "6F1B5nBg",
-				"quqr32S5": "81iY4HAN",
-				"r6R0JUzX": "rs1mCRB5",
+		{
+			name:    "no secret",
+			give:    "doesnotexist",
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name:    "no mount",
+			give:    noMountPrefix,
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			name: "error",
+			give: "test/foo",
+			giveLogical: &errLogical{
+				err: errInject,
 			},
-			outputErr: false,
-		},
-		5: {
-			input:     vaku.NewPathInput("secretv1/doesnotexist"),
-			output:    nil,
-			outputErr: true,
-		},
-		6: {
-			input:     vaku.NewPathInput("secretv2/doesnotexist"),
-			output:    nil,
-			outputErr: true,
+			want:    nil,
+			wantErr: []error{ErrPathRead, ErrVaultRead},
 		},
 	}
 
-	for _, d := range tests {
-		o, e := c.PathRead(d.input)
-		assert.Equal(t, d.output, o)
-		if d.outputErr {
-			assert.Error(t, e)
-		} else {
-			assert.NoError(t, e)
-		}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			ln, client := testClient(t, tt.giveOptions...)
+			defer ln.Close()
+			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
+
+			funcs := []func(string) (map[string]interface{}, error){
+				client.PathRead,
+				client.PathReadDst,
+			}
+
+			for _, ver := range kvMountVersions {
+				for _, f := range funcs {
+					path := addMountToPath(t, tt.give, ver)
+
+					read, err := f(path)
+
+					compareErrors(t, err, tt.wantErr)
+					assert.Equal(t, tt.want, read)
+				}
+			}
+		})
 	}
 }

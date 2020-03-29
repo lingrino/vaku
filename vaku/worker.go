@@ -1,4 +1,4 @@
-package vaku2
+package vaku
 
 type work interface {
 	Do()

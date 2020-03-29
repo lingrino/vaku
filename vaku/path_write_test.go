@@ -1,74 +1,87 @@
-package vaku_test
+package vaku
 
 import (
 	"testing"
 
-	"github.com/lingrino/vaku/vaku"
 	"github.com/stretchr/testify/assert"
 )
 
-type TestPathWriteData struct {
-	inputPath *vaku.PathInput
-	inputData map[string]interface{}
-	outputErr bool
-}
-
 func TestPathWrite(t *testing.T) {
-	c := clientInitForTests(t)
+	t.Parallel()
 
-	tests := map[int]TestPathWriteData{
-		1: {
-			inputPath: vaku.NewPathInput("secretv1/writetest/foo"),
-			inputData: map[string]interface{}{
-				"value": "bar",
-			},
-			outputErr: false,
-		},
-		2: {
-			inputPath: vaku.NewPathInput("secretv2/writetest/foo"),
-			inputData: map[string]interface{}{
-				"value": "bar",
-			},
-			outputErr: false,
-		},
-		3: {
-			inputPath: vaku.NewPathInput("secretv1/writetest/bar/"),
-			inputData: map[string]interface{}{
+	tests := []struct {
+		name           string
+		give           string
+		giveData       map[string]interface{}
+		giveLogical    logical
+		giveOptions    []Option
+		wantErr        []error
+		wantNoReadback bool
+	}{
+		{
+			name: "new path",
+			give: "write/bar",
+			giveData: map[string]interface{}{
 				"Eg5ljS7t": "6F1B5nBg",
 				"quqr32S5": "81iY4HAN",
 				"r6R0JUzX": "rs1mCRB5",
 			},
-			outputErr: false,
+			wantErr: nil,
 		},
-		4: {
-			inputPath: vaku.NewPathInput("secretv2/writetest/bar/"),
-			inputData: map[string]interface{}{
-				"Eg5ljS7t": "6F1B5nBg",
-				"quqr32S5": "81iY4HAN",
-				"r6R0JUzX": "rs1mCRB5",
+		{
+			name: "overwrite",
+			give: "test/foo",
+			giveData: map[string]interface{}{
+				"foo": "bar",
 			},
-			outputErr: false,
+			wantErr: nil,
 		},
-		5: {
-			inputPath: vaku.NewPathInput("secretdoesnotexist/writetest/bar"),
-			inputData: map[string]interface{}{
-				"Eg5ljS7t": "6F1B5nBg",
-				"quqr32S5": "81iY4HAN",
-				"r6R0JUzX": "rs1mCRB5",
+		{
+			name:     "nil data",
+			give:     "write/foo",
+			giveData: nil,
+			wantErr:  []error{ErrPathWrite, ErrNilData},
+		},
+		{
+			name: "no mount",
+			give: noMountPrefix,
+			giveData: map[string]interface{}{
+				"foo": "bar",
 			},
-			outputErr: true,
+			wantErr:        []error{ErrPathWrite, ErrVaultWrite},
+			wantNoReadback: true,
 		},
 	}
 
-	for _, d := range tests {
-		e := c.PathWrite(d.inputPath, d.inputData)
-		readBack, re := c.PathRead(d.inputPath)
-		if d.outputErr {
-			assert.Error(t, e)
-		} else {
-			assert.Equal(t, readBack, d.inputData)
-			assert.NoError(t, e)
-			assert.NoError(t, re)
-		}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			ln, client := testClient(t, tt.giveOptions...)
+			defer ln.Close()
+			readbackClient := cloneCLient(t, client)
+			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
+
+			funcs := []func(string, map[string]interface{}) error{
+				client.PathWrite,
+				client.PathWriteDst,
+			}
+
+			for _, ver := range kvMountVersions {
+				for _, f := range funcs {
+					path := addMountToPath(t, tt.give, ver)
+
+					err := f(path, tt.giveData)
+					compareErrors(t, err, tt.wantErr)
+
+					if !tt.wantNoReadback {
+						readBack, err := readbackClient.PathRead(path)
+						assert.NoError(t, err)
+						assert.Equal(t, tt.giveData, readBack)
+					}
+				}
+			}
+		})
 	}
 }

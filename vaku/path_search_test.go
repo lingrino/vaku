@@ -1,99 +1,116 @@
-package vaku_test
+package vaku
 
 import (
 	"testing"
 
-	"github.com/lingrino/vaku/vaku"
+	"github.com/hashicorp/vault/api"
 	"github.com/stretchr/testify/assert"
 )
 
-type TestPathSearchData struct {
-	inputPath   *vaku.PathInput
-	inputSearch string
-	output      bool
-	outputErr   bool
-}
-
 func TestPathSearch(t *testing.T) {
 	t.Parallel()
-	c := clientInitForTests(t)
 
-	tests := map[int]TestPathSearchData{
-		1: {
-			inputPath:   vaku.NewPathInput("secretv1/test/foo"),
-			inputSearch: "ba",
-			output:      true,
-			outputErr:   false,
+	tests := []struct {
+		name        string
+		give        string
+		giveSearch  string
+		giveLogical logical
+		giveOptions []Option
+		wantSuccess bool
+		wantErr     []error
+	}{
+		{
+			name:        "test/foo key success",
+			give:        "test/foo",
+			giveSearch:  "bar",
+			wantSuccess: true,
+			wantErr:     nil,
 		},
-		2: {
-			inputPath:   vaku.NewPathInput("secretv2/test/foo"),
-			inputSearch: "ba",
-			output:      true,
-			outputErr:   false,
+		{
+			name:        "test/foo value success",
+			give:        "test/foo",
+			giveSearch:  "alue",
+			wantSuccess: true,
+			wantErr:     nil,
 		},
-		3: {
-			inputPath:   vaku.NewPathInput("secretv1/test/foo"),
-			inputSearch: "value",
-			output:      true,
-			outputErr:   false,
+		{
+			name:        "test/foo fail",
+			give:        "test/foo",
+			giveSearch:  "valuebar",
+			wantSuccess: false,
+			wantErr:     nil,
 		},
-		4: {
-			inputPath:   vaku.NewPathInput("secretv2/test/foo"),
-			inputSearch: "value",
-			output:      true,
-			outputErr:   false,
+		{
+			name:        "test/inner/again/inner/UCrt6sZT suuccess",
+			give:        "test/inner/again/inner/UCrt6sZT",
+			giveSearch:  "iY4HA",
+			wantSuccess: true,
+			wantErr:     nil,
 		},
-		5: {
-			inputPath:   vaku.NewPathInput("secretv1/test/inner/again/inner/UCrt6sZT"),
-			inputSearch: "s1mCR",
-			output:      true,
-			outputErr:   false,
+		{
+			name:        "no path with string",
+			give:        "pathdoesnotexist",
+			giveSearch:  "searchstring",
+			wantSuccess: false,
+			wantErr:     nil,
 		},
-		6: {
-			inputPath:   vaku.NewPathInput("secretv2/test/inner/again/inner/UCrt6sZT"),
-			inputSearch: "s1mCR",
-			output:      true,
-			outputErr:   false,
+		{
+			name:        "no path empty string",
+			give:        "pathdoesnotexist",
+			giveSearch:  "",
+			wantSuccess: false,
+			wantErr:     nil,
 		},
-		7: {
-			inputPath:   vaku.NewPathInput("secretv1/test/foo"),
-			inputSearch: "eiojfdss",
-			output:      false,
-			outputErr:   false,
+		{
+			name:        "bad mount",
+			give:        noMountPrefix,
+			giveSearch:  "searchstring",
+			wantSuccess: false,
+			wantErr:     nil,
 		},
-		8: {
-			inputPath:   vaku.NewPathInput("secretv2/test/foo"),
-			inputSearch: "eiojfdss",
-			output:      false,
-			outputErr:   false,
+		{
+			name:       "inject secret err",
+			give:       "test/foo",
+			giveSearch: "bar",
+			giveLogical: &errLogical{
+				err: errInject,
+			},
+			wantSuccess: false,
+			wantErr:     []error{ErrPathSearch, ErrPathRead, ErrVaultRead},
 		},
-		9: {
-			inputPath:   vaku.NewPathInput("secretv1/doesnotexist"),
-			inputSearch: "foo",
-			output:      false,
-			outputErr:   true,
-		},
-		10: {
-			inputPath:   vaku.NewPathInput("secretv2/doesnotexist"),
-			inputSearch: "foo",
-			output:      false,
-			outputErr:   true,
-		},
-		11: {
-			inputPath:   vaku.NewPathInput("secretdoesnotexist/test/foo"),
-			inputSearch: "foo",
-			output:      false,
-			outputErr:   true,
+		{
+			name:       "inject bad secret data",
+			give:       "test/foo",
+			giveSearch: "bar",
+			giveLogical: &errLogical{
+				secret: &api.Secret{
+					Data: map[string]interface{}{
+						"Data": func() {},
+					},
+				},
+			},
+			wantSuccess: false,
+			wantErr:     []error{ErrPathSearch, ErrJSONMarshall},
 		},
 	}
 
-	for _, d := range tests {
-		o, e := c.PathSearch(d.inputPath, d.inputSearch)
-		assert.Equal(t, d.output, o)
-		if d.outputErr {
-			assert.Error(t, e)
-		} else {
-			assert.NoError(t, e)
-		}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			ln, client := testClient(t, tt.giveOptions...)
+			defer ln.Close()
+			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
+
+			for _, ver := range kvMountVersions {
+				path := addMountToPath(t, tt.give, ver)
+
+				success, err := client.PathSearch(path, tt.giveSearch)
+
+				compareErrors(t, err, tt.wantErr)
+				assert.Equal(t, tt.wantSuccess, success)
+			}
+		})
 	}
 }

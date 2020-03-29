@@ -1,85 +1,132 @@
-package vaku_test
+package vaku
 
 import (
-	"fmt"
 	"testing"
 
-	"github.com/lingrino/vaku/vaku"
 	"github.com/stretchr/testify/assert"
 )
 
-type TestPathMoveData struct {
-	inputSource *vaku.PathInput
-	inputTarget *vaku.PathInput
-	outputErr   bool
-}
-
 func TestPathMove(t *testing.T) {
-	var err error
+	t.Parallel()
 
-	c := clientInitForTests(t)
-
-	defer func() {
-		err = seed(t, c)
-		if err != nil {
-			t.Error(fmt.Errorf("failed to reseed: %w", err))
-		}
-	}()
-
-	tests := map[int]TestPathMoveData{
-		1: {
-			inputSource: vaku.NewPathInput("secretv1/test/foo"),
-			inputTarget: vaku.NewPathInput("secretv1/pathmove/foo"),
-			outputErr:   false,
+	tests := []struct {
+		name           string
+		giveSrc        string
+		giveDst        string
+		giveSrcLogical logical
+		giveDstLogical logical
+		giveOptions    []Option
+		wantErr        []error
+		wantNilSrc     bool
+		wantNilDst     bool
+	}{
+		{
+			name:       "move",
+			giveSrc:    "test/foo",
+			giveDst:    "move/test/foo",
+			wantErr:    nil,
+			wantNilSrc: true,
 		},
-		2: {
-			inputSource: vaku.NewPathInput("secretv2/test/foo"),
-			inputTarget: vaku.NewPathInput("secretv2/pathmove/foo"),
-			outputErr:   false,
+		{
+			name:       "overwrite",
+			giveSrc:    "test/foo",
+			giveDst:    "test/value",
+			wantErr:    nil,
+			wantNilSrc: true,
 		},
-		3: {
-			inputSource: vaku.NewPathInput("secretv1/test/fizz"),
-			inputTarget: vaku.NewPathInput("secretv2/pathmove/fizz"),
-			outputErr:   false,
+		{
+			name:       "bad src mount",
+			giveSrc:    noMountPrefix,
+			giveDst:    "move/test/foo",
+			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathWrite, ErrNilData},
+			wantNilDst: true,
 		},
-		4: {
-			inputSource: vaku.NewPathInput("secretv2/test/fizz"),
-			inputTarget: vaku.NewPathInput("secretv1/pathmove/fizz"),
-			outputErr:   false,
+		{
+			name:       "bad dst mount",
+			giveSrc:    "test/foo",
+			giveDst:    noMountPrefix,
+			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathWrite, ErrVaultWrite},
+			wantNilDst: true,
 		},
-		5: {
-			inputSource: vaku.NewPathInput("secretdoesnotexist/test/foo"),
-			inputTarget: vaku.NewPathInput("secretv1/test/foo"),
-			outputErr:   true,
+		{
+			name:    "inject read",
+			giveSrc: "test/foo",
+			giveDst: "move/injectread",
+			giveSrcLogical: &errLogical{
+				err: errInject,
+				op:  "Read",
+			},
+			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathRead, ErrVaultRead},
+			wantNilDst: true,
 		},
-		6: {
-			inputSource: vaku.NewPathInput("secretv1/test/foo"),
-			inputTarget: vaku.NewPathInput("secretdoesnotexist/foo"),
-			outputErr:   true,
+		{
+			name:    "inject write",
+			giveSrc: "test/foo",
+			giveDst: "move/injectwrite",
+			giveDstLogical: &errLogical{
+				err: errInject,
+				op:  "Write",
+			},
+			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathWrite, ErrVaultWrite},
+			wantNilDst: true,
+		},
+		{
+			name:    "inject delete",
+			giveSrc: "test/foo",
+			giveDst: "move/injectdelete",
+			giveSrcLogical: &errLogical{
+				err: errInject,
+				op:  "Delete",
+			},
+			wantErr:    []error{ErrPathMove, ErrPathDelete, ErrVaultDelete},
+			wantNilSrc: false,
+			wantNilDst: false,
 		},
 	}
 
-	for _, d := range tests {
-		bsr, _ := c.PathRead(d.inputSource)
-		e := c.PathMove(d.inputSource, d.inputTarget)
-		sr, sre := c.PathRead(d.inputSource)
-		tr, _ := c.PathRead(d.inputTarget)
-		if d.outputErr {
-			assert.Error(t, e)
-		} else {
-			if sre == nil {
-				assert.Equal(t, "SECRET_HAS_BEEN_DELETED", sr["VAKU_STATUS"])
-			} else {
-				assert.Error(t, sre)
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			for _, ver := range versionProduct {
+				ln, client := testClient(t, tt.giveOptions...)
+				defer ln.Close()
+
+				lnS, lnD, clientDD := testClientDiffDst(t, tt.giveOptions...)
+				defer lnS.Close()
+				defer lnD.Close()
+
+				for _, c := range []*Client{client, clientDD} {
+					readbackClient := cloneCLient(t, c)
+					updateLogical(t, c, tt.giveSrcLogical, tt.giveDstLogical)
+
+					pathS := addMountToPath(t, tt.giveSrc, ver[0])
+					pathD := addMountToPath(t, tt.giveDst, ver[1])
+
+					orig, err := readbackClient.PathRead(pathS)
+					assert.NoError(t, err)
+
+					err = c.PathMove(pathS, pathD)
+					compareErrors(t, err, tt.wantErr)
+
+					readBackS, errS := readbackClient.PathRead(pathS)
+					readBackD, errD := readbackClient.PathReadDst(pathD)
+					assert.NoError(t, errS)
+					assert.NoError(t, errD)
+
+					if tt.wantNilSrc {
+						assert.Nil(t, readBackS)
+					} else {
+						assert.Equal(t, orig, readBackS)
+					}
+					if tt.wantNilDst {
+						assert.Nil(t, readBackD)
+					} else {
+						assert.Equal(t, orig, readBackD)
+					}
+				}
 			}
-			assert.Equal(t, bsr, tr)
-			assert.NoError(t, e)
-		}
-	}
-
-	// Reseed the vault server after tests end
-	err = seed(t, c)
-	if err != nil {
-		t.Error(fmt.Errorf("failed to reseed: %w", err))
+		})
 	}
 }

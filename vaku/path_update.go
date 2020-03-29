@@ -1,29 +1,36 @@
 package vaku
 
-import "fmt"
+import (
+	"errors"
+)
 
-// PathUpdate takes in a path with existing data and new data to write to that path.
-// It then merges the data at the existing path with the new data, with precedence given
-// to the new data, and writes the merged data back to Vault
-func (c *Client) PathUpdate(i *PathInput, d map[string]interface{}) error {
-	var err error
+var (
+	ErrPathUpdate = errors.New("path update")
+)
 
-	// Get old data
-	read, err := c.PathRead(i)
-	if err != nil {
-		return fmt.Errorf("failed to read data at path %s. PathUpdate only works on existing data: %w", i.Path, err)
+// PathUpdate updates a path with data. Existing data is merged with new data. Precedence is given
+// to new data.
+func (c *Client) PathUpdate(p string, d map[string]interface{}) error {
+	if d == nil {
+		return newWrapErr(p, ErrPathUpdate, ErrNilData)
 	}
 
-	// Generate the new data to write
+	read, err := c.PathRead(p)
+	if err != nil {
+		return newWrapErr(p, ErrPathUpdate, err)
+	}
+	if read == nil {
+		read = make(map[string]interface{}, len(d))
+	}
+
 	for k, v := range d {
 		read[k] = v
 	}
 
-	// Write the updated data back to vault
-	err = c.PathWrite(i, read)
+	err = c.PathWrite(p, read)
 	if err != nil {
-		return fmt.Errorf("failed to write updated data back to %s: %w", i.opPath, err)
+		return newWrapErr(p, ErrPathUpdate, err)
 	}
 
-	return err
+	return nil
 }
