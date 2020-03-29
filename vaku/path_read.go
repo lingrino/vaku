@@ -44,7 +44,6 @@ func (c *Client) PathRead(i *PathInput) (map[string]interface{}, error) {
 			return outputS, nil
 		}
 
-
 		data := secret.Data["data"]
 		if data != nil {
 			output = data.(map[string]interface{})
