@@ -2,14 +2,16 @@
 
 ## Soon
 
-- Update actions validate to run on ./... instead of ./vaku
 - CLI tests
-- man pages, autocomplete, other cobra features
+- man pages
+- include man pages with cli
+- ci to make sure cobra docs are up to date
 - bash completion
 - add context and cancellations?
 - add installation instructions like <https://goreleaser.com/install/>
 - add a changelog <https://keepachangelog.com/en/1.0.0/>
   - <https://github.com/starship/starship/releases>
+- ci should ignore generated markdown
 
 ## Upcoming
 
