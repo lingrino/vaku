@@ -37,6 +37,11 @@ func (c *Client) PathRead(i *PathInput) (map[string]interface{}, error) {
 				"VAKU_STATUS": "SECRET_HAS_BEEN_DELETED",
 			}
 			return outputS, nil
+		} else if metadata["destroyed"].(bool) == true {
+			outputS := map[string]interface{}{
+				"VAKU_STATUS": "SECRET_HAS_BEEN_DESTROYED",
+			}
+			return outputS, nil
 		}
 
 		data := secret.Data["data"]
