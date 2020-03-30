@@ -86,16 +86,16 @@ func (o withWorkers) apply(c *Client) error {
 	return nil
 }
 
-// WithFullPath sets the output format for all returned paths. Default path output is trimmed up to
-// the path input. Pass WithFullPath(true) to set path output to the entire path. Example:
-// List(secret/foo) -> "bar" OR "secret/foo/bar"
-func WithFullPath(b bool) Option {
-	return withFullPath(b)
+// WithAbsolutePath sets the output format for all returned paths. Default path output is a relative
+// path, trimmed up to the path input. Pass WithAbsolutePath(true) to set path output to the entire
+// path. Example: List(secret/foo) -> "bar" OR "secret/foo/bar"
+func WithAbsolutePath(b bool) Option {
+	return withAbsolutePath(b)
 }
 
-type withFullPath bool
+type withAbsolutePath bool
 
-func (o withFullPath) apply(c *Client) error {
+func (o withAbsolutePath) apply(c *Client) error {
 	c.fullPath = bool(o)
 	return nil
 }

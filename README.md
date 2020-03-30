@@ -7,6 +7,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/db6951b0aa53becf8c92/maintainability)](https://codeclimate.com/github/lingrino/vaku/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/db6951b0aa53becf8c92/test_coverage)](https://codeclimate.com/github/lingrino/vaku/test_coverage)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/65802905eb8148e2ae9ae4c909673ee2)](https://www.codacy.com/manual/lingrino/vaku)
+[![codebeat badge](https://codebeat.co/badges/fe613311-36ff-4c62-b7a7-6336be5cf3e7)](https://codebeat.co/projects/github-com-lingrino-vaku-master)
 
 Vaku is a CLI and Go API that add useful functions on top of Hashicorp Vault.
 
@@ -101,24 +102,3 @@ TODO - Link to contributing file
 ## Running Tests
 
 TODO
-
-## TODO
-
-- Benchmarks
-- Example functions
-- API example in readme
-- doc.go
-- CLI tests
-- man pages, autocomplete, other cobra features
-- how to test version functions? best practices?
-- www html linting, best practices, css?
-- further parallelize tests?
-- update seeds to make more sense maybe?
-- add context and cancellations?
-- change full/prefixed path terms to absolute/relative
-- <https://github.com/SimonBaeumer/commander> or other way to test CLI?
-- cli option to sort output
-- release on snapcraft
-- add installation instructions like <https://goreleaser.com/install/>
-- update tests to run on ./... instead of ./vaku
-- verify delete/destory behavior on real vault

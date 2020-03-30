@@ -56,6 +56,9 @@ linters-settings:
 
 issues:
   exclude-rules:
+    - path: main.go
+      linters:
+        - gochecknoglobals # global in main.go needed for testing
     - path: _test.go
       linters:
         - dupl # many functions in tests look like duplicates

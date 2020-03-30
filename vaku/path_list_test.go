@@ -28,7 +28,7 @@ func TestPathList(t *testing.T) {
 		{
 			name:        "full path prefix",
 			give:        "test/inner/again/",
-			giveOptions: []Option{WithFullPath(true)},
+			giveOptions: []Option{WithAbsolutePath(true)},
 			want:        []string{"test/inner/again/inner/"},
 			wantErr:     nil,
 		},

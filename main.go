@@ -7,6 +7,8 @@ import (
 // version is populated at build time by goreleaser
 var version = "dev"
 
+var executeCMD = cmd.Execute
+
 func main() {
-	cmd.Execute(version)
+	executeCMD(version)
 }
