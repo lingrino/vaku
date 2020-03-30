@@ -12,7 +12,7 @@ const (
 )
 
 const (
-	vakuUse   = "vaku"
+	vakuUse   = "vaku <cmd>"
 	vakuShort = "Vaku is a tool for working with large vault k/v secret engines"
 	vakuLong  = `vaku
 long

@@ -5,15 +5,19 @@ import (
 )
 
 const (
-	pathUse     = "path [cmd]"
+	pathUse     = "path <cmd>"
 	pathShort   = "path operations"
 	pathExample = "vaku path list secret/foo"
+	pathLong    = `long
+description
+hello`
 )
 
 func newPathCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     pathUse,
 		Short:   pathShort,
+		Long:    pathLong,
 		Example: pathExample,
 	}
 
