@@ -25,8 +25,8 @@ type Client struct {
 	// workers is the max number of concurrent operations we'll run.
 	workers uint
 
-	// fullPath if the full path is desired instead of the trimmed path.
-	fullPath bool
+	// absolutepath if the absolution path is desired instead of the relative path.
+	absolutepath bool
 }
 
 // Option configures a Client.
@@ -96,7 +96,7 @@ func WithAbsolutePath(b bool) Option {
 type withAbsolutePath bool
 
 func (o withAbsolutePath) apply(c *Client) error {
-	c.fullPath = bool(o)
+	c.absolutepath = bool(o)
 	return nil
 }
 

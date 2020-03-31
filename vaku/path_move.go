@@ -5,6 +5,7 @@ import (
 )
 
 var (
+	// ErrPathMove when PathMove fails.
 	ErrPathMove = errors.New("path move")
 )
 

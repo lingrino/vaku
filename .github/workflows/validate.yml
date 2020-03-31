@@ -12,6 +12,13 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: 1
+      - name: Docs Check
+        run: |
+          before=$(cat docs/cli/*.md | md5sum)
+          go run docs/cli/generate.go
+          after=$(cat docs/cli/*.md | md5sum)
+          if [ "$before" != "$after" ]; then exit 1; fi
+        shell: bash
       - name: Goreleaser Check
         run: goreleaser check
       - name: Go fmt

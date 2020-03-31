@@ -5,7 +5,9 @@ import (
 )
 
 var (
-	ErrPathDelete  = errors.New("path delete")
+	// ErrPathDelete when PathDelete/PathDeleteDst fails.
+	ErrPathDelete = errors.New("path delete")
+	// ErrVaultDelete when the underlying Vault API delete fails.
 	ErrVaultDelete = errors.New("vault delete")
 )
 

@@ -5,9 +5,9 @@ import (
 )
 
 var (
-	// ErrPathWrite when PathWrite/PathWriteDest errors
+	// ErrPathWrite when PathWrite/PathWriteDst errors.
 	ErrPathWrite = errors.New("path write")
-	// ErrVaultWrite when the underlying Vault API write fails
+	// ErrVaultWrite when the underlying Vault API write fails.
 	ErrVaultWrite = errors.New("vault write")
 )
 

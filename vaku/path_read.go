@@ -5,7 +5,9 @@ import (
 )
 
 var (
-	ErrPathRead  = errors.New("path read")
+	// ErrPathRead when PathRead/PathReadDst fauls.
+	ErrPathRead = errors.New("path read")
+	// ErrVaultRead when the underlying Vault API read fails.
 	ErrVaultRead = errors.New("vault read")
 )
 
@@ -14,7 +16,7 @@ func (c *Client) PathRead(p string) (map[string]interface{}, error) {
 	return c.pathRead(c.srcL, p)
 }
 
-// PathReadDest gets data at a path.
+// PathReadDst gets data at a path.
 func (c *Client) PathReadDst(p string) (map[string]interface{}, error) {
 	return c.pathRead(c.dstL, p)
 }

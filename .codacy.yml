@@ -1,0 +1,4 @@
+engines:
+  remark-lint:
+    exclude_paths:
+      - "docs/cli/*.md"

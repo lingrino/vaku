@@ -13,7 +13,7 @@ var (
 	ErrJSONMarshall = errors.New("json marshall")
 	// ErrNilData when passed data is nil.
 	ErrNilData = errors.New("nil data")
-	// UnknownError when returning an error with no data.
+	// ErrUnknownError when returning an error with no data.
 	ErrUnknownError = errors.New("unknown error")
 )
 

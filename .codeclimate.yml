@@ -10,5 +10,7 @@ plugins:
     enabled: true
   markdownlint:
     enabled: true
+    exclude_patterns:
+      - "docs/cli/*.md"
   shellcheck:
     enabled: true

@@ -5,6 +5,7 @@ import (
 )
 
 var (
+	// ErrPathUpdate when PathUpdate fails.
 	ErrPathUpdate = errors.New("path update")
 )
 

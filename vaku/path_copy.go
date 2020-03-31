@@ -5,6 +5,7 @@ import (
 )
 
 var (
+	// ErrPathCopy when PathCopy fails.
 	ErrPathCopy = errors.New("path copy")
 )
 

@@ -7,6 +7,7 @@ import (
 )
 
 var (
+	// ErrPathSearch when PathSearch fails.
 	ErrPathSearch = errors.New("path search")
 )
 
@@ -18,8 +19,13 @@ func (c *Client) PathSearch(p, s string) (bool, error) {
 		return false, newWrapErr(p, ErrPathSearch, err)
 	}
 
-	for k, v := range read {
-		if strings.Contains(k, s) {
+	return searchSecret(read, s)
+}
+
+// searchSecret does the actual search.
+func searchSecret(secret map[string]interface{}, search string) (bool, error) {
+	for k, v := range secret {
+		if strings.Contains(k, search) {
 			return true, nil
 		}
 		vjson, err := json.Marshal(v)
@@ -27,7 +33,7 @@ func (c *Client) PathSearch(p, s string) (bool, error) {
 			return false, newWrapErr("", ErrPathSearch, ErrJSONMarshall)
 		}
 		vstr := string(vjson)
-		if strings.Contains(vstr, s) {
+		if strings.Contains(vstr, search) {
 			return true, nil
 		}
 	}
