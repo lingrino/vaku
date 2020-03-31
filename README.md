@@ -44,8 +44,6 @@ Usage docs here.
 
 Documentation for the Vaku API is on [pkg.go.dev](https://pkg.go.dev/github.com/lingrino/vaku/vaku).
 
-[hello][]
-- hi
 ## Contributing
 
 Suggestions and [contributions](https://github.com/lingrino/.github/blob/master/CONTRIBUTING.md) of all kinds are welcome! If there is functionality you would like to see in Vaku please open an issue or pull request and I will be sure to address it.
