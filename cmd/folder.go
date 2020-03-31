@@ -6,11 +6,14 @@ import (
 
 const (
 	folderUse     = "folder <cmd>"
-	folderShort   = "folder operations"
+	folderShort   = "Commands that act on Vault folders"
 	folderExample = "vaku folder list secret/foo"
-	folderLong    = `long
-description
-hello`
+	folderLong    = `Commands that act on Vault folders
+
+Commands under the folder subcommand act on Vault folders. Folders
+are designated by paths that end in a '/' such as 'secret/foo/'. Vaku
+can list, copy, move, search, etc.. on Vault folders.
+`
 )
 
 func newFolderCmd() *cobra.Command {

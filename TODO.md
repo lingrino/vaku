@@ -3,7 +3,6 @@
 ## Soon
 
 - path functions
-- CLI run vs runE
 - CLI tests
 - api context and cancellations?
 

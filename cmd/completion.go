@@ -10,7 +10,7 @@ import (
 const (
 	completionArgs    = 1
 	completionUse     = "completion bash|zsh|powershell"
-	completionShort   = "generates completion scripts for bash, zsh, or powershell"
+	completionShort   = "Generates shell completions"
 	completionExample = "vaku completion zsh"
 	completionLong    = `To install completions for your shell
 

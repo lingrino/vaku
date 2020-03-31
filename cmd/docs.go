@@ -9,9 +9,9 @@ import (
 
 const (
 	docsArgs    = 1
-	docsUse     = "docs [path]"
-	docsShort   = "generates markdown docs in the provided folder"
-	docsExample = "vaku docs docs/cli"
+	docsUse     = "docs <path>"
+	docsShort   = "Generates markdown docs at a path"
+	docsExample = "vaku docs ."
 )
 
 var (
@@ -28,6 +28,8 @@ func newDocsCmd() *cobra.Command {
 		Example: docsExample,
 
 		Args: cobra.ExactArgs(docsArgs),
+
+		DisableFlagsInUseLine: true,
 
 		RunE: func(cmd *cobra.Command, args []string) error {
 			err := runDocs(cmd.Root(), args[0])

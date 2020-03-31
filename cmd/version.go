@@ -9,7 +9,7 @@ import (
 
 const (
 	versionUse     = "version"
-	versionShort   = "print Vaku version"
+	versionShort   = "Print vaku version"
 	versionExample = "vaku version"
 )
 
@@ -18,7 +18,11 @@ func newVersionCmd(version string) *cobra.Command {
 		Use:     versionUse,
 		Short:   versionShort,
 		Example: versionExample,
-		Args:    cobra.NoArgs,
+
+		Args: cobra.NoArgs,
+
+		DisableFlagsInUseLine: true,
+
 		Run: func(cmd *cobra.Command, args []string) {
 			runVersion(version)
 		},
