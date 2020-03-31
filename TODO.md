@@ -2,8 +2,10 @@
 
 ## Soon
 
+- path functions
+- CLI run vs runE
 - CLI tests
-- add context and cancellations?
+- api context and cancellations?
 
 ## Upcoming
 
@@ -23,7 +25,6 @@
 - update website
 - release on snapcraft
 - verify delete/destory behavior on real vault
-- codacy file and style fixes
 - make sure all 100% on codeclimate, codacy, codebeat, etc...
 - make sure changelog is up to date
 

@@ -32,6 +32,7 @@ func NewVakuCmd(version string) (*cobra.Command, error) {
 
 	cmd.AddCommand(
 		newCompletionCmd(),
+		newDocsCmd(),
 		newPathCmd(),
 		newFolderCmd(),
 		newVersionCmd(version),
