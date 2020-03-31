@@ -12,9 +12,10 @@ const (
 )
 
 const (
-	vakuUse   = "vaku <cmd>"
-	vakuShort = "Vaku is a tool for working with large vault k/v secret engines"
-	vakuLong  = `vaku
+	vakuUse     = "vaku <cmd>"
+	vakuShort   = "Vaku is a tool for working with large vault k/v secret engines"
+	vakuExample = "vaku folder list secret/foo"
+	vakuLong    = `vaku
 long
 description
 
@@ -23,11 +24,16 @@ API documentation - https://pkg.go.dev/github.com/lingrino/vaku/vaku
 Built by Sean Lingren <sean@lingrino.com>`
 )
 
-func NewVakuCmd(version string) (*cobra.Command, error) {
+func newVakuCmd(version string) (*cobra.Command, error) {
 	cmd := &cobra.Command{
-		Use:   vakuUse,
-		Short: vakuShort,
-		Long:  vakuLong,
+		Use:     vakuUse,
+		Short:   vakuShort,
+		Long:    vakuLong,
+		Example: vakuExample,
+
+		// https://github.com/spf13/cobra/issues/914#issuecomment-548411337
+		SilenceErrors: true,
+		SilenceUsage:  true,
 	}
 
 	cmd.AddCommand(
@@ -43,15 +49,15 @@ func NewVakuCmd(version string) (*cobra.Command, error) {
 
 // Execute runs Vaku
 func Execute(version string) {
-	vc, err := NewVakuCmd(version)
+	vc, err := newVakuCmd(version)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 		os.Exit(exitFail)
 	}
 
 	err = vc.Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s\n", err)
+		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 		os.Exit(exitFail)
 	}
 }

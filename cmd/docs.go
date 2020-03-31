@@ -29,9 +29,9 @@ func newDocsCmd() *cobra.Command {
 
 		Args: cobra.ExactArgs(docsArgs),
 
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			err := runDocs(cmd.Root(), args[0])
-			outErr(err)
+			return err
 		},
 	}
 

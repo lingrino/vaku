@@ -41,9 +41,9 @@ func newCompletionCmd() *cobra.Command {
 		Args:      cobra.ExactArgs(completionArgs),
 		ValidArgs: []string{"zsh", "bash", "powershhell"},
 
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			err := runCompletion(cmd.Root(), args[0])
-			outErr(err)
+			return err
 		},
 	}
 
