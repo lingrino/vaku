@@ -11,8 +11,7 @@ const (
 	pathLong    = `Commands that act on Vault paths
 
 Commands under the path subcommand act on Vault paths. Vaku can list,
-copy, move, search, etc.. on Vault paths.
-`
+copy, move, search, etc.. on Vault paths.`
 )
 
 func newPathCmd() *cobra.Command {

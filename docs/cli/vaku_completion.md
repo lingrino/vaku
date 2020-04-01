@@ -15,7 +15,6 @@ source <(vaku completion zsh)
 # Powershell
 Write the contents of 'vaku completion powershell' and source them in your profile
 
-
 ```
 vaku completion bash|zsh|powershell [flags]
 ```

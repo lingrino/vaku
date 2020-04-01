@@ -21,8 +21,7 @@ source <(vaku completion bash)
 source <(vaku completion zsh)
 
 # Powershell
-Write the contents of 'vaku completion powershell' and source them in your profile
-`
+Write the contents of 'vaku completion powershell' and source them in your profile`
 )
 
 var (

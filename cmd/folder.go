@@ -12,8 +12,7 @@ const (
 
 Commands under the folder subcommand act on Vault folders. Folders
 are designated by paths that end in a '/' such as 'secret/foo/'. Vaku
-can list, copy, move, search, etc.. on Vault folders.
-`
+can list, copy, move, search, etc.. on Vault folders.`
 )
 
 func newFolderCmd() *cobra.Command {
