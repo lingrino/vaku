@@ -2,8 +2,8 @@
 
 ## Soon
 
-- path functions
 - CLI tests
+- path functions
 - api context and cancellations?
 
 ## Upcoming

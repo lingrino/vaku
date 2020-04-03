@@ -4,8 +4,8 @@ go 1.14
 
 require (
 	github.com/fatih/color v1.9.0 // indirect
-	github.com/hashicorp/go-hclog v0.12.1
-	github.com/hashicorp/go-retryablehttp v0.6.4 // indirect
+	github.com/hashicorp/go-hclog v0.12.2
+	github.com/hashicorp/go-retryablehttp v0.6.5 // indirect
 	github.com/hashicorp/go-rootcerts v1.0.2 // indirect
 	github.com/hashicorp/vault v1.3.4
 	github.com/hashicorp/vault/api v1.0.5-0.20200117231345-460d63e36490

@@ -24,14 +24,14 @@ func newVersionCmd(version string) *cobra.Command {
 		DisableFlagsInUseLine: true,
 
 		Run: func(cmd *cobra.Command, args []string) {
-			runVersion(version)
+			runVersion(cmd, version)
 		},
 	}
 
 	return cmd
 }
 
-func runVersion(version string) {
-	fmt.Println("CLI:", version)
-	fmt.Println("API:", vaku.Version())
+func runVersion(cmd *cobra.Command, version string) {
+	fmt.Fprintln(cmd.OutOrStdout(), "CLI:", version)
+	fmt.Fprintln(cmd.OutOrStdout(), "API:", vaku.Version())
 }
