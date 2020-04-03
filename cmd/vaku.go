@@ -1,14 +1,15 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 )
 
 const (
-	exitFail = 1
+	exitSuccess = 0
+	exitFail    = 1
 )
 
 const (
@@ -31,7 +32,7 @@ API documentation - https://pkg.go.dev/github.com/lingrino/vaku/vaku
 Built by Sean Lingren <sean@lingrino.com>`
 )
 
-func newVakuCmd(version string) (*cobra.Command, error) {
+func newVakuCmd(version string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     vakuUse,
 		Short:   vakuShort,
@@ -53,20 +54,28 @@ func newVakuCmd(version string) (*cobra.Command, error) {
 		newVersionCmd(version),
 	)
 
-	return cmd, nil
+	return cmd
 }
 
 // Execute runs Vaku
-func Execute(version string) {
-	vc, err := newVakuCmd(version)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-		os.Exit(exitFail)
+func Execute(version string) int {
+	vc := newVakuCmd(version)
+
+	// Test/Failure injection
+	if version == "test" || version == "fail" {
+		var nilout bytes.Buffer
+		vc.SetOut(&nilout)
+		vc.SetErr(&nilout)
+	}
+	if version == "fail" {
+		vc.SetArgs([]string{"fail"})
 	}
 
-	err = vc.Execute()
+	err := vc.Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-		os.Exit(exitFail)
+		fmt.Fprintf(vc.ErrOrStderr(), "Error: %s\n", err)
+		return exitFail
 	}
+
+	return exitSuccess
 }

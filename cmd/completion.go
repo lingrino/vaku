@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -57,11 +56,13 @@ func runCompletion(rootCmd *cobra.Command, completion string) error {
 	var err error
 	switch completion {
 	case "bash":
-		err = rootCmd.GenBashCompletion(os.Stdout)
+		err = rootCmd.GenBashCompletion(rootCmd.OutOrStdout())
 	case "zsh":
-		err = rootCmd.GenZshCompletion(os.Stdout)
+		err = rootCmd.GenZshCompletion(rootCmd.OutOrStdout())
 	case "powershell":
-		err = rootCmd.GenPowerShellCompletion(os.Stdout)
+		err = rootCmd.GenPowerShellCompletion(rootCmd.OutOrStdout())
+	case "fail":
+		err = errors.New("failure injection")
 	default:
 		return errCmpUnsupported
 	}

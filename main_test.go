@@ -7,6 +7,9 @@ import (
 )
 
 func TestMain(t *testing.T) {
-	executeCMD = func(s string) {}
+	t.Parallel()
+
+	executeCMD = func(s string) int { return 0 }
+	exitCmd = func(i int) {}
 	assert.NotPanics(t, func() { main() })
 }

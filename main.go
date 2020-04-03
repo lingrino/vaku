@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/lingrino/vaku/cmd"
 )
 
@@ -8,7 +10,8 @@ import (
 var version = "dev"
 
 var executeCMD = cmd.Execute
+var exitCmd = os.Exit
 
 func main() {
-	executeCMD(version)
+	exitCmd(executeCMD(version))
 }

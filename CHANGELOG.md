@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 - GEN: Badges & integrations with code climate, codacy, goreportcard, codebeat
 - GEN: Compliance with golangci-lint and integration linters
 - CLI: Completion commands for bash/zsh/powershell.
+- CLI: Full test coverage.
 - API: Full test coverage.
 
 ### Changed

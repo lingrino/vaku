@@ -41,7 +41,7 @@ func TestVersion(t *testing.T) {
 			t.Parallel()
 
 			vc := newVersionCmd(tt.giveVersion)
-			out := prepCmd(t, vc, tt.giveArgs)
+			out, _ := prepCmd(t, vc, tt.giveArgs)
 
 			err := vc.Execute()
 
