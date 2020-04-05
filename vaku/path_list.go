@@ -2,7 +2,6 @@ package vaku
 
 import (
 	"errors"
-	"sort"
 
 	"github.com/hashicorp/vault/api"
 )
@@ -44,7 +43,6 @@ func (c *Client) pathList(l logical, p string) ([]string, error) {
 		PrefixList(list, p)
 	}
 
-	sort.Strings(list)
 	return list, nil
 }
 

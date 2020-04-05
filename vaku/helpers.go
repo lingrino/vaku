@@ -10,6 +10,19 @@ func IsFolder(p string) bool {
 	return strings.HasSuffix(p, "/")
 }
 
+// MakeFolder adds a slash to the end of a path if it doesn't already have one
+func MakeFolder(p string) string {
+	return KeyJoin(p, "/")
+}
+
+// EnsurePrefix adds a prefix to a path if it doesn't already have it
+func EnsurePrefix(p, pfx string) string {
+	if strings.HasPrefix(p, pfx) {
+		return p
+	}
+	return KeyJoin(pfx, p)
+}
+
 // KeyJoin combines strings into a clean Vault key. Keys may have a trailing '/' to signify they are a folder.
 func KeyJoin(k ...string) string {
 	if strings.HasSuffix(k[len(k)-1], "/") {

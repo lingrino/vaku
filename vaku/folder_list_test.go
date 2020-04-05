@@ -1,6 +1,7 @@
 package vaku
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -24,14 +25,34 @@ func TestFolderList(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name: "test/inner",
-			give: "test/inner",
+			name: "test/inner trailing slash",
+			give: "test/inner/",
 			want: []string{
 				"WKNC3muM",
 				"A2xlzTfE",
 				"again/inner/UCrt6sZT",
 			},
 			wantErr: nil,
+		},
+		{
+			name: "test/inner no slash and absolute path",
+			give: "test/inner",
+			want: []string{
+				"test/inner/WKNC3muM",
+				"test/inner/A2xlzTfE",
+				"test/inner/again/inner/UCrt6sZT",
+			},
+			giveOptions: []Option{WithAbsolutePath(true)},
+			wantErr:     nil,
+		},
+		{
+			name: "list error",
+			give: "test/inner",
+			want: []string{},
+			giveLogical: &errLogical{
+				err: errInject,
+			},
+			wantErr: []error{ErrFolderList, ErrPathList, ErrVaultList},
 		},
 	}
 
@@ -47,10 +68,11 @@ func TestFolderList(t *testing.T) {
 			for _, ver := range kvMountVersions {
 				path := addMountToPath(t, tt.give, ver)
 
-				list, err := client.FolderList(path)
+				list, err := client.FolderList(context.Background(), path)
 				compareErrors(t, err, tt.wantErr)
 
-				assert.Equal(t, tt.want, list)
+				TrimListPrefix(list, ver)
+				assert.ElementsMatch(t, tt.want, list)
 			}
 		})
 	}

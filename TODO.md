@@ -2,9 +2,10 @@
 
 ## Soon
 
-- CLI tests
-- path functions
+- api folder funtions
+- cli path/folder functions
 - api context and cancellations?
+- add sort as an option in cli and api
 
 ## Upcoming
 
@@ -13,7 +14,6 @@
 - API example in readme
 - doc.go in api
 - further parallelize tests?
-- cli option to sort output
 - graceful worker shutdown <https://callistaenterprise.se/blogg/teknik/2019/10/05/go-worker-cancellation/>
 - cli checks for updates <https://github.com/tcnksm/go-latest>
 - CI to make sure api Version() stays up to date with tags

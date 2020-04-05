@@ -53,6 +53,100 @@ func TestIsFolder(t *testing.T) {
 	}
 }
 
+func TestMakeFolder(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		give string
+		want string
+	}{
+		{
+			give: "",
+			want: "/",
+		},
+		{
+			give: "a",
+			want: "a/",
+		},
+		{
+			give: "a/",
+			want: "a/",
+		},
+		{
+			give: "a/b",
+			want: "a/b/",
+		},
+		{
+			give: "a/",
+			want: "a/",
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.give, func(t *testing.T) {
+			t.Parallel()
+
+			assert.Equal(t, tt.want, MakeFolder(tt.give))
+		})
+	}
+}
+
+func TestEnsurePrefix(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		give       string
+		givePrefix string
+		want       string
+	}{
+		{
+			give:       "",
+			givePrefix: "",
+			want:       "",
+		},
+		{
+			give:       "a",
+			givePrefix: "",
+			want:       "a",
+		},
+		{
+			give:       "",
+			givePrefix: "a",
+			want:       "a",
+		},
+		{
+			give:       "a/",
+			givePrefix: "a",
+			want:       "a/",
+		},
+		{
+			give:       "a",
+			givePrefix: "a/",
+			want:       "a/a",
+		},
+		{
+			give:       "a/b/c/d",
+			givePrefix: "a/b/",
+			want:       "a/b/c/d",
+		},
+		{
+			give:       "a/b/c/d",
+			givePrefix: "b",
+			want:       "b/a/b/c/d",
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.give, func(t *testing.T) {
+			t.Parallel()
+
+			assert.Equal(t, tt.want, EnsurePrefix(tt.give, tt.givePrefix))
+		})
+	}
+}
+
 func TestKeyJoin(t *testing.T) {
 	t.Parallel()
 

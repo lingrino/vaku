@@ -22,8 +22,8 @@ type Client struct {
 	srcL logical
 	dstL logical
 
-	// workers is the max number of concurrent operations we'll run.
-	workers uint
+	// workers is the max number of concurrent operations against vault.
+	workers int
 
 	// absolutepath if the absolution path is desired instead of the relative path.
 	absolutepath bool
@@ -71,18 +71,18 @@ func (o withDstVaultClient) apply(c *Client) error {
 	return nil
 }
 
-// WithWorkers sets the maximum number of goroutines that will be used to run folder based
-// operations. Default value is 10. A stable and well-operated Vault server should be able to handle
-// 100 or more without issue. Use with caution and tune specifically to your environment and storage
-// backend.
-func WithWorkers(n uint) Option {
+// WithWorkers sets the maximum number of goroutines that access Vault at any given time. Does not
+// cap the number of goroutines overall. Default value is 10. A stable and well-operated Vault
+// server should be able to handle 100 or more without issue. Use with caution and tune specifically
+// to your environment and storage backend.
+func WithWorkers(n int) Option {
 	return withWorkers(n)
 }
 
 type withWorkers uint
 
 func (o withWorkers) apply(c *Client) error {
-	c.workers = uint(o)
+	c.workers = int(o)
 	return nil
 }
 
