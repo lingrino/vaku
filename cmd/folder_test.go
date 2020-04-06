@@ -10,10 +10,11 @@ func TestFolder(t *testing.T) {
 	t.Parallel()
 
 	vc := newFolderCmd()
-	out, _ := prepCmd(t, vc, nil)
+	stdO, stdE := prepCmd(t, vc, nil)
+	assert.Equal(t, "", stdE.String())
 
 	err := vc.Execute()
 	assert.NoError(t, err)
-	assert.Contains(t, out.String(), folderShort)
-	assert.Contains(t, out.String(), folderLong)
+	assert.Contains(t, stdO.String(), folderShort)
+	assert.Contains(t, stdO.String(), folderLong)
 }

@@ -50,14 +50,15 @@ func TestCompletion(t *testing.T) {
 			t.Parallel()
 
 			vc := newCompletionCmd()
-			out, _ := prepCmd(t, vc, tt.giveArgs)
+			stdO, stdE := prepCmd(t, vc, tt.giveArgs)
+			assert.Equal(t, "", stdE.String())
 
 			err := vc.Execute()
 
 			assertError(t, err, tt.wantErr)
 			if tt.wantErr == "" {
 				// Expect a long string
-				assert.Greater(t, len(out.String()), 100)
+				assert.Greater(t, len(stdO.String()), 100)
 			}
 		})
 	}

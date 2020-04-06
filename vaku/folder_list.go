@@ -95,24 +95,31 @@ func (c *Client) folderListWork(ctx context.Context, root string, wg *sync.WaitG
 			if !ok {
 				return nil
 			}
-			if IsFolder(path) {
-				list, err := c.PathList(path)
-				if err != nil {
-					return newWrapErr(root, ErrFolderList, err)
-				}
-				for _, item := range list {
-					item = EnsurePrefix(item, path)
-					wg.Add(1)
-					go func(p string) { pathC <- p }(item)
-				}
-			} else {
-				if c.absolutepath {
-					resC <- path
-				} else {
-					resC <- strings.TrimPrefix(path, root)
-				}
-			}
-			wg.Done()
+			return c.pathListWork(path, root, wg, pathC, resC)
 		}
 	}
+}
+
+// pathListWork takes a path and either adds it back to the pathC (if folder) or processes it and
+// adds it to the resC.
+func (c *Client) pathListWork(path, root string, wg *sync.WaitGroup, pathC, resC chan string) error {
+	if IsFolder(path) {
+		list, err := c.PathList(path)
+		if err != nil {
+			return newWrapErr(root, ErrFolderList, err)
+		}
+		for _, item := range list {
+			item = EnsurePrefix(item, path)
+			wg.Add(1)
+			go func(p string) { pathC <- p }(item)
+		}
+	} else {
+		if c.absolutepath {
+			resC <- path
+		} else {
+			resC <- strings.TrimPrefix(path, root)
+		}
+	}
+	wg.Done()
+	return nil
 }

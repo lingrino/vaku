@@ -11,13 +11,14 @@ func TestVaku(t *testing.T) {
 	t.Parallel()
 
 	vc := newVakuCmd("test")
-	out, _ := prepCmd(t, vc, nil)
+	stdO, stdE := prepCmd(t, vc, nil)
+	assert.Equal(t, "", stdE.String())
 
 	err := vc.Execute()
 	assert.NoError(t, err)
-	assert.Contains(t, out.String(), vakuShort)
-	assert.Contains(t, out.String(), vakuLong)
-	assert.Contains(t, out.String(), vakuExample)
+	assert.Contains(t, stdO.String(), vakuShort)
+	assert.Contains(t, stdO.String(), vakuLong)
+	assert.Contains(t, stdO.String(), vakuExample)
 }
 
 func TestExecute(t *testing.T) {

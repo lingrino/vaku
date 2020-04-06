@@ -12,6 +12,12 @@ const (
 	exitFail    = 1
 )
 
+// Special strings used for failure injection in tests
+const (
+	failString = "fail"
+	testString = "test"
+)
+
 const (
 	vakuUse     = "vaku <cmd>"
 	vakuShort   = "Vaku is a CLI for working with large Vault k/v secret engines"
@@ -62,13 +68,13 @@ func Execute(version string) int {
 	vc := newVakuCmd(version)
 
 	// Test/Failure injection
-	if version == "test" || version == "fail" {
+	if version == testString || version == failString {
 		var nilout bytes.Buffer
 		vc.SetOut(&nilout)
 		vc.SetErr(&nilout)
 	}
-	if version == "fail" {
-		vc.SetArgs([]string{"fail"})
+	if version == failString {
+		vc.SetArgs([]string{failString})
 	}
 
 	err := vc.Execute()

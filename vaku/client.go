@@ -4,6 +4,10 @@ import (
 	"github.com/hashicorp/vault/api"
 )
 
+const (
+	defaultWorkers = 10
+)
+
 // logical is functions from api.Logical() used by Vaku.
 type logical interface {
 	Delete(path string) (*api.Secret, error)
@@ -104,7 +108,7 @@ func (o withAbsolutePath) apply(c *Client) error {
 func NewClient(opts ...Option) (*Client, error) {
 	// set defaults
 	client := &Client{
-		workers: 10,
+		workers: defaultWorkers,
 	}
 
 	// apply options

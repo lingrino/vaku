@@ -38,13 +38,14 @@ func TestDocs(t *testing.T) {
 			t.Parallel()
 
 			vc := newDocsCmd()
-			out, _ := prepCmd(t, vc, tt.giveArgs)
+			stdO, stdE := prepCmd(t, vc, tt.giveArgs)
+			assert.Equal(t, "", stdE.String())
 
 			err := vc.Execute()
 
 			assertError(t, err, tt.wantErr)
 			if tt.wantErr == "" {
-				assert.Equal(t, tt.wantOut, out.String())
+				assert.Equal(t, tt.wantOut, stdO.String())
 			}
 		})
 	}
