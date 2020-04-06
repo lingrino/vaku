@@ -28,6 +28,7 @@ func assertError(t *testing.T, err error, contains string) {
 	if contains == "" {
 		assert.NoError(t, err)
 	} else {
+		assert.NotNil(t, err)
 		assert.Contains(t, err.Error(), contains)
 	}
 }
