@@ -1,6 +1,8 @@
 package vaku
 
 import (
+	"strings"
+
 	"github.com/hashicorp/vault/api"
 )
 
@@ -29,8 +31,8 @@ type Client struct {
 	// workers is the max number of concurrent operations against vault.
 	workers int
 
-	// absolutepath if the absolution path is desired instead of the relative path.
-	absolutepath bool
+	// absolutePath if the absolution path is desired instead of the relative path.
+	absolutePath bool
 }
 
 // Option configures a Client.
@@ -90,17 +92,17 @@ func (o withWorkers) apply(c *Client) error {
 	return nil
 }
 
-// WithAbsolutePath sets the output format for all returned paths. Default path output is a relative
-// path, trimmed up to the path input. Pass WithAbsolutePath(true) to set path output to the entire
+// WithabsolutePath sets the output format for all returned paths. Default path output is a relative
+// path, trimmed up to the path input. Pass WithabsolutePath(true) to set path output to the entire
 // path. Example: List(secret/foo) -> "bar" OR "secret/foo/bar"
-func WithAbsolutePath(b bool) Option {
-	return withAbsolutePath(b)
+func WithabsolutePath(b bool) Option {
+	return withabsolutePath(b)
 }
 
-type withAbsolutePath bool
+type withabsolutePath bool
 
-func (o withAbsolutePath) apply(c *Client) error {
-	c.absolutepath = bool(o)
+func (o withabsolutePath) apply(c *Client) error {
+	c.absolutePath = bool(o)
 	return nil
 }
 
@@ -126,4 +128,13 @@ func NewClient(opts ...Option) (*Client, error) {
 	}
 
 	return client, nil
+}
+
+// pathToReturn takes a path and returns a path that can be returned to the user, given their
+// formatting preferences.
+func (c *Client) pathToReturn(path, root string) string {
+	if c.absolutePath {
+		return EnsurePrefix(path, root)
+	}
+	return strings.TrimPrefix(path, root)
 }

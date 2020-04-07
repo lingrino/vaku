@@ -5,6 +5,7 @@
 - api folder funtions
 - cli path/folder functions
 - api context and cancellations?
+- cli flags for timeouts
 - add sort as an option in cli and api
 
 ## Upcoming

@@ -3,7 +3,6 @@ package vaku
 import (
 	"context"
 	"errors"
-	"strings"
 	"sync"
 
 	"golang.org/x/sync/errgroup"
@@ -12,6 +11,8 @@ import (
 var (
 	// ErrFolderList when FolderList fails.
 	ErrFolderList = errors.New("folder list")
+	// ErrFolderListChan when FolderListChan fails.
+	ErrFolderListChan = errors.New("folder list chan")
 )
 
 // FolderList recursively lists the provided path and all subpaths.
@@ -19,16 +20,18 @@ func (c *Client) FolderList(ctx context.Context, p string) ([]string, error) {
 	resC, errC := c.FolderListChan(ctx, p)
 
 	// read results and errors. send on errC signifies done (can be nil).
-	var out []string
+	var output []string
 	for {
 		select {
-		case res := <-resC:
-			out = append(out, res)
+		case res, ok := <-resC:
+			if !ok {
+				return output, nil
+			}
+			output = append(output, res)
 		case err := <-errC:
 			if err != nil {
-				return nil, err
+				return nil, newWrapErr(p, ErrFolderList, err)
 			}
-			return out, nil
 		}
 	}
 }
@@ -56,70 +59,73 @@ func (c *Client) FolderListChan(ctx context.Context, p string) (<-chan string, <
 
 	// fan out and process paths
 	for i := 0; i < c.workers; i++ {
-		eg.Go(func() error { return c.folderListWork(ctx, root, &wg, pathC, resC) })
+		eg.Go(func() error {
+			return c.folderListWork(&folderListWorkInput{
+				ctx:   ctx,
+				root:  root,
+				wg:    &wg,
+				pathC: pathC,
+				resC:  resC,
+			})
+		})
 	}
 
-	// close pathC once all have been processed or when the group is cancelled
+	// close pathC & resC once all have been processed or when the group is cancelled
 	eg.Go(func() error {
-		// provide a way to wait on wg.Wait() inside a select
-		done := make(chan bool)
-		go func() {
-			wg.Wait()
-			done <- true
-		}()
-
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
-		case <-done:
+		case <-waitFuncOnChan(wg.Wait):
 			close(pathC)
+			close(resC)
 			return nil
 		}
 	})
 
-	// provide eg.Wait() on a channel for returning
-	errC := make(chan error)
-	go func() { errC <- eg.Wait() }()
+	return resC, errFuncOnChan(eg.Wait)
+}
 
-	return resC, errC
+// folderListWorkInput is the piecces needed to list a folder
+type folderListWorkInput struct {
+	ctx   context.Context
+	root  string
+	wg    *sync.WaitGroup
+	pathC chan string
+	resC  chan<- string
 }
 
 // folderListWork takes input from pathC, lists the path, adds listed folders back into pathC, and
 // adds non-folders into results.
-func (c *Client) folderListWork(ctx context.Context, root string, wg *sync.WaitGroup, pathC, resC chan string) error {
+func (c *Client) folderListWork(i *folderListWorkInput) error {
 	for {
 		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		case path, ok := <-pathC:
+		case <-i.ctx.Done():
+			return i.ctx.Err()
+		case path, ok := <-i.pathC:
 			if !ok {
 				return nil
 			}
-			return c.pathListWork(path, root, wg, pathC, resC)
+			return c.pathListWork(path, i)
 		}
 	}
 }
 
 // pathListWork takes a path and either adds it back to the pathC (if folder) or processes it and
 // adds it to the resC.
-func (c *Client) pathListWork(path, root string, wg *sync.WaitGroup, pathC, resC chan string) error {
+func (c *Client) pathListWork(path string, i *folderListWorkInput) error {
 	if IsFolder(path) {
 		list, err := c.PathList(path)
 		if err != nil {
-			return newWrapErr(root, ErrFolderList, err)
+			return newWrapErr(i.root, ErrFolderListChan, err)
 		}
 		for _, item := range list {
+			i.wg.Add(1)
 			item = EnsurePrefix(item, path)
-			wg.Add(1)
-			go func(p string) { pathC <- p }(item)
+			go func(p string) { i.pathC <- p }(item)
 		}
 	} else {
-		if c.absolutepath {
-			resC <- path
-		} else {
-			resC <- strings.TrimPrefix(path, root)
-		}
+		i.resC <- c.pathToReturn(path, i.root)
 	}
-	wg.Done()
+	i.wg.Done()
 	return nil
 }

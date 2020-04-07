@@ -42,7 +42,7 @@ func TestFolderList(t *testing.T) {
 				"test/inner/A2xlzTfE",
 				"test/inner/again/inner/UCrt6sZT",
 			},
-			giveOptions: []Option{WithAbsolutePath(true)},
+			giveOptions: []Option{WithabsolutePath(true)},
 			wantErr:     nil,
 		},
 		{
@@ -52,7 +52,7 @@ func TestFolderList(t *testing.T) {
 			giveLogical: &errLogical{
 				err: errInject,
 			},
-			wantErr: []error{ErrFolderList, ErrPathList, ErrVaultList},
+			wantErr: []error{ErrFolderList, ErrFolderListChan, ErrPathList, ErrVaultList},
 		},
 	}
 

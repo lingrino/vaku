@@ -39,7 +39,7 @@ func (c *Client) pathList(l logical, p string) ([]string, error) {
 		return nil, newWrapErr(p, ErrPathList, err)
 	}
 
-	if c.absolutepath {
+	if c.absolutePath {
 		PrefixList(list, p)
 	}
 
