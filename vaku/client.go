@@ -136,5 +136,5 @@ func (c *Client) pathToReturn(path, root string) string {
 	if c.absolutePath {
 		return EnsurePrefix(path, root)
 	}
-	return strings.TrimPrefix(path, root)
+	return KeyJoin(strings.TrimPrefix(path, root))
 }
