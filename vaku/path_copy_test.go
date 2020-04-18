@@ -75,12 +75,8 @@ func TestPathCopy(t *testing.T) {
 			t.Parallel()
 
 			for _, ver := range versionProduct {
-				ln, client := testClient(t, tt.giveOptions...)
-				defer ln.Close()
-
-				lnS, lnD, clientDD := testClientDiffDst(t, tt.giveOptions...)
-				defer lnS.Close()
-				defer lnD.Close()
+				client := testClient(t, tt.giveOptions...)
+				clientDD := testClientDiffDst(t, tt.giveOptions...)
 
 				for _, c := range []*Client{client, clientDD} {
 					readbackClient := cloneCLient(t, c)

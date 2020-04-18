@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"net"
 	"os"
 	"testing"
 
@@ -71,7 +70,7 @@ func TestMain(m *testing.M) {
 }
 
 // testServer creates a new Vault server and returns a Vault API client that points to it.
-func testServer(t *testing.T) (net.Listener, *api.Client) {
+func testServer(t *testing.T) *api.Client {
 	t.Helper()
 
 	core, _, token := vault.TestCoreUnsealedWithConfig(t, &vault.CoreConfig{
@@ -86,14 +85,16 @@ func testServer(t *testing.T) (net.Listener, *api.Client) {
 	err = apiClient.SetAddress(addr)
 	assert.NoError(t, err)
 
-	return ln, apiClient
+	t.Cleanup(func() { ln.Close() })
+
+	return apiClient
 }
 
 // testServerSeeded creates a seeded Vault server and returns an API client that points to it.
-func testServerSeeded(t *testing.T) (net.Listener, *api.Client) {
+func testServerSeeded(t *testing.T) *api.Client {
 	t.Helper()
 
-	ln, client := testServer(t)
+	client := testServer(t)
 
 	for _, ver := range kvMountVersions {
 		err := client.Sys().Mount(ver+"/", &api.MountInput{
@@ -110,27 +111,27 @@ func testServerSeeded(t *testing.T) (net.Listener, *api.Client) {
 		}
 	}
 
-	return ln, client
+	return client
 }
 
 // testClient returns a client that points to a seeded server.
-func testClient(t *testing.T, opts ...Option) (net.Listener, *Client) {
+func testClient(t *testing.T, opts ...Option) *Client {
 	t.Helper()
 
-	ln, apiClient := testServerSeeded(t)
+	apiClient := testServerSeeded(t)
 
 	client, err := NewClient(append(opts, WithVaultClient(apiClient))...)
 	assert.NoError(t, err)
 
-	return ln, client
+	return client
 }
 
 // testClientDiffDst returns a client that points src and dst at different seeded servers.
-func testClientDiffDst(t *testing.T, opts ...Option) (net.Listener, net.Listener, *Client) {
+func testClientDiffDst(t *testing.T, opts ...Option) *Client {
 	t.Helper()
 
-	ln, apiClientS := testServerSeeded(t)
-	lnD, apiClientD := testServerSeeded(t)
+	apiClientS := testServerSeeded(t)
+	apiClientD := testServerSeeded(t)
 
 	client, err := NewClient(append(opts,
 		WithVaultSrcClient(apiClientS),
@@ -138,7 +139,7 @@ func testClientDiffDst(t *testing.T, opts ...Option) (net.Listener, net.Listener
 	)...)
 	assert.NoError(t, err)
 
-	return ln, lnD, client
+	return client
 }
 
 // cloneCLient copies a client.

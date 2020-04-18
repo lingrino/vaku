@@ -99,8 +99,7 @@ func TestPathSearch(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			ln, client := testClient(t, tt.giveOptions...)
-			defer ln.Close()
+			client := testClient(t, tt.giveOptions...)
 			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
 
 			for _, ver := range kvMountVersions {

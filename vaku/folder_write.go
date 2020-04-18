@@ -14,6 +14,11 @@ var (
 	ErrFolderWriteChan = errors.New("folder write chan")
 )
 
+// // FolderWrite writes data to a path. Multiple paths can be written to at once.
+// func (c *Client) FolderWrite(ctx context.Context, d map[string]map[string]interface{}) error {
+// 	return c.folderWrite(ctx, d)
+// }
+
 // FolderWrite writes data to a path. Multiple paths can be written to at once.
 func (c *Client) FolderWrite(ctx context.Context, d map[string]map[string]interface{}) error {
 	errC := c.FolderWriteChan(ctx, d)

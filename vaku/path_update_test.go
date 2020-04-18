@@ -104,8 +104,7 @@ func TestPathUpate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			ln, client := testClient(t, tt.giveOptions...)
-			defer ln.Close()
+			client := testClient(t, tt.giveOptions...)
 			readbackClient := cloneCLient(t, client)
 			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
 
