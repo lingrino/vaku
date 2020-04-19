@@ -15,7 +15,7 @@ var (
 	ErrFolderListChan = errors.New("folder list chan")
 )
 
-// FolderList recursively lists the provided path and all subpaths.
+// folderList recursively lists the provided path and all subpaths.
 func (c *Client) FolderList(ctx context.Context, p string) ([]string, error) {
 	resC, errC := c.FolderListChan(ctx, p)
 

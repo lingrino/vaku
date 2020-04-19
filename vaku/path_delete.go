@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	// ErrPathDelete when PathDelete/PathDeleteDst fails.
+	// ErrPathDelete when PathDelete/pathDeleteDst fails.
 	ErrPathDelete = errors.New("path delete")
 	// ErrVaultDelete when the underlying Vault API delete fails.
 	ErrVaultDelete = errors.New("vault delete")
@@ -16,8 +16,8 @@ func (c *Client) PathDelete(p string) error {
 	return c.pathDelete(c.srcL, p)
 }
 
-// PathDeleteDst deletes data at a path.
-func (c *Client) PathDeleteDst(p string) error {
+// pathDeleteDst deletes data at a path.
+func (c *Client) pathDeleteDst(p string) error {
 	return c.pathDelete(c.dstL, p)
 }
 

@@ -50,7 +50,7 @@ func TestFolderDelete(t *testing.T) {
 					"r6R0JUzX": "rs1mCRB5",
 				},
 			},
-			wantErr: []error{ErrFolderDelete, ErrFolderDeleteChan, ErrFolderListChan, ErrPathList, ErrVaultList},
+			wantErr: []error{ErrFolderDelete, ErrFolderListChan, ErrPathList, ErrVaultList},
 		},
 		{
 			name: "delete error",
@@ -66,7 +66,7 @@ func TestFolderDelete(t *testing.T) {
 					"r6R0JUzX": "rs1mCRB5",
 				},
 			},
-			wantErr: []error{ErrFolderDelete, ErrFolderDeleteChan, ErrPathDelete, ErrVaultDelete},
+			wantErr: []error{ErrFolderDelete, ErrPathDelete, ErrVaultDelete},
 		},
 	}
 

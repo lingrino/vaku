@@ -16,7 +16,17 @@ var (
 
 // FolderRead recursively reads the provided path and all subpaths.
 func (c *Client) FolderRead(ctx context.Context, p string) (map[string]map[string]interface{}, error) {
-	resC, errC := c.FolderReadChan(ctx, p)
+	return c.folderRead(ctx, p, false)
+}
+
+// folderReadDst recursively reads the provided path and all subpaths.
+func (c *Client) folderReadDst(ctx context.Context, p string) (map[string]map[string]interface{}, error) {
+	return c.folderRead(ctx, p, true)
+}
+
+// folderRead recursively reads the provided path and all subpaths.
+func (c *Client) folderRead(ctx context.Context, p string, dst bool) (map[string]map[string]interface{}, error) {
+	resC, errC := c.folderReadChan(ctx, p, dst)
 
 	// read results and errors. send on errC signifies done (can be nil).
 	out := make(map[string]map[string]interface{})
@@ -42,6 +52,19 @@ func (c *Client) FolderRead(ctx context.Context, p string) (map[string]map[strin
 // channel that can be read until close and an error channel that sends either the first error or
 // nil when the work is done.
 func (c *Client) FolderReadChan(ctx context.Context, p string) (<-chan map[string]map[string]interface{}, <-chan error) {
+	return c.folderReadChan(ctx, p, false)
+}
+
+// folderReadChan recursively reads the provided path and all subpaths. Returns an unbuffered
+// channel that can be read until close and an error channel that sends either the first error or
+// nil when the work is done.
+func (c *Client) folderReadChan(ctx context.Context, p string, dst bool) (<-chan map[string]map[string]interface{}, <-chan error) {
+	// use src or dst readF
+	readF := c.PathRead
+	if dst {
+		readF = c.pathReadDst
+	}
+
 	// eg manages workers reading from the paths channel
 	eg, ctx := errgroup.WithContext(ctx)
 
@@ -66,6 +89,7 @@ func (c *Client) FolderReadChan(ctx context.Context, p string) (<-chan map[strin
 				root:  p,
 				pathC: pathC,
 				resC:  resC,
+				readF: readF,
 			})
 		})
 	}
@@ -79,6 +103,7 @@ type folderReadWorkInput struct {
 	root  string
 	pathC <-chan string
 	resC  chan<- map[string]map[string]interface{}
+	readF func(string) (map[string]interface{}, error)
 }
 
 // folderReadWork takes input from pathC, lists the path, adds listed folders back into pathC, and
@@ -93,7 +118,7 @@ func (c *Client) folderReadWork(i *folderReadWorkInput) error {
 				return nil
 			}
 			path = EnsurePrefix(path, i.root)
-			read, err := c.PathRead(path)
+			read, err := i.readF(path)
 			if err != nil {
 				return newWrapErr(i.root, ErrFolderReadChan, err)
 			}

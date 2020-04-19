@@ -107,7 +107,7 @@ func TestPathMove(t *testing.T) {
 					compareErrors(t, err, tt.wantErr)
 
 					readBackS, errS := readbackClient.PathRead(pathS)
-					readBackD, errD := readbackClient.PathReadDst(pathD)
+					readBackD, errD := readbackClient.pathReadDst(pathD)
 					assert.NoError(t, errS)
 					assert.NoError(t, errD)
 

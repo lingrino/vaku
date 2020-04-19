@@ -17,7 +17,9 @@ func (c *Client) PathCopy(src, dst string) error {
 		return newWrapErr(src, ErrPathCopy, err)
 	}
 
-	err = c.PathWriteDst(dst, secret)
+	err = c.dc.PathWrite(dst, secret)
+
+	// err = c.pathWriteDst(dst, secret)
 	if err != nil {
 		return newWrapErr(dst, ErrPathCopy, err)
 	}

@@ -10,25 +10,10 @@ import (
 var (
 	// ErrFolderDelete when FolderDelete fails.
 	ErrFolderDelete = errors.New("folder delete")
-	// ErrFolderDeleteChan when FolderDeleteChan fails.
-	ErrFolderDeleteChan = errors.New("folder delete chan")
 )
 
 // FolderDelete recursively deletes the provided path and all subpaths.
 func (c *Client) FolderDelete(ctx context.Context, p string) error {
-	errC := c.FolderDeleteChan(ctx, p)
-
-	err := <-errC
-	if err != nil {
-		return newWrapErr(p, ErrFolderDelete, err)
-	}
-
-	return nil
-}
-
-// FolderDeleteChan recursively deletes the provided path and all subpaths. Returns an error channel
-// that sends either the first error or nil when the work is done.
-func (c *Client) FolderDeleteChan(ctx context.Context, p string) <-chan error {
 	// eg manages workers reading from the paths channel
 	eg, ctx := errgroup.WithContext(ctx)
 
@@ -37,7 +22,7 @@ func (c *Client) FolderDeleteChan(ctx context.Context, p string) <-chan error {
 	eg.Go(func() error {
 		err := <-errC
 		if err != nil {
-			return newWrapErr(p, ErrFolderDeleteChan, err)
+			return newWrapErr(p, ErrFolderDelete, err)
 		}
 		return nil
 	})
@@ -53,7 +38,7 @@ func (c *Client) FolderDeleteChan(ctx context.Context, p string) <-chan error {
 		})
 	}
 
-	return errFuncOnChan(eg.Wait)
+	return eg.Wait()
 }
 
 // folderDeleteWorkInput is the piecces needed to list a folder
@@ -77,7 +62,7 @@ func (c *Client) folderDeleteWork(i *folderDeleteWorkInput) error {
 			path = EnsurePrefix(path, i.root)
 			err := c.PathDelete(path)
 			if err != nil {
-				return newWrapErr(i.root, ErrFolderDeleteChan, err)
+				return newWrapErr(i.root, ErrFolderDelete, err)
 			}
 			return nil
 		}

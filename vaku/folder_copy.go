@@ -8,8 +8,6 @@ package vaku
 // var (
 // 	// ErrFolderCopy when FolderCopy fails.
 // 	ErrFolderCopy = errors.New("folder copy")
-// 	// ErrFolderCopyChan when FolderCopyChan fails.
-// 	ErrFolderCopyChan = errors.New("folder copy chan")
 // )
 
 // // FolderCopy copies data at a source folder to a destination folder. Client must have been
@@ -19,7 +17,7 @@ package vaku
 // 	if err != nil {
 // 		return newWrapErr("read from "+src, ErrFolderCopy, err)
 // 	}
-// 	err = c.FolderWriteDst(ctx, read)
+// 	err = c.folderWriteDst(ctx, read)
 // 	if err != nil {
 // 		return newWrapErr("write to "+dst, ErrFolderCopy, err)
 // 	}

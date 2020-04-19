@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	// ErrPathWrite when PathWrite/PathWriteDst errors.
+	// ErrPathWrite when PathWrite/pathWriteDst errors.
 	ErrPathWrite = errors.New("path write")
 	// ErrVaultWrite when the underlying Vault API write fails.
 	ErrVaultWrite = errors.New("vault write")
@@ -16,8 +16,8 @@ func (c *Client) PathWrite(p string, d map[string]interface{}) error {
 	return c.pathWrite(c.srcL, p, d)
 }
 
-// PathWriteDst writes data to a path.
-func (c *Client) PathWriteDst(p string, d map[string]interface{}) error {
+// pathWriteDst writes data to a path.
+func (c *Client) pathWriteDst(p string, d map[string]interface{}) error {
 	return c.pathWrite(c.dstL, p, d)
 }
 
@@ -27,7 +27,7 @@ func (c *Client) pathWrite(l logical, p string, d map[string]interface{}) error 
 		return newWrapErr(p, ErrPathWrite, ErrNilData)
 	}
 
-	_, err := l.Write(p, d)
+	_, err := c.vl.Write(p, d)
 	if err != nil {
 		return newWrapErr(p, ErrPathWrite, newWrapErr(err.Error(), ErrVaultWrite, nil))
 	}

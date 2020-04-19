@@ -30,7 +30,7 @@ func TestFolderWrite(t *testing.T) {
 				"test/foo": nil,
 			},
 			wantReadBack: nil,
-			wantErr:      []error{ErrFolderWrite, ErrFolderWriteChan, ErrPathWrite, ErrNilData},
+			wantErr:      []error{ErrFolderWrite, ErrPathWrite, ErrNilData},
 		},
 		{
 			name: "overwrite",
@@ -102,7 +102,7 @@ func TestFolderWrite(t *testing.T) {
 				op:  "Write",
 			},
 			wantReadBack: nil,
-			wantErr:      []error{ErrFolderWrite, ErrFolderWriteChan, ErrPathWrite, ErrVaultWrite},
+			wantErr:      []error{ErrFolderWrite, ErrPathWrite, ErrVaultWrite},
 		},
 	}
 
@@ -115,19 +115,26 @@ func TestFolderWrite(t *testing.T) {
 			readbackClient := cloneCLient(t, client)
 			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
 
+			funcs := []func(context.Context, map[string]map[string]interface{}) error{
+				client.FolderWrite,
+				client.folderWriteDst,
+			}
+
 			for _, ver := range kvMountVersions {
-				writeMap := make(map[string]map[string]interface{}, len(tt.give))
-				for path, data := range tt.give {
-					writeMap[addMountToPath(t, path, ver)] = data
-				}
+				for _, f := range funcs {
+					writeMap := make(map[string]map[string]interface{}, len(tt.give))
+					for path, data := range tt.give {
+						writeMap[addMountToPath(t, path, ver)] = data
+					}
 
-				err := client.FolderWrite(context.Background(), writeMap)
-				compareErrors(t, err, tt.wantErr)
+					err := f(context.Background(), writeMap)
+					compareErrors(t, err, tt.wantErr)
 
-				for path, data := range tt.wantReadBack {
-					readBack, err := readbackClient.PathRead(addMountToPath(t, path, ver))
-					assert.NoError(t, err)
-					assert.Equal(t, data, readBack)
+					for path, data := range tt.wantReadBack {
+						readBack, err := readbackClient.PathRead(addMountToPath(t, path, ver))
+						assert.NoError(t, err)
+						assert.Equal(t, data, readBack)
+					}
 				}
 			}
 		})

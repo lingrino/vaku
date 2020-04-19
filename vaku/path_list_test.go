@@ -132,7 +132,7 @@ func TestPathList(t *testing.T) {
 
 			funcs := []func(string) ([]string, error){
 				client.PathList,
-				client.PathListDst,
+				client.pathListDst,
 			}
 
 			for _, ver := range kvMountVersions {

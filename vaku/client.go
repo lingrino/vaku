@@ -20,6 +20,10 @@ type logical interface {
 
 // Client has all Vaku functions and wraps Vault API clients.
 type Client struct {
+	vc *api.Client
+	vl logical
+	dc *Client
+
 	// src is the default client and also used as dst when dst is nil.
 	src *api.Client
 	dst *api.Client
@@ -31,7 +35,7 @@ type Client struct {
 	// workers is the max number of concurrent operations against vault.
 	workers int
 
-	// absolutePath if the absolution path is desired instead of the relative path.
+	// absolutePath if the absolute path is desired instead of the relative path.
 	absolutePath bool
 }
 
@@ -55,6 +59,8 @@ type withVaultClient struct {
 }
 
 func (o withVaultClient) apply(c *Client) error {
+	c.vc = o.client
+	c.vl = o.client.Logical()
 	c.src = o.client
 	c.srcL = o.client.Logical()
 	return nil
@@ -72,6 +78,11 @@ type withDstVaultClient struct {
 }
 
 func (o withDstVaultClient) apply(c *Client) error {
+	c.dc = &Client{
+		vc: o.client,
+		vl: o.client.Logical(),
+		dc: c,
+	}
 	c.dst = o.client
 	c.dstL = o.client.Logical()
 	return nil
@@ -125,6 +136,10 @@ func NewClient(opts ...Option) (*Client, error) {
 	if client.dst == nil && client.src != nil {
 		client.dst = client.src
 		client.dstL = client.srcL
+	}
+
+	if client.dc == nil {
+		client.dc = client
 	}
 
 	return client, nil
