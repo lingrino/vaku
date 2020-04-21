@@ -64,22 +64,15 @@ func TestPathRead(t *testing.T) {
 			t.Parallel()
 
 			client := testClient(t, tt.giveOptions...)
-			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
-
-			funcs := []func(string) (map[string]interface{}, error){
-				client.PathRead,
-				client.pathReadDst,
-			}
+			updateLogical(t, client, tt.giveLogical, nil)
 
 			for _, ver := range kvMountVersions {
-				for _, f := range funcs {
-					path := addMountToPath(t, tt.give, ver)
+				path := addMountToPath(t, tt.give, ver)
 
-					read, err := f(path)
+				read, err := client.PathRead(path)
 
-					compareErrors(t, err, tt.wantErr)
-					assert.Equal(t, tt.want, read)
-				}
+				compareErrors(t, err, tt.wantErr)
+				assert.Equal(t, tt.want, read)
 			}
 		})
 	}

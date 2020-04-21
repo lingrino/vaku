@@ -105,7 +105,10 @@ func (c *Client) folderListWork(i *folderListWorkInput) error {
 			if !ok {
 				return nil
 			}
-			return c.pathListWork(path, i)
+			err := c.pathListWork(path, i)
+			if err != nil {
+				return err
+			}
 		}
 	}
 }

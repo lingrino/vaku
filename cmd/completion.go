@@ -57,10 +57,12 @@ func runCompletion(rootCmd *cobra.Command, completion string) error {
 	switch completion {
 	case "bash":
 		err = rootCmd.GenBashCompletion(rootCmd.OutOrStdout())
-	case "zsh":
-		err = rootCmd.GenZshCompletion(rootCmd.OutOrStdout())
+	case "fish":
+		err = rootCmd.GenFishCompletion(rootCmd.OutOrStdout(), true)
 	case "powershell":
 		err = rootCmd.GenPowerShellCompletion(rootCmd.OutOrStdout())
+	case "zsh":
+		err = rootCmd.GenZshCompletion(rootCmd.OutOrStdout())
 	case "fail":
 		err = errors.New("failure injection")
 	default:

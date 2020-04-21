@@ -10,7 +10,7 @@ const (
 	defaultWorkers = 10
 )
 
-// logical is functions from api.Logical() used by Vaku.
+// logical is functions from api.Logical() used by Vaku. Helps with testing.
 type logical interface {
 	Delete(path string) (*api.Secret, error)
 	List(path string) (*api.Secret, error)
@@ -20,17 +20,13 @@ type logical interface {
 
 // Client has all Vaku functions and wraps Vault API clients.
 type Client struct {
+	// vc is the vault client.
 	vc *api.Client
+	// vl wraps vc.Logical() for easy testing.
 	vl logical
+
+	// dc is a recursive Client for operations with a source and destination.
 	dc *Client
-
-	// src is the default client and also used as dst when dst is nil.
-	src *api.Client
-	dst *api.Client
-
-	// wrap api.Client.Logical() in an interface.
-	srcL logical
-	dstL logical
 
 	// workers is the max number of concurrent operations against vault.
 	workers int
@@ -61,8 +57,6 @@ type withVaultClient struct {
 func (o withVaultClient) apply(c *Client) error {
 	c.vc = o.client
 	c.vl = o.client.Logical()
-	c.src = o.client
-	c.srcL = o.client.Logical()
 	return nil
 }
 
@@ -70,21 +64,17 @@ func (o withVaultClient) apply(c *Client) error {
 // and destination (copy, move, etc...). If unset the default client will be used as the source and
 // destination.
 func WithVaultDstClient(c *api.Client) Option {
-	return withDstVaultClient{c}
+	return withVaultDstClient{c}
 }
 
-type withDstVaultClient struct {
+type withVaultDstClient struct {
 	client *api.Client
 }
 
-func (o withDstVaultClient) apply(c *Client) error {
-	c.dc = &Client{
-		vc: o.client,
-		vl: o.client.Logical(),
-		dc: c,
-	}
-	c.dst = o.client
-	c.dstL = o.client.Logical()
+func (o withVaultDstClient) apply(c *Client) error {
+	c.dc.vc = o.client
+	c.dc.vl = o.client.Logical()
+	// c.dc.dc = c
 	return nil
 }
 
@@ -100,6 +90,7 @@ type withWorkers uint
 
 func (o withWorkers) apply(c *Client) error {
 	c.workers = int(o)
+	c.dc.workers = int(o)
 	return nil
 }
 
@@ -114,6 +105,7 @@ type withabsolutePath bool
 
 func (o withabsolutePath) apply(c *Client) error {
 	c.absolutePath = bool(o)
+	c.dc.absolutePath = bool(o)
 	return nil
 }
 
@@ -123,6 +115,7 @@ func NewClient(opts ...Option) (*Client, error) {
 	client := &Client{
 		workers: defaultWorkers,
 	}
+	client.dc = client
 
 	// apply options
 	for _, opt := range opts {
@@ -132,15 +125,14 @@ func NewClient(opts ...Option) (*Client, error) {
 		}
 	}
 
-	// set dst to src if dst is unspecified
-	if client.dst == nil && client.src != nil {
-		client.dst = client.src
-		client.dstL = client.srcL
-	}
-
-	if client.dc == nil {
-		client.dc = client
-	}
+	// // set destination client to source if nil
+	// if client.dc == nil {
+	// 	client.dc = client
+	// } else {
+	// 	// otherwise match destination and client options
+	// 	client.dc.workers = client.workers
+	// 	client.dc.absolutePath = client.absolutePath
+	// }
 
 	return client, nil
 }

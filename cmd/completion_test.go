@@ -20,12 +20,16 @@ func TestCompletion(t *testing.T) {
 			giveArgs: []string{"bash"},
 		},
 		{
-			name:     "zsh",
-			giveArgs: []string{"zsh"},
+			name:     "fish",
+			giveArgs: []string{"fish"},
 		},
 		{
 			name:     "powershell",
 			giveArgs: []string{"powershell"},
+		},
+		{
+			name:     "zsh",
+			giveArgs: []string{"zsh"},
 		},
 		{
 			name:     "no args",

@@ -59,6 +59,14 @@ func TrimMapKeyPrefix(m map[string]map[string]interface{}, prefix string) {
 	}
 }
 
+// EnsureMapKeyPrefix ensures a prefix for every key in a map
+func EnsureMapKeyPrefix(m map[string]map[string]interface{}, prefix string) {
+	for k, v := range m {
+		delete(m, k)
+		m[EnsurePrefix(k, prefix)] = v
+	}
+}
+
 // waitFuncOnChan takes a function like waitgroup.Wait() and provides a channel that can be read
 // after the function returns. Makes it easy to wait inside of a select statement.
 func waitFuncOnChan(waitFunc func()) <-chan bool {
@@ -80,4 +88,11 @@ func errFuncOnChan(errFunc func() error) <-chan error {
 		close(errC)
 	}()
 	return errC
+}
+
+// mergeMaps merges m2 into m1, preferring data from m2
+func mergeMaps(m1, m2 map[string]map[string]interface{}) {
+	for k, v := range m2 {
+		m1[k] = v
+	}
 }

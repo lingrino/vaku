@@ -324,3 +324,119 @@ func TestTrimListPrefix(t *testing.T) {
 		})
 	}
 }
+
+func TestTrimMapKeyPrefix(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		giveMap    map[string]map[string]interface{}
+		givePrefix string
+		want       map[string]map[string]interface{}
+	}{
+		{
+			giveMap: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+			givePrefix: "foo",
+			want: map[string]map[string]interface{}{
+				"bar": {"a": "b"},
+			},
+		},
+		{
+			giveMap: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+			givePrefix: "foo/",
+			want: map[string]map[string]interface{}{
+				"bar": {"a": "b"},
+			},
+		},
+		{
+			giveMap: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+			givePrefix: "fo",
+			want: map[string]map[string]interface{}{
+				"o/bar": {"a": "b"},
+			},
+		},
+		{
+			giveMap: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+			givePrefix: "fooo",
+			want: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.givePrefix, func(t *testing.T) {
+			t.Parallel()
+
+			TrimMapKeyPrefix(tt.giveMap, tt.givePrefix)
+
+			assert.Equal(t, tt.want, tt.giveMap)
+		})
+	}
+}
+
+func TestEnsureMapKeyPrefix(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		giveMap    map[string]map[string]interface{}
+		givePrefix string
+		want       map[string]map[string]interface{}
+	}{
+		{
+			giveMap: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+			givePrefix: "foo",
+			want: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+		},
+		{
+			giveMap: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+			givePrefix: "foo/",
+			want: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+		},
+		{
+			giveMap: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+			givePrefix: "fo",
+			want: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+		},
+		{
+			giveMap: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+			givePrefix: "fooo",
+			want: map[string]map[string]interface{}{
+				"fooo/foo/bar": {"a": "b"},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.givePrefix, func(t *testing.T) {
+			t.Parallel()
+
+			EnsureMapKeyPrefix(tt.giveMap, tt.givePrefix)
+
+			assert.Equal(t, tt.want, tt.giveMap)
+		})
+	}
+}

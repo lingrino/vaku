@@ -17,7 +17,7 @@ func (c *Client) PathMove(src, dst string) error {
 		return newWrapErr("", ErrPathMove, err)
 	}
 
-	err = c.PathDelete(src)
+	err = c.dc.PathDelete(src)
 	if err != nil {
 		return newWrapErr(dst, ErrPathMove, err)
 	}

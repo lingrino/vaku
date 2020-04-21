@@ -77,7 +77,7 @@ func TestFolderDelete(t *testing.T) {
 
 			client := testClient(t, tt.giveOptions...)
 			readbackClient := cloneCLient(t, client)
-			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
+			updateLogical(t, client, tt.giveLogical, nil)
 
 			for _, ver := range kvMountVersions {
 				path := addMountToPath(t, tt.give, ver)

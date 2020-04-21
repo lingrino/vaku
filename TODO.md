@@ -2,6 +2,7 @@
 
 ## Soon
 
+- cleanup comments (update docs about dst client)
 - api folder funtions
 - cli path/folder functions
 - api context and cancellations?

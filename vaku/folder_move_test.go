@@ -1,12 +1,13 @@
 package vaku
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPathMove(t *testing.T) {
+func TestFolderMove(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -21,66 +22,58 @@ func TestPathMove(t *testing.T) {
 		wantNilDst     bool
 	}{
 		{
-			name:       "move",
+			name:       "move one",
 			giveSrc:    "test/foo",
-			giveDst:    "move/test/foo",
+			giveDst:    "moveone/test",
 			wantErr:    nil,
 			wantNilSrc: true,
 		},
 		{
-			name:       "overwrite",
-			giveSrc:    "test/foo",
-			giveDst:    "test/value",
+			name:       "move all",
+			giveSrc:    "test",
+			giveDst:    "moveall/test",
 			wantErr:    nil,
 			wantNilSrc: true,
 		},
 		{
-			name:       "bad src mount",
-			giveSrc:    noMountPrefix,
-			giveDst:    "move/test/foo",
-			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathWrite, ErrNilData},
-			wantNilDst: true,
+			name:        "move all absolute path",
+			giveSrc:     "test",
+			giveDst:     "move/test",
+			giveOptions: []Option{WithabsolutePath(true)},
+			wantErr:     nil,
+			wantNilSrc:  true,
 		},
 		{
-			name:       "bad dst mount",
-			giveSrc:    "test/foo",
-			giveDst:    noMountPrefix,
-			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathWrite, ErrVaultWrite},
-			wantNilDst: true,
-		},
-		{
-			name:    "inject read",
-			giveSrc: "test/foo",
-			giveDst: "move/injectread",
+			name:    "read err",
+			giveSrc: "test/inner/again",
+			giveDst: "readerr/test",
 			giveSrcLogical: &errLogical{
 				err: errInject,
 				op:  "Read",
 			},
-			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathRead, ErrVaultRead},
+			wantErr:    []error{ErrFolderMove, ErrFolderCopy, ErrFolderRead, ErrFolderReadChan, ErrPathRead, ErrVaultRead},
 			wantNilDst: true,
 		},
 		{
-			name:    "inject write",
-			giveSrc: "test/foo",
-			giveDst: "move/injectwrite",
-			giveDstLogical: &errLogical{
+			name:    "write err",
+			giveSrc: "test/inner/again",
+			giveDst: "writerr/test",
+			giveSrcLogical: &errLogical{
 				err: errInject,
 				op:  "Write",
 			},
-			wantErr:    []error{ErrPathMove, ErrPathCopy, ErrPathWrite, ErrVaultWrite},
+			wantErr:    []error{ErrFolderMove, ErrFolderCopy, ErrFolderWrite, ErrPathWrite, ErrVaultWrite},
 			wantNilDst: true,
 		},
 		{
-			name:    "inject delete",
-			giveSrc: "test/foo",
-			giveDst: "move/injectdelete",
+			name:    "delete err",
+			giveSrc: "test/inner/again",
+			giveDst: "writerr/test",
 			giveSrcLogical: &errLogical{
 				err: errInject,
 				op:  "Delete",
 			},
-			wantErr:    []error{ErrPathMove, ErrPathDelete, ErrVaultDelete},
-			wantNilSrc: false,
-			wantNilDst: false,
+			wantErr: []error{ErrFolderMove, ErrFolderDelete, ErrPathDelete, ErrVaultDelete},
 		},
 	}
 
@@ -100,16 +93,19 @@ func TestPathMove(t *testing.T) {
 					pathS := addMountToPath(t, tt.giveSrc, ver[0])
 					pathD := addMountToPath(t, tt.giveDst, ver[1])
 
-					orig, err := readbackClient.PathRead(pathS)
+					orig, err := readbackClient.FolderRead(context.Background(), pathS)
 					assert.NoError(t, err)
+					TrimMapKeyPrefix(orig, pathS)
 
-					err = c.PathMove(pathS, pathD)
+					err = c.FolderMove(context.Background(), pathS, pathD)
 					compareErrors(t, err, tt.wantErr)
 
-					readBackS, errS := readbackClient.PathRead(pathS)
-					readBackD, errD := readbackClient.dc.PathRead(pathD)
+					readBackS, errS := readbackClient.FolderRead(context.Background(), pathS)
+					readBackD, errD := readbackClient.dc.FolderRead(context.Background(), pathD)
 					assert.NoError(t, errS)
 					assert.NoError(t, errD)
+					TrimMapKeyPrefix(readBackS, pathS)
+					TrimMapKeyPrefix(readBackD, pathD)
 
 					if tt.wantNilSrc {
 						assert.Nil(t, readBackS)

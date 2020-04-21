@@ -146,7 +146,9 @@ func testClientDiffDst(t *testing.T, opts ...Option) *Client {
 func cloneCLient(t *testing.T, c *Client) *Client {
 	t.Helper()
 
+	dc := *c.dc
 	cpy := *c
+	cpy.dc = &dc
 	return &cpy
 }
 
@@ -198,19 +200,19 @@ func updateLogical(t *testing.T, c *Client, srcL logical, dstL logical) {
 	if srcL != nil {
 		sl, ok := srcL.(*errLogical)
 		if ok {
-			sl.realL = c.srcL
-			c.srcL = sl
+			sl.realL = c.vl
+			c.vl = sl
 		} else {
-			c.srcL = srcL
+			c.vl = srcL
 		}
 	}
 	if dstL != nil {
 		dl, ok := dstL.(*errLogical)
 		if ok {
-			dl.realL = c.dstL
-			c.dstL = dl
+			dl.realL = c.dc.vl
+			c.dc.vl = dl
 		} else {
-			c.dstL = dstL
+			c.dc.vl = dstL
 		}
 	}
 }
@@ -236,18 +238,4 @@ func compareErrors(t *testing.T, err error, el []error) {
 	}
 
 	assert.Nil(t, err)
-}
-
-func TestE(t *testing.T) {
-	var errOne = errors.New("one")
-	var errSecond = errors.New("second")
-	var errTree = errors.New("tree")
-
-	err := newWrapErr("1", errOne, nil)
-	err = newWrapErr("2", errSecond, err)
-	err = newWrapErr("3", errTree, err)
-
-	exp := []error{errTree, errSecond, errOne}
-
-	compareErrors(t, err, exp)
 }

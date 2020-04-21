@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	// ErrPathList when PathList/pathListDst fails.
+	// ErrPathList when PathList fails.
 	ErrPathList = errors.New("path list")
 	// ErrVaultList when the underlying Vault API list fails.
 	ErrVaultList = errors.New("vault list")
@@ -15,17 +15,7 @@ var (
 
 // PathList lists paths at a path.
 func (c *Client) PathList(p string) ([]string, error) {
-	return c.pathList(c.srcL, p)
-}
-
-// pathListDst lists paths at a path.
-func (c *Client) pathListDst(p string) ([]string, error) {
-	return c.pathList(c.dstL, p)
-}
-
-// pathList does the actual list.
-func (c *Client) pathList(l logical, p string) ([]string, error) {
-	secret, err := l.List(p)
+	secret, err := c.vl.List(p)
 	if err != nil {
 		return nil, newWrapErr(p, ErrPathList, newWrapErr(err.Error(), ErrVaultList, nil))
 	}

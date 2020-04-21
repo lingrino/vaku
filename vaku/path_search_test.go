@@ -100,7 +100,7 @@ func TestPathSearch(t *testing.T) {
 			t.Parallel()
 
 			client := testClient(t, tt.giveOptions...)
-			updateLogical(t, client, tt.giveLogical, tt.giveLogical)
+			updateLogical(t, client, tt.giveLogical, nil)
 
 			for _, ver := range kvMountVersions {
 				path := addMountToPath(t, tt.give, ver)
