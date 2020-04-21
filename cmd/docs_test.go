@@ -22,7 +22,7 @@ func TestDocs(t *testing.T) {
 		},
 		{
 			name:     "failure",
-			giveArgs: []string{"///"},
+			giveArgs: []string{"//\\#\\--%@&*/"},
 			wantErr:  "failed to generate markdown docs",
 		},
 		{
