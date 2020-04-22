@@ -19,7 +19,12 @@ func (c *Client) PathSearch(p, s string) (bool, error) {
 		return false, newWrapErr(p, ErrPathSearch, err)
 	}
 
-	return searchSecret(read, s)
+	match, err := searchSecret(read, s)
+	if err != nil {
+		return false, newWrapErr(p, ErrPathSearch, err)
+	}
+
+	return match, nil
 }
 
 // searchSecret does the actual search.
@@ -30,7 +35,7 @@ func searchSecret(secret map[string]interface{}, search string) (bool, error) {
 		}
 		vjson, err := json.Marshal(v)
 		if err != nil {
-			return false, newWrapErr("", ErrPathSearch, ErrJSONMarshall)
+			return false, newWrapErr("", ErrJSONMarshall, nil)
 		}
 		vstr := string(vjson)
 		if strings.Contains(vstr, search) {
