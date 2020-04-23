@@ -68,7 +68,7 @@ func TestCompletion(t *testing.T) {
 	}
 }
 
-// TestRunCompletion explicitly with a nil command
+// TestRunCompletion explicitly with a nil command.
 func TestRunCompletion(t *testing.T) {
 	err := runCompletion(nil, "")
 	assert.True(t, errors.Is(err, errCmpNilRoot))

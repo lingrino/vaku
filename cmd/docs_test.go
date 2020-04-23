@@ -51,7 +51,7 @@ func TestDocs(t *testing.T) {
 	}
 }
 
-// TestRunDocs explicitly with a nil command
+// TestRunDocs explicitly with a nil command.
 func TestRunDocs(t *testing.T) {
 	err := runDocs(nil, "")
 	assert.True(t, errors.Is(err, errDocNilRoot))

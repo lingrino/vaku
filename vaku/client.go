@@ -96,7 +96,7 @@ func (o withWorkers) apply(c *Client) error {
 
 // WithabsolutePath sets the output format for all returned paths. Default path output is a relative
 // path, trimmed up to the path input. Pass WithabsolutePath(true) to set path output to the entire
-// path. Example: List(secret/foo) -> "bar" OR "secret/foo/bar"
+// path. Example: List(secret/foo) -> "bar" OR "secret/foo/bar".
 func WithabsolutePath(b bool) Option {
 	return withabsolutePath(b)
 }

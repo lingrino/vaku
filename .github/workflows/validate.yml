@@ -23,15 +23,15 @@ jobs:
         run: goreleaser check
       - name: Go fmt
         run: test -z $(gofmt -l -w -s vaku/)
+      - name: Lint
+        run: golangci-lint run --out-format github-actions
       - name: Prep Coverage
-        run: |
-          cc-test-reporter before-build
+        run: cc-test-reporter before-build
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       - name: Run Tests
         run: go test -cover -coverprofile=c.out -covermode=atomic -race -v ./...
       - name: Upload Coverage
-        run: |
-          cc-test-reporter after-build -p "github.com/${GITHUB_REPOSITORY}"
+        run: cc-test-reporter after-build -p "github.com/${GITHUB_REPOSITORY}"
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}

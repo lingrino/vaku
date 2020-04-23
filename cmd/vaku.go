@@ -63,7 +63,7 @@ func newVakuCmd(version string) *cobra.Command {
 	return cmd
 }
 
-// Execute runs Vaku
+// Execute runs Vaku.
 func Execute(version string) int {
 	vc := newVakuCmd(version)
 

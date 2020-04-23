@@ -30,13 +30,13 @@ func TestExecute(t *testing.T) {
 	assert.Equal(t, exitFail, code)
 }
 
-// TestHasExample tests that every command has an example
+// TestHasExample tests that every command has an example.
 func TestHasExample(t *testing.T) {
 	rootCmd := newVakuCmd("")
 	assert.True(t, allHasExample(rootCmd))
 }
 
-// allHasExample recursively checks a command and it's children for example functions
+// allHasExample recursively checks a command and it's children for example functions.
 func allHasExample(cmds ...*cobra.Command) bool {
 	res := true
 	for _, cmd := range cmds {

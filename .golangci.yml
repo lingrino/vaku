@@ -13,6 +13,7 @@ linters:
     - goconst
     - gocritic
     - gocyclo
+    - godot
     - godox
     - gofmt
     - goimports
@@ -26,6 +27,7 @@ linters:
     - lll
     - misspell
     - nakedret
+    - nestif
     - prealloc
     - rowserrcheck
     - scopelint
@@ -39,9 +41,9 @@ linters:
     - varcheck
     - whitespace
   disable:
-    - wsl # too strict
     - interfacer # deprecated
     - maligned # not worth savings
+    - wsl # too strict
 
 linters-settings:
   dupl:

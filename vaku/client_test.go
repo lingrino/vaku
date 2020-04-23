@@ -94,7 +94,7 @@ func TestNewClient(t *testing.T) {
 	}
 }
 
-// withError returns the passed in error for Option error injection
+// withError returns the passed in error for Option error injection.
 func withError(e error) Option {
 	return withErrorOpt{e}
 }
@@ -107,7 +107,7 @@ func (o withErrorOpt) apply(c *Client) error {
 	return o.err
 }
 
-// newDefaultVaultClient creates a default vault client and fails on error
+// newDefaultVaultClient creates a default vault client and fails on error.
 func newDefaultVaultClient(t *testing.T) *api.Client {
 	t.Helper()
 
@@ -118,7 +118,7 @@ func newDefaultVaultClient(t *testing.T) *api.Client {
 	return client
 }
 
-// assertClientsEqual compares two Clients
+// assertClientsEqual compares two Clients.
 func assertClientsEqual(t *testing.T, expected *Client, actual *Client) {
 	if expected == nil {
 		assert.Nil(t, actual)

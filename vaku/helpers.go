@@ -10,12 +10,12 @@ func IsFolder(p string) bool {
 	return strings.HasSuffix(p, "/")
 }
 
-// MakeFolder adds a slash to the end of a path if it doesn't already have one
+// MakeFolder adds a slash to the end of a path if it doesn't already have one.
 func MakeFolder(p string) string {
 	return KeyJoin(p, "/")
 }
 
-// EnsurePrefix adds a prefix to a path if it doesn't already have it
+// EnsurePrefix adds a prefix to a path if it doesn't already have it.
 func EnsurePrefix(p, pfx string) string {
 	if strings.HasPrefix(p, pfx) {
 		return p
@@ -37,21 +37,21 @@ func PathJoin(p ...string) string {
 	return strings.TrimSuffix(KeyJoin(p...), "/")
 }
 
-// PrefixList adds a prefix to every item in a list
+// PrefixList adds a prefix to every item in a list.
 func PrefixList(list []string, prefix string) {
 	for i, v := range list {
 		list[i] = KeyJoin(prefix, v)
 	}
 }
 
-// TrimListPrefix removes a prefix from every item in a list
+// TrimListPrefix removes a prefix from every item in a list.
 func TrimListPrefix(list []string, prefix string) {
 	for i, v := range list {
 		list[i] = KeyJoin(strings.TrimPrefix(v, prefix))
 	}
 }
 
-// TrimMapKeyPrefix removes a prefix from every key in a map
+// TrimMapKeyPrefix removes a prefix from every key in a map.
 func TrimMapKeyPrefix(m map[string]map[string]interface{}, prefix string) {
 	for k, v := range m {
 		delete(m, k)
@@ -59,7 +59,7 @@ func TrimMapKeyPrefix(m map[string]map[string]interface{}, prefix string) {
 	}
 }
 
-// EnsureMapKeyPrefix ensures a prefix for every key in a map
+// EnsureMapKeyPrefix ensures a prefix for every key in a map.
 func EnsureMapKeyPrefix(m map[string]map[string]interface{}, prefix string) {
 	for k, v := range m {
 		delete(m, k)
@@ -90,7 +90,7 @@ func errFuncOnChan(errFunc func() error) <-chan error {
 	return errC
 }
 
-// mergeMaps merges m2 into m1, preferring data from m2
+// mergeMaps merges m2 into m1, preferring data from m2.
 func mergeMaps(m1, m2 map[string]map[string]interface{}) {
 	for k, v := range m2 {
 		m1[k] = v

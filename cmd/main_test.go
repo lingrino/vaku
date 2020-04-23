@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// prepCmd sets args/output to test values and returns stdin/stderr writers
+// prepCmd sets args/output to test values and returns stdin/stderr writers.
 func prepCmd(t *testing.T, cmd *cobra.Command, args []string) (*bytes.Buffer, *bytes.Buffer) {
 	t.Helper()
 
@@ -21,7 +21,7 @@ func prepCmd(t *testing.T, cmd *cobra.Command, args []string) (*bytes.Buffer, *b
 	return &out, &err
 }
 
-// assertError checks an error against an expected string (or nil) in that error
+// assertError checks an error against an expected string (or nil) in that error.
 func assertError(t *testing.T, err error, contains string) {
 	t.Helper()
 
