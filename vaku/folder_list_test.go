@@ -70,7 +70,7 @@ func TestFolderList(t *testing.T) {
 				list, err := client.FolderList(context.Background(), path)
 				compareErrors(t, err, tt.wantErr)
 
-				TrimListPrefix(list, ver)
+				TrimPrefixList(list, ver)
 				assert.ElementsMatch(t, tt.want, list)
 			}
 		})

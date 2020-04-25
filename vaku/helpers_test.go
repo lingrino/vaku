@@ -6,6 +6,53 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestPathJoin(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		give []string
+		want string
+	}{
+		{
+			give: []string{"/"},
+			want: "/",
+		},
+		{
+			give: []string{"a/"},
+			want: "a/",
+		},
+		{
+			give: []string{"b", ""},
+			want: "b",
+		},
+		{
+			give: []string{"a/b", "c"},
+			want: "a/b/c",
+		},
+		{
+			give: []string{"d/e/", "/f"},
+			want: "d/e/f",
+		},
+		{
+			give: []string{"/g/h/", "/i/"},
+			want: "g/h/i/",
+		},
+		{
+			give: []string{"/j/", "/k/l", "m"},
+			want: "j/k/l/m",
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.want, func(t *testing.T) {
+			t.Parallel()
+
+			assert.Equal(t, tt.want, PathJoin(tt.give...))
+		})
+	}
+}
+
 func TestIsFolder(t *testing.T) {
 	t.Parallel()
 
@@ -53,7 +100,7 @@ func TestIsFolder(t *testing.T) {
 	}
 }
 
-func TestMakeFolder(t *testing.T) {
+func TestEnsureFolder(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -87,7 +134,7 @@ func TestMakeFolder(t *testing.T) {
 		t.Run(tt.give, func(t *testing.T) {
 			t.Parallel()
 
-			assert.Equal(t, tt.want, MakeFolder(tt.give))
+			assert.Equal(t, tt.want, EnsureFolder(tt.give))
 		})
 	}
 }
@@ -147,101 +194,7 @@ func TestEnsurePrefix(t *testing.T) {
 	}
 }
 
-func TestKeyJoin(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		give []string
-		want string
-	}{
-		{
-			give: []string{"/"},
-			want: "/",
-		},
-		{
-			give: []string{"a/"},
-			want: "a/",
-		},
-		{
-			give: []string{"b", ""},
-			want: "b",
-		},
-		{
-			give: []string{"a/b", "c"},
-			want: "a/b/c",
-		},
-		{
-			give: []string{"d/e/", "/f"},
-			want: "d/e/f",
-		},
-		{
-			give: []string{"/g/h/", "/i/"},
-			want: "g/h/i/",
-		},
-		{
-			give: []string{"/j/", "/k/l", "m"},
-			want: "j/k/l/m",
-		},
-	}
-
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.want, func(t *testing.T) {
-			t.Parallel()
-
-			assert.Equal(t, tt.want, KeyJoin(tt.give...))
-		})
-	}
-}
-
-func TestPathJoin(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		give []string
-		want string
-	}{
-		{
-			give: []string{"/"},
-			want: "",
-		},
-		{
-			give: []string{"a/"},
-			want: "a",
-		},
-		{
-			give: []string{"b", ""},
-			want: "b",
-		},
-		{
-			give: []string{"a/b", "c"},
-			want: "a/b/c",
-		},
-		{
-			give: []string{"d/e/", "/f"},
-			want: "d/e/f",
-		},
-		{
-			give: []string{"/g/h/", "/i/"},
-			want: "g/h/i",
-		},
-		{
-			give: []string{"/j/", "/k/l", "m"},
-			want: "j/k/l/m",
-		},
-	}
-
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.want, func(t *testing.T) {
-			t.Parallel()
-
-			assert.Equal(t, tt.want, PathJoin(tt.give...))
-		})
-	}
-}
-
-func TestPrefixList(t *testing.T) {
+func TestEnsurePrefixList(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -276,14 +229,14 @@ func TestPrefixList(t *testing.T) {
 		t.Run(tt.givePrefix, func(t *testing.T) {
 			t.Parallel()
 
-			PrefixList(tt.giveList, tt.givePrefix)
+			EnsurePrefixList(tt.giveList, tt.givePrefix)
 
 			assert.Equal(t, tt.want, tt.giveList)
 		})
 	}
 }
 
-func TestTrimListPrefix(t *testing.T) {
+func TestTrimPrefixList(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -318,72 +271,14 @@ func TestTrimListPrefix(t *testing.T) {
 		t.Run(tt.givePrefix, func(t *testing.T) {
 			t.Parallel()
 
-			TrimListPrefix(tt.giveList, tt.givePrefix)
+			TrimPrefixList(tt.giveList, tt.givePrefix)
 
 			assert.Equal(t, tt.want, tt.giveList)
 		})
 	}
 }
 
-func TestTrimMapKeyPrefix(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		giveMap    map[string]map[string]interface{}
-		givePrefix string
-		want       map[string]map[string]interface{}
-	}{
-		{
-			giveMap: map[string]map[string]interface{}{
-				"foo/bar": {"a": "b"},
-			},
-			givePrefix: "foo",
-			want: map[string]map[string]interface{}{
-				"bar": {"a": "b"},
-			},
-		},
-		{
-			giveMap: map[string]map[string]interface{}{
-				"foo/bar": {"a": "b"},
-			},
-			givePrefix: "foo/",
-			want: map[string]map[string]interface{}{
-				"bar": {"a": "b"},
-			},
-		},
-		{
-			giveMap: map[string]map[string]interface{}{
-				"foo/bar": {"a": "b"},
-			},
-			givePrefix: "fo",
-			want: map[string]map[string]interface{}{
-				"o/bar": {"a": "b"},
-			},
-		},
-		{
-			giveMap: map[string]map[string]interface{}{
-				"foo/bar": {"a": "b"},
-			},
-			givePrefix: "fooo",
-			want: map[string]map[string]interface{}{
-				"foo/bar": {"a": "b"},
-			},
-		},
-	}
-
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.givePrefix, func(t *testing.T) {
-			t.Parallel()
-
-			TrimMapKeyPrefix(tt.giveMap, tt.givePrefix)
-
-			assert.Equal(t, tt.want, tt.giveMap)
-		})
-	}
-}
-
-func TestEnsureMapKeyPrefix(t *testing.T) {
+func TestEnsurePrefixMap(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -434,7 +329,65 @@ func TestEnsureMapKeyPrefix(t *testing.T) {
 		t.Run(tt.givePrefix, func(t *testing.T) {
 			t.Parallel()
 
-			EnsureMapKeyPrefix(tt.giveMap, tt.givePrefix)
+			EnsurePrefixMap(tt.giveMap, tt.givePrefix)
+
+			assert.Equal(t, tt.want, tt.giveMap)
+		})
+	}
+}
+
+func TestTrimPrefixMap(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		giveMap    map[string]map[string]interface{}
+		givePrefix string
+		want       map[string]map[string]interface{}
+	}{
+		{
+			giveMap: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+			givePrefix: "foo",
+			want: map[string]map[string]interface{}{
+				"bar": {"a": "b"},
+			},
+		},
+		{
+			giveMap: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+			givePrefix: "foo/",
+			want: map[string]map[string]interface{}{
+				"bar": {"a": "b"},
+			},
+		},
+		{
+			giveMap: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+			givePrefix: "fo",
+			want: map[string]map[string]interface{}{
+				"o/bar": {"a": "b"},
+			},
+		},
+		{
+			giveMap: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+			givePrefix: "fooo",
+			want: map[string]map[string]interface{}{
+				"foo/bar": {"a": "b"},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.givePrefix, func(t *testing.T) {
+			t.Parallel()
+
+			TrimPrefixMap(tt.giveMap, tt.givePrefix)
 
 			assert.Equal(t, tt.want, tt.giveMap)
 		})

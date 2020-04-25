@@ -95,7 +95,7 @@ func TestFolderMove(t *testing.T) {
 
 					orig, err := readbackClient.FolderRead(context.Background(), pathS)
 					assert.NoError(t, err)
-					TrimMapKeyPrefix(orig, pathS)
+					TrimPrefixMap(orig, pathS)
 
 					err = c.FolderMove(context.Background(), pathS, pathD)
 					compareErrors(t, err, tt.wantErr)
@@ -104,8 +104,8 @@ func TestFolderMove(t *testing.T) {
 					readBackD, errD := readbackClient.dc.FolderRead(context.Background(), pathD)
 					assert.NoError(t, errS)
 					assert.NoError(t, errD)
-					TrimMapKeyPrefix(readBackS, pathS)
-					TrimMapKeyPrefix(readBackD, pathD)
+					TrimPrefixMap(readBackS, pathS)
+					TrimPrefixMap(readBackD, pathD)
 
 					if tt.wantNilSrc {
 						assert.Nil(t, readBackS)

@@ -10,8 +10,7 @@ var (
 	ErrFolderCopy = errors.New("folder copy")
 )
 
-// FolderCopy copies data at a source folder to a destination folder. Client must have been
-// initialized using WithDstClient() when copying across vault servers.
+// FolderCopy copies data at a source folder to a destination folder..
 func (c *Client) FolderCopy(ctx context.Context, src, dst string) error {
 	read, err := c.FolderRead(ctx, src)
 	if err != nil {
@@ -20,9 +19,9 @@ func (c *Client) FolderCopy(ctx context.Context, src, dst string) error {
 
 	// Switch the key prefixes from src to dst
 	if c.absolutePath {
-		TrimMapKeyPrefix(read, src)
+		TrimPrefixMap(read, src)
 	}
-	EnsureMapKeyPrefix(read, dst)
+	EnsurePrefixMap(read, dst)
 
 	err = c.dc.FolderWrite(ctx, read)
 	if err != nil {

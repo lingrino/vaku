@@ -103,7 +103,7 @@ func TestFolderSearch(t *testing.T) {
 				matches, err := client.FolderSearch(context.Background(), path, tt.giveSearch)
 				compareErrors(t, err, tt.wantErr)
 
-				TrimListPrefix(matches, ver)
+				TrimPrefixList(matches, ver)
 				assert.ElementsMatch(t, tt.want, matches)
 			}
 		})

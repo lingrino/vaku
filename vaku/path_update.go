@@ -9,8 +9,7 @@ var (
 	ErrPathUpdate = errors.New("path update")
 )
 
-// PathUpdate updates a path with data. Existing data is merged with new data. Precedence is given
-// to new data.
+// PathUpdate updates a path with data. New data (precedence) is merged with existing data.
 func (c *Client) PathUpdate(p string, d map[string]interface{}) error {
 	if d == nil {
 		return newWrapErr(p, ErrPathUpdate, ErrNilData)

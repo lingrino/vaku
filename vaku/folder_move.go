@@ -11,7 +11,6 @@ var (
 )
 
 // FolderMove moves data at a source folder to a destination folder. Source is deleted after copy.
-// Client must have been initialized using WithDstClient() when moving across vault servers.
 func (c *Client) FolderMove(ctx context.Context, src, dst string) error {
 	err := c.dc.FolderCopy(ctx, src, dst)
 	if err != nil {

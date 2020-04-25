@@ -2,8 +2,6 @@
 
 ## Soon
 
-- cleanup comments (update docs about dst client)
-- api folder funtions
 - cli path/folder functions
 - api context and cancellations?
 - cli flags for timeouts
@@ -17,7 +15,6 @@
 - doc.go in api
 - further parallelize tests?
 - graceful worker shutdown <https://callistaenterprise.se/blogg/teknik/2019/10/05/go-worker-cancellation/>
-- cli checks for updates <https://github.com/tcnksm/go-latest>
 - CI to make sure api Version() stays up to date with tags
 
 ## Right Before Release

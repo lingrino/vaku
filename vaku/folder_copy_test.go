@@ -90,8 +90,8 @@ func TestFolderCopy(t *testing.T) {
 					if tt.wantNilDst {
 						assert.Nil(t, readBackD)
 					} else {
-						TrimMapKeyPrefix(readBackS, pathS)
-						TrimMapKeyPrefix(readBackD, pathD)
+						TrimPrefixMap(readBackS, pathS)
+						TrimPrefixMap(readBackD, pathD)
 						assert.Equal(t, readBackS, readBackD)
 					}
 				}

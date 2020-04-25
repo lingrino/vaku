@@ -40,7 +40,7 @@ type Option interface {
 	apply(c *Client) error
 }
 
-// WithVaultClient sets the default Vault client to be used.
+// WithVaultClient sets the Vault client to be used.
 func WithVaultClient(c *api.Client) Option {
 	return withVaultClient{c}
 }
@@ -61,8 +61,7 @@ func (o withVaultClient) apply(c *Client) error {
 }
 
 // WithVaultDstClient sets a separate Vault client to be used only on operations that have a source
-// and destination (copy, move, etc...). If unset the default client will be used as the source and
-// destination.
+// and destination (copy, move, etc...). If unset the source client will be used.
 func WithVaultDstClient(c *api.Client) Option {
 	return withVaultDstClient{c}
 }
@@ -125,23 +124,13 @@ func NewClient(opts ...Option) (*Client, error) {
 		}
 	}
 
-	// // set destination client to source if nil
-	// if client.dc == nil {
-	// 	client.dc = client
-	// } else {
-	// 	// otherwise match destination and client options
-	// 	client.dc.workers = client.workers
-	// 	client.dc.absolutePath = client.absolutePath
-	// }
-
 	return client, nil
 }
 
-// pathToReturn takes a path and returns a path that can be returned to the user, given their
-// formatting preferences.
+// pathToRetur returns a path for the user, given their formatting preferences.
 func (c *Client) pathToReturn(path, root string) string {
 	if c.absolutePath {
 		return EnsurePrefix(path, root)
 	}
-	return KeyJoin(strings.TrimPrefix(path, root))
+	return PathJoin(strings.TrimPrefix(path, root))
 }

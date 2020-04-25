@@ -85,7 +85,7 @@ func TestFolderRead(t *testing.T) {
 				read, err := client.FolderRead(context.Background(), path)
 				compareErrors(t, err, tt.wantErr)
 
-				TrimMapKeyPrefix(read, ver)
+				TrimPrefixMap(read, ver)
 				assert.Equal(t, tt.want, read)
 			}
 		})

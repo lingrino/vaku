@@ -5,14 +5,22 @@ import (
 	"strings"
 )
 
+// PathJoin combines multiple paths into one.
+func PathJoin(p ...string) string {
+	if strings.HasSuffix(p[len(p)-1], "/") {
+		return strings.TrimPrefix(path.Join(p...)+"/", "/")
+	}
+	return strings.TrimPrefix(path.Join(p...), "/")
+}
+
 // IsFolder if path is a folder (ends in "/").
 func IsFolder(p string) bool {
 	return strings.HasSuffix(p, "/")
 }
 
-// MakeFolder adds a slash to the end of a path if it doesn't already have one.
-func MakeFolder(p string) string {
-	return KeyJoin(p, "/")
+// EnsureFolder ensures a path is a folder (adds a trailing "/").
+func EnsureFolder(p string) string {
+	return PathJoin(p, "/")
 }
 
 // EnsurePrefix adds a prefix to a path if it doesn't already have it.
@@ -20,50 +28,36 @@ func EnsurePrefix(p, pfx string) string {
 	if strings.HasPrefix(p, pfx) {
 		return p
 	}
-	return KeyJoin(pfx, p)
+	return PathJoin(pfx, p)
 }
 
-// KeyJoin combines strings into a clean Vault key. Keys may have a trailing '/' to signify they are
-// a folder.
-func KeyJoin(k ...string) string {
-	if strings.HasSuffix(k[len(k)-1], "/") {
-		return strings.TrimPrefix(path.Join(k...)+"/", "/")
-	}
-	return strings.TrimPrefix(path.Join(k...), "/")
-}
-
-// PathJoin combines strings into a clean Vault path. Paths never end with a '/'.
-func PathJoin(p ...string) string {
-	return strings.TrimSuffix(KeyJoin(p...), "/")
-}
-
-// PrefixList adds a prefix to every item in a list.
-func PrefixList(list []string, prefix string) {
-	for i, v := range list {
-		list[i] = KeyJoin(prefix, v)
+// EnsurePrefixList adds a prefix to every item in a list.
+func EnsurePrefixList(l []string, pfx string) {
+	for i, v := range l {
+		l[i] = PathJoin(pfx, v)
 	}
 }
 
-// TrimListPrefix removes a prefix from every item in a list.
-func TrimListPrefix(list []string, prefix string) {
-	for i, v := range list {
-		list[i] = KeyJoin(strings.TrimPrefix(v, prefix))
+// TrimPrefixList removes a prefix from every item in a list.
+func TrimPrefixList(l []string, pfx string) {
+	for i, v := range l {
+		l[i] = PathJoin(strings.TrimPrefix(v, pfx))
 	}
 }
 
-// TrimMapKeyPrefix removes a prefix from every key in a map.
-func TrimMapKeyPrefix(m map[string]map[string]interface{}, prefix string) {
+// EnsurePrefixMap ensures a prefix for every key in a map.
+func EnsurePrefixMap(m map[string]map[string]interface{}, pfx string) {
 	for k, v := range m {
 		delete(m, k)
-		m[KeyJoin(strings.TrimPrefix(k, prefix))] = v
+		m[EnsurePrefix(k, pfx)] = v
 	}
 }
 
-// EnsureMapKeyPrefix ensures a prefix for every key in a map.
-func EnsureMapKeyPrefix(m map[string]map[string]interface{}, prefix string) {
+// TrimPrefixMap removes a prefix from every key in a map.
+func TrimPrefixMap(m map[string]map[string]interface{}, pfx string) {
 	for k, v := range m {
 		delete(m, k)
-		m[EnsurePrefix(k, prefix)] = v
+		m[PathJoin(strings.TrimPrefix(k, pfx))] = v
 	}
 }
 
@@ -79,8 +73,8 @@ func waitFuncOnChan(waitFunc func()) <-chan bool {
 	return done
 }
 
-// errFuncOnChan takes a function like errgroup.Wait() and provides a channel that can be read for the err value
-// that the function returns. Makes it easy to wait inside of a select statement.
+// errFuncOnChan takes a function like errgroup.Wait() and provides a channel that can be read for
+// the err value that the function returns. Makes it easy to wait inside of a select statement.
 func errFuncOnChan(errFunc func() error) <-chan error {
 	errC := make(chan error)
 	go func() {

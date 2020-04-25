@@ -11,8 +11,7 @@ var (
 	ErrPathSearch = errors.New("path search")
 )
 
-// PathSearch searches for a string at a path. Primitive search that does strings.Contains() on
-// string(secret).
+// PathSearch searches for a string at a path.
 func (c *Client) PathSearch(p, s string) (bool, error) {
 	read, err := c.PathRead(p)
 	if err != nil {
@@ -27,7 +26,7 @@ func (c *Client) PathSearch(p, s string) (bool, error) {
 	return match, nil
 }
 
-// searchSecret does the actual search.
+// searchSecret searches a secret for a string.
 func searchSecret(secret map[string]interface{}, search string) (bool, error) {
 	for k, v := range secret {
 		if strings.Contains(k, search) {

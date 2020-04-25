@@ -134,7 +134,7 @@ func TestPathList(t *testing.T) {
 				path := addMountToPath(t, tt.give, ver)
 
 				list, err := client.PathList(path)
-				TrimListPrefix(list, ver)
+				TrimPrefixList(list, ver)
 
 				compareErrors(t, err, tt.wantErr)
 				assert.Equal(t, tt.want, list)

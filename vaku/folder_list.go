@@ -41,7 +41,7 @@ func (c *Client) FolderList(ctx context.Context, p string) ([]string, error) {
 // nil when the work is done.
 func (c *Client) FolderListChan(ctx context.Context, p string) (<-chan string, <-chan error) {
 	// input must be a folder (end in "/")
-	root := MakeFolder(p)
+	root := EnsureFolder(p)
 
 	// eg manages workers reading from the paths channel
 	eg, ctx := errgroup.WithContext(ctx)

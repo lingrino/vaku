@@ -11,7 +11,7 @@ var (
 	ErrVaultRead = errors.New("vault read")
 )
 
-// PathRead gets data at a path.
+// PathRead reads data at a path.
 func (c *Client) PathRead(p string) (map[string]interface{}, error) {
 	secret, err := c.vl.Read(p)
 	if err != nil {

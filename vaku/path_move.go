@@ -9,8 +9,7 @@ var (
 	ErrPathMove = errors.New("path move")
 )
 
-// PathMove moves data at a source path to a destination path (copy + delete). Client must
-// have been initialized using WithDstClient() when moving across vault servers.
+// PathMove moves data at a source path to a destination path (copy + delete).
 func (c *Client) PathMove(src, dst string) error {
 	err := c.PathCopy(src, dst)
 	if err != nil {

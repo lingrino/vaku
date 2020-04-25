@@ -30,7 +30,7 @@ func (c *Client) PathList(p string) ([]string, error) {
 	}
 
 	if c.absolutePath {
-		PrefixList(list, p)
+		EnsurePrefixList(list, p)
 	}
 
 	return list, nil
