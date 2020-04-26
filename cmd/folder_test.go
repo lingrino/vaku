@@ -9,12 +9,12 @@ import (
 func TestFolder(t *testing.T) {
 	t.Parallel()
 
-	vc := newFolderCmd()
-	stdO, stdE := prepCmd(t, vc, nil)
-	assert.Equal(t, "", stdE.String())
+	cli, outW, errW := newTestCLI(t, []string{"folder"})
+	assert.Equal(t, "", errW.String())
 
-	err := vc.Execute()
+	err := cli.cmd.Execute()
+
 	assert.NoError(t, err)
-	assert.Contains(t, stdO.String(), folderShort)
-	assert.Contains(t, stdO.String(), folderLong)
+	assert.Contains(t, outW.String(), folderShort)
+	assert.Contains(t, outW.String(), folderLong)
 }

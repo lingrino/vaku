@@ -1,21 +1,7 @@
 package cmd
 
 import (
-	"bytes"
-	"fmt"
-
 	"github.com/spf13/cobra"
-)
-
-const (
-	exitSuccess = 0
-	exitFail    = 1
-)
-
-// Special strings used for failure injection in tests
-const (
-	failString = "fail"
-	testString = "test"
 )
 
 const (
@@ -38,50 +24,36 @@ API documentation - https://pkg.go.dev/github.com/lingrino/vaku/vaku
 Built by Sean Lingren <sean@lingrino.com>`
 )
 
-func newVakuCmd(version string) *cobra.Command {
+// newVakuCmd sets flags/subcommands and returns the base vaku command.
+func (c *cli) newVakuCmd() *cobra.Command {
+	// base command
 	cmd := &cobra.Command{
 		Use:     vakuUse,
 		Short:   vakuShort,
 		Long:    vakuLong,
 		Example: vakuExample,
 
+		PersistentPreRunE: c.validateVakuFlags,
+
 		// https://github.com/spf13/cobra/issues/914#issuecomment-548411337
 		SilenceErrors: true,
 		SilenceUsage:  true,
 
+		// prevents docs from adding promotional message footer
 		DisableAutoGenTag: true,
 	}
 
+	// add base/persistent flags
+	c.addVakuFlags(cmd)
+
+	// add subcommands
 	cmd.AddCommand(
-		newCompletionCmd(),
-		newDocsCmd(),
-		newPathCmd(),
-		newFolderCmd(),
-		newVersionCmd(version),
+		c.newCompletionCmd(),
+		c.newDocsCmd(),
+		c.newFolderCmd(),
+		c.newPathCmd(),
+		c.newVersionCmd(),
 	)
 
 	return cmd
-}
-
-// Execute runs Vaku.
-func Execute(version string) int {
-	vc := newVakuCmd(version)
-
-	// Test/Failure injection
-	if version == testString || version == failString {
-		var nilout bytes.Buffer
-		vc.SetOut(&nilout)
-		vc.SetErr(&nilout)
-	}
-	if version == failString {
-		vc.SetArgs([]string{failString})
-	}
-
-	err := vc.Execute()
-	if err != nil {
-		fmt.Fprintf(vc.ErrOrStderr(), "Error: %s\n", err)
-		return exitFail
-	}
-
-	return exitSuccess
 }

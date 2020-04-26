@@ -14,13 +14,19 @@ Commands under the path subcommand act on Vault paths. Vaku can list,
 copy, move, search, etc.. on Vault paths.`
 )
 
-func newPathCmd() *cobra.Command {
+func (c *cli) newPathCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     pathUse,
 		Short:   pathShort,
 		Long:    pathLong,
 		Example: pathExample,
+
+		// PersistentPreRunE: c.authVakuClient,
 	}
+
+	cmd.AddCommand(
+		c.newPathListCmd(),
+	)
 
 	return cmd
 }

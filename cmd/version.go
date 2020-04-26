@@ -13,7 +13,7 @@ const (
 	versionExample = "vaku version"
 )
 
-func newVersionCmd(version string) *cobra.Command {
+func (c *cli) newVersionCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     versionUse,
 		Short:   versionShort,
@@ -23,15 +23,13 @@ func newVersionCmd(version string) *cobra.Command {
 
 		DisableFlagsInUseLine: true,
 
-		Run: func(cmd *cobra.Command, args []string) {
-			runVersion(cmd, version)
-		},
+		Run: c.runVersion,
 	}
 
 	return cmd
 }
 
-func runVersion(cmd *cobra.Command, version string) {
-	fmt.Fprintln(cmd.OutOrStdout(), "CLI:", version)
+func (c *cli) runVersion(cmd *cobra.Command, args []string) {
+	fmt.Fprintln(cmd.OutOrStdout(), "CLI:", c.version)
 	fmt.Fprintln(cmd.OutOrStdout(), "API:", vaku.Version())
 }

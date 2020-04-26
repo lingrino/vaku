@@ -9,9 +9,11 @@ import (
 // version is populated at build time by goreleaser
 var version = "dev"
 
+// used for testing
 var executeCMD = cmd.Execute
 var exitCmd = os.Exit
 
 func main() {
-	exitCmd(executeCMD(version))
+	code := executeCMD(version, os.Args[1:], os.Stdout, os.Stderr)
+	exitCmd(code)
 }

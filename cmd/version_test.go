@@ -40,15 +40,16 @@ func TestVersion(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			vc := newVersionCmd(tt.giveVersion)
-			stdO, stdE := prepCmd(t, vc, tt.giveArgs)
-			assert.Equal(t, "", stdE.String())
+			args := append([]string{"version"}, tt.giveArgs...)
+			cli, outW, errW := newTestCLI(t, args)
+			cli.setVersion(tt.giveVersion)
+			assert.Equal(t, "", errW.String())
 
-			err := vc.Execute()
+			err := cli.cmd.Execute()
 
 			assertError(t, err, tt.wantErr)
 			if tt.wantErr == "" {
-				assert.Equal(t, tt.wantOut, stdO.String())
+				assert.Equal(t, tt.wantOut, outW.String())
 			}
 		})
 	}

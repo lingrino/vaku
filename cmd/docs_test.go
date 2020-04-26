@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -37,22 +36,16 @@ func TestDocs(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			vc := newDocsCmd()
-			stdO, stdE := prepCmd(t, vc, tt.giveArgs)
-			assert.Equal(t, "", stdE.String())
+			args := append([]string{"docs"}, tt.giveArgs...)
+			cli, outW, errW := newTestCLI(t, args)
+			assert.Equal(t, "", errW.String())
 
-			err := vc.Execute()
+			err := cli.cmd.Execute()
 
 			assertError(t, err, tt.wantErr)
 			if tt.wantErr == "" {
-				assert.Equal(t, tt.wantOut, stdO.String())
+				assert.Equal(t, tt.wantOut, outW.String())
 			}
 		})
 	}
-}
-
-// TestRunDocs explicitly with a nil command.
-func TestRunDocs(t *testing.T) {
-	err := runDocs(nil, "")
-	assert.True(t, errors.Is(err, errDocNilRoot))
 }

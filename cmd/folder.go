@@ -15,12 +15,14 @@ are designated by paths that end in a '/' such as 'secret/foo/'. Vaku
 can list, copy, move, search, etc.. on Vault folders.`
 )
 
-func newFolderCmd() *cobra.Command {
+func (c *cli) newFolderCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     folderUse,
 		Short:   folderShort,
 		Long:    folderLong,
 		Example: folderExample,
+
+		// PersistentPreRunE: c.authVakuClient,
 	}
 
 	return cmd

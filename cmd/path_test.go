@@ -9,12 +9,12 @@ import (
 func TestPath(t *testing.T) {
 	t.Parallel()
 
-	vc := newPathCmd()
-	stdO, stdE := prepCmd(t, vc, nil)
-	assert.Equal(t, "", stdE.String())
+	cli, outW, errW := newTestCLI(t, []string{"path"})
+	assert.Equal(t, "", errW.String())
 
-	err := vc.Execute()
+	err := cli.cmd.Execute()
+
 	assert.NoError(t, err)
-	assert.Contains(t, stdO.String(), pathShort)
-	assert.Contains(t, stdO.String(), pathLong)
+	assert.Contains(t, outW.String(), pathShort)
+	assert.Contains(t, outW.String(), pathLong)
 }

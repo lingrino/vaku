@@ -15,11 +15,10 @@ const (
 )
 
 var (
-	errDocNilRoot     = errors.New("failed to generate docs for nil root command")
 	errDocGenMarkdown = errors.New("failed to generate markdown docs")
 )
 
-func newDocsCmd() *cobra.Command {
+func (c *cli) newDocsCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Hidden: true,
 
@@ -31,21 +30,14 @@ func newDocsCmd() *cobra.Command {
 
 		DisableFlagsInUseLine: true,
 
-		RunE: func(cmd *cobra.Command, args []string) error {
-			err := runDocs(cmd.Root(), args[0])
-			return err
-		},
+		RunE: c.runDocs,
 	}
 
 	return cmd
 }
 
-func runDocs(rootCmd *cobra.Command, folder string) error {
-	if rootCmd == nil {
-		return errDocNilRoot
-	}
-
-	err := doc.GenMarkdownTree(rootCmd, folder)
+func (c *cli) runDocs(cmd *cobra.Command, args []string) error {
+	err := doc.GenMarkdownTree(cmd.Root(), args[0])
 	if err != nil {
 		return errDocGenMarkdown
 	}

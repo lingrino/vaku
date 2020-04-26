@@ -4,21 +4,22 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
 
-// prepCmd sets args/output to test values and returns stdin/stderr writers.
-func prepCmd(t *testing.T, cmd *cobra.Command, args []string) (*bytes.Buffer, *bytes.Buffer) {
+// newTestCLI returns a CLI ready for running tests
+func newTestCLI(t *testing.T, args []string) (*cli, *bytes.Buffer, *bytes.Buffer) {
 	t.Helper()
 
-	cmd.SetArgs(args)
+	cli := newCLI()
 
-	var out, err bytes.Buffer
-	cmd.SetOut(&out)
-	cmd.SetErr(&err)
+	var outW, errW bytes.Buffer
+	cli.cmd.SetOut(&outW)
+	cli.cmd.SetErr(&errW)
 
-	return &out, &err
+	cli.cmd.SetArgs(args)
+
+	return cli, &outW, &errW
 }
 
 // assertError checks an error against an expected string (or nil) in that error.
@@ -28,7 +29,7 @@ func assertError(t *testing.T, err error, contains string) {
 	if contains == "" {
 		assert.NoError(t, err)
 	} else {
-		assert.NotNil(t, err)
+		assert.Error(t, err)
 		assert.Contains(t, err.Error(), contains)
 	}
 }

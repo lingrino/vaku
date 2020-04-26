@@ -1,9 +1,15 @@
 package vaku
 
 import (
+	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/hashicorp/vault/api"
+)
+
+var (
+	ErrNumWorkers = errors.New("invalid workers")
 )
 
 const (
@@ -73,7 +79,6 @@ type withVaultDstClient struct {
 func (o withVaultDstClient) apply(c *Client) error {
 	c.dc.vc = o.client
 	c.dc.vl = o.client.Logical()
-	// c.dc.dc = c
 	return nil
 }
 
@@ -85,9 +90,12 @@ func WithWorkers(n int) Option {
 	return withWorkers(n)
 }
 
-type withWorkers uint
+type withWorkers int
 
 func (o withWorkers) apply(c *Client) error {
+	if o < 1 {
+		return newWrapErr(fmt.Sprintf("workers must 1 or greater: %d", o), ErrNumWorkers, nil)
+	}
 	c.workers = int(o)
 	c.dc.workers = int(o)
 	return nil

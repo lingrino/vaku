@@ -16,20 +16,22 @@ const (
 # Bash: In ~/.bashrc
 source <(vaku completion bash)
 
-# Zsh: In ~/.zshhrc
-source <(vaku completion zsh)
+# Fish: In ~/.config/fish/config.fish
+vaku completion fish | source -
 
 # Powershell
-Write the contents of 'vaku completion powershell' and source them in your profile`
+Write the contents of 'vaku completion powershell' and source them in your profile
+
+# Zsh: In ~/.zshhrc
+source <(vaku completion zsh)`
 )
 
 var (
-	errCmpNilRoot     = errors.New("failed to print completions for nil root command")
 	errCmpUnsupported = errors.New("unsupported completion type")
 	errCmpFailed      = errors.New("failed to print completions")
 )
 
-func newCompletionCmd() *cobra.Command {
+func (c *cli) newCompletionCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     completionUse,
 		Short:   completionShort,
@@ -37,24 +39,21 @@ func newCompletionCmd() *cobra.Command {
 		Example: completionExample,
 
 		Args:      cobra.ExactArgs(completionArgs),
-		ValidArgs: []string{"zsh", "bash", "powershhell"},
+		ValidArgs: []string{"bash", "fish", "powershhell", "zsh"},
 
-		RunE: func(cmd *cobra.Command, args []string) error {
-			err := runCompletion(cmd.Root(), args[0])
-			return err
-		},
+		DisableFlagsInUseLine: true,
+
+		RunE: c.runCompletion,
 	}
 
 	return cmd
 }
 
-func runCompletion(rootCmd *cobra.Command, completion string) error {
-	if rootCmd == nil {
-		return errCmpNilRoot
-	}
+func (c *cli) runCompletion(cmd *cobra.Command, args []string) error {
+	rootCmd := cmd.Root()
 
 	var err error
-	switch completion {
+	switch args[0] {
 	case "bash":
 		err = rootCmd.GenBashCompletion(rootCmd.OutOrStdout())
 	case "fish":
