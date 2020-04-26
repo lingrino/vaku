@@ -22,6 +22,8 @@ type cli struct {
 	// flags
 	flagAbsPath bool
 	flagFormat  string
+	flagIndent  string
+	flagSort    bool
 	flagWorkers int
 
 	// data

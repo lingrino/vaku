@@ -7,11 +7,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// newTestCLI returns a CLI ready for running tests
+// newTestCLI returns a CLI ready for running tests.
 func newTestCLI(t *testing.T, args []string) (*cli, *bytes.Buffer, *bytes.Buffer) {
 	t.Helper()
 
 	cli := newCLI()
+	cli.flagIndent = ""
 
 	var outW, errW bytes.Buffer
 	cli.cmd.SetOut(&outW)

@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/lingrino/vaku/vaku"
 	"github.com/spf13/cobra"
 )
@@ -30,6 +28,6 @@ func (c *cli) newVersionCmd() *cobra.Command {
 }
 
 func (c *cli) runVersion(cmd *cobra.Command, args []string) {
-	fmt.Fprintln(cmd.OutOrStdout(), "CLI:", c.version)
-	fmt.Fprintln(cmd.OutOrStdout(), "API:", vaku.Version())
+	c.output("CLI: " + c.version)
+	c.output("API: " + vaku.Version())
 }

@@ -90,7 +90,7 @@ func TestPathSearch(t *testing.T) {
 				},
 			},
 			wantSuccess: false,
-			wantErr:     []error{ErrPathSearch, ErrJSONMarshall},
+			wantErr:     []error{ErrPathSearch, ErrJSONMarshal},
 		},
 	}
 

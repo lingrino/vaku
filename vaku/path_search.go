@@ -34,7 +34,7 @@ func searchSecret(secret map[string]interface{}, search string) (bool, error) {
 		}
 		vjson, err := json.Marshal(v)
 		if err != nil {
-			return false, newWrapErr("", ErrJSONMarshall, nil)
+			return false, newWrapErr("", ErrJSONMarshal, nil)
 		}
 		vstr := string(vjson)
 		if strings.Contains(vstr, search) {

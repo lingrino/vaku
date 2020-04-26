@@ -85,7 +85,7 @@ func TestFolderSearch(t *testing.T) {
 				},
 				op: "Read",
 			},
-			wantErr: []error{ErrFolderSearch, ErrJSONMarshall},
+			wantErr: []error{ErrFolderSearch, ErrJSONMarshal},
 		},
 	}
 

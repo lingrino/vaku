@@ -16,6 +16,16 @@ const (
 	flagFormatUse     = "output format: text|json"
 	flagFormatDefault = "text"
 
+	flagIndentName    = "indent-char"
+	flagIndentShort   = "i"
+	flagIndentUse     = "string used for indents"
+	flagIndentDefault = "    "
+
+	flagSortName    = "sort"
+	flagSortShort   = "s"
+	flagSortUse     = "sort output text"
+	flagSortDefault = true
+
 	flagWorkersName    = "workers"
 	flagWorkersShort   = "w"
 	flagWorkersUse     = "number of concurrent workers"
@@ -31,10 +41,12 @@ var (
 func (c *cli) addVakuFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().BoolVarP(&c.flagAbsPath, flagAbsPathName, flagAbsPathShort, flagAbsPathDefault, flagAbsPathUse)
 	cmd.PersistentFlags().StringVar(&c.flagFormat, flagFormatName, flagFormatDefault, flagFormatUse)
+	cmd.PersistentFlags().StringVarP(&c.flagIndent, flagIndentName, flagIndentShort, flagIndentDefault, flagIndentUse)
+	cmd.PersistentFlags().BoolVarP(&c.flagSort, flagSortName, flagSortShort, flagSortDefault, flagSortUse)
 	cmd.PersistentFlags().IntVarP(&c.flagWorkers, flagWorkersName, flagWorkersShort, flagWorkersDefault, flagWorkersUse)
 }
 
-// validateFlags checks if valid flag values were passed. Use as cmd.PersistentPreRunE
+// validateFlags checks if valid flag values were passed. Use as cmd.PersistentPreRunE.
 func (c *cli) validateVakuFlags(cmd *cobra.Command, args []string) error {
 	validationFuncs := []func() error{
 		c.validFormat,
@@ -50,7 +62,7 @@ func (c *cli) validateVakuFlags(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-// validFormat checks if the format flag is a valid option
+// validFormat checks if the format flag is a valid option.
 func (c *cli) validFormat() error {
 	validFormats := []string{"text", "json"}
 
@@ -62,7 +74,7 @@ func (c *cli) validFormat() error {
 	return errFlagInvalidFormat
 }
 
-// validWorkers checks if the workers flag is a valid option
+// validWorkers checks if the workers flag is a valid option.
 func (c *cli) validWorkers() error {
 	if c.flagWorkers < 1 {
 		return errFlagInvalidWorkers

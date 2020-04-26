@@ -31,6 +31,6 @@ func (c *cli) runPathList(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	output(list)
+	c.output(list)
 	return nil
 }
