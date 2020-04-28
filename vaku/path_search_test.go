@@ -99,16 +99,20 @@ func TestPathSearch(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			client := testClient(t, tt.giveOptions...)
-			updateLogical(t, client, tt.giveLogical, nil)
+			client, _ := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
 
 			for _, ver := range kvMountVersions {
-				path := addMountToPath(t, tt.give, ver)
+				ver := ver
+				t.Run(ver, func(t *testing.T) {
+					t.Parallel()
 
-				success, err := client.PathSearch(path, tt.giveSearch)
+					path := addMountToPath(t, tt.give, ver)
 
-				compareErrors(t, err, tt.wantErr)
-				assert.Equal(t, tt.wantSuccess, success)
+					success, err := client.PathSearch(path, tt.giveSearch)
+
+					compareErrors(t, err, tt.wantErr)
+					assert.Equal(t, tt.wantSuccess, success)
+				})
 			}
 		})
 	}

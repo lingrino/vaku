@@ -46,19 +46,22 @@ func TestPathDelete(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			client := testClient(t, tt.giveOptions...)
-			readbackClient := cloneCLient(t, client)
-			updateLogical(t, client, tt.giveLogical, nil)
+			client, rbClient := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
 
 			for _, ver := range kvMountVersions {
-				path := addMountToPath(t, tt.give, ver)
+				ver := ver
+				t.Run(ver, func(t *testing.T) {
+					t.Parallel()
 
-				err := client.PathDelete(path)
-				compareErrors(t, err, tt.wantErr)
+					path := addMountToPath(t, tt.give, ver)
 
-				readBack, err := readbackClient.PathRead(path)
-				assert.NoError(t, err)
-				assert.Nil(t, readBack)
+					err := client.PathDelete(path)
+					compareErrors(t, err, tt.wantErr)
+
+					readBack, err := rbClient.PathRead(path)
+					assert.NoError(t, err)
+					assert.Nil(t, readBack)
+				})
 			}
 		})
 	}

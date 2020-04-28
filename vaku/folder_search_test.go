@@ -94,17 +94,21 @@ func TestFolderSearch(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			client := testClient(t, tt.giveOptions...)
-			updateLogical(t, client, tt.giveLogical, nil)
+			client, _ := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
 
 			for _, ver := range kvMountVersions {
-				path := addMountToPath(t, tt.give, ver)
+				ver := ver
+				t.Run(ver, func(t *testing.T) {
+					t.Parallel()
 
-				matches, err := client.FolderSearch(context.Background(), path, tt.giveSearch)
-				compareErrors(t, err, tt.wantErr)
+					path := addMountToPath(t, tt.give, ver)
 
-				TrimPrefixList(matches, ver)
-				assert.ElementsMatch(t, tt.want, matches)
+					matches, err := client.FolderSearch(context.Background(), path, tt.giveSearch)
+					compareErrors(t, err, tt.wantErr)
+
+					TrimPrefixList(matches, ver)
+					assert.ElementsMatch(t, tt.want, matches)
+				})
 			}
 		})
 	}

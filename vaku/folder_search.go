@@ -3,7 +3,6 @@ package vaku
 import (
 	"context"
 	"errors"
-	"fmt"
 )
 
 var (
@@ -21,7 +20,6 @@ func (c *Client) FolderSearch(ctx context.Context, path, search string) ([]strin
 
 	var matches []string
 	for pth, sec := range read {
-		fmt.Println(sec)
 		found, err := searchSecret(sec, search)
 		if err != nil {
 			return nil, newWrapErr(path, ErrFolderSearch, err)

@@ -75,19 +75,22 @@ func TestFolderDelete(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			client := testClient(t, tt.giveOptions...)
-			readbackClient := cloneCLient(t, client)
-			updateLogical(t, client, tt.giveLogical, nil)
+			client, rbClient := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
 
 			for _, ver := range kvMountVersions {
-				path := addMountToPath(t, tt.give, ver)
+				ver := ver
+				t.Run(ver, func(t *testing.T) {
+					t.Parallel()
 
-				err := client.FolderDelete(context.Background(), path)
-				compareErrors(t, err, tt.wantErr)
+					path := addMountToPath(t, tt.give, ver)
 
-				readBack, err := readbackClient.FolderRead(context.Background(), path)
-				assert.NoError(t, err)
-				assert.Equal(t, tt.wantReadBack, readBack)
+					err := client.FolderDelete(context.Background(), path)
+					compareErrors(t, err, tt.wantErr)
+
+					readBack, err := rbClient.FolderRead(context.Background(), path)
+					assert.NoError(t, err)
+					assert.Equal(t, tt.wantReadBack, readBack)
+				})
 			}
 		})
 	}

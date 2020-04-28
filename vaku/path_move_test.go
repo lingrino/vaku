@@ -94,20 +94,20 @@ func TestPathMove(t *testing.T) {
 				clientDD := testClientDiffDst(t, tt.giveOptions...)
 
 				for _, c := range []*Client{client, clientDD} {
-					readbackClient := cloneCLient(t, c)
+					rbClient := cloneCLient(t, c)
 					updateLogical(t, c, tt.giveSrcLogical, tt.giveDstLogical)
 
 					pathS := addMountToPath(t, tt.giveSrc, ver[0])
 					pathD := addMountToPath(t, tt.giveDst, ver[1])
 
-					orig, err := readbackClient.PathRead(pathS)
+					orig, err := rbClient.PathRead(pathS)
 					assert.NoError(t, err)
 
 					err = c.PathMove(pathS, pathD)
 					compareErrors(t, err, tt.wantErr)
 
-					readBackS, errS := readbackClient.PathRead(pathS)
-					readBackD, errD := readbackClient.dc.PathRead(pathD)
+					readBackS, errS := rbClient.PathRead(pathS)
+					readBackD, errD := rbClient.dc.PathRead(pathD)
 					assert.NoError(t, errS)
 					assert.NoError(t, errD)
 

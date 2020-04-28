@@ -22,8 +22,10 @@ func (c *cli) newFolderCmd() *cobra.Command {
 		Long:    folderLong,
 		Example: folderExample,
 
-		// PersistentPreRunE: c.authVakuClient,
+		PersistentPreRunE: c.initVakuClient,
 	}
+
+	c.addPathFolderFlags(cmd)
 
 	return cmd
 }

@@ -76,17 +76,21 @@ func TestFolderRead(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			client := testClient(t, tt.giveOptions...)
-			updateLogical(t, client, tt.giveLogical, nil)
+			client, _ := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
 
 			for _, ver := range kvMountVersions {
-				path := addMountToPath(t, tt.give, ver)
+				ver := ver
+				t.Run(ver, func(t *testing.T) {
+					t.Parallel()
 
-				read, err := client.FolderRead(context.Background(), path)
-				compareErrors(t, err, tt.wantErr)
+					path := addMountToPath(t, tt.give, ver)
 
-				TrimPrefixMap(read, ver)
-				assert.Equal(t, tt.want, read)
+					read, err := client.FolderRead(context.Background(), path)
+					compareErrors(t, err, tt.wantErr)
+
+					TrimPrefixMap(read, ver)
+					assert.Equal(t, tt.want, read)
+				})
 			}
 		})
 	}

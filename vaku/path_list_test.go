@@ -127,17 +127,21 @@ func TestPathList(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			client := testClient(t, tt.giveOptions...)
-			updateLogical(t, client, tt.giveLogical, nil)
+			client, _ := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
 
 			for _, ver := range kvMountVersions {
-				path := addMountToPath(t, tt.give, ver)
+				ver := ver
+				t.Run(ver, func(t *testing.T) {
+					t.Parallel()
 
-				list, err := client.PathList(path)
-				TrimPrefixList(list, ver)
+					path := addMountToPath(t, tt.give, ver)
 
-				compareErrors(t, err, tt.wantErr)
-				assert.Equal(t, tt.want, list)
+					list, err := client.PathList(path)
+					TrimPrefixList(list, ver)
+
+					compareErrors(t, err, tt.wantErr)
+					assert.Equal(t, tt.want, list)
+				})
 			}
 		})
 	}

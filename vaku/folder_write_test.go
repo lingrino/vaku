@@ -111,24 +111,27 @@ func TestFolderWrite(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			client := testClient(t, tt.giveOptions...)
-			readbackClient := cloneCLient(t, client)
-			updateLogical(t, client, tt.giveLogical, nil)
+			client, rbClient := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
 
 			for _, ver := range kvMountVersions {
-				writeMap := make(map[string]map[string]interface{}, len(tt.give))
-				for path, data := range tt.give {
-					writeMap[addMountToPath(t, path, ver)] = data
-				}
+				ver := ver
+				t.Run(ver, func(t *testing.T) {
+					t.Parallel()
 
-				err := client.FolderWrite(context.Background(), writeMap)
-				compareErrors(t, err, tt.wantErr)
+					writeMap := make(map[string]map[string]interface{}, len(tt.give))
+					for path, data := range tt.give {
+						writeMap[addMountToPath(t, path, ver)] = data
+					}
 
-				for path, data := range tt.wantReadBack {
-					readBack, err := readbackClient.PathRead(addMountToPath(t, path, ver))
-					assert.NoError(t, err)
-					assert.Equal(t, data, readBack)
-				}
+					err := client.FolderWrite(context.Background(), writeMap)
+					compareErrors(t, err, tt.wantErr)
+
+					for path, data := range tt.wantReadBack {
+						readBack, err := rbClient.PathRead(addMountToPath(t, path, ver))
+						assert.NoError(t, err)
+						assert.Equal(t, data, readBack)
+					}
+				})
 			}
 		})
 	}

@@ -2,18 +2,20 @@
 
 ## Soon
 
+- standard cli error output
 - cli path/folder functions
+- support namespaces
 - api context and cancellations?
 - cli flags for timeouts
-- add sort as an option in cli and api
 
 ## Upcoming
 
+- CI enforces 100% test coverage
 - Benchmarks
 - Example functions
 - API example in readme
 - doc.go in api
-- further parallelize tests?
+- optimize api tests?
 - graceful worker shutdown <https://callistaenterprise.se/blogg/teknik/2019/10/05/go-worker-cancellation/>
 - CI to make sure api Version() stays up to date with tags
 

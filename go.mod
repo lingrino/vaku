@@ -16,7 +16,7 @@ require (
 	github.com/pierrec/lz4 v2.5.1+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/spf13/cobra v1.0.0
-	github.com/spf13/pflag v1.0.5
+	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.5.1
 	github.com/ugorji/go/codec v0.0.0-20190204201341-e444a5086c43 // indirect
 	golang.org/x/build v0.0.0-20190314133821-5284462c4bec // indirect

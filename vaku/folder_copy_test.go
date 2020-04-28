@@ -73,7 +73,7 @@ func TestFolderCopy(t *testing.T) {
 				clientDD := testClientDiffDst(t, tt.giveOptions...)
 
 				for _, c := range []*Client{client, clientDD} {
-					readbackClient := cloneCLient(t, c)
+					rbClient := cloneCLient(t, c)
 					updateLogical(t, c, tt.giveSrcLogical, tt.giveDstLogical)
 
 					pathS := addMountToPath(t, tt.giveSrc, ver[0])
@@ -82,8 +82,8 @@ func TestFolderCopy(t *testing.T) {
 					err := c.FolderCopy(context.Background(), pathS, pathD)
 					compareErrors(t, err, tt.wantErr)
 
-					readBackS, errS := readbackClient.FolderRead(context.Background(), pathS)
-					readBackD, errD := readbackClient.dc.FolderRead(context.Background(), pathD)
+					readBackS, errS := rbClient.FolderRead(context.Background(), pathS)
+					readBackD, errD := rbClient.dc.FolderRead(context.Background(), pathD)
 					assert.NoError(t, errS)
 					assert.NoError(t, errD)
 

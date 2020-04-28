@@ -152,6 +152,15 @@ func cloneCLient(t *testing.T, c *Client) *Client {
 	return &cpy
 }
 
+// testSetup sets up most of our tests. Returns a client with 'logical' updated and a readback client.
+func testSetup(t *testing.T, srcL, dstL logical, opts ...Option) (*Client, *Client) {
+	client := testClient(t, opts...)
+	rbClient := cloneCLient(t, client)
+	updateLogical(t, client, srcL, dstL)
+
+	return client, rbClient
+}
+
 // errLogical implements logical and injects ouputs.
 type errLogical struct {
 	secret *api.Secret

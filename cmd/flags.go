@@ -6,12 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Base Flags
 const (
-	flagAbsPathName    = "absolute-path"
-	flagAbsPathShort   = "a"
-	flagAbsPathUse     = "show absolute path in output"
-	flagAbsPathDefault = false
-
 	flagFormatName    = "format"
 	flagFormatUse     = "output format: text|json"
 	flagFormatDefault = "text"
@@ -25,11 +21,45 @@ const (
 	flagSortShort   = "s"
 	flagSortUse     = "sort output text"
 	flagSortDefault = true
+)
+
+// Vault Flags
+const (
+	flagAbsPathName    = "absolute-path"
+	flagAbsPathShort   = "p"
+	flagAbsPathUse     = "show absolute path in output"
+	flagAbsPathDefault = false
 
 	flagWorkersName    = "workers"
 	flagWorkersShort   = "w"
 	flagWorkersUse     = "number of concurrent workers"
 	flagWorkersDefault = 10
+
+	flagAddrName    = "address"
+	flagAddrShort   = "a"
+	flagAddrUse     = "address of the Vault server"
+	flagAddrDefault = ""
+
+	flagSrcAddrName    = "source-address"
+	flagSrcAddrUse     = "address of the source Vault server (alias for --address)"
+	flagSrcAddrDefault = ""
+
+	flagDstAddrName    = "destination-address"
+	flagDstAddrUse     = "address of the destination Vault server"
+	flagDstAddrDefault = ""
+
+	flagTokenName    = "token"
+	flagTokenShort   = "t"
+	flagTokenUse     = "token for the vault server"
+	flagTokenDefault = ""
+
+	flagSrcTokenName    = "source-token"
+	flagSrcTokenUse     = "token for the source vault server (alias for --token)"
+	flagSrcTokenDefault = ""
+
+	flagDstTokenName    = "destination-token"
+	flagDstTokenUse     = "token for the destination vault server (alias for --token)"
+	flagDstTokenDefault = ""
 )
 
 var (
@@ -37,13 +67,25 @@ var (
 	errFlagInvalidWorkers = errors.New("workers must be >= 1")
 )
 
-// addVakuFlags adds all flags to the vaku command.
+// addVakuFlags adds all flags for the vaku command.
 func (c *cli) addVakuFlags(cmd *cobra.Command) {
-	cmd.PersistentFlags().BoolVarP(&c.flagAbsPath, flagAbsPathName, flagAbsPathShort, flagAbsPathDefault, flagAbsPathUse)
 	cmd.PersistentFlags().StringVar(&c.flagFormat, flagFormatName, flagFormatDefault, flagFormatUse)
 	cmd.PersistentFlags().StringVarP(&c.flagIndent, flagIndentName, flagIndentShort, flagIndentDefault, flagIndentUse)
 	cmd.PersistentFlags().BoolVarP(&c.flagSort, flagSortName, flagSortShort, flagSortDefault, flagSortUse)
+}
+
+// addPathFolderFlags adds all flags for the path and folder commands.
+func (c *cli) addPathFolderFlags(cmd *cobra.Command) {
+	cmd.PersistentFlags().BoolVarP(&c.flagAbsPath, flagAbsPathName, flagAbsPathShort, flagAbsPathDefault, flagAbsPathUse)
 	cmd.PersistentFlags().IntVarP(&c.flagWorkers, flagWorkersName, flagWorkersShort, flagWorkersDefault, flagWorkersUse)
+
+	cmd.PersistentFlags().StringVarP(&c.flagSrcAddr, flagAddrName, flagAddrShort, flagAddrDefault, flagAddrUse)
+	cmd.PersistentFlags().StringVar(&c.flagSrcAddr, flagSrcAddrName, flagSrcAddrDefault, flagSrcAddrUse)
+	cmd.PersistentFlags().StringVar(&c.flagDstAddr, flagDstAddrName, flagDstAddrDefault, flagDstAddrUse)
+
+	cmd.PersistentFlags().StringVarP(&c.flagSrcToken, flagTokenName, flagTokenShort, flagTokenDefault, flagTokenUse)
+	cmd.PersistentFlags().StringVar(&c.flagSrcToken, flagSrcTokenName, flagSrcTokenDefault, flagSrcTokenUse)
+	cmd.PersistentFlags().StringVar(&c.flagDstToken, flagDstTokenName, flagDstTokenDefault, flagDstTokenUse)
 }
 
 // validateFlags checks if valid flag values were passed. Use as cmd.PersistentPreRunE.

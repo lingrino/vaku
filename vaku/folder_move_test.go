@@ -87,21 +87,21 @@ func TestFolderMove(t *testing.T) {
 				clientDD := testClientDiffDst(t, tt.giveOptions...)
 
 				for _, c := range []*Client{client, clientDD} {
-					readbackClient := cloneCLient(t, c)
+					rbClient := cloneCLient(t, c)
 					updateLogical(t, c, tt.giveSrcLogical, tt.giveDstLogical)
 
 					pathS := addMountToPath(t, tt.giveSrc, ver[0])
 					pathD := addMountToPath(t, tt.giveDst, ver[1])
 
-					orig, err := readbackClient.FolderRead(context.Background(), pathS)
+					orig, err := rbClient.FolderRead(context.Background(), pathS)
 					assert.NoError(t, err)
 					TrimPrefixMap(orig, pathS)
 
 					err = c.FolderMove(context.Background(), pathS, pathD)
 					compareErrors(t, err, tt.wantErr)
 
-					readBackS, errS := readbackClient.FolderRead(context.Background(), pathS)
-					readBackD, errD := readbackClient.dc.FolderRead(context.Background(), pathD)
+					readBackS, errS := rbClient.FolderRead(context.Background(), pathS)
+					readBackD, errD := rbClient.dc.FolderRead(context.Background(), pathD)
 					assert.NoError(t, errS)
 					assert.NoError(t, errD)
 					TrimPrefixMap(readBackS, pathS)
