@@ -22,12 +22,12 @@ func TestDocs(t *testing.T) {
 		{
 			name:     "failure",
 			giveArgs: []string{"//\\#\\--%@&*/"},
-			wantErr:  "failed to generate markdown docs",
+			wantErr:  "ERROR: failed to generate markdown docs\n",
 		},
 		{
 			name:     "extra args",
 			giveArgs: []string{"///", "foo", "bar"},
-			wantErr:  "accepts 1 arg(s), received 3",
+			wantErr:  "ERROR: accepts 1 arg(s), received 3\n",
 		},
 	}
 
@@ -38,14 +38,12 @@ func TestDocs(t *testing.T) {
 
 			args := append([]string{"docs"}, tt.giveArgs...)
 			cli, outW, errW := newTestCLI(t, args)
-			assert.Equal(t, "", errW.String())
 
-			err := cli.cmd.Execute()
+			ec := cli.execute()
+			assert.Equal(t, ec*len(errW.String()), len(errW.String()), "unexpected exit code")
 
-			assertError(t, err, tt.wantErr)
-			if tt.wantErr == "" {
-				assert.Equal(t, tt.wantOut, outW.String())
-			}
+			assert.Equal(t, tt.wantOut, outW.String())
+			assert.Equal(t, tt.wantErr, errW.String())
 		})
 	}
 }

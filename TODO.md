@@ -2,11 +2,11 @@
 
 ## Soon
 
-- standard cli error output
+- fix v2 api endpoint calls
 - cli path/folder functions
-- support namespaces
+- support namespaces?
 - api context and cancellations?
-- cli flags for timeouts
+- cli flags for timeouts/context
 
 ## Upcoming
 
@@ -15,7 +15,7 @@
 - Example functions
 - API example in readme
 - doc.go in api
-- optimize api tests?
+- optimize api tests? tests share client and get new path prefix?
 - graceful worker shutdown <https://callistaenterprise.se/blogg/teknik/2019/10/05/go-worker-cancellation/>
 - CI to make sure api Version() stays up to date with tags
 

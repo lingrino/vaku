@@ -44,6 +44,8 @@ func newWrapErr(msg string, is, wraps error) *wrapErr {
 		msg = is.Error()
 	case msg == "":
 		msg = fmt.Sprintf("%v: %v", is, wraps)
+	case wraps == nil:
+		msg = fmt.Sprintf("%v: %v", msg, is)
 	default:
 		msg = fmt.Sprintf("%v: %v: %v", msg, is, wraps)
 	}

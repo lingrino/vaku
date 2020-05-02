@@ -6,10 +6,10 @@ import (
 	"github.com/lingrino/vaku/cmd"
 )
 
-// version is populated at build time by goreleaser
+// version is populated at build time by goreleaser.
 var version = "dev"
 
-// used for testing
+// used for testing.
 var executeCMD = cmd.Execute
 var exitCmd = os.Exit
 

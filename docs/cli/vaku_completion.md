@@ -9,14 +9,17 @@ To install completions for your shell
 # Bash: In ~/.bashrc
 source <(vaku completion bash)
 
-# Zsh: In ~/.zshhrc
-source <(vaku completion zsh)
+# Fish: In ~/.config/fish/config.fish
+vaku completion fish | source -
 
 # Powershell
 Write the contents of 'vaku completion powershell' and source them in your profile
 
+# Zsh: In ~/.zshhrc
+source <(vaku completion zsh)
+
 ```
-vaku completion bash|zsh|powershell [flags]
+vaku completion bash|zsh|powershell
 ```
 
 ### Examples
@@ -29,6 +32,14 @@ vaku completion zsh
 
 ```
   -h, --help   help for completion
+```
+
+### Options inherited from parent commands
+
+```
+      --format string        output format: text|json (default "text")
+  -i, --indent-char string   string used for indents (default "    ")
+  -s, --sort                 sort output text (default true)
 ```
 
 ### SEE ALSO

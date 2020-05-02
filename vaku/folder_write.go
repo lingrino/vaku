@@ -40,7 +40,7 @@ func (c *Client) FolderWrite(ctx context.Context, d map[string]map[string]interf
 	return eg.Wait()
 }
 
-// folderWriteWorkInput is the piecces needed to list a folder
+// folderWriteWorkInput is the piecces needed to list a folder.
 type folderWriteWorkInput struct {
 	ctx   context.Context
 	pathC <-chan string

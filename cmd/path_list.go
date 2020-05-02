@@ -20,17 +20,14 @@ func (c *cli) newPathListCmd() *cobra.Command {
 
 		Args: cobra.ExactArgs(1),
 
-		RunE: c.runPathList,
+		// RunE: c.runPathList,
 	}
 
 	return cmd
 }
 
-func (c *cli) runPathList(cmd *cobra.Command, args []string) error {
-	list, err := c.vc.PathList(args[0])
-	if err != nil {
-		return err
-	}
-	c.output(list)
-	return nil
-}
+// func (c *cli) runPathList(cmd *cobra.Command, args []string) error {
+// 	list, err := c.vc.PathList(args[0])
+// 	c.output(list)
+// 	return err
+// }

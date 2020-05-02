@@ -41,7 +41,7 @@ func (c *Client) FolderDelete(ctx context.Context, p string) error {
 	return eg.Wait()
 }
 
-// folderDeleteWorkInput is the piecces needed to list a folder
+// folderDeleteWorkInput is the piecces needed to list a folder.
 type folderDeleteWorkInput struct {
 	ctx   context.Context
 	root  string

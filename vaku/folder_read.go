@@ -71,7 +71,7 @@ func (c *Client) FolderReadChan(ctx context.Context, p string) (<-chan map[strin
 	return resC, errFuncOnChan(eg.Wait)
 }
 
-// folderReadWorkInput is the piecces needed to list a folder
+// folderReadWorkInput is the piecces needed to list a folder.
 type folderReadWorkInput struct {
 	ctx   context.Context
 	root  string

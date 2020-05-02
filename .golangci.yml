@@ -57,7 +57,7 @@ linters-settings:
   nakedret:
     max-func-lines: 0
   goconst:
-    min-occurrences: 2
+    min-occurrences: 3
   golint:
     min-confidence: 0
 

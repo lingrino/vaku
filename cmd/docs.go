@@ -39,8 +39,7 @@ func (c *cli) newDocsCmd() *cobra.Command {
 func (c *cli) runDocs(cmd *cobra.Command, args []string) error {
 	err := doc.GenMarkdownTree(cmd.Root(), args[0])
 	if err != nil {
-		return errDocGenMarkdown
+		err = errDocGenMarkdown
 	}
-
-	return nil
+	return err
 }

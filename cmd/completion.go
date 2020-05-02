@@ -51,25 +51,29 @@ func (c *cli) newCompletionCmd() *cobra.Command {
 
 func (c *cli) runCompletion(cmd *cobra.Command, args []string) error {
 	rootCmd := cmd.Root()
+	outW := rootCmd.OutOrStdout()
 
 	var err error
+	var cmpErr error
+
 	switch args[0] {
 	case "bash":
-		err = rootCmd.GenBashCompletion(rootCmd.OutOrStdout())
+		cmpErr = rootCmd.GenBashCompletion(outW)
 	case "fish":
-		err = rootCmd.GenFishCompletion(rootCmd.OutOrStdout(), true)
+		cmpErr = rootCmd.GenFishCompletion(outW, true)
 	case "powershell":
-		err = rootCmd.GenPowerShellCompletion(rootCmd.OutOrStdout())
+		cmpErr = rootCmd.GenPowerShellCompletion(outW)
 	case "zsh":
-		err = rootCmd.GenZshCompletion(rootCmd.OutOrStdout())
+		cmpErr = rootCmd.GenZshCompletion(outW)
 	case "fail":
-		err = errors.New("failure injection")
+		cmpErr = errors.New("fault injection")
 	default:
-		return errCmpUnsupported
+		err = errCmpUnsupported
 	}
 
-	if err != nil {
-		return errCmpFailed
+	if cmpErr != nil {
+		err = errCmpFailed
 	}
-	return nil
+
+	return err
 }

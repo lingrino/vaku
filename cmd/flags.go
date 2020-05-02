@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Base Flags
+// Base Flags.
 const (
 	flagFormatName    = "format"
 	flagFormatUse     = "output format: text|json"
@@ -23,7 +23,7 @@ const (
 	flagSortDefault = true
 )
 
-// Vault Flags
+// Vault Flags.
 const (
 	flagAbsPathName    = "absolute-path"
 	flagAbsPathShort   = "p"

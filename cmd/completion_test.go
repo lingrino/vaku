@@ -33,17 +33,17 @@ func TestCompletion(t *testing.T) {
 		{
 			name:     "no args",
 			giveArgs: []string{},
-			wantErr:  "accepts 1 arg(s), received 0",
+			wantErr:  "ERROR: accepts 1 arg(s), received 0\n",
 		},
 		{
 			name:     "bad arg",
 			giveArgs: []string{"badarg"},
-			wantErr:  errCmpUnsupported.Error(),
+			wantErr:  "ERROR: " + errCmpUnsupported.Error() + "\n",
 		},
 		{
 			name:     "failure injection",
 			giveArgs: []string{"fail"},
-			wantErr:  errCmpFailed.Error(),
+			wantErr:  "ERROR: " + errCmpFailed.Error() + "\n",
 		},
 	}
 
@@ -54,11 +54,11 @@ func TestCompletion(t *testing.T) {
 
 			args := append([]string{"completion"}, tt.giveArgs...)
 			cli, outW, errW := newTestCLI(t, args)
-			assert.Equal(t, "", errW.String())
 
-			err := cli.cmd.Execute()
+			ec := cli.execute()
+			assert.Equal(t, ec*len(errW.String()), len(errW.String()), "unexpected exit code")
 
-			assertError(t, err, tt.wantErr)
+			assert.Equal(t, tt.wantErr, errW.String())
 			if tt.wantErr == "" {
 				// Expect a long string (the completion code)
 				assert.Greater(t, len(outW.String()), 100)

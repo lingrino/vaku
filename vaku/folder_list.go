@@ -85,7 +85,7 @@ func (c *Client) FolderListChan(ctx context.Context, p string) (<-chan string, <
 	return resC, errFuncOnChan(eg.Wait)
 }
 
-// folderListWorkInput is the piecces needed to list a folder
+// folderListWorkInput is the piecces needed to list a folder.
 type folderListWorkInput struct {
 	ctx   context.Context
 	root  string

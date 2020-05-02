@@ -28,7 +28,10 @@ vaku folder list secret/foo
 ### Options
 
 ```
-  -h, --help   help for vaku
+      --format string        output format: text|json (default "text")
+  -h, --help                 help for vaku
+  -i, --indent-char string   string used for indents (default "    ")
+  -s, --sort                 sort output text (default true)
 ```
 
 ### SEE ALSO

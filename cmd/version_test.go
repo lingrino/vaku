@@ -17,14 +17,14 @@ func TestVersion(t *testing.T) {
 		wantErr     string
 	}{
 		{
-			name:        "test",
+			name:        "version test",
 			giveVersion: "test",
-			wantOut:     "CLI: test\nAPI: 2.0.0\n",
+			wantOut:     "API: 2.0.0\nCLI: test\n",
 		},
 		{
-			name:        "version",
+			name:        "version version",
 			giveVersion: "version",
-			wantOut:     "CLI: version\nAPI: 2.0.0\n",
+			wantOut:     "API: 2.0.0\nCLI: version\n",
 		},
 		{
 			name:        "args",
@@ -43,14 +43,11 @@ func TestVersion(t *testing.T) {
 			args := append([]string{"version"}, tt.giveArgs...)
 			cli, outW, errW := newTestCLI(t, args)
 			cli.setVersion(tt.giveVersion)
-			assert.Equal(t, "", errW.String())
 
-			err := cli.cmd.Execute()
+			ec := cli.execute()
+			assert.Equal(t, ec*len(errW.String()), len(errW.String()), "unexpected exit code")
 
-			assertError(t, err, tt.wantErr)
-			if tt.wantErr == "" {
-				assert.Equal(t, tt.wantOut, outW.String())
-			}
+			assert.Equal(t, tt.wantOut, outW.String())
 		})
 	}
 }

@@ -68,6 +68,17 @@ func TestNewWrapErr(t *testing.T) {
 			},
 		},
 		{
+			name:     "msg and nil wrap",
+			giveMsg:  "random error",
+			giveIs:   errInject,
+			giveWrap: nil,
+			wantErr: &wrapErr{
+				msg:   fmt.Sprintf("%v: %v", "random error", errInject),
+				is:    errInject,
+				wraps: nil,
+			},
+		},
+		{
 			name:     "standard error",
 			giveMsg:  "context here",
 			giveIs:   errors.New("standard error"),

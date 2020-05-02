@@ -1,10 +1,59 @@
 package cmd
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+func TestWrapErr(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name    string
+		giveE1  error
+		giveE2  error
+		wantErr error
+	}{
+		{
+			name:    "nil",
+			giveE1:  nil,
+			giveE2:  nil,
+			wantErr: nil,
+		},
+		{
+			name:    "e1 nil",
+			giveE1:  nil,
+			giveE2:  errors.New("bar"),
+			wantErr: errors.New("bar"),
+		},
+		{
+			name:    "e2 nil",
+			giveE1:  errors.New("foo"),
+			giveE2:  nil,
+			wantErr: errors.New("foo"),
+		},
+		{
+			name:    "both",
+			giveE1:  errors.New("foo"),
+			giveE2:  errors.New("bar"),
+			wantErr: errors.New("foo\nbar"),
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			cli, _, _ := newTestCLI(t, nil)
+
+			err := cli.combineErr(tt.giveE1, tt.giveE2)
+			assert.Equal(t, tt.wantErr, err)
+		})
+	}
+}
 
 func TestOutput(t *testing.T) {
 	t.Parallel()
@@ -12,10 +61,15 @@ func TestOutput(t *testing.T) {
 	tests := []struct {
 		name       string
 		give       interface{}
+		giveErr    error
 		giveFormat string
 		wantOut    string
 		wantErr    string
 	}{
+		{
+			name: "nil",
+			give: nil,
+		},
 		{
 			name:       "text string",
 			give:       "foo",
@@ -35,7 +89,7 @@ func TestOutput(t *testing.T) {
 				"bar": 100,
 			},
 			giveFormat: "text",
-			wantOut:    "bar => 100\nfoo => fooValue\n",
+			wantOut:    "bar: 100\nfoo: fooValue\n",
 		},
 		{
 			name: "text nested map",
@@ -49,7 +103,7 @@ func TestOutput(t *testing.T) {
 				},
 			},
 			giveFormat: "text",
-			wantOut:    "bar\nhello => world\nfoo\ninbar => 100\ninfoo => fooValue\n",
+			wantOut:    "bar\nhello: world\nfoo\ninbar: 100\ninfoo: fooValue\n",
 		},
 		{
 			name:       "json string",
@@ -87,22 +141,34 @@ func TestOutput(t *testing.T) {
 			wantOut:    "{\n\"bar\": {\n\"hello\": \"world\"\n},\n\"foo\": {\n\"inbar\": 100,\n\"infoo\": \"fooValue\"\n}\n}\n",
 		},
 		{
+			name:       "error text",
+			give:       errors.New("test error"),
+			giveFormat: "text",
+			wantErr:    "ERROR: test error\n",
+		},
+		{
+			name:       "error json",
+			give:       errors.New("test error"),
+			giveFormat: "json",
+			wantErr:    "{\n\"error\": \"test error\"\n}\n",
+		},
+		{
 			name:       "bad format",
 			give:       "",
 			giveFormat: "invalid",
-			wantErr:    errOutputFormat + "\n",
+			wantErr:    "ERROR: " + errOutputFormat.Error() + "\n",
 		},
 		{
 			name:       "bad type",
 			give:       5,
 			giveFormat: "text",
-			wantErr:    errOutputType + "\n",
+			wantErr:    "ERROR: " + errOutputType.Error() + "\n",
 		},
 		{
 			name:       "bad json",
 			give:       func() {},
 			giveFormat: "json",
-			wantErr:    errJSONMarshal + "\n",
+			wantErr:    "ERROR: " + errJSONMarshal.Error() + "\n",
 		},
 	}
 

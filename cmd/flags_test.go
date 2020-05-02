@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestValidateVakuFlags(t *testing.T) {
@@ -10,7 +12,7 @@ func TestValidateVakuFlags(t *testing.T) {
 	tests := []struct {
 		name string
 		give *cli
-		want string
+		want error
 	}{
 		{
 			name: "valid",
@@ -21,7 +23,7 @@ func TestValidateVakuFlags(t *testing.T) {
 				flagSort:    true,
 				flagWorkers: 100,
 			},
-			want: "",
+			want: nil,
 		},
 		{
 			name: "invalid format",
@@ -32,7 +34,7 @@ func TestValidateVakuFlags(t *testing.T) {
 				flagSort:    true,
 				flagWorkers: 100,
 			},
-			want: errFlagInvalidFormat.Error(),
+			want: errFlagInvalidFormat,
 		},
 		{
 			name: "invalid workers",
@@ -43,7 +45,7 @@ func TestValidateVakuFlags(t *testing.T) {
 				flagSort:    true,
 				flagWorkers: 0,
 			},
-			want: errFlagInvalidWorkers.Error(),
+			want: errFlagInvalidWorkers,
 		},
 	}
 
@@ -53,7 +55,9 @@ func TestValidateVakuFlags(t *testing.T) {
 			t.Parallel()
 
 			err := tt.give.validateVakuFlags(nil, nil)
-			assertError(t, err, tt.want)
+			if err != nil {
+				assert.Equal(t, tt.want, err)
+			}
 		})
 	}
 }

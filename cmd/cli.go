@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"os"
 
@@ -18,12 +17,12 @@ const (
 )
 
 var (
-	errInitVakuClient   = errors.New("error initializing vaku client")
-	errNewVaultClient   = errors.New("error creating new vault client")
-	errVaultReadEnv     = errors.New("error with vault reading the environment")
-	errVaultTokenHelper = errors.New("error getting default token helper")
-	errGetVaultToken    = errors.New("error using helper to get vault token")
-	errSetVaultToken    = errors.New("error setting vault token")
+	errInitVakuClient   = errors.New("initializing vaku client")
+	errNewVaultClient   = errors.New("creating new vault client")
+	errVaultTokenHelper = errors.New("getting default token helper")
+	errGetVaultToken    = errors.New("using helper to get vault token")
+	errSetVaultToken    = errors.New("setting vault token")
+	errSetAddress       = errors.New("setting vault address")
 )
 
 // cli extends cobra.Command with our own config.
@@ -47,6 +46,9 @@ type cli struct {
 
 	// data
 	version string
+
+	// failure injection
+	fail string
 }
 
 // newCLI returns a new CLI ready to run. Vaku client is not set because some commands (version) do
@@ -69,14 +71,14 @@ func (c *cli) initVakuClient(cmd *cobra.Command, args []string) error {
 
 	srcClient, err := c.newVaultClient(c.flagSrcAddr, c.flagSrcToken)
 	if err != nil {
-		return errInitVakuClient
+		return c.combineErr(errInitVakuClient, err)
 	}
 	options = append(options, vaku.WithVaultSrcClient(srcClient))
 
 	if c.flagDstAddr != "" || c.flagDstToken != "" {
 		dstClient, err := c.newVaultClient(c.flagDstAddr, c.flagDstToken)
 		if err != nil {
-			return errInitVakuClient
+			return c.combineErr(errInitVakuClient, err)
 		}
 		options = append(options, vaku.WithVaultDstClient(dstClient))
 	}
@@ -86,7 +88,7 @@ func (c *cli) initVakuClient(cmd *cobra.Command, args []string) error {
 
 	vakuClient, err := vaku.NewClient(options...)
 	if err != nil {
-		return errInitVakuClient
+		return c.combineErr(errInitVakuClient, err)
 	}
 
 	c.vc = vakuClient
@@ -96,24 +98,22 @@ func (c *cli) initVakuClient(cmd *cobra.Command, args []string) error {
 
 // newVaultClient creates a new vault client. Prefer passed addr/token. Fallback to env/config.
 func (c *cli) newVaultClient(addr, token string) (*api.Client, error) {
-	cfg := api.DefaultConfig()
-	err := cfg.ReadEnvironment()
-	if err != nil {
-		return nil, errVaultReadEnv
+	// nil means use default configuration and read from environment
+	client, err := api.NewClient(nil)
+	if err != nil || c.fail == "api.NewClient" {
+		return nil, c.combineErr(errNewVaultClient, err)
 	}
 
 	if addr != "" {
-		cfg.Address = addr
-	}
-
-	client, err := api.NewClient(cfg)
-	if err != nil {
-		return nil, errNewVaultClient
+		err := client.SetAddress(addr)
+		if err != nil {
+			return nil, c.combineErr(errSetAddress, err)
+		}
 	}
 
 	err = c.setVaultToken(client, token)
 	if err != nil {
-		return nil, errSetVaultToken
+		return nil, c.combineErr(errSetVaultToken, err)
 	}
 
 	if os.Getenv(api.EnvVaultMaxRetries) == "" {
@@ -127,24 +127,25 @@ func (c *cli) newVaultClient(addr, token string) (*api.Client, error) {
 func (c *cli) setVaultToken(vc *api.Client, token string) error {
 	if token != "" {
 		vc.SetToken(token)
+	}
+	if vc.Token() != "" {
 		return nil
 	}
-	token = vc.Token()
-	if token == "" {
-		helper, err := config.DefaultTokenHelper()
-		if err != nil {
-			return errVaultTokenHelper
-		}
-		token, err = helper.Get()
-		if err != nil {
-			return errGetVaultToken
-		}
-		vc.SetToken(token)
+
+	helper, err := config.DefaultTokenHelper()
+	if err != nil || c.fail == "config.DefaultTokenHelper" {
+		return c.combineErr(errVaultTokenHelper, err)
 	}
+	token, err = helper.Get()
+	if err != nil || c.fail == "helper.Get" {
+		return c.combineErr(errGetVaultToken, err)
+	}
+	vc.SetToken(token)
+
 	return nil
 }
 
-// Execute runs the CLI.
+// Execute runs a standard CLI and can be called externally.
 func Execute(version string, args []string, outW, errW io.Writer) int {
 	cli := newCLI()
 	cli.setVersion(version)
@@ -152,9 +153,15 @@ func Execute(version string, args []string, outW, errW io.Writer) int {
 	cli.cmd.SetArgs(args)
 	cli.cmd.SetOut(outW)
 	cli.cmd.SetErr(errW)
-	err := cli.cmd.Execute()
+
+	return cli.execute()
+}
+
+// execute runs the CLI. Expects args and out/err writers to be set.
+func (c *cli) execute() int {
+	err := c.cmd.Execute()
 	if err != nil {
-		fmt.Fprintf(cli.cmd.ErrOrStderr(), "Error: %s\n", err)
+		c.output(err)
 		return exitFailure
 	}
 

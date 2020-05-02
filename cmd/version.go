@@ -21,13 +21,17 @@ func (c *cli) newVersionCmd() *cobra.Command {
 
 		DisableFlagsInUseLine: true,
 
-		Run: c.runVersion,
+		RunE: c.runVersion,
 	}
 
 	return cmd
 }
 
-func (c *cli) runVersion(cmd *cobra.Command, args []string) {
-	c.output("CLI: " + c.version)
-	c.output("API: " + vaku.Version())
+func (c *cli) runVersion(cmd *cobra.Command, args []string) error {
+	output := map[string]interface{}{
+		"CLI": c.version,
+		"API": vaku.Version(),
+	}
+	c.output(output)
+	return nil
 }
