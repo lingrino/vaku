@@ -27,7 +27,10 @@ func (c *cli) newPathCmd() *cobra.Command {
 	c.addPathFolderFlags(cmd)
 
 	cmd.AddCommand(
+		c.newPathDeleteCmd(),
 		c.newPathListCmd(),
+		c.newPathReadCmd(),
+		c.newPathWriteCmd(),
 	)
 
 	return cmd

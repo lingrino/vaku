@@ -393,3 +393,60 @@ func TestTrimPrefixMap(t *testing.T) {
 		})
 	}
 }
+
+func TestInsertIntoPath(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		givePath   string
+		giveAfter  string
+		giveInsert string
+		want       string
+	}{
+		{
+			givePath:   "",
+			giveAfter:  "",
+			giveInsert: "",
+			want:       "",
+		},
+		{
+			givePath:   "foo",
+			giveAfter:  "fo",
+			giveInsert: "b",
+			want:       "fo/b/o",
+		},
+		{
+			givePath:   "foo/bar",
+			giveAfter:  "fo",
+			giveInsert: "b",
+			want:       "fo/b/o/bar",
+		},
+		{
+			givePath:   "foo/bar",
+			giveAfter:  "foo",
+			giveInsert: "baz",
+			want:       "foo/baz/bar",
+		},
+		{
+			givePath:   "foo/bar/",
+			giveAfter:  "foo/",
+			giveInsert: "baz/",
+			want:       "foo/baz/bar/",
+		},
+		{
+			givePath:   "1/2/3/4/5/6",
+			giveAfter:  "1/2/3",
+			giveInsert: "foo",
+			want:       "1/2/3/foo/4/5/6",
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.want, func(t *testing.T) {
+			t.Parallel()
+
+			assert.Equal(t, tt.want, InsertIntoPath(tt.givePath, tt.giveAfter, tt.giveInsert))
+		})
+	}
+}

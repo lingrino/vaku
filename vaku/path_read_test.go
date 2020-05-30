@@ -43,9 +43,9 @@ func TestPathRead(t *testing.T) {
 		},
 		{
 			name:    "no mount",
-			give:    noMountPrefix,
+			give:    mountless,
 			want:    nil,
-			wantErr: nil,
+			wantErr: []error{ErrPathRead, ErrRewritePath, ErrMountInfo, ErrNoMount},
 		},
 		{
 			name: "error",
@@ -65,7 +65,7 @@ func TestPathRead(t *testing.T) {
 
 			client, _ := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
 
-			for _, ver := range kvMountVersions {
+			for _, ver := range mountVersions {
 				ver := ver
 				t.Run(ver, func(t *testing.T) {
 					t.Parallel()
@@ -78,6 +78,72 @@ func TestPathRead(t *testing.T) {
 					assert.Equal(t, tt.want, read)
 				})
 			}
+		})
+	}
+}
+
+func TestExtractV2Read(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name string
+		give map[string]interface{}
+		want map[string]interface{}
+	}{
+		{
+			name: "nil",
+			give: nil,
+			want: nil,
+		},
+		{
+			name: "no metadata",
+			give: map[string]interface{}{"foo": "bar"},
+			want: nil,
+		},
+		{
+			name: "no deletion_time",
+			give: map[string]interface{}{"metadata": map[string]interface{}{"foo": "bar"}},
+			want: nil,
+		},
+		{
+			name: "no destroyed",
+			give: map[string]interface{}{"metadata": map[string]interface{}{"deletion_time": ""}},
+			want: nil,
+		},
+		{
+			name: "no data",
+			give: map[string]interface{}{
+				"metadata": map[string]interface{}{
+					"deletion_time": "",
+					"destroyed":     false,
+				},
+			},
+			want: nil,
+		},
+		{
+			name: "data",
+			give: map[string]interface{}{
+				"metadata": map[string]interface{}{
+					"deletion_time": "",
+					"destroyed":     false,
+				},
+				"data": map[string]interface{}{
+					"foo": "bar",
+				},
+			},
+			want: map[string]interface{}{
+				"foo": "bar",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			result := extractV2Read(tt.give)
+			assert.Equal(t, tt.want, result)
 		})
 	}
 }

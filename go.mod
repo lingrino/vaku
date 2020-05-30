@@ -11,7 +11,9 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.6.6 // indirect
 	github.com/hashicorp/go-rootcerts v1.0.2 // indirect
 	github.com/hashicorp/vault v1.4.0
+	github.com/hashicorp/vault-plugin-secrets-kv v0.5.4
 	github.com/hashicorp/vault/api v1.0.5-0.20200317185738-82f498082f02
+	github.com/hashicorp/vault/sdk v0.1.14-0.20200406173424-43a93d4a43b1
 	github.com/mitchellh/mapstructure v1.2.2 // indirect
 	github.com/pierrec/lz4 v2.5.1+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect

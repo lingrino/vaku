@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strconv"
+	"sync"
 	"testing"
 
 	"github.com/hashicorp/go-hclog"
@@ -12,18 +14,25 @@ import (
 	"github.com/hashicorp/vault/http"
 	"github.com/hashicorp/vault/vault"
 	"github.com/stretchr/testify/assert"
+
+	kv "github.com/hashicorp/vault-plugin-secrets-kv"
+	vl "github.com/hashicorp/vault/sdk/logical"
 )
 
-// noMountPrefix is a special string that, when passed in tests, will not be prefixed with a mount
-// to allow testing on a nonexistent mount.
-var noMountPrefix = "nomount"
+// sharedVaku for most vaku tests. Tests isolate by path on each mount.
+var sharedVaku *Client
 
-// kvMountVersions lists the types of kv mounts for vault. There are currently two k/v mount types
-// and vaku supports both. Tests should run against each version and return the same results.
-var kvMountVersions = []string{"1", "2"}
+// pathPrefix is used to create new unique seeded paths. Should be incremented after use.
+var pathPrefix int
+var pathPrefixMtx sync.Mutex
 
-// versionProduct is all possible to/from version combinations for testing functions that should
-// work across multiple mount versions and vault servers.
+// mountless, when passed in tests, will not be prefixed with a mount.
+const mountless = "mountless"
+
+// mountVersions lists all kv versions. Tests run against all versions with equal results.
+var mountVersions = [2]string{"1", "2"}
+
+// versionProduct is all possible to/from mount version combinations.
 var versionProduct = [4][2]string{
 	{"1", "1"},
 	{"2", "2"},
@@ -31,72 +40,60 @@ var versionProduct = [4][2]string{
 	{"2", "1"},
 }
 
-// seeds holds the canonical secret seeds for every test.
+// seeds is the canonical secret seeds for every test.
 var seeds = map[string]map[string]interface{}{
-	"test/foo": {
-		"value": "bar",
+	"1": {
+		"2": "3",
 	},
-	"test/value": {
-		"fizz": "buzz",
-		"foo":  "bar",
+	"4/5": {
+		"6": "7",
 	},
-	"test/fizz": {
-		"fizz": "buzz",
-		"foo":  "bar",
+	"4/8": {
+		"9":  "10",
+		"11": "12",
 	},
-	"test/HToOeKKD": {
-		"3zqxVbJY": "TvOjGxvC",
+	"4/13/14": {
+		"15": "16",
 	},
-	"test/inner/WKNC3muM": {
-		"IY1C148K": "JxBfEt91",
-		"iwVzPqbY": "0NH9GlR1",
+	"4/13/17": {
+		"18": "19",
+		"20": "21",
+		"22": "23",
 	},
-	"test/inner/A2xlzTfE": {
-		"Eg5ljS7t": "BHRMKjj1",
-		"quqr32S5": "pcidzSMW",
-	},
-	"test/inner/again/inner/UCrt6sZT": {
-		"Eg5ljS7t": "6F1B5nBg",
-		"quqr32S5": "81iY4HAN",
-		"r6R0JUzX": "rs1mCRB5",
+	"4/13/24/25/26/27": {
+		"28": "29",
 	},
 }
 
-// TestMain runs before any test. It is here because vault.TestCoreUnsealedWithConfig() calls a
-// function further down that uses a default logger intead of the logger passed.
+// TestMain prepares the test run.
 func TestMain(m *testing.M) {
 	hclog.DefaultOutput = ioutil.Discard
 	os.Exit(m.Run())
 }
 
-// testServer creates a new Vault server and returns a Vault API client that points to it.
+// testServer creates a new vault server and returns a vault API client that points to it.
 func testServer(t *testing.T) *api.Client {
 	t.Helper()
 
+	// create vault core
 	core, _, token := vault.TestCoreUnsealedWithConfig(t, &vault.CoreConfig{
+		// Must be provided for v1/v2 path differences to work.
+		LogicalBackends: map[string]vl.Factory{
+			"kv": kv.Factory,
+		},
 		Logger: hclog.NewNullLogger(),
 	})
 	ln, addr := http.TestServer(t, core)
-
-	apiClient, err := api.NewClient(api.DefaultConfig())
-	assert.NoError(t, err)
-
-	apiClient.SetToken(token)
-	err = apiClient.SetAddress(addr)
-	assert.NoError(t, err)
-
 	t.Cleanup(func() { ln.Close() })
 
-	return apiClient
-}
+	// create client that points at core
+	client, err := api.NewClient(api.DefaultConfig())
+	assert.NoError(t, err)
+	client.SetToken(token)
+	assert.NoError(t, client.SetAddress(addr))
 
-// testServerSeeded creates a seeded Vault server and returns an API client that points to it.
-func testServerSeeded(t *testing.T) *api.Client {
-	t.Helper()
-
-	client := testServer(t)
-
-	for _, ver := range kvMountVersions {
+	// mount all mount versions
+	for _, ver := range mountVersions {
 		err := client.Sys().Mount(ver+"/", &api.MountInput{
 			Type: "kv",
 			Options: map[string]string{
@@ -104,14 +101,31 @@ func testServerSeeded(t *testing.T) *api.Client {
 			},
 		})
 		assert.NoError(t, err)
+	}
 
+	return client
+}
+
+// seededPath seeds a new prefixed path on the shared client. Returns the prefix to use.
+func seededPath(t *testing.T) string {
+	t.Helper()
+
+	pathPrefixMtx.Lock()
+	prefix := strconv.Itoa(pathPrefix)
+	pathPrefix++
+	pathPrefixMtx.Unlock()
+
+	for _, ver := range mountVersions {
 		for path, secret := range seeds {
-			_, err := client.Logical().Write(PathJoin(ver, path), secret)
+			err := sharedVaku.PathWrite(PathJoin(ver, prefix, path), secret)
+			assert.NoError(t, err)
+
+			err = sharedVaku.dc.PathWrite(PathJoin(ver, prefix, path), secret)
 			assert.NoError(t, err)
 		}
 	}
 
-	return client
+	return prefix
 }
 
 // testClient returns a client that points to a seeded server.
@@ -226,11 +240,11 @@ func updateLogical(t *testing.T, c *Client, srcL logical, dstL logical) {
 	}
 }
 
-// addMountToPath prefixes a path with a mount if path is not noMountPrefix.
+// addMountToPath prefixes a path with a mount if path is not mountless.
 func addMountToPath(t *testing.T, path string, mount string) string {
 	t.Helper()
 
-	if path != noMountPrefix {
+	if path != mountless {
 		return PathJoin(mount, path)
 	}
 	return path

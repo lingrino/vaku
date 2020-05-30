@@ -15,7 +15,12 @@ var (
 
 // PathList lists paths at a path.
 func (c *Client) PathList(p string) ([]string, error) {
-	secret, err := c.vl.List(p)
+	vaultPath, _, err := c.rewritePath(p, vaultList)
+	if err != nil {
+		return nil, newWrapErr(p, ErrPathList, err)
+	}
+
+	secret, err := c.vl.List(vaultPath)
 	if err != nil {
 		return nil, newWrapErr(p, ErrPathList, newWrapErr(err.Error(), ErrVaultList, nil))
 	}

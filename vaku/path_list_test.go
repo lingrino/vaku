@@ -46,9 +46,9 @@ func TestPathList(t *testing.T) {
 		},
 		{
 			name:    "no mount",
-			give:    noMountPrefix,
+			give:    mountless,
 			want:    nil,
-			wantErr: nil,
+			wantErr: []error{ErrPathList, ErrRewritePath, ErrMountInfo, ErrNoMount},
 		},
 		{
 			name: "list error",
@@ -129,7 +129,7 @@ func TestPathList(t *testing.T) {
 
 			client, _ := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
 
-			for _, ver := range kvMountVersions {
+			for _, ver := range mountVersions {
 				ver := ver
 				t.Run(ver, func(t *testing.T) {
 					t.Parallel()

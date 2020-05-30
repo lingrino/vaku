@@ -3,6 +3,7 @@
 ## Soon
 
 - fix v2 api endpoint calls
+- switch test seed to use vaku folder write
 - cli path/folder functions
 - support namespaces?
 - api context and cancellations?

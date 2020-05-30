@@ -63,7 +63,7 @@ func TestFolderList(t *testing.T) {
 
 			client, _ := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
 
-			for _, ver := range kvMountVersions {
+			for _, ver := range mountVersions {
 				ver := ver
 				t.Run(ver, func(t *testing.T) {
 					t.Parallel()

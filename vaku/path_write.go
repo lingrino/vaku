@@ -17,7 +17,18 @@ func (c *Client) PathWrite(p string, d map[string]interface{}) error {
 		return newWrapErr(p, ErrPathWrite, ErrNilData)
 	}
 
-	_, err := c.vl.Write(p, d)
+	vaultPath, mv, err := c.rewritePath(p, vaultRead)
+	if err != nil {
+		return newWrapErr(p, ErrPathWrite, err)
+	}
+
+	if mv == mv2 {
+		d = map[string]interface{}{
+			"data": d,
+		}
+	}
+
+	_, err = c.vl.Write(vaultPath, d)
 	if err != nil {
 		return newWrapErr(p, ErrPathWrite, newWrapErr(err.Error(), ErrVaultWrite, nil))
 	}

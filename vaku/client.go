@@ -9,6 +9,7 @@ import (
 )
 
 var (
+	// ErrNumWorkers when workers is not a supported number.
 	ErrNumWorkers = errors.New("invalid workers")
 )
 
