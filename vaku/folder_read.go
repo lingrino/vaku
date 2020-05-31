@@ -97,7 +97,7 @@ func (c *Client) folderReadWork(i *folderReadWorkInput) error {
 			}
 
 			res := make(map[string]map[string]interface{}, 1)
-			res[c.pathToReturn(path, i.root)] = read
+			res[c.outputPath(path, i.root)] = read
 
 			i.resC <- res
 		}

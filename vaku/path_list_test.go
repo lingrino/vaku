@@ -3,7 +3,6 @@ package vaku
 import (
 	"testing"
 
-	"github.com/hashicorp/vault/api"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -11,112 +10,52 @@ func TestPathList(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name        string
-		give        string
-		giveLogical logical
-		giveOptions []Option
-		want        []string
-		wantErr     []error
-		skipMount   bool
+		give    string
+		want    []string
+		wantErr []error
 	}{
 		{
-			name:    "list test",
-			give:    "test",
-			want:    []string{"HToOeKKD", "fizz", "foo", "inner/", "value"},
+			give:    "0",
+			want:    []string{"1", "4/"},
 			wantErr: nil,
 		},
 		{
-			name:        "full path prefix",
-			give:        "test/inner/again/",
-			giveOptions: []Option{WithabsolutePath(true)},
-			want:        []string{"test/inner/again/inner/"},
-			wantErr:     nil,
+			give:    "0/4/13/24",
+			want:    []string{"25/"},
+			wantErr: nil,
 		},
 		{
-			name:    "single secret",
-			give:    "test/foo",
+			give:    "fake",
 			want:    nil,
 			wantErr: nil,
 		},
 		{
-			name:    "list bad path",
-			give:    "doesnotexist",
-			want:    nil,
-			wantErr: nil,
-		},
-		{
-			name:    "no mount",
 			give:    mountless,
 			want:    nil,
 			wantErr: []error{ErrPathList, ErrRewritePath, ErrMountInfo, ErrNoMount},
 		},
 		{
-			name: "list error",
-			give: "test",
-			giveLogical: &errLogical{
-				err: errInject,
-			},
+			give:    "injecterror",
 			want:    nil,
 			wantErr: []error{ErrPathList, ErrVaultList},
 		},
 		{
-			name: "nil secret",
-			give: "test",
-			giveLogical: &errLogical{
-				secret: nil,
-			},
+			give:    "injectdatanil",
 			want:    nil,
 			wantErr: nil,
 		},
 		{
-			name: "nil data",
-			give: "test",
-			giveLogical: &errLogical{
-				secret: &api.Secret{
-					Data: nil,
-				},
-			},
-			want:    nil,
-			wantErr: nil,
-		},
-		{
-			name: "no keys",
-			give: "test",
-			giveLogical: &errLogical{
-				secret: &api.Secret{
-					Data: map[string]interface{}{
-						"notkeys": "notkeys",
-					},
-				},
-			},
+			give:    "injectkeysnil",
 			want:    nil,
 			wantErr: []error{ErrPathList, ErrDecodeSecret},
 		},
 		{
-			name: "keys not []interface{}",
-			give: "test",
-			giveLogical: &errLogical{
-				secret: &api.Secret{
-					Data: map[string]interface{}{
-						"keys": 1,
-					},
-				},
-			},
+			give:    "injectkeysint",
 			want:    nil,
 			wantErr: []error{ErrPathList, ErrDecodeSecret},
 		},
 		{
-			name: "keys not string",
-			give: "test",
-			giveLogical: &errLogical{
-				secret: &api.Secret{
-					Data: map[string]interface{}{
-						"keys": []interface{}{
-							1,
-						},
-					},
-				},
-			},
+			give:    "injectkeyslistint",
 			want:    nil,
 			wantErr: []error{ErrPathList, ErrDecodeSecret},
 		},
@@ -124,20 +63,15 @@ func TestPathList(t *testing.T) {
 
 	for _, tt := range tests {
 		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.give, func(t *testing.T) {
 			t.Parallel()
-
-			client, _ := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
-
-			for _, ver := range mountVersions {
-				ver := ver
-				t.Run(ver, func(t *testing.T) {
+			for _, prefix := range seededPath(t, tt.give) {
+				prefix := prefix
+				t.Run(prefix, func(t *testing.T) {
 					t.Parallel()
 
-					path := addMountToPath(t, tt.give, ver)
-
-					list, err := client.PathList(path)
-					TrimPrefixList(list, ver)
+					list, err := sharedVaku.PathList(PathJoin(prefix, tt.give))
+					TrimPrefixList(list, prefix)
 
 					compareErrors(t, err, tt.wantErr)
 					assert.Equal(t, tt.want, list)

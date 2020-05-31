@@ -17,7 +17,7 @@ func (c *Client) PathWrite(p string, d map[string]interface{}) error {
 		return newWrapErr(p, ErrPathWrite, ErrNilData)
 	}
 
-	vaultPath, mv, err := c.rewritePath(p, vaultRead)
+	vaultPath, mv, err := c.rewritePath(p, vaultWrite)
 	if err != nil {
 		return newWrapErr(p, ErrPathWrite, err)
 	}

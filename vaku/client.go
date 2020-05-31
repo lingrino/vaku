@@ -136,10 +136,17 @@ func NewClient(opts ...Option) (*Client, error) {
 	return client, nil
 }
 
-// pathToRetur returns a path for the user, given their formatting preferences.
-func (c *Client) pathToReturn(path, root string) string {
+// outputPath returns a path for the user, given their formatting preferences.
+func (c *Client) outputPath(path, root string) string {
 	if c.absolutePath {
 		return EnsurePrefix(path, root)
 	}
 	return PathJoin(strings.TrimPrefix(path, root))
+}
+
+// outputPaths prepares a list of paths for the user, given their formatting preferences.
+func (c *Client) outputPaths(paths []string, root string) {
+	if c.absolutePath {
+		EnsurePrefixList(paths, root)
+	}
 }

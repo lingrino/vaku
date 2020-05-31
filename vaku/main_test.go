@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path"
 	"strconv"
 	"sync"
 	"testing"
@@ -21,6 +22,9 @@ import (
 
 // sharedVaku for most vaku tests. Tests isolate by path on each mount.
 var sharedVaku *Client
+
+// sharedReadBack for reading back in tests. No logical injections here.
+var sharedReadBack *Client
 
 // pathPrefix is used to create new unique seeded paths. Should be incremented after use.
 var pathPrefix int
@@ -42,25 +46,25 @@ var versionProduct = [4][2]string{
 
 // seeds is the canonical secret seeds for every test.
 var seeds = map[string]map[string]interface{}{
-	"1": {
+	"0/1": {
 		"2": "3",
 	},
-	"4/5": {
+	"0/4/5": {
 		"6": "7",
 	},
-	"4/8": {
+	"0/4/8": {
 		"9":  "10",
 		"11": "12",
 	},
-	"4/13/14": {
+	"0/4/13/14": {
 		"15": "16",
 	},
-	"4/13/17": {
+	"0/4/13/17": {
 		"18": "19",
 		"20": "21",
 		"22": "23",
 	},
-	"4/13/24/25/26/27": {
+	"0/4/13/24/25/26/27": {
 		"28": "29",
 	},
 }
@@ -83,8 +87,7 @@ func testServer(t *testing.T) *api.Client {
 		},
 		Logger: hclog.NewNullLogger(),
 	})
-	ln, addr := http.TestServer(t, core)
-	t.Cleanup(func() { ln.Close() })
+	_, addr := http.TestServer(t, core)
 
 	// create client that points at core
 	client, err := api.NewClient(api.DefaultConfig())
@@ -106,148 +109,122 @@ func testServer(t *testing.T) *api.Client {
 	return client
 }
 
-// seededPath seeds a new prefixed path on the shared client. Returns the prefix to use.
-func seededPath(t *testing.T) string {
+// seededPath seeds a new prefixed path, appends to given path, and returns paths to test against.
+func seededPath(t *testing.T, p string) []string {
 	t.Helper()
 
+	// set up the shared client if needed
 	pathPrefixMtx.Lock()
+	if sharedVaku == nil {
+		initSharedVaku(t)
+	}
+
+	// use current path prefix and increment
 	prefix := strconv.Itoa(pathPrefix)
 	pathPrefix++
 	pathPrefixMtx.Unlock()
 
-	for _, ver := range mountVersions {
-		for path, secret := range seeds {
-			err := sharedVaku.PathWrite(PathJoin(ver, prefix, path), secret)
-			assert.NoError(t, err)
-
-			err = sharedVaku.dc.PathWrite(PathJoin(ver, prefix, path), secret)
-			assert.NoError(t, err)
-		}
+	// mountless is for testing operations against invalid mounts
+	if p == mountless {
+		return []string{""}
 	}
 
-	return prefix
+	// seed prefixes
+	prefixes := make([]string, len(mountVersions))
+	for i, ver := range mountVersions {
+		for p, secret := range seeds {
+			err := sharedVaku.PathWrite(PathJoin(ver, prefix, p), secret)
+			assert.NoError(t, err)
+
+			err = sharedVaku.dc.PathWrite(PathJoin(ver, prefix, p), secret)
+			assert.NoError(t, err)
+		}
+		prefixes[i] = PathJoin(ver, prefix)
+	}
+
+	return prefixes
 }
 
-// testClient returns a client that points to a seeded server.
-func testClient(t *testing.T, opts ...Option) *Client {
+func initSharedVaku(t *testing.T) {
 	t.Helper()
 
-	apiClient := testServerSeeded(t)
+	srcClient := testServer(t)
+	dstClient := testServer(t)
 
-	client, err := NewClient(append(opts, WithVaultClient(apiClient))...)
+	client, err := NewClient(
+		WithVaultSrcClient(srcClient),
+		WithVaultDstClient(dstClient),
+		WithabsolutePath(false),
+		WithWorkers(100),
+	)
 	assert.NoError(t, err)
 
-	return client
+	// sharedReadBack does not have logical injector
+	cleanDC := *client.dc
+	cleanClient := *client
+	cleanClient.dc = &cleanDC
+	sharedReadBack = &cleanClient
+
+	// replace standard logical with logicalInjector
+	li := &logicalInjector{realL: client.vl}
+	client.vl = li
+	client.dc.vl = li
+	sharedVaku = client
 }
 
-// testClientDiffDst returns a client that points src and dst at different seeded servers.
-func testClientDiffDst(t *testing.T, opts ...Option) *Client {
-	t.Helper()
-
-	apiClientS := testServerSeeded(t)
-	apiClientD := testServerSeeded(t)
-
-	client, err := NewClient(append(opts,
-		WithVaultSrcClient(apiClientS),
-		WithVaultDstClient(apiClientD),
-	)...)
-	assert.NoError(t, err)
-
-	return client
-}
-
-// cloneCLient copies a client.
-func cloneCLient(t *testing.T, c *Client) *Client {
-	t.Helper()
-
-	dc := *c.dc
-	cpy := *c
-	cpy.dc = &dc
-	return &cpy
-}
-
-// testSetup sets up most of our tests. Returns a client with 'logical' updated and a readback client.
-func testSetup(t *testing.T, srcL, dstL logical, opts ...Option) (*Client, *Client) {
-	client := testClient(t, opts...)
-	rbClient := cloneCLient(t, client)
-	updateLogical(t, client, srcL, dstL)
-
-	return client, rbClient
-}
-
-// errLogical implements logical and injects ouputs.
-type errLogical struct {
+// inject is an injection to return from any logical function.
+type inject struct {
 	secret *api.Secret
 	err    error
+}
 
-	// if op != "" all functions will pass to the real client except the one named in op
-	op    string
+// injects is a map of path endings to an inject to return for that path.
+var injects = map[string]inject{
+	"injecterror":       {err: errInject},
+	"injectdatanil":     {secret: &api.Secret{Data: nil}},
+	"injectkeysnil":     {secret: &api.Secret{Data: map[string]interface{}{"keys": nil}}},
+	"injectkeysint":     {secret: &api.Secret{Data: map[string]interface{}{"keys": 1}}},
+	"injectkeyslistint": {secret: &api.Secret{Data: map[string]interface{}{"keys": []interface{}{1}}}},
+}
+
+// logicalInjector injects errors and outputs into vault operations.
+type logicalInjector struct {
 	realL logical
 }
 
 // verify compliance with logical interface.
-var _ logical = (*errLogical)(nil)
+var _ logical = (*logicalInjector)(nil)
 
-func (e *errLogical) Delete(path string) (*api.Secret, error) {
-	if e.op != "Delete" && e.op != "" {
-		return e.realL.Delete(path)
+func (e *logicalInjector) Delete(p string) (*api.Secret, error) {
+	inject, ok := injects[path.Base(p)]
+	if !ok {
+		return e.realL.Delete(p)
 	}
-	return e.secret, e.err
+	return inject.secret, inject.err
 }
 
-func (e *errLogical) List(path string) (*api.Secret, error) {
-	if e.op != "List" && e.op != "" {
-		return e.realL.List(path)
+func (e *logicalInjector) List(p string) (*api.Secret, error) {
+	inject, ok := injects[path.Base(p)]
+	if !ok {
+		return e.realL.List(p)
 	}
-	return e.secret, e.err
+	return inject.secret, inject.err
 }
 
-func (e *errLogical) Read(path string) (*api.Secret, error) {
-	if e.op != "Read" && e.op != "" {
-		return e.realL.Read(path)
+func (e *logicalInjector) Read(p string) (*api.Secret, error) {
+	inject, ok := injects[path.Base(p)]
+	if !ok {
+		return e.realL.Read(p)
 	}
-	return e.secret, e.err
+	return inject.secret, inject.err
 }
 
-func (e *errLogical) Write(path string, data map[string]interface{}) (*api.Secret, error) {
-	if e.op != "Write" && e.op != "" {
-		return e.realL.Write(path, data)
+func (e *logicalInjector) Write(p string, data map[string]interface{}) (*api.Secret, error) {
+	i, ok := injects[path.Base(p)]
+	if !ok {
+		return e.realL.Write(p, data)
 	}
-	return e.secret, e.err
-}
-
-// updateLogical updates a client's real logical clients with passed errLogical clients.
-func updateLogical(t *testing.T, c *Client, srcL logical, dstL logical) {
-	t.Helper()
-
-	if srcL != nil {
-		sl, ok := srcL.(*errLogical)
-		if ok {
-			sl.realL = c.vl
-			c.vl = sl
-		} else {
-			c.vl = srcL
-		}
-	}
-	if dstL != nil {
-		dl, ok := dstL.(*errLogical)
-		if ok {
-			dl.realL = c.dc.vl
-			c.dc.vl = dl
-		} else {
-			c.dc.vl = dstL
-		}
-	}
-}
-
-// addMountToPath prefixes a path with a mount if path is not mountless.
-func addMountToPath(t *testing.T, path string, mount string) string {
-	t.Helper()
-
-	if path != mountless {
-		return PathJoin(mount, path)
-	}
-	return path
+	return i.secret, i.err
 }
 
 // compareErrors asserts that the error list is an ordered and complete list of errors returned by

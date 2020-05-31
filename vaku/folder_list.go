@@ -127,7 +127,7 @@ func (c *Client) pathListWork(path string, i *folderListWorkInput) error {
 			go func(p string) { i.pathC <- p }(item)
 		}
 	} else {
-		i.resC <- c.pathToReturn(path, i.root)
+		i.resC <- c.outputPath(path, i.root)
 	}
 	i.wg.Done()
 	return nil

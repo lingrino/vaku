@@ -10,57 +10,47 @@ func TestPathDelete(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name        string
-		give        string
-		giveLogical logical
-		giveOptions []Option
-		wantErr     []error
+		give           string
+		wantErr        []error
+		wantNoReadback bool
 	}{
 		{
-			name:    "delete path",
-			give:    "test/foo",
+			give:    "0/1",
 			wantErr: nil,
 		},
 		{
-			name:    "nonexistent path",
-			give:    "doesnotexist",
+			give:    "fake",
 			wantErr: nil,
 		},
 		{
-			name:    "no mount",
-			give:    mountless,
-			wantErr: []error{ErrPathDelete, ErrVaultDelete},
+			give:           mountless,
+			wantErr:        []error{ErrPathDelete, ErrRewritePath, ErrMountInfo, ErrNoMount},
+			wantNoReadback: true,
 		},
 		{
-			name: "error",
-			give: "delete/foo",
-			giveLogical: &errLogical{
-				err: errInject,
-			},
-			wantErr: []error{ErrPathDelete, ErrVaultDelete},
+			give:           "injecterror",
+			wantErr:        []error{ErrPathDelete, ErrVaultDelete},
+			wantNoReadback: true,
 		},
 	}
 
 	for _, tt := range tests {
 		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.give, func(t *testing.T) {
 			t.Parallel()
-
-			client, rbClient := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
-
-			for _, ver := range mountVersions {
-				ver := ver
-				t.Run(ver, func(t *testing.T) {
+			for _, prefix := range seededPath(t, tt.give) {
+				prefix := prefix
+				t.Run(prefix, func(t *testing.T) {
 					t.Parallel()
 
-					path := addMountToPath(t, tt.give, ver)
-
-					err := client.PathDelete(path)
+					err := sharedVaku.PathDelete(PathJoin(prefix, tt.give))
 					compareErrors(t, err, tt.wantErr)
 
-					readBack, err := rbClient.PathRead(path)
-					assert.NoError(t, err)
-					assert.Nil(t, readBack)
+					if !tt.wantNoReadback {
+						readBack, err := sharedReadBack.PathRead(PathJoin(prefix, tt.give))
+						assert.NoError(t, err)
+						assert.Nil(t, readBack)
+					}
 				})
 			}
 		})

@@ -34,9 +34,7 @@ func (c *Client) PathList(p string) ([]string, error) {
 		return nil, newWrapErr(p, ErrPathList, err)
 	}
 
-	if c.absolutePath {
-		EnsurePrefixList(list, p)
-	}
+	c.outputPaths(list, p)
 
 	return list, nil
 }
