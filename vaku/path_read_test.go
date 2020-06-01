@@ -41,7 +41,7 @@ func TestPathRead(t *testing.T) {
 			wantErr: []error{ErrPathRead, ErrRewritePath, ErrMountInfo, ErrNoMount},
 		},
 		{
-			give:    "injecterror",
+			give:    "error/read/inject",
 			want:    nil,
 			wantErr: []error{ErrPathRead, ErrVaultRead},
 		},
@@ -49,11 +49,11 @@ func TestPathRead(t *testing.T) {
 
 	for _, tt := range tests {
 		tt := tt
-		t.Run(tt.give, func(t *testing.T) {
+		t.Run(testName(tt.give), func(t *testing.T) {
 			t.Parallel()
-			for _, prefix := range seededPath(t, tt.give) {
+			for _, prefix := range seededPrefixes(t, tt.give) {
 				prefix := prefix
-				t.Run(prefix, func(t *testing.T) {
+				t.Run(testName(prefix), func(t *testing.T) {
 					t.Parallel()
 
 					read, err := sharedVaku.PathRead(PathJoin(prefix, tt.give))

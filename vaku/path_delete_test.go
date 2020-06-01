@@ -28,7 +28,7 @@ func TestPathDelete(t *testing.T) {
 			wantNoReadback: true,
 		},
 		{
-			give:           "injecterror",
+			give:           "error/delete/inject",
 			wantErr:        []error{ErrPathDelete, ErrVaultDelete},
 			wantNoReadback: true,
 		},
@@ -36,18 +36,18 @@ func TestPathDelete(t *testing.T) {
 
 	for _, tt := range tests {
 		tt := tt
-		t.Run(tt.give, func(t *testing.T) {
+		t.Run(testName(tt.give), func(t *testing.T) {
 			t.Parallel()
-			for _, prefix := range seededPath(t, tt.give) {
+			for _, prefix := range seededPrefixes(t, tt.give) {
 				prefix := prefix
-				t.Run(prefix, func(t *testing.T) {
+				t.Run(testName(prefix), func(t *testing.T) {
 					t.Parallel()
 
 					err := sharedVaku.PathDelete(PathJoin(prefix, tt.give))
 					compareErrors(t, err, tt.wantErr)
 
 					if !tt.wantNoReadback {
-						readBack, err := sharedReadBack.PathRead(PathJoin(prefix, tt.give))
+						readBack, err := sharedVakuClean.PathRead(PathJoin(prefix, tt.give))
 						assert.NoError(t, err)
 						assert.Nil(t, readBack)
 					}

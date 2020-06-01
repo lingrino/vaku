@@ -38,7 +38,7 @@ func TestPathWrite(t *testing.T) {
 			wantErr:  []error{ErrPathWrite, ErrNilData},
 		},
 		{
-			give:           "injecterror",
+			give:           "error/write/inject",
 			giveData:       map[string]interface{}{"0": "1"},
 			wantErr:        []error{ErrPathWrite, ErrVaultWrite},
 			wantNoReadback: true,
@@ -53,18 +53,18 @@ func TestPathWrite(t *testing.T) {
 
 	for _, tt := range tests {
 		tt := tt
-		t.Run(tt.give, func(t *testing.T) {
+		t.Run(testName(tt.give), func(t *testing.T) {
 			t.Parallel()
-			for _, prefix := range seededPath(t, tt.give) {
+			for _, prefix := range seededPrefixes(t, tt.give) {
 				prefix := prefix
-				t.Run(prefix, func(t *testing.T) {
+				t.Run(testName(prefix), func(t *testing.T) {
 					t.Parallel()
 
 					err := sharedVaku.PathWrite(PathJoin(prefix, tt.give), tt.giveData)
 					compareErrors(t, err, tt.wantErr)
 
 					if !tt.wantNoReadback {
-						readBack, err := sharedReadBack.PathRead(PathJoin(prefix, tt.give))
+						readBack, err := sharedVakuClean.PathRead(PathJoin(prefix, tt.give))
 						assert.NoError(t, err)
 						assert.Equal(t, tt.giveData, readBack)
 					}

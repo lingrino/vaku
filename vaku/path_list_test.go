@@ -25,7 +25,7 @@ func TestPathList(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			give:    "fake",
+			give:    "emptypath",
 			want:    nil,
 			wantErr: nil,
 		},
@@ -35,27 +35,27 @@ func TestPathList(t *testing.T) {
 			wantErr: []error{ErrPathList, ErrRewritePath, ErrMountInfo, ErrNoMount},
 		},
 		{
-			give:    "injecterror",
+			give:    "error/list/inject",
 			want:    nil,
 			wantErr: []error{ErrPathList, ErrVaultList},
 		},
 		{
-			give:    "injectdatanil",
+			give:    "nildata/list/inject",
 			want:    nil,
 			wantErr: nil,
 		},
 		{
-			give:    "injectkeysnil",
+			give:    "nilkeys/list/inject",
 			want:    nil,
 			wantErr: []error{ErrPathList, ErrDecodeSecret},
 		},
 		{
-			give:    "injectkeysint",
+			give:    "intkeys/list/inject",
 			want:    nil,
 			wantErr: []error{ErrPathList, ErrDecodeSecret},
 		},
 		{
-			give:    "injectkeyslistint",
+			give:    "listintkeys/list/inject",
 			want:    nil,
 			wantErr: []error{ErrPathList, ErrDecodeSecret},
 		},
@@ -63,11 +63,12 @@ func TestPathList(t *testing.T) {
 
 	for _, tt := range tests {
 		tt := tt
-		t.Run(tt.give, func(t *testing.T) {
+		t.Run(testName(tt.give), func(t *testing.T) {
 			t.Parallel()
-			for _, prefix := range seededPath(t, tt.give) {
+
+			for _, prefix := range seededPrefixes(t, tt.give) {
 				prefix := prefix
-				t.Run(prefix, func(t *testing.T) {
+				t.Run(testName(prefix), func(t *testing.T) {
 					t.Parallel()
 
 					list, err := sharedVaku.PathList(PathJoin(prefix, tt.give))

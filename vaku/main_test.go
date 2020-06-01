@@ -20,29 +20,21 @@ import (
 	vl "github.com/hashicorp/vault/sdk/logical"
 )
 
-// sharedVaku for most vaku tests. Tests isolate by path on each mount.
-var sharedVaku *Client
-
-// sharedReadBack for reading back in tests. No logical injections here.
-var sharedReadBack *Client
-
-// pathPrefix is used to create new unique seeded paths. Should be incremented after use.
-var pathPrefix int
-var pathPrefixMtx sync.Mutex
-
 // mountless, when passed in tests, will not be prefixed with a mount.
 const mountless = "mountless"
 
+// sharedVaku for most vaku tests. Tests isolate by path on each mount.
+var sharedVaku *Client
+
+// sharedVakuClean is for reading back values in tests. No logical injections here.
+var sharedVakuClean *Client
+
+// pathPrefix is used to create new unique seeded paths. Should be incremented after use.
+var pathPrefix int = 100
+var pathPrefixMtx sync.Mutex
+
 // mountVersions lists all kv versions. Tests run against all versions with equal results.
 var mountVersions = [2]string{"1", "2"}
-
-// versionProduct is all possible to/from mount version combinations.
-var versionProduct = [4][2]string{
-	{"1", "1"},
-	{"2", "2"},
-	{"1", "2"},
-	{"2", "1"},
-}
 
 // seeds is the canonical secret seeds for every test.
 var seeds = map[string]map[string]interface{}{
@@ -97,7 +89,7 @@ func testServer(t *testing.T) *api.Client {
 
 	// mount all mount versions
 	for _, ver := range mountVersions {
-		err := client.Sys().Mount(ver+"/", &api.MountInput{
+		err := client.Sys().Mount("kv"+ver+"/", &api.MountInput{
 			Type: "kv",
 			Options: map[string]string{
 				"version": ver,
@@ -109,8 +101,39 @@ func testServer(t *testing.T) *api.Client {
 	return client
 }
 
-// seededPath seeds a new prefixed path, appends to given path, and returns paths to test against.
-func seededPath(t *testing.T, p string) []string {
+// initSharedVaku sets up the global clients.
+func initSharedVaku(t *testing.T) {
+	t.Helper()
+
+	srcClient := testServer(t)
+	dstClient := testServer(t)
+
+	client, err := NewClient(
+		WithVaultSrcClient(srcClient),
+		WithVaultDstClient(dstClient),
+		WithabsolutePath(false),
+		WithWorkers(100),
+	)
+	assert.NoError(t, err)
+
+	// sharedVakuClean does not have logical injector
+	cleanDC := *client.dc
+	cleanClient := *client
+	cleanClient.dc = &cleanDC
+	cleanClient.vl = &logicalInjector{realL: client.vl, t: t, disabled: true}
+	cleanClient.dc.vl = &logicalInjector{realL: client.dc.vl, t: t, disabled: true}
+	sharedVakuClean = &cleanClient
+
+	// replace standard logical with logicalInjector
+	li := &logicalInjector{realL: client.vl, t: t}
+	lid := &logicalInjector{realL: client.dc.vl, t: t}
+	client.vl = li
+	client.dc.vl = lid
+	sharedVaku = client
+}
+
+// seededPrefixes seeds a new prefixed path, appends to given path, and returns paths to test against.
+func seededPrefixes(t *testing.T, p string) []string {
 	t.Helper()
 
 	// set up the shared client if needed
@@ -133,102 +156,56 @@ func seededPath(t *testing.T, p string) []string {
 	prefixes := make([]string, len(mountVersions))
 	for i, ver := range mountVersions {
 		for p, secret := range seeds {
-			err := sharedVaku.PathWrite(PathJoin(ver, prefix, p), secret)
+			err := sharedVaku.PathWrite(PathJoin("kv"+ver, prefix, p), secret)
 			assert.NoError(t, err)
 
-			err = sharedVaku.dc.PathWrite(PathJoin(ver, prefix, p), secret)
+			err = sharedVaku.dc.PathWrite(PathJoin("kv"+ver, prefix, p), secret)
 			assert.NoError(t, err)
 		}
-		prefixes[i] = PathJoin(ver, prefix)
+		prefixes[i] = PathJoin("kv"+ver, prefix)
 	}
 
 	return prefixes
 }
 
-func initSharedVaku(t *testing.T) {
+// seededPrefixProduct returns a list of pairs of prefixes to use for src/dest commands.
+func seededPrefixProduct(t *testing.T) [4][2]string {
 	t.Helper()
 
-	srcClient := testServer(t)
-	dstClient := testServer(t)
+	prefixes1 := seededPrefixes(t, "")
+	prefixes2 := seededPrefixes(t, "")
+	prefixes3 := seededPrefixes(t, "")
+	prefixes4 := seededPrefixes(t, "")
 
-	client, err := NewClient(
-		WithVaultSrcClient(srcClient),
-		WithVaultDstClient(dstClient),
-		WithabsolutePath(false),
-		WithWorkers(100),
-	)
-	assert.NoError(t, err)
-
-	// sharedReadBack does not have logical injector
-	cleanDC := *client.dc
-	cleanClient := *client
-	cleanClient.dc = &cleanDC
-	sharedReadBack = &cleanClient
-
-	// replace standard logical with logicalInjector
-	li := &logicalInjector{realL: client.vl}
-	client.vl = li
-	client.dc.vl = li
-	sharedVaku = client
-}
-
-// inject is an injection to return from any logical function.
-type inject struct {
-	secret *api.Secret
-	err    error
-}
-
-// injects is a map of path endings to an inject to return for that path.
-var injects = map[string]inject{
-	"injecterror":       {err: errInject},
-	"injectdatanil":     {secret: &api.Secret{Data: nil}},
-	"injectkeysnil":     {secret: &api.Secret{Data: map[string]interface{}{"keys": nil}}},
-	"injectkeysint":     {secret: &api.Secret{Data: map[string]interface{}{"keys": 1}}},
-	"injectkeyslistint": {secret: &api.Secret{Data: map[string]interface{}{"keys": []interface{}{1}}}},
-}
-
-// logicalInjector injects errors and outputs into vault operations.
-type logicalInjector struct {
-	realL logical
-}
-
-// verify compliance with logical interface.
-var _ logical = (*logicalInjector)(nil)
-
-func (e *logicalInjector) Delete(p string) (*api.Secret, error) {
-	inject, ok := injects[path.Base(p)]
-	if !ok {
-		return e.realL.Delete(p)
+	return [4][2]string{
+		{prefixes1[0], prefixes1[0]},
+		{prefixes2[0], prefixes2[1]},
+		{prefixes3[1], prefixes3[0]},
+		{prefixes4[1], prefixes4[1]},
 	}
-	return inject.secret, inject.err
 }
 
-func (e *logicalInjector) List(p string) (*api.Secret, error) {
-	inject, ok := injects[path.Base(p)]
-	if !ok {
-		return e.realL.List(p)
+// testName takes a path (and optional destination path) and returns a name for the test.
+func testName(sp string, dps ...string) string {
+	var dp string
+	if len(dps) == 1 {
+		dp = dps[0]
 	}
-	return inject.secret, inject.err
-}
 
-func (e *logicalInjector) Read(p string) (*api.Secret, error) {
-	inject, ok := injects[path.Base(p)]
-	if !ok {
-		return e.realL.Read(p)
+	if dp != "" {
+		return fmt.Sprintf("~%s->%s~", sp, dp)
 	}
-	return inject.secret, inject.err
+
+	return fmt.Sprintf("~%s~", sp)
 }
 
-func (e *logicalInjector) Write(p string, data map[string]interface{}) (*api.Secret, error) {
-	i, ok := injects[path.Base(p)]
-	if !ok {
-		return e.realL.Write(p, data)
-	}
-	return i.secret, i.err
+func TestComareErrors(t *testing.T) {
+	e := newWrapErr("", ErrPathWrite, newWrapErr("", ErrVaultWrite, nil))
+	ee := []error{ErrPathWrite, ErrVaultWrite}
+	compareErrors(t, e, ee)
 }
 
-// compareErrors asserts that the error list is an ordered and complete list of errors returned by
-// repeatedly calling errors.Unwrap(err).
+// compareErrors asserts continuously calling Unwrap(err) produces the error list.
 func compareErrors(t *testing.T, err error, el []error) {
 	t.Helper()
 
@@ -238,4 +215,104 @@ func compareErrors(t *testing.T, err error, el []error) {
 	}
 
 	assert.Nil(t, err)
+}
+
+// inject represents an injection to return instead of a real vault API call.
+type inject struct {
+	secret *api.Secret
+	err    error
+}
+
+// injects is a map of path endings to an inject to return for that path.
+var injects = map[string]*inject{
+	"error":       {err: errInject},
+	"nildata":     {secret: &api.Secret{Data: nil}},
+	"nilkeys":     {secret: &api.Secret{Data: map[string]interface{}{"keys": nil}}},
+	"intkeys":     {secret: &api.Secret{Data: map[string]interface{}{"keys": 1}}},
+	"listintkeys": {secret: &api.Secret{Data: map[string]interface{}{"keys": []interface{}{1}}}},
+	"funcdata": {secret: &api.Secret{Data: map[string]interface{}{
+		"data": map[string]interface{}{
+			"foo": func() {},
+		},
+		"metadata": map[string]interface{}{
+			"destroyed":     false,
+			"deletion_time": "",
+		},
+	}}},
+}
+
+// logicalInjector injects errors and outputs into vault api calls.
+type logicalInjector struct {
+	t        *testing.T
+	realL    logical
+	disabled bool
+}
+
+// verify compliance with logical interface.
+var _ logical = (*logicalInjector)(nil)
+
+// run does injector logic. inject at a path with normalpath/injectname/operation/inject.
+func (e *logicalInjector) run(p, op string) (string, *inject) {
+	e.t.Helper()
+
+	// if not injecting, proceed as normal
+	if path.Base(p) != "inject" {
+		return p, nil
+	}
+	p = path.Dir(p)
+
+	// if not injecting on this operation, proceed with dir path
+	if path.Base(p) != op {
+		return path.Dir(path.Dir(p)), nil
+	}
+	p = path.Dir(p)
+
+	// if no injector or disabled, proceed with dir path
+	inj, ok := injects[path.Base(p)]
+	if !ok || e.disabled {
+		return path.Dir(p), nil
+	}
+
+	// return injector
+	return path.Dir(p), inj
+}
+
+func (e *logicalInjector) Delete(p string) (*api.Secret, error) {
+	e.t.Helper()
+
+	p, inj := e.run(p, "delete")
+	if inj != nil {
+		return inj.secret, inj.err
+	}
+	return e.realL.Delete(p)
+}
+
+func (e *logicalInjector) List(p string) (*api.Secret, error) {
+	e.t.Helper()
+
+	p, inj := e.run(p, "list")
+	if inj != nil {
+		return inj.secret, inj.err
+	}
+	return e.realL.List(p)
+}
+
+func (e *logicalInjector) Read(p string) (*api.Secret, error) {
+	e.t.Helper()
+
+	p, inj := e.run(p, "read")
+	if inj != nil {
+		return inj.secret, inj.err
+	}
+	return e.realL.Read(p)
+}
+
+func (e *logicalInjector) Write(p string, data map[string]interface{}) (*api.Secret, error) {
+	e.t.Helper()
+
+	p, inj := e.run(p, "write")
+	if inj != nil {
+		return inj.secret, inj.err
+	}
+	return e.realL.Write(p, data)
 }
