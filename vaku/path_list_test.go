@@ -65,7 +65,6 @@ func TestPathList(t *testing.T) {
 		tt := tt
 		t.Run(testName(tt.give), func(t *testing.T) {
 			t.Parallel()
-
 			for _, prefix := range seededPrefixes(t, tt.give) {
 				prefix := prefix
 				t.Run(testName(prefix), func(t *testing.T) {

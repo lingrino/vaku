@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"strings"
 	"sync"
 	"testing"
 
@@ -254,6 +255,21 @@ var _ logical = (*logicalInjector)(nil)
 // run does injector logic. inject at a path with normalpath/injectname/operation/inject.
 func (e *logicalInjector) run(p, op string) (string, *inject) {
 	e.t.Helper()
+
+	// remove trailing slash
+	p = strings.TrimSuffix(p, "/")
+
+	pathSplit := strings.Split(p, "/")
+
+	injectI := -1
+	for i, s := range pathSplit {
+		if s == "inject" {
+			injectI = i
+		}
+	}
+	if injectI >= 0 {
+
+	}
 
 	// if not injecting, proceed as normal
 	if path.Base(p) != "inject" {

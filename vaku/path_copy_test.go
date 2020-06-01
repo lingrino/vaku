@@ -1,7 +1,6 @@
 package vaku
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -44,14 +43,12 @@ func TestPathCopy(t *testing.T) {
 		tt := tt
 		t.Run(testName(tt.giveSrc, tt.giveDst), func(t *testing.T) {
 			t.Parallel()
-
 			for _, prefixPair := range seededPrefixProduct(t) {
 				prefixPair := prefixPair
 				t.Run(testName(prefixPair[0], prefixPair[1]), func(t *testing.T) {
 					t.Parallel()
 
 					err := sharedVaku.PathCopy(PathJoin(prefixPair[0], tt.giveSrc), PathJoin(prefixPair[1], tt.giveDst))
-					fmt.Println(err)
 					compareErrors(t, err, tt.wantErr)
 
 					readSrc, errSrc := sharedVakuClean.PathRead(PathJoin(prefixPair[0], tt.giveSrc))
