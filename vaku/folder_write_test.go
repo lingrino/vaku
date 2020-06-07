@@ -13,8 +13,6 @@ func TestFolderWrite(t *testing.T) {
 	tests := []struct {
 		name         string
 		give         map[string]map[string]interface{}
-		giveLogical  logical
-		giveOptions  []Option
 		wantReadBack map[string]map[string]interface{}
 		wantErr      []error
 	}{
@@ -93,13 +91,9 @@ func TestFolderWrite(t *testing.T) {
 		{
 			name: "path write fail",
 			give: map[string]map[string]interface{}{
-				"failonwrite": {
+				"failonwrite/error/write/inject": {
 					"foo": "bar",
 				},
-			},
-			giveLogical: &errLogical{
-				err: errInject,
-				op:  "Write",
 			},
 			wantReadBack: nil,
 			wantErr:      []error{ErrFolderWrite, ErrPathWrite, ErrVaultWrite},
@@ -110,24 +104,21 @@ func TestFolderWrite(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-
-			client, rbClient := testSetup(t, tt.giveLogical, nil, tt.giveOptions...)
-
-			for _, ver := range mountVersions {
-				ver := ver
-				t.Run(ver, func(t *testing.T) {
+			for _, prefix := range seededPrefixes(t, "") {
+				prefix := prefix
+				t.Run(testName(prefix), func(t *testing.T) {
 					t.Parallel()
 
 					writeMap := make(map[string]map[string]interface{}, len(tt.give))
 					for path, data := range tt.give {
-						writeMap[addMountToPath(t, path, ver)] = data
+						writeMap[PathJoin(prefix, path)] = data
 					}
 
-					err := client.FolderWrite(context.Background(), writeMap)
+					err := sharedVaku.FolderWrite(context.Background(), writeMap)
 					compareErrors(t, err, tt.wantErr)
 
 					for path, data := range tt.wantReadBack {
-						readBack, err := rbClient.PathRead(addMountToPath(t, path, ver))
+						readBack, err := sharedVakuClean.PathRead(PathJoin(prefix, path))
 						assert.NoError(t, err)
 						assert.Equal(t, data, readBack)
 					}

@@ -2,7 +2,6 @@ package vaku
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -69,7 +68,6 @@ func TestFolderRead(t *testing.T) {
 					t.Parallel()
 
 					read, err := sharedVaku.FolderRead(context.Background(), PathJoin(prefix, tt.give))
-					fmt.Println(err)
 					compareErrors(t, err, tt.wantErr)
 
 					TrimPrefixMap(read, prefix)
