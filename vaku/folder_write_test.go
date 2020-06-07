@@ -25,7 +25,7 @@ func TestFolderWrite(t *testing.T) {
 		{
 			name: "empty data",
 			give: map[string]map[string]interface{}{
-				"test/foo": nil,
+				"000/001": nil,
 			},
 			wantReadBack: nil,
 			wantErr:      []error{ErrFolderWrite, ErrPathWrite, ErrNilData},
@@ -33,13 +33,13 @@ func TestFolderWrite(t *testing.T) {
 		{
 			name: "overwrite",
 			give: map[string]map[string]interface{}{
-				"test/foo": {
-					"bibim": "bap",
+				"0/1": {
+					"0001": "0002",
 				},
 			},
 			wantReadBack: map[string]map[string]interface{}{
-				"test/foo": {
-					"bibim": "bap",
+				"0/1": {
+					"0001": "0002",
 				},
 			},
 			wantErr: nil,
@@ -47,21 +47,21 @@ func TestFolderWrite(t *testing.T) {
 		{
 			name: "two new paths",
 			give: map[string]map[string]interface{}{
-				"new/boo": {
-					"wat": "tot",
+				"000/001": {
+					"0001": "0002",
 				},
-				"new/boo/too": {
-					"watoo": "totoo",
-					"watee": "totee",
+				"000/001/002": {
+					"0003": "0004",
+					"0005": "0006",
 				},
 			},
 			wantReadBack: map[string]map[string]interface{}{
-				"new/boo": {
-					"wat": "tot",
+				"000/001": {
+					"0001": "0002",
 				},
-				"new/boo/too": {
-					"watoo": "totoo",
-					"watee": "totee",
+				"000/001/002": {
+					"0003": "0004",
+					"0005": "0006",
 				},
 			},
 			wantErr: nil,
@@ -69,21 +69,21 @@ func TestFolderWrite(t *testing.T) {
 		{
 			name: "two different paths",
 			give: map[string]map[string]interface{}{
-				"new/one/boo": {
-					"wat": "tot",
+				"000/001": {
+					"0001": "0002",
 				},
-				"two/two/bootoo": {
-					"watoo": "totoo",
-					"watee": "totee",
+				"111/001/002": {
+					"0003": "0004",
+					"0005": "0006",
 				},
 			},
 			wantReadBack: map[string]map[string]interface{}{
-				"new/one/boo": {
-					"wat": "tot",
+				"000/001": {
+					"0001": "0002",
 				},
-				"two/two/bootoo": {
-					"watoo": "totoo",
-					"watee": "totee",
+				"111/001/002": {
+					"0003": "0004",
+					"0005": "0006",
 				},
 			},
 			wantErr: nil,
@@ -92,7 +92,7 @@ func TestFolderWrite(t *testing.T) {
 			name: "path write fail",
 			give: map[string]map[string]interface{}{
 				"failonwrite/error/write/inject": {
-					"foo": "bar",
+					"01": "02",
 				},
 			},
 			wantReadBack: nil,

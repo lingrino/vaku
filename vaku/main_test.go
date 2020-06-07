@@ -201,12 +201,6 @@ func testName(sp string, dps ...string) string {
 	return fmt.Sprintf("~%s~", sp)
 }
 
-func TestComareErrors(t *testing.T) {
-	e := newWrapErr("", ErrPathWrite, newWrapErr("", ErrVaultWrite, nil))
-	ee := []error{ErrPathWrite, ErrVaultWrite}
-	compareErrors(t, e, ee)
-}
-
 // compareErrors asserts continuously calling Unwrap(err) produces the error list.
 func compareErrors(t *testing.T, err error, el []error) {
 	t.Helper()
@@ -253,33 +247,42 @@ type logicalInjector struct {
 // verify compliance with logical interface.
 var _ logical = (*logicalInjector)(nil)
 
-// run does injector logic. inject at a path with normalpath/injectname/operation/inject.
+// run does injector logic. inject at a path with path/injectname/operation/inject/path.
 func (e *logicalInjector) run(p, op string) (string, *inject) {
 	e.t.Helper()
 
 	// remove trailing slash
 	p = strings.TrimSuffix(p, "/")
 
+	// find injection in path
+	injectI := -1
+	pathSplit := strings.Split(p, "/")
+	for i, s := range pathSplit {
+		if s == "inject" {
+			injectI = i
+		}
+	}
+
 	// if not injecting, proceed as normal
-	if path.Base(p) != "inject" {
+	if injectI < 0 {
 		return p, nil
 	}
-	p = path.Dir(p)
+
+	cleanPath := PathJoin(append(pathSplit[:injectI-2], pathSplit[injectI+1:]...)...)
 
 	// if not injecting on this operation, proceed with dir path
-	if path.Base(p) != op {
-		return path.Dir(path.Dir(p)), nil
+	if pathSplit[injectI-1] != op {
+		return cleanPath, nil
 	}
-	p = path.Dir(p)
 
 	// if no injector or disabled, proceed with dir path
-	inj, ok := injects[path.Base(p)]
+	inj, ok := injects[pathSplit[injectI-2]]
 	if !ok || e.disabled {
-		return path.Dir(p), nil
+		return cleanPath, nil
 	}
 
 	// return injector
-	return path.Dir(p), inj
+	return cleanPath, inj
 }
 
 func (e *logicalInjector) Delete(p string) (*api.Secret, error) {
@@ -305,9 +308,9 @@ func (e *logicalInjector) List(p string) (*api.Secret, error) {
 	// call list with the real logical client
 	sec, errL := e.realL.List(np)
 
-	// if we are injecting but not on list, then we need to re-add the injections to the pah of
-	// the results so that the injection can continue with the resulting paths.
-	if path.Base(p) == "inject" {
+	// if we are injecting but not on list, then we need to re-add the injections to the path of
+	// the results so that the injections can continue with the resulting paths.
+	if path.Base(p) == "inject" && !e.disabled {
 		if sec == nil || sec.Data == nil {
 			return nil, errL
 		}
@@ -318,23 +321,18 @@ func (e *logicalInjector) List(p string) (*api.Secret, error) {
 
 		listI := []interface{}{}
 		for _, l := range list {
-			newP := strings.TrimSuffix(p, "/")
-			injP := PathJoin(path.Base(path.Dir(path.Dir(newP))), path.Base(path.Dir(newP)), path.Base(newP))
-			newP = PathJoin(strings.TrimSuffix(newP, injP), l, injP)
+			p = strings.TrimSuffix(p, "/")
+			ip := PathJoin(path.Base(path.Dir(path.Dir(p))), path.Base(path.Dir(p)), path.Base(p))
+			np = PathJoin(l, ip)
 			if IsFolder(l) {
-				newP = EnsureFolder(newP)
+				np = EnsureFolder(np)
 			}
-			listI = append(listI, newP)
+			listI = append(listI, np)
 		}
 
 		ns := &api.Secret{
 			Data: map[string]interface{}{
 				"keys": listI,
-				"data": listI,
-				"metadata": map[string]interface{}{
-					"destroyed":     false,
-					"deletion_time": "",
-				},
 			},
 		}
 		return ns, errL

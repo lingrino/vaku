@@ -90,16 +90,30 @@ func (c *Client) folderReadWork(i *folderReadWorkInput) error {
 			if !ok {
 				return nil
 			}
-			path = EnsurePrefix(path, i.root)
-			read, err := c.PathRead(path)
+			err := c.pathReadWork(path, i)
 			if err != nil {
-				return newWrapErr(i.root, ErrFolderReadChan, err)
+				return err
 			}
-
-			res := make(map[string]map[string]interface{}, 1)
-			res[c.outputPath(path, i.root)] = read
-
-			i.resC <- res
 		}
 	}
+}
+
+// pathReadWork reads the path adds results to the channel.
+func (c *Client) pathReadWork(path string, i *folderReadWorkInput) error {
+	path = EnsurePrefix(path, i.root)
+
+	read, err := c.PathRead(path)
+	if err != nil {
+		return newWrapErr(i.root, ErrFolderReadChan, err)
+	}
+
+	// Don't add nil reads to results. These show up in list but are actually deleted secrets.
+	if read != nil {
+		res := make(map[string]map[string]interface{}, 1)
+		res[c.outputPath(path, i.root)] = read
+
+		i.resC <- res
+	}
+
+	return nil
 }
