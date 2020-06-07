@@ -133,7 +133,8 @@ func initSharedVaku(t *testing.T) {
 	sharedVaku = client
 }
 
-// seededPrefixes seeds a new prefixed path, appends to given path, and returns paths to test against.
+// seededPrefixes seeds a new prefixed path, appends to given path, and returns paths to test
+// against.
 func seededPrefixes(t *testing.T, p string) []string {
 	t.Helper()
 
@@ -259,18 +260,6 @@ func (e *logicalInjector) run(p, op string) (string, *inject) {
 	// remove trailing slash
 	p = strings.TrimSuffix(p, "/")
 
-	pathSplit := strings.Split(p, "/")
-
-	injectI := -1
-	for i, s := range pathSplit {
-		if s == "inject" {
-			injectI = i
-		}
-	}
-	if injectI >= 0 {
-
-	}
-
 	// if not injecting, proceed as normal
 	if path.Base(p) != "inject" {
 		return p, nil
@@ -306,11 +295,52 @@ func (e *logicalInjector) Delete(p string) (*api.Secret, error) {
 func (e *logicalInjector) List(p string) (*api.Secret, error) {
 	e.t.Helper()
 
-	p, inj := e.run(p, "list")
+	np, inj := e.run(p, "list")
+
+	// return injected results if they exist
 	if inj != nil {
 		return inj.secret, inj.err
 	}
-	return e.realL.List(p)
+
+	// call list with the real logical client
+	sec, errL := e.realL.List(np)
+
+	// if we are injecting but not on list, then we need to re-add the injections to the pah of
+	// the results so that the injection can continue with the resulting paths.
+	if path.Base(p) == "inject" {
+		if sec == nil || sec.Data == nil {
+			return nil, errL
+		}
+		list, err := decodeSecret(sec)
+		if err != nil {
+			return nil, err
+		}
+
+		listI := []interface{}{}
+		for _, l := range list {
+			newP := strings.TrimSuffix(p, "/")
+			injP := PathJoin(path.Base(path.Dir(path.Dir(newP))), path.Base(path.Dir(newP)), path.Base(newP))
+			newP = PathJoin(strings.TrimSuffix(newP, injP), l, injP)
+			if IsFolder(l) {
+				newP = EnsureFolder(newP)
+			}
+			listI = append(listI, newP)
+		}
+
+		ns := &api.Secret{
+			Data: map[string]interface{}{
+				"keys": listI,
+				"data": listI,
+				"metadata": map[string]interface{}{
+					"destroyed":     false,
+					"deletion_time": "",
+				},
+			},
+		}
+		return ns, errL
+	}
+
+	return sec, errL
 }
 
 func (e *logicalInjector) Read(p string) (*api.Secret, error) {

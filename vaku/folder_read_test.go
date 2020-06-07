@@ -2,6 +2,7 @@ package vaku
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -15,44 +16,44 @@ func TestFolderRead(t *testing.T) {
 		want    map[string]map[string]interface{}
 		wantErr []error
 	}{
-		// {
-		// 	give:    "0/1",
-		// 	want:    nil,
-		// 	wantErr: nil,
-		// },
-		// {
-		// 	give: "0/4/13/24/25",
-		// 	want: map[string]map[string]interface{}{
-		// 		"26/27": {
-		// 			"28": "29",
-		// 		},
-		// 	},
-		// 	wantErr: nil,
-		// },
-		// {
-		// 	give: "0/4/13",
-		// 	want: map[string]map[string]interface{}{
-		// 		"14": {
-		// 			"15": "16",
-		// 		},
-		// 		"17": {
-		// 			"18": "19",
-		// 			"20": "21",
-		// 			"22": "23",
-		// 		},
-		// 		"24/25/26/27": {
-		// 			"28": "29",
-		// 		},
-		// 	},
-		// 	wantErr: nil,
-		// },
-		// {
-		// 	give:    "error/list/inject",
-		// 	want:    nil,
-		// 	wantErr: []error{ErrFolderRead, ErrFolderReadChan, ErrFolderListChan, ErrPathList, ErrVaultList},
-		// },
 		{
-			give:    "0/1/error/read/inject",
+			give:    "0/1",
+			want:    nil,
+			wantErr: nil,
+		},
+		{
+			give: "0/4/13/24/25",
+			want: map[string]map[string]interface{}{
+				"26/27": {
+					"28": "29",
+				},
+			},
+			wantErr: nil,
+		},
+		{
+			give: "0/4/13",
+			want: map[string]map[string]interface{}{
+				"14": {
+					"15": "16",
+				},
+				"17": {
+					"18": "19",
+					"20": "21",
+					"22": "23",
+				},
+				"24/25/26/27": {
+					"28": "29",
+				},
+			},
+			wantErr: nil,
+		},
+		{
+			give:    "error/list/inject",
+			want:    nil,
+			wantErr: []error{ErrFolderRead, ErrFolderReadChan, ErrFolderListChan, ErrPathList, ErrVaultList},
+		},
+		{
+			give:    "0/4/13/24/25/26/error/read/inject",
 			want:    nil,
 			wantErr: []error{ErrFolderRead, ErrFolderReadChan, ErrPathRead, ErrVaultRead},
 		},
@@ -68,6 +69,7 @@ func TestFolderRead(t *testing.T) {
 					t.Parallel()
 
 					read, err := sharedVaku.FolderRead(context.Background(), PathJoin(prefix, tt.give))
+					fmt.Println(err)
 					compareErrors(t, err, tt.wantErr)
 
 					TrimPrefixMap(read, prefix)

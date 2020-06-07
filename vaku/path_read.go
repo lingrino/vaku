@@ -2,7 +2,6 @@ package vaku
 
 import (
 	"errors"
-	"fmt"
 )
 
 var (
@@ -14,7 +13,6 @@ var (
 
 // PathRead reads data at a path.
 func (c *Client) PathRead(p string) (map[string]interface{}, error) {
-	fmt.Println(p)
 	vaultPath, mv, err := c.rewritePath(p, vaultRead)
 	if err != nil {
 		return nil, newWrapErr(p, ErrPathRead, err)
