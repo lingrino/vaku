@@ -52,7 +52,7 @@ func TestPathCopy(t *testing.T) {
 					compareErrors(t, err, tt.wantErr)
 
 					readSrc, errSrc := sharedVakuClean.PathRead(PathJoin(prefixPair[0], tt.giveSrc))
-					readDst, errDst := sharedVakuClean.PathRead(PathJoin(prefixPair[1], tt.giveDst))
+					readDst, errDst := sharedVakuClean.dc.PathRead(PathJoin(prefixPair[1], tt.giveDst))
 					assert.NoError(t, errSrc)
 					assert.NoError(t, errDst)
 
