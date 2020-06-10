@@ -1,6 +1,7 @@
 package vaku
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -157,13 +158,17 @@ func seededPrefixes(t *testing.T, p string) []string {
 	// seed prefixes
 	prefixes := make([]string, len(mountVersions))
 	for i, ver := range mountVersions {
-		for p, secret := range seeds {
-			err := sharedVaku.PathWrite(PathJoin("kv"+ver, prefix, p), secret)
-			assert.NoError(t, err)
-
-			err = sharedVaku.dc.PathWrite(PathJoin("kv"+ver, prefix, p), secret)
-			assert.NoError(t, err)
+		seedsCopy := make(map[string]map[string]interface{}, len(seeds))
+		for p, v := range seeds {
+			seedsCopy[PathJoin("kv"+ver, prefix, p)] = v
 		}
+
+		err := sharedVakuClean.FolderWrite(context.Background(), seedsCopy)
+		assert.NoError(t, err)
+
+		err = sharedVakuClean.dc.FolderWrite(context.Background(), seedsCopy)
+		assert.NoError(t, err)
+
 		prefixes[i] = PathJoin("kv"+ver, prefix)
 	}
 

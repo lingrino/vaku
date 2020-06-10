@@ -2,8 +2,6 @@
 
 ## Soon
 
-- fix v2 api endpoint calls
-- switch test seed to use vaku folder write
 - cli path/folder functions
 - support namespaces?
 - api context and cancellations?
@@ -16,7 +14,6 @@
 - Example functions
 - API example in readme
 - doc.go in api
-- optimize api tests? tests share client and get new path prefix?
 - graceful worker shutdown <https://callistaenterprise.se/blogg/teknik/2019/10/05/go-worker-cancellation/>
 - CI to make sure api Version() stays up to date with tags
 

@@ -2,7 +2,6 @@ package vaku
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -42,7 +41,6 @@ const (
 // mountInfo takes a path and returns the mount path and version.
 func (c *Client) mountInfo(p string) (string, mountVersion, error) {
 	mounts, err := c.vc.Sys().ListMounts()
-	fmt.Println(mounts)
 	if err != nil {
 		return "", mv0, newWrapErr(p, ErrMountInfo, newWrapErr(err.Error(), ErrListMounts, nil))
 	}
