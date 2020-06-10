@@ -57,7 +57,7 @@ func TestNewClient(t *testing.T) {
 			give: []Option{
 				WithVaultSrcClient(newDefaultVaultClient(t)),
 				WithVaultDstClient(newDefaultVaultClient(t)),
-				WithabsolutePath(true),
+				WithAbsolutePath(true),
 			},
 			want: &Client{
 				vc: newDefaultVaultClient(t),
@@ -96,6 +96,145 @@ func TestNewClient(t *testing.T) {
 
 			compareErrors(t, err, tt.wantErr)
 			assertClientsEqual(t, tt.want, client)
+		})
+	}
+}
+
+func TestSwapPaths(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		giveSrc       string
+		giveDst       string
+		giveAbsData   map[string]map[string]interface{}
+		giveNoAbsData map[string]map[string]interface{}
+		wantAbs       map[string]map[string]interface{}
+		wantNoAbs     map[string]map[string]interface{}
+	}{
+		{
+			giveSrc: "0/1/2",
+			giveDst: "00/01/02",
+			giveAbsData: map[string]map[string]interface{}{
+				"0/1/2/3": nil,
+				"0/1/2/4": nil,
+			},
+			giveNoAbsData: map[string]map[string]interface{}{
+				"0/1/2/3": nil,
+				"0/1/2/4": nil,
+			},
+			wantAbs: map[string]map[string]interface{}{
+				"00/01/02/3": nil,
+				"00/01/02/4": nil,
+			},
+			wantNoAbs: map[string]map[string]interface{}{
+				"00/01/02/0/1/2/3": nil,
+				"00/01/02/0/1/2/4": nil,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.giveSrc, func(t *testing.T) {
+			t.Parallel()
+
+			client, err := NewClient(WithAbsolutePath(true))
+			assert.NoError(t, err)
+
+			client.swapPaths(tt.giveAbsData, tt.giveSrc, tt.giveDst)
+			assert.Equal(t, tt.wantAbs, tt.giveAbsData)
+		})
+		t.Run(tt.giveSrc, func(t *testing.T) {
+			t.Parallel()
+
+			client, err := NewClient()
+			assert.NoError(t, err)
+
+			client.swapPaths(tt.giveNoAbsData, tt.giveSrc, tt.giveDst)
+			assert.Equal(t, tt.wantNoAbs, tt.giveNoAbsData)
+		})
+	}
+}
+
+func TestOutputPath(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		giveRoot  string
+		givePath  string
+		wantAbs   string
+		wantNoAbs string
+	}{
+		{
+			giveRoot:  "0/1/2",
+			givePath:  "3",
+			wantAbs:   "0/1/2/3",
+			wantNoAbs: "3",
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.givePath, func(t *testing.T) {
+			t.Parallel()
+
+			client, err := NewClient(WithAbsolutePath(true))
+			assert.NoError(t, err)
+
+			res := client.outputPath(tt.givePath, tt.giveRoot)
+			assert.Equal(t, tt.wantAbs, res)
+		})
+		t.Run(tt.givePath, func(t *testing.T) {
+			t.Parallel()
+
+			client, err := NewClient()
+			assert.NoError(t, err)
+
+			res := client.outputPath(tt.givePath, tt.giveRoot)
+			assert.Equal(t, tt.wantNoAbs, res)
+		})
+	}
+}
+
+func TestOutputPaths(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		giveRoot       string
+		giveAbsPaths   []string
+		giveNoAbsPaths []string
+
+		wantAbs   []string
+		wantNoAbs []string
+	}{
+		{
+			giveRoot:       "0/1/2",
+			giveAbsPaths:   []string{"3", "4"},
+			giveNoAbsPaths: []string{"3", "4"},
+			wantAbs:        []string{"0/1/2/3", "0/1/2/4"},
+			wantNoAbs:      []string{"3", "4"},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.giveRoot, func(t *testing.T) {
+			t.Parallel()
+
+			client, err := NewClient(WithAbsolutePath(true))
+			assert.NoError(t, err)
+
+			client.outputPaths(tt.giveAbsPaths, tt.giveRoot)
+			assert.Equal(t, tt.wantAbs, tt.giveAbsPaths)
+		})
+		t.Run(tt.giveRoot, func(t *testing.T) {
+			t.Parallel()
+
+			client, err := NewClient()
+			assert.NoError(t, err)
+
+			client.outputPaths(tt.giveNoAbsPaths, tt.giveRoot)
+			assert.Equal(t, tt.wantNoAbs, tt.giveNoAbsPaths)
 		})
 	}
 }

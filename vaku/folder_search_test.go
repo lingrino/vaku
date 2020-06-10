@@ -42,6 +42,12 @@ func TestFolderSearch(t *testing.T) {
 			wantErr:    nil,
 		},
 		{
+			give:       "0/4/error/read/inject",
+			giveSearch: "aaaaaaaaa",
+			want:       nil,
+			wantErr:    []error{ErrFolderSearch, ErrFolderRead, ErrFolderReadChan, ErrPathRead, ErrVaultRead},
+		},
+		{
 			give:       "0/4/funcdata/read/inject",
 			giveSearch: "aaaaaaaaa",
 			want:       nil,

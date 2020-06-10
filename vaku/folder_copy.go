@@ -3,7 +3,6 @@ package vaku
 import (
 	"context"
 	"errors"
-	"fmt"
 )
 
 var (
@@ -19,12 +18,8 @@ func (c *Client) FolderCopy(ctx context.Context, src, dst string) error {
 	}
 
 	// Switch the key prefixes from src to dst
-	if c.absolutePath {
-		TrimPrefixMap(read, src)
-	}
-	EnsurePrefixMap(read, dst)
+	c.swapPaths(read, src, dst)
 
-	fmt.Println(read)
 	err = c.dc.FolderWrite(ctx, read)
 	if err != nil {
 		return newWrapErr("write to "+dst, ErrFolderCopy, err)

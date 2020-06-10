@@ -112,7 +112,7 @@ func initSharedVaku(t *testing.T) {
 	client, err := NewClient(
 		WithVaultSrcClient(srcClient),
 		WithVaultDstClient(dstClient),
-		WithabsolutePath(false),
+		WithAbsolutePath(false),
 		WithWorkers(100),
 	)
 	assert.NoError(t, err)
@@ -255,28 +255,34 @@ func (e *logicalInjector) run(p, op string) (string, *inject) {
 	p = strings.TrimSuffix(p, "/")
 
 	// find injection in path
-	injectI := -1
+	var injectOp string
+	var injectName string
 	pathSplit := strings.Split(p, "/")
 	for i, s := range pathSplit {
 		if s == "inject" {
-			injectI = i
+			injectOp = pathSplit[i-1]
+			injectName = pathSplit[i-2]
+			pathSplit[i] = ""
+			pathSplit[i-1] = ""
+			pathSplit[i-2] = ""
 		}
 	}
 
 	// if not injecting, proceed as normal
-	if injectI < 0 {
+	if injectName == "" {
 		return p, nil
 	}
 
-	cleanPath := PathJoin(append(pathSplit[:injectI-2], pathSplit[injectI+1:]...)...)
+	// cleanPath is path with injection words removed
+	cleanPath := PathJoin(pathSplit...)
 
 	// if not injecting on this operation, proceed with dir path
-	if pathSplit[injectI-1] != op {
+	if injectOp != op {
 		return cleanPath, nil
 	}
 
 	// if no injector or disabled, proceed with dir path
-	inj, ok := injects[pathSplit[injectI-2]]
+	inj, ok := injects[injectName]
 	if !ok || e.disabled {
 		return cleanPath, nil
 	}

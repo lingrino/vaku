@@ -102,16 +102,16 @@ func (o withWorkers) apply(c *Client) error {
 	return nil
 }
 
-// WithabsolutePath sets the output format for all returned paths. Default path output is a relative
-// path, trimmed up to the path input. Pass WithabsolutePath(true) to set path output to the entire
+// WithAbsolutePath sets the output format for all returned paths. Default path output is a relative
+// path, trimmed up to the path input. Pass WithAbsolutePath(true) to set path output to the entire
 // path. Example: List(secret/foo) -> "bar" OR "secret/foo/bar".
-func WithabsolutePath(b bool) Option {
-	return withabsolutePath(b)
+func WithAbsolutePath(b bool) Option {
+	return withAbsolutePath(b)
 }
 
-type withabsolutePath bool
+type withAbsolutePath bool
 
-func (o withabsolutePath) apply(c *Client) error {
+func (o withAbsolutePath) apply(c *Client) error {
 	c.absolutePath = bool(o)
 	c.dc.absolutePath = bool(o)
 	return nil
@@ -134,6 +134,14 @@ func NewClient(opts ...Option) (*Client, error) {
 	}
 
 	return client, nil
+}
+
+// swapPaths replaces source paths in data with dest paths for copy/move after FolderRead.
+func (c *Client) swapPaths(data map[string]map[string]interface{}, src, dst string) {
+	if c.absolutePath {
+		TrimPrefixMap(data, src)
+	}
+	EnsurePrefixMap(data, dst)
 }
 
 // outputPath returns a path for the user, given their formatting preferences.

@@ -83,7 +83,7 @@ func (c *cli) initVakuClient(cmd *cobra.Command, args []string) error {
 		options = append(options, vaku.WithVaultDstClient(dstClient))
 	}
 
-	options = append(options, vaku.WithabsolutePath(c.flagAbsPath))
+	options = append(options, vaku.WithAbsolutePath(c.flagAbsPath))
 	options = append(options, vaku.WithWorkers(c.flagWorkers))
 
 	vakuClient, err := vaku.NewClient(options...)

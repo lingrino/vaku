@@ -34,7 +34,9 @@ func EnsurePrefix(p, pfx string) string {
 // EnsurePrefixList adds a prefix to every item in a list.
 func EnsurePrefixList(l []string, pfx string) {
 	for i, v := range l {
-		l[i] = PathJoin(pfx, v)
+		if !strings.HasPrefix(v, pfx) {
+			l[i] = PathJoin(pfx, v)
+		}
 	}
 }
 

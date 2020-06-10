@@ -220,7 +220,7 @@ func TestEnsurePrefixList(t *testing.T) {
 		{
 			giveList:   []string{"i/j"},
 			givePrefix: "i",
-			want:       []string{"i/i/j"},
+			want:       []string{"i/j"},
 		},
 	}
 
