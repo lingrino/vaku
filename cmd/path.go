@@ -32,6 +32,8 @@ func (c *cli) newPathCmd() *cobra.Command {
 		c.newPathWriteCmd(),
 		c.newPathDeleteCmd(),
 		c.newPathSearchCmd(),
+		c.newPathCopyCmd(),
+		c.newPathMoveCmd(),
 	)
 
 	return cmd
