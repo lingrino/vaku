@@ -2,7 +2,7 @@
 
 ## Soon
 
-- cli path/folder functions
+- cli folder functions
 - support namespaces?
 - api context and cancellations?
 - cli flags for timeouts/context
@@ -10,6 +10,7 @@
 
 ## Upcoming
 
+- Better CLI descriptions/texta
 - CI enforces 100% test coverage
 - Benchmarks
 - Example functions

@@ -37,6 +37,7 @@ vaku folder list secret/foo
 ### SEE ALSO
 
 * [vaku completion](vaku_completion.md)	 - Generates shell completions
+* [vaku folder](vaku_folder.md)	 - Commands that act on Vault folders
 * [vaku path](vaku_path.md)	 - Commands that act on Vault paths
 * [vaku version](vaku_version.md)	 - Print vaku version
 
