@@ -5,28 +5,24 @@ import (
 )
 
 const (
-	pathWriteUse     = "write <path>"
-	pathWriteShort   = "Write all paths at a path"
-	pathWriteExample = "vaku path write secret/foo"
-	pathWriteLong    = "Write all paths at a path"
+	pathWriteUse   = "write"
+	pathWriteShort = "Vaku CLI does not support path write. Use the vaku API or native Vault CLI"
+	pathWriteLong  = "Vaku CLI does not support path write. Use the vaku API or native Vault CLI"
 )
 
 func (c *cli) newPathWriteCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     pathWriteUse,
-		Short:   pathWriteShort,
-		Long:    pathWriteLong,
-		Example: pathWriteExample,
+		Use:   pathWriteUse,
+		Short: pathWriteShort,
+		Long:  pathWriteLong,
 
-		Args: cobra.ExactArgs(1),
-
-		RunE: c.runPathWrite,
+		// disable all discovery
+		Hidden:                true,
+		DisableSuggestions:    true,
+		DisableFlagsInUseLine: true,
+		PersistentPreRun:      nil,
+		Args:                  cobra.ArbitraryArgs,
 	}
 
 	return cmd
-}
-
-func (c *cli) runPathWrite(cmd *cobra.Command, args []string) error {
-	err := c.vc.PathWrite("kv2/data/wat", map[string]interface{}{"foo": args[0]})
-	return err
 }

@@ -6,6 +6,7 @@
 - support namespaces?
 - api context and cancellations?
 - cli flags for timeouts/context
+- destroy/metadatadestroy commands?
 
 ## Upcoming
 

@@ -116,7 +116,7 @@ func TestHasExample(t *testing.T) {
 func allHasExample(cmds ...*cobra.Command) bool {
 	res := true
 	for _, cmd := range cmds {
-		res = res && cmd.HasExample() && allHasExample(cmd.Commands()...)
+		res = res && (cmd.HasExample() || cmd.Hidden) && allHasExample(cmd.Commands()...)
 	}
 	return res
 }

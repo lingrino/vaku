@@ -43,5 +43,4 @@ vaku path list secret/foo
 * [vaku path delete](vaku_path_delete.md)	 - Delete all paths at a path
 * [vaku path list](vaku_path_list.md)	 - List all paths at a path
 * [vaku path read](vaku_path_read.md)	 - Read all paths at a path
-* [vaku path write](vaku_path_write.md)	 - Write all paths at a path
 

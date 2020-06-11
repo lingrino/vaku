@@ -1,6 +1,7 @@
 package vaku
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strings"
@@ -41,6 +42,31 @@ type Client struct {
 	// absolutePath if the absolute path is desired instead of the relative path.
 	absolutePath bool
 }
+
+// ClientInterface exports the interface for the full Vaku client.
+type ClientInterface interface {
+	PathList(string) ([]string, error)
+	PathRead(string) (map[string]interface{}, error)
+	PathWrite(string, map[string]interface{}) error
+	PathDelete(string) error
+	PathUpdate(string, map[string]interface{}) error
+	PathSearch(string, string) (bool, error)
+	PathCopy(string, string) error
+	PathMove(string, string) error
+
+	FolderList(context.Context, string) ([]string, error)
+	FolderListChan(context.Context, string) (<-chan string, <-chan error)
+	FolderRead(context.Context, string) (map[string]map[string]interface{}, error)
+	FolderReadChan(context.Context, string) (<-chan map[string]map[string]interface{}, <-chan error)
+	FolderWrite(context.Context, map[string]map[string]interface{}) error
+	FolderDelete(context.Context, string) error
+	FolderSearch(context.Context, string, string) ([]string, error)
+	FolderCopy(context.Context, string, string) error
+	FolderMove(context.Context, string, string) error
+}
+
+// Verify Client compliance with the interface.
+var _ ClientInterface = (*Client)(nil)
 
 // Option configures a Client.
 type Option interface {

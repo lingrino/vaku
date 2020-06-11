@@ -66,6 +66,9 @@ issues:
     - path: main.go
       linters:
         - gochecknoglobals # global in main.go needed for testing
+    - path: cmd/
+      linters:
+        - dupl # CLIs are a lot of similar-looking code!
     - path: _test.go
       linters:
         - dupl # many functions in tests look like duplicates
