@@ -29,6 +29,12 @@ func (c *cli) newFolderCmd() *cobra.Command {
 
 	cmd.AddCommand(
 		c.newFolderListCmd(),
+		c.newFolderReadCmd(),
+		c.newFolderWriteCmd(),
+		c.newFolderDeleteCmd(),
+		c.newFolderSearchCmd(),
+		c.newFolderCopyCmd(),
+		c.newFolderMoveCmd(),
 	)
 
 	return cmd
