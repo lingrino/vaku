@@ -7,10 +7,11 @@ import (
 )
 
 const (
-	folderSearchUse     = "search <path> <search>"
-	folderSearchShort   = "Search for a secret in a folder"
-	folderSearchExample = "vaku folder search secret/foo"
-	folderSearchLong    = "Search for a secret in a folder"
+	folderSearchArgs    = 2
+	folderSearchUse     = "search <folder> <search>"
+	folderSearchShort   = "Recursively search all secrets in a folder for a search string"
+	folderSearchLong    = "Recursively search all secrets in a folder for a search string"
+	folderSearchExample = "vaku folder search secret/foo bar"
 )
 
 func (c *cli) newFolderSearchCmd() *cobra.Command {
@@ -20,7 +21,7 @@ func (c *cli) newFolderSearchCmd() *cobra.Command {
 		Long:    folderSearchLong,
 		Example: folderSearchExample,
 
-		Args: cobra.ExactArgs(2), //nolint:gomnd
+		Args: cobra.ExactArgs(folderSearchArgs),
 
 		RunE: c.runfolderSearch,
 	}

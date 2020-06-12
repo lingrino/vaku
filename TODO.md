@@ -9,7 +9,6 @@
 
 ## Upcoming
 
-- Better CLI descriptions/texta
 - CI enforces 100% test coverage
 - Benchmarks
 - Example functions
@@ -23,7 +22,6 @@
 - www html linting, best practices, css?
 - update website
 - release on snapcraft
-- verify delete/destory behavior on real vault
 - make sure all 100% on codeclimate, codacy, codebeat, etc...
 - make sure changelog is up to date
 

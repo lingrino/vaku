@@ -67,7 +67,7 @@ func (c *cli) setVersion(version string) {
 // initVakuClient initializes our vaku client and underlying vault clients.
 // https://github.com/hashicorp/vault/blob/8571221f03c92ac3acac27c240fa7c9b3cb22db5/command/base.go#L67-L159
 func (c *cli) initVakuClient(cmd *cobra.Command, args []string) error {
-	// don't proveed if vc is already set (likely in tests)
+	// don't proceed if vc is already set (likely in tests)
 	if c.vc != nil {
 		return nil
 	}

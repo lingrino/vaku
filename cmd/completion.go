@@ -8,7 +8,7 @@ import (
 
 const (
 	completionArgs    = 1
-	completionUse     = "completion bash|zsh|powershell"
+	completionUse     = "completion bash|fish|zsh|powershell"
 	completionShort   = "Generates shell completions"
 	completionExample = "vaku completion zsh"
 	completionLong    = `To install completions for your shell

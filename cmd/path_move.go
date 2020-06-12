@@ -5,10 +5,11 @@ import (
 )
 
 const (
+	pathMoveArgs    = 2
 	pathMoveUse     = "move <source path> <destination path>"
 	pathMoveShort   = "Move a secret from a source path to a destination path"
+	pathMoveLong    = "Move a secret from a source path to a destination path"
 	pathMoveExample = "vaku path move secret/foo secret/bar"
-	pathMoveLong    = "Search a secret for a string"
 )
 
 func (c *cli) newPathMoveCmd() *cobra.Command {
@@ -18,7 +19,7 @@ func (c *cli) newPathMoveCmd() *cobra.Command {
 		Long:    pathMoveLong,
 		Example: pathMoveExample,
 
-		Args: cobra.ExactArgs(2), //nolint:gomnd
+		Args: cobra.ExactArgs(pathMoveArgs),
 
 		RunE: c.runPathMove,
 	}

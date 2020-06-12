@@ -7,10 +7,11 @@ import (
 )
 
 const (
-	folderDeleteUse     = "delete <path>"
-	folderDeleteShort   = "Recursively delete all paths in a folder"
+	folderDeleteArgs    = 1
+	folderDeleteUse     = "delete <folder>"
+	folderDeleteShort   = "Recursively delete all secrets in a folder"
+	folderDeleteLong    = "Recursively delete all secrets in a folder"
 	folderDeleteExample = "vaku folder delete secret/foo"
-	folderDeleteLong    = "Recursively delete all paths in a folder"
 )
 
 func (c *cli) newFolderDeleteCmd() *cobra.Command {
@@ -20,7 +21,7 @@ func (c *cli) newFolderDeleteCmd() *cobra.Command {
 		Long:    folderDeleteLong,
 		Example: folderDeleteExample,
 
-		Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(folderDeleteArgs),
 
 		RunE: c.runfolderDelete,
 	}

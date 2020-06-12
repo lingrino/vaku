@@ -5,10 +5,11 @@ import (
 )
 
 const (
+	pathDeleteArgs    = 1
 	pathDeleteUse     = "delete <path>"
-	pathDeleteShort   = "Delete all paths at a path"
+	pathDeleteShort   = "Delete a secret at a path"
+	pathDeleteLong    = "Delete a secret at a path"
 	pathDeleteExample = "vaku path delete secret/foo"
-	pathDeleteLong    = "Delete all paths at a path"
 )
 
 func (c *cli) newPathDeleteCmd() *cobra.Command {
@@ -18,7 +19,7 @@ func (c *cli) newPathDeleteCmd() *cobra.Command {
 		Long:    pathDeleteLong,
 		Example: pathDeleteExample,
 
-		Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(pathDeleteArgs),
 
 		RunE: c.runPathDelete,
 	}
@@ -27,6 +28,5 @@ func (c *cli) newPathDeleteCmd() *cobra.Command {
 }
 
 func (c *cli) runPathDelete(cmd *cobra.Command, args []string) error {
-	err := c.vc.PathDelete(args[0])
-	return err
+	return c.vc.PathDelete(args[0])
 }

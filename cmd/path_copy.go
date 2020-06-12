@@ -5,10 +5,11 @@ import (
 )
 
 const (
+	pathCopyArgs    = 2
 	pathCopyUse     = "copy <source path> <destination path>"
 	pathCopyShort   = "Copy a secret from a source path to a destination path"
+	pathCopyLong    = "Copy a secret from a source path to a destination path"
 	pathCopyExample = "vaku path copy secret/foo secret/bar"
-	pathCopyLong    = "Search a secret for a string"
 )
 
 func (c *cli) newPathCopyCmd() *cobra.Command {
@@ -18,7 +19,7 @@ func (c *cli) newPathCopyCmd() *cobra.Command {
 		Long:    pathCopyLong,
 		Example: pathCopyExample,
 
-		Args: cobra.ExactArgs(2), //nolint:gomnd
+		Args: cobra.ExactArgs(pathCopyArgs),
 
 		RunE: c.runPathCopy,
 	}

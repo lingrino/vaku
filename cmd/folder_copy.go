@@ -7,10 +7,11 @@ import (
 )
 
 const (
+	folderCopyArgs    = 2
 	folderCopyUse     = "copy <source folder> <destination folder>"
-	folderCopyShort   = "Copy a folder from source to destination"
+	folderCopyShort   = "Recursively copy all secrets in source folder to destination folder"
+	folderCopyLong    = "Recursively copy all secrets in source folder to destination folder"
 	folderCopyExample = "vaku folder copy secret/foo secret/bar"
-	folderCopyLong    = "Copy a folder from source to destination"
 )
 
 func (c *cli) newFolderCopyCmd() *cobra.Command {
@@ -20,7 +21,7 @@ func (c *cli) newFolderCopyCmd() *cobra.Command {
 		Long:    folderCopyLong,
 		Example: folderCopyExample,
 
-		Args: cobra.ExactArgs(2), //nolint:gomnd
+		Args: cobra.ExactArgs(folderCopyArgs),
 
 		RunE: c.runfolderCopy,
 	}

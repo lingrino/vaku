@@ -7,10 +7,11 @@ import (
 )
 
 const (
+	folderMoveArgs    = 2
 	folderMoveUse     = "move <source folder> <destination folder>"
-	folderMoveShort   = "Move a folder from source to destination"
+	folderMoveShort   = "Recursively move all secrets in source folder to destination folder"
+	folderMoveLong    = "Recursively move all secrets in source folder to destination folder"
 	folderMoveExample = "vaku folder move secret/foo secret/bar"
-	folderMoveLong    = "Move a folder from source to destination"
 )
 
 func (c *cli) newFolderMoveCmd() *cobra.Command {
@@ -20,7 +21,7 @@ func (c *cli) newFolderMoveCmd() *cobra.Command {
 		Long:    folderMoveLong,
 		Example: folderMoveExample,
 
-		Args: cobra.ExactArgs(2), //nolint:gomnd
+		Args: cobra.ExactArgs(folderMoveArgs),
 
 		RunE: c.runfolderMove,
 	}

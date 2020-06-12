@@ -5,10 +5,11 @@ import (
 )
 
 const (
+	pathListArgs    = 1
 	pathListUse     = "list <path>"
 	pathListShort   = "List all paths at a path"
-	pathListExample = "vaku path list secret/foo"
 	pathListLong    = "List all paths at a path"
+	pathListExample = "vaku path list secret/foo"
 )
 
 func (c *cli) newPathListCmd() *cobra.Command {
@@ -18,7 +19,7 @@ func (c *cli) newPathListCmd() *cobra.Command {
 		Long:    pathListLong,
 		Example: pathListExample,
 
-		Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(pathListArgs),
 
 		RunE: c.runPathList,
 	}

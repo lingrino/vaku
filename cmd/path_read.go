@@ -5,10 +5,11 @@ import (
 )
 
 const (
+	pathReadArgs    = 1
 	pathReadUse     = "read <path>"
-	pathReadShort   = "Read all paths at a path"
+	pathReadShort   = "Read a secret at a path"
+	pathReadLong    = "Read a secret at a path"
 	pathReadExample = "vaku path read secret/foo"
-	pathReadLong    = "Read all paths at a path"
 )
 
 func (c *cli) newPathReadCmd() *cobra.Command {
@@ -18,7 +19,7 @@ func (c *cli) newPathReadCmd() *cobra.Command {
 		Long:    pathReadLong,
 		Example: pathReadExample,
 
-		Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(pathReadArgs),
 
 		RunE: c.runPathRead,
 	}

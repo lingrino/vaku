@@ -7,10 +7,11 @@ import (
 )
 
 const (
-	folderReadUse     = "read <path>"
-	folderReadShort   = "Recursively read all paths in a folder"
+	folderReadArgs    = 1
+	folderReadUse     = "read <folder>"
+	folderReadShort   = "Recursively read all secrets in a folder"
+	folderReadLong    = "Recursively read all secrets in a folder"
 	folderReadExample = "vaku folder read secret/foo"
-	folderReadLong    = "Recursively read all paths in a folder"
 )
 
 func (c *cli) newFolderReadCmd() *cobra.Command {
@@ -20,7 +21,7 @@ func (c *cli) newFolderReadCmd() *cobra.Command {
 		Long:    folderReadLong,
 		Example: folderReadExample,
 
-		Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(folderReadArgs),
 
 		RunE: c.runfolderRead,
 	}

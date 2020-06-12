@@ -7,10 +7,11 @@ import (
 )
 
 const (
+	pathSearchArgs    = 2
 	pathSearchUse     = "search <path> <search>"
-	pathSearchShort   = "Search a secret for a string"
+	pathSearchShort   = "Search a secret for a search string"
+	pathSearchLong    = "Search a secret for a search string"
 	pathSearchExample = "vaku path search secret/foo bar"
-	pathSearchLong    = "Search a secret for a string"
 )
 
 func (c *cli) newPathSearchCmd() *cobra.Command {
@@ -20,7 +21,7 @@ func (c *cli) newPathSearchCmd() *cobra.Command {
 		Long:    pathSearchLong,
 		Example: pathSearchExample,
 
-		Args: cobra.ExactArgs(2), //nolint:gomnd
+		Args: cobra.ExactArgs(pathSearchArgs),
 
 		RunE: c.runPathSearch,
 	}
@@ -29,7 +30,7 @@ func (c *cli) newPathSearchCmd() *cobra.Command {
 }
 
 func (c *cli) runPathSearch(cmd *cobra.Command, args []string) error {
-	found, err := c.vc.PathSearch(args[0], args[1])
-	c.output(strconv.FormatBool(found))
+	search, err := c.vc.PathSearch(args[0], args[1])
+	c.output(strconv.FormatBool(search))
 	return err
 }

@@ -7,10 +7,11 @@ import (
 )
 
 const (
-	folderListUse     = "list <path>"
-	folderListShort   = "Recursively list all paths at a path"
+	folderListArgs    = 1
+	folderListUse     = "list <folder>"
+	folderListShort   = "Recursively list all paths in a folder"
+	folderListLong    = "Recursively list all paths in a folder"
 	folderListExample = "vaku folder list secret/foo"
-	folderListLong    = "Recursively list all paths at a path"
 )
 
 func (c *cli) newFolderListCmd() *cobra.Command {
@@ -20,7 +21,7 @@ func (c *cli) newFolderListCmd() *cobra.Command {
 		Long:    folderListLong,
 		Example: folderListExample,
 
-		Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(folderListArgs),
 
 		RunE: c.runfolderList,
 	}
