@@ -2,7 +2,6 @@
 
 ## Soon
 
-- cli folder functions
 - support namespaces?
 - api context and cancellations?
 - cli flags for timeouts/context
