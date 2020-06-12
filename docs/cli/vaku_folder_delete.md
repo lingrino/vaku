@@ -1,13 +1,13 @@
 ## vaku folder delete
 
-Recursively delete all paths in a folder
+Recursively delete all secrets in a folder
 
 ### Synopsis
 
-Recursively delete all paths in a folder
+Recursively delete all secrets in a folder
 
 ```
-vaku folder delete <path> [flags]
+vaku folder delete <folder> [flags]
 ```
 
 ### Examples

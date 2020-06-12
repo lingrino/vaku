@@ -1,10 +1,10 @@
 ## vaku path read
 
-Read all paths at a path
+Read a secret at a path
 
 ### Synopsis
 
-Read all paths at a path
+Read a secret at a path
 
 ```
 vaku path read <path> [flags]

@@ -1,10 +1,10 @@
 ## vaku path search
 
-Search a secret for a string
+Search a secret for a search string
 
 ### Synopsis
 
-Search a secret for a string
+Search a secret for a search string
 
 ```
 vaku path search <path> <search> [flags]

@@ -1,13 +1,13 @@
 ## vaku folder read
 
-Recursively read all paths in a folder
+Recursively read all secrets in a folder
 
 ### Synopsis
 
-Recursively read all paths in a folder
+Recursively read all secrets in a folder
 
 ```
-vaku folder read <path> [flags]
+vaku folder read <folder> [flags]
 ```
 
 ### Examples

@@ -4,7 +4,7 @@ Move a secret from a source path to a destination path
 
 ### Synopsis
 
-Search a secret for a string
+Move a secret from a source path to a destination path
 
 ```
 vaku path move <source path> <destination path> [flags]

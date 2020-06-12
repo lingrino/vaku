@@ -41,10 +41,10 @@ vaku folder list secret/foo
 ### SEE ALSO
 
 * [vaku](vaku.md)	 - Vaku is a CLI for working with large Vault k/v secret engines
-* [vaku folder copy](vaku_folder_copy.md)	 - Copy a folder from source to destination
-* [vaku folder delete](vaku_folder_delete.md)	 - Recursively delete all paths in a folder
-* [vaku folder list](vaku_folder_list.md)	 - Recursively list all paths at a path
-* [vaku folder move](vaku_folder_move.md)	 - Move a folder from source to destination
-* [vaku folder read](vaku_folder_read.md)	 - Recursively read all paths in a folder
-* [vaku folder search](vaku_folder_search.md)	 - Search for a secret in a folder
+* [vaku folder copy](vaku_folder_copy.md)	 - Recursively copy all secrets in source folder to destination folder
+* [vaku folder delete](vaku_folder_delete.md)	 - Recursively delete all secrets in a folder
+* [vaku folder list](vaku_folder_list.md)	 - Recursively list all paths in a folder
+* [vaku folder move](vaku_folder_move.md)	 - Recursively move all secrets in source folder to destination folder
+* [vaku folder read](vaku_folder_read.md)	 - Recursively read all secrets in a folder
+* [vaku folder search](vaku_folder_search.md)	 - Recursively search all secrets in a folder for a search string
 

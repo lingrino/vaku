@@ -1,13 +1,13 @@
 ## vaku folder list
 
-Recursively list all paths at a path
+Recursively list all paths in a folder
 
 ### Synopsis
 
-Recursively list all paths at a path
+Recursively list all paths in a folder
 
 ```
-vaku folder list <path> [flags]
+vaku folder list <folder> [flags]
 ```
 
 ### Examples

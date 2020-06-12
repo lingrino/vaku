@@ -1,10 +1,10 @@
 ## vaku path delete
 
-Delete all paths at a path
+Delete a secret at a path
 
 ### Synopsis
 
-Delete all paths at a path
+Delete a secret at a path
 
 ```
 vaku path delete <path> [flags]

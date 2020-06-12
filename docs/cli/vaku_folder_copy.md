@@ -1,10 +1,10 @@
 ## vaku folder copy
 
-Copy a folder from source to destination
+Recursively copy all secrets in source folder to destination folder
 
 ### Synopsis
 
-Copy a folder from source to destination
+Recursively copy all secrets in source folder to destination folder
 
 ```
 vaku folder copy <source folder> <destination folder> [flags]

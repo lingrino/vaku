@@ -1,19 +1,19 @@
 ## vaku folder search
 
-Search for a secret in a folder
+Recursively search all secrets in a folder for a search string
 
 ### Synopsis
 
-Search for a secret in a folder
+Recursively search all secrets in a folder for a search string
 
 ```
-vaku folder search <path> <search> [flags]
+vaku folder search <folder> <search> [flags]
 ```
 
 ### Examples
 
 ```
-vaku folder search secret/foo
+vaku folder search secret/foo bar
 ```
 
 ### Options

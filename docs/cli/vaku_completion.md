@@ -19,7 +19,7 @@ Write the contents of 'vaku completion powershell' and source them in your profi
 source <(vaku completion zsh)
 
 ```
-vaku completion bash|zsh|powershell
+vaku completion bash|fish|zsh|powershell
 ```
 
 ### Examples

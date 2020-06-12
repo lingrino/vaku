@@ -1,10 +1,10 @@
 ## vaku folder move
 
-Move a folder from source to destination
+Recursively move all secrets in source folder to destination folder
 
 ### Synopsis
 
-Move a folder from source to destination
+Recursively move all secrets in source folder to destination folder
 
 ```
 vaku folder move <source folder> <destination folder> [flags]

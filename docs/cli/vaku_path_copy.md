@@ -4,7 +4,7 @@ Copy a secret from a source path to a destination path
 
 ### Synopsis
 
-Search a secret for a string
+Copy a secret from a source path to a destination path
 
 ```
 vaku path copy <source path> <destination path> [flags]
