@@ -40,26 +40,42 @@ type testVakuClient struct{}
 // Verify Client compliance with the interface.
 var _ vaku.ClientInterface = (*testVakuClient)(nil)
 
-func (c *testVakuClient) FolderCopy(ctx context.Context, src, dst string) error {
+func (c *testVakuClient) PathList(p string) ([]string, error) {
+	return []string{"foo", "moo"}, nil
+}
+func (c *testVakuClient) PathRead(p string) (map[string]interface{}, error) {
+	return map[string]interface{}{"biz": "baz", "foo": "bar"}, nil
+}
+func (c *testVakuClient) PathWrite(p string, d map[string]interface{}) error {
 	return nil
 }
-
-func (c *testVakuClient) FolderDelete(ctx context.Context, p string) error {
+func (c *testVakuClient) PathDelete(p string) error {
 	return nil
 }
-
+func (c *testVakuClient) PathDestroy(p string, v []int) error {
+	return nil
+}
+func (c *testVakuClient) PathDeleteMeta(p string) error {
+	return nil
+}
+func (c *testVakuClient) PathUpdate(p string, d map[string]interface{}) error {
+	return nil
+}
+func (c *testVakuClient) PathSearch(p, s string) (bool, error) {
+	return true, nil
+}
+func (c *testVakuClient) PathCopy(src, dst string) error {
+	return nil
+}
+func (c *testVakuClient) PathMove(src, dst string) error {
+	return nil
+}
 func (c *testVakuClient) FolderList(ctx context.Context, p string) ([]string, error) {
 	return []string{"foo/bar", "foo/baz", "bim/bom"}, nil
 }
-
 func (c *testVakuClient) FolderListChan(ctx context.Context, p string) (<-chan string, <-chan error) {
 	return nil, nil
 }
-
-func (c *testVakuClient) FolderMove(ctx context.Context, src, dst string) error {
-	return nil
-}
-
 func (c *testVakuClient) FolderRead(ctx context.Context, p string) (map[string]map[string]interface{}, error) {
 	return map[string]map[string]interface{}{
 		"foo": {
@@ -71,47 +87,27 @@ func (c *testVakuClient) FolderRead(ctx context.Context, p string) (map[string]m
 		},
 	}, nil
 }
-
 func (c *testVakuClient) FolderReadChan(ctx context.Context, p string) (<-chan map[string]map[string]interface{}, <-chan error) { //nolint:lll
 	return nil, nil
 }
-
-func (c *testVakuClient) FolderSearch(ctx context.Context, path, search string) ([]string, error) {
-	return []string{"foo/bar", "bim/bom"}, nil
-}
-
 func (c *testVakuClient) FolderWrite(ctx context.Context, d map[string]map[string]interface{}) error {
 	return nil
 }
-
-func (c *testVakuClient) PathCopy(src, dst string) error {
+func (c *testVakuClient) FolderDelete(ctx context.Context, p string) error {
 	return nil
 }
-
-func (c *testVakuClient) PathDelete(p string) error {
+func (c *testVakuClient) FolderDeleteMeta(context.Context, string) error {
 	return nil
 }
-
-func (c *testVakuClient) PathList(p string) ([]string, error) {
-	return []string{"foo", "moo"}, nil
-}
-
-func (c *testVakuClient) PathMove(src, dst string) error {
+func (c *testVakuClient) FolderDestroy(context.Context, string, []int) error {
 	return nil
 }
-
-func (c *testVakuClient) PathRead(p string) (map[string]interface{}, error) {
-	return map[string]interface{}{"biz": "baz", "foo": "bar"}, nil
+func (c *testVakuClient) FolderSearch(ctx context.Context, path, search string) ([]string, error) {
+	return []string{"foo/bar", "bim/bom"}, nil
 }
-
-func (c *testVakuClient) PathSearch(p, s string) (bool, error) {
-	return true, nil
-}
-
-func (c *testVakuClient) PathUpdate(p string, d map[string]interface{}) error {
+func (c *testVakuClient) FolderCopy(ctx context.Context, src, dst string) error {
 	return nil
 }
-
-func (c *testVakuClient) PathWrite(p string, d map[string]interface{}) error {
+func (c *testVakuClient) FolderMove(ctx context.Context, src, dst string) error {
 	return nil
 }

@@ -49,6 +49,8 @@ type ClientInterface interface {
 	PathRead(string) (map[string]interface{}, error)
 	PathWrite(string, map[string]interface{}) error
 	PathDelete(string) error
+	PathDeleteMeta(string) error
+	PathDestroy(string, []int) error
 	PathUpdate(string, map[string]interface{}) error
 	PathSearch(string, string) (bool, error)
 	PathCopy(string, string) error
@@ -60,6 +62,8 @@ type ClientInterface interface {
 	FolderReadChan(context.Context, string) (<-chan map[string]map[string]interface{}, <-chan error)
 	FolderWrite(context.Context, map[string]map[string]interface{}) error
 	FolderDelete(context.Context, string) error
+	FolderDeleteMeta(context.Context, string) error
+	FolderDestroy(context.Context, string, []int) error
 	FolderSearch(context.Context, string, string) ([]string, error)
 	FolderCopy(context.Context, string, string) error
 	FolderMove(context.Context, string, string) error

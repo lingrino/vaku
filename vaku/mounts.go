@@ -15,6 +15,8 @@ var (
 	ErrNoMount = errors.New("no matching mount")
 	// ErrRewritePath when failing to rewrite the path with mount data.
 	ErrRewritePath = errors.New("rewriting path")
+	// ErrMountVersion when an operation is not supported on the mount version.
+	ErrMountVersion = errors.New("mount version does not support operation")
 )
 
 // mountVersion represents possible vault kv mount versions.
@@ -36,6 +38,7 @@ const (
 	vaultWrite
 	vaultDelete
 	vaultDestroy
+	vaultDeleteMeta
 )
 
 // mountInfo takes a path and returns the mount path and version.
@@ -78,17 +81,40 @@ func (c *Client) rewritePath(p string, op vaultOperation) (string, mountVersion,
 		return "", mv0, newWrapErr(p, ErrRewritePath, err)
 	}
 
+	// check if the operation is supported
+	if !mountSupportsOperation(op, version) {
+		return "", version, newWrapErr(p, ErrMountVersion, nil)
+	}
+
 	// only rewrite mv2 mounts
 	if version != mv2 {
 		return p, version, nil
 	}
 
 	switch op {
-	case vaultList, vaultDestroy:
+	case vaultList, vaultDeleteMeta:
 		p = InsertIntoPath(p, mount, "metadata")
 	case vaultRead, vaultWrite, vaultDelete:
 		p = InsertIntoPath(p, mount, "data")
+	case vaultDestroy:
+		p = InsertIntoPath(p, mount, "destroy")
 	}
 
 	return p, version, nil
+}
+
+func mountSupportsOperation(op vaultOperation, v mountVersion) bool {
+	// v2 mounts support all operations
+	if v == mv2 {
+		return true
+	}
+
+	// v1 mounts don't support these
+	switch op {
+	case vaultDestroy, vaultDeleteMeta:
+		return false
+	}
+
+	// default to supported
+	return true
 }

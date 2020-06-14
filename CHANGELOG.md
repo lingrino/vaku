@@ -15,9 +15,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 - GEN: Code coverage in code climate
 - GEN: Badges & integrations with code climate, codacy, goreportcard, codebeat
 - GEN: Compliance with golangci-lint and integration linters
-- CLI: Completion commands for bash/zsh/powershell.
+- CLI: Completion commands for bash/fish/zsh/powershell.
 - CLI: Full test coverage.
 - API: Full test coverage.
+- API: New destroy command that matches v2 kv secrets enginve
 
 ### Changed
 
@@ -28,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 - API: Client is now configured using functional options.
 - API: Client now supports source/destination vault clients.
 - API: CLient no longer inherits the vault client. Set in source/dest instead.
+- API: Destory calls renamed to DeleteMeta which is more accurate.
 
 ### Removed
 
