@@ -9,6 +9,7 @@
 
 ## Upcoming
 
+- Improve API comments and CLI docs (mention v1/v2 differences and vaku/vault differences)
 - CI enforces 100% test coverage
 - Benchmarks
 - Example functions
@@ -26,7 +27,9 @@
 - make sure all 100% on codeclimate, codacy, codebeat, etc...
 - make sure changelog is up to date
 - review changelog
+- update packages (dependabot)
 
 ## After Release
 
 - Update codebeat, codacy, codelimate to point at master branch
+- Rename default branch to main

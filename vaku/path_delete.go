@@ -13,14 +13,23 @@ var (
 
 // PathDelete deletes data at a path.
 func (c *Client) PathDelete(p string) error {
-	vaultPath, _, err := c.rewritePath(p, vaultDelete)
+	err := c.pathDeleteWithOp(p, vaultDelete)
 	if err != nil {
 		return newWrapErr(p, ErrPathDelete, err)
 	}
 
+	return err
+}
+
+func (c *Client) pathDeleteWithOp(p string, op vaultOperation) error {
+	vaultPath, _, err := c.rewritePath(p, op)
+	if err != nil {
+		return err
+	}
+
 	_, err = c.vl.Delete(vaultPath)
 	if err != nil {
-		return newWrapErr(p, ErrPathDelete, newWrapErr(err.Error(), ErrVaultDelete, nil))
+		return newWrapErr(err.Error(), ErrVaultDelete, nil)
 	}
 
 	return nil

@@ -14,6 +14,15 @@ var (
 
 // FolderDelete recursively deletes the provided path and all subpaths.
 func (c *Client) FolderDelete(ctx context.Context, p string) error {
+	err := c.folderDeleteWithFunc(ctx, p, c.PathDelete)
+	if err != nil {
+		return newWrapErr(p, ErrFolderDelete, err)
+	}
+
+	return nil
+}
+
+func (c *Client) folderDeleteWithFunc(ctx context.Context, p string, deleteF func(string) error) error {
 	// eg manages workers reading from the paths channel
 	eg, ctx := errgroup.WithContext(ctx)
 
@@ -22,7 +31,7 @@ func (c *Client) FolderDelete(ctx context.Context, p string) error {
 	eg.Go(func() error {
 		err := <-errC
 		if err != nil {
-			return newWrapErr(p, ErrFolderDelete, err)
+			return err
 		}
 		return nil
 	})
@@ -31,9 +40,10 @@ func (c *Client) FolderDelete(ctx context.Context, p string) error {
 	for i := 0; i < c.workers; i++ {
 		eg.Go(func() error {
 			return c.folderDeleteWork(&folderDeleteWorkInput{
-				ctx:   ctx,
-				root:  p,
-				pathC: pathC,
+				ctx:     ctx,
+				root:    p,
+				pathC:   pathC,
+				deleteF: deleteF,
 			})
 		})
 	}
@@ -43,9 +53,10 @@ func (c *Client) FolderDelete(ctx context.Context, p string) error {
 
 // folderDeleteWorkInput is the piecces needed to list a folder.
 type folderDeleteWorkInput struct {
-	ctx   context.Context
-	root  string
-	pathC <-chan string
+	ctx     context.Context
+	root    string
+	pathC   <-chan string
+	deleteF func(string) error
 }
 
 // folderDeleteWork takes input from pathC, lists the path, adds listed folders back into pathC, and
@@ -60,9 +71,9 @@ func (c *Client) folderDeleteWork(i *folderDeleteWorkInput) error {
 				return nil
 			}
 			path = EnsurePrefix(path, i.root)
-			err := c.PathDelete(path)
+			err := i.deleteF(path)
 			if err != nil {
-				return newWrapErr(i.root, ErrFolderDelete, err)
+				return err
 			}
 			return nil
 		}

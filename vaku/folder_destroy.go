@@ -3,6 +3,8 @@ package vaku
 import (
 	"context"
 	"errors"
+
+	"golang.org/x/sync/errgroup"
 )
 
 var (
@@ -12,5 +14,59 @@ var (
 
 // FolderDestroy destroys versions of all secrets in a folder. Only works on v2 kv engines.
 func (c *Client) FolderDestroy(ctx context.Context, p string, versions []int) error {
-	return nil
+	// eg manages workers reading from the paths channel
+	eg, ctx := errgroup.WithContext(ctx)
+
+	// list the path
+	pathC, errC := c.FolderListChan(ctx, p)
+	eg.Go(func() error {
+		err := <-errC
+		if err != nil {
+			return newWrapErr(p, ErrFolderDelete, err)
+		}
+		return nil
+	})
+
+	// fan out and process paths
+	for i := 0; i < c.workers; i++ {
+		eg.Go(func() error {
+			return c.folderDestroyWork(&folderDestroyWorkInput{
+				ctx:      ctx,
+				root:     p,
+				versions: versions,
+				pathC:    pathC,
+			})
+		})
+	}
+
+	return eg.Wait()
+}
+
+// folderDestroyWorkInput is the piecces needed to destroy a folder.
+type folderDestroyWorkInput struct {
+	ctx      context.Context
+	root     string
+	versions []int
+	pathC    <-chan string
+}
+
+// folderDestroyWork takes input from pathC, lists the path, adds listed folders back into pathC, and
+// adds non-folders into results.
+func (c *Client) folderDestroyWork(i *folderDestroyWorkInput) error {
+	for {
+		select {
+		case <-i.ctx.Done():
+			return i.ctx.Err()
+		case path, ok := <-i.pathC:
+			if !ok {
+				return nil
+			}
+			path = EnsurePrefix(path, i.root)
+			err := c.PathDestroy(path, i.versions)
+			if err != nil {
+				return newWrapErr(i.root, ErrFolderDelete, err)
+			}
+			return nil
+		}
+	}
 }
