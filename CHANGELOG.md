@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 - GEN: Code coverage in code climate
 - GEN: Badges & integrations with code climate, codacy, goreportcard, codebeat
 - GEN: Compliance with golangci-lint and integration linters
+- GEN: The default branch name is now `main`
 - CLI: Completion commands for bash/fish/zsh/powershell.
 - CLI: Full test coverage.
 - API: Full test coverage.

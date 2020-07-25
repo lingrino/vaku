@@ -11,7 +11,7 @@ jobs:
     container: lingrino/ci:latest
     steps:
       - name: Code - Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
         with:
           fetch-depth: 1
       - name: Docker Login

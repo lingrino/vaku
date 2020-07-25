@@ -28,8 +28,10 @@
 - make sure changelog is up to date
 - review changelog
 - update packages (dependabot)
+- fix aws cli www release exit code 255
+- update goreleaser.yml with all new checks
 
 ## After Release
 
-- Update codebeat, codacy, codelimate to point at master branch
+- Update codebeat, codacy, codelimate to point at main branch
 - Rename default branch to main
