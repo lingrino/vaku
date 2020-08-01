@@ -1,0 +1,49 @@
+version: 2
+updates:
+  - package-ecosystem: docker
+    open-pull-requests-limit: 100
+    directory: /
+    schedule:
+      time: "09:00"
+      interval: daily
+    allow:
+      - dependency-type: all
+    assignees:
+      - lingrino
+    reviewers:
+      - lingrino
+    labels:
+      - dependencies
+      - docker
+
+  - package-ecosystem: github-actions
+    open-pull-requests-limit: 100
+    directory: /
+    schedule:
+      time: "09:00"
+      interval: daily
+    allow:
+      - dependency-type: all
+    assignees:
+      - lingrino
+    reviewers:
+      - lingrino
+    labels:
+      - dependencies
+      - actions
+
+  - package-ecosystem: gomod
+    open-pull-requests-limit: 100
+    directory: /
+    schedule:
+      time: "09:00"
+      interval: daily
+    allow:
+      - dependency-type: all
+    assignees:
+      - lingrino
+    reviewers:
+      - lingrino
+    labels:
+      - dependencies
+      - go
