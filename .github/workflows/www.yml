@@ -20,7 +20,7 @@ jobs:
       - name: Release
         run: |
           aws --region "${S3_REGION}" s3 sync www/ "s3://${S3_BUCKET_NAME}" --sse AES256
-          aws cloudfront create-invalidation --distribution-id "${CF_DISTRIBUTION_ID}" --paths "/*"
+          aws --region "${S3_REGION}" cloudfront create-invalidation --distribution-id "${CF_DISTRIBUTION_ID}" --paths "/*"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
