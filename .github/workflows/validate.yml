@@ -7,12 +7,20 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    container: lingrino/ci:latest
     steps:
-      - name: Code - Checkout
-        uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
         with:
-          fetch-depth: 1
+          go-version: 1.15 # https://golang.org/dl/
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache Modules
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
       - name: Docs Check
         run: |
           before=$(cat docs/cli/*.md | md5sum)
@@ -21,16 +29,22 @@ jobs:
           if [ "$before" != "$after" ]; then exit 1; fi
         shell: bash
       - name: Goreleaser Check
-        run: goreleaser check
-      - name: Go fmt
-        run: test -z $(gofmt -l -w -s vaku/)
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          args: check
+      - name: Go Mod Tidy
+        run: test -z $(go mod tidy)
+      - name: Go Format
+        run: test -z $(gofmt -l -s .)
       - name: Lint
-        run: golangci-lint run --out-format github-actions
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.31 # https://github.com/golangci/golangci-lint/releases
       - name: Prep Coverage
         run: cc-test-reporter before-build
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-      - name: Run Tests
+      - name: Test
         run: go test -cover -coverprofile=c.out -covermode=atomic -race -v ./...
       - name: Upload Coverage
         run: cc-test-reporter after-build -p "github.com/${GITHUB_REPOSITORY}"

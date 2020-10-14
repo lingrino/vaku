@@ -1,4 +1,4 @@
-name: WWW
+name: Website
 
 on:
   workflow_dispatch:
@@ -11,12 +11,9 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    container: lingrino/ci:latest
     steps:
-      - name: Code - Checkout
+      - name: Checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
       - name: Release
         run: |
           aws --region "${S3_REGION}" s3 sync www/ "s3://${S3_BUCKET_NAME}" --sse AES256
