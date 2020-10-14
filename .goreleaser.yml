@@ -80,7 +80,11 @@ nfpms:
 dockers:
   - dockerfile: Dockerfile
     image_templates:
-      - lingrino/vaku:latest
-      - lingrino/vaku:{{ .Version }}
-      - lingrino/vaku:{{ .Major }}
-      - lingrino/vaku:{{ .Major }}.{{ .Minor }}
+      - ghcr.io/lingrino/vaku:latest
+      - ghcr.io/lingrino/vaku:{{ .Version }}
+      - ghcr.io/lingrino/vaku:{{ .Major }}
+      - ghcr.io/lingrino/vaku:{{ .Major }}.{{ .Minor }}
+    build_flag_templates:
+      - --label=org.opencontainers.image.created={{.Date}}
+      - --label=org.opencontainers.image.revision={{.FullCommit}}
+      - --label=org.opencontainers.image.version={{.Version}}

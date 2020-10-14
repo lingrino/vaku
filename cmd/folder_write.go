@@ -6,8 +6,8 @@ import (
 
 const (
 	folderWriteUse   = "write"
-	folderWriteShort = "Vaku CLI does not support folder write. Use the vaku API or native Vault CLI"
-	folderWriteLong  = "Vaku CLI does not support folder write. Use the vaku API or native Vault CLI"
+	folderWriteShort = "Vaku CLI does not yet support folder write. Use the vaku API or native Vault CLI"
+	folderWriteLong  = "Vaku CLI does not yet support folder write. Use the vaku API or native Vault CLI"
 )
 
 func (c *cli) newFolderWriteCmd() *cobra.Command {

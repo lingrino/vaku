@@ -6,8 +6,8 @@ import (
 
 const (
 	pathWriteUse   = "write"
-	pathWriteShort = "Vaku CLI does not support path write. Use the vaku API or native Vault CLI"
-	pathWriteLong  = "Vaku CLI does not support path write. Use the vaku API or native Vault CLI"
+	pathWriteShort = "Vaku CLI does not yet support path write. Use the vaku API or native Vault CLI"
+	pathWriteLong  = "Vaku CLI does not yet support path write. Use the vaku API or native Vault CLI"
 )
 
 func (c *cli) newPathWriteCmd() *cobra.Command {

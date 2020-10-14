@@ -32,6 +32,8 @@ func (c *cli) newFolderCmd() *cobra.Command {
 		c.newFolderReadCmd(),
 		c.newFolderWriteCmd(),
 		c.newFolderDeleteCmd(),
+		c.newFolderDeleteMetaCmd(),
+		c.newFolderDestroyCmd(),
 		c.newFolderSearchCmd(),
 		c.newFolderCopyCmd(),
 		c.newFolderMoveCmd(),
