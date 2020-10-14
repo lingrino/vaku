@@ -22,7 +22,7 @@ func (c *Client) FolderDestroy(ctx context.Context, p string, versions []int) er
 	eg.Go(func() error {
 		err := <-errC
 		if err != nil {
-			return newWrapErr(p, ErrFolderDelete, err)
+			return newWrapErr(p, ErrFolderDestroy, err)
 		}
 		return nil
 	})
@@ -64,7 +64,7 @@ func (c *Client) folderDestroyWork(i *folderDestroyWorkInput) error {
 			path = EnsurePrefix(path, i.root)
 			err := c.PathDestroy(path, i.versions)
 			if err != nil {
-				return newWrapErr(i.root, ErrFolderDelete, err)
+				return newWrapErr(i.root, ErrFolderDestroy, err)
 			}
 			return nil
 		}
