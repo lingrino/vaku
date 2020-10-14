@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	// errInject is used when injecting errors in tests
+	// errInject is used when injecting errors in tests.
 	errInject = errors.New("injected error")
 )
 

@@ -52,6 +52,8 @@ func (c *Client) FolderListChan(ctx context.Context, p string) (<-chan string, <
 	pathC := make(chan string)
 	// resC is processed paths
 	resC := make(chan string)
+	// errC for the first error seen
+	errC := make(chan error)
 
 	// add root path to paths
 	wg.Add(1)
@@ -70,22 +72,27 @@ func (c *Client) FolderListChan(ctx context.Context, p string) (<-chan string, <
 		})
 	}
 
-	// close pathC & resC once all have been processed or when the group is cancelled
-	eg.Go(func() error {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		case <-waitFuncOnChan(wg.Wait):
-			close(pathC)
-			close(resC)
-			return nil
-		}
-	})
+	// Wait until finished (success or not) and clean up
+	go func() {
+		// Close pathC after all paths added
+		wg.Wait()
+		close(pathC)
 
-	return resC, errFuncOnChan(eg.Wait)
+		// Wait for all paths to process
+		err := eg.Wait()
+
+		// Report the error (or nil) to errC
+		errC <- err
+
+		// Clean up
+		close(resC)
+		close(errC)
+	}()
+
+	return resC, errC
 }
 
-// folderListWorkInput is the piecces needed to list a folder.
+// folderListWorkInput is the pieces needed to list a folder.
 type folderListWorkInput struct {
 	ctx   context.Context
 	root  string
@@ -97,25 +104,26 @@ type folderListWorkInput struct {
 // folderListWork takes input from pathC, lists the path, adds listed folders back into pathC, and
 // adds non-folders into results.
 func (c *Client) folderListWork(i *folderListWorkInput) error {
-	for {
+	for path := range i.pathC {
+		err := c.pathListWork(path, i)
+		if err != nil {
+			return err
+		}
+
 		select {
 		case <-i.ctx.Done():
 			return i.ctx.Err()
-		case path, ok := <-i.pathC:
-			if !ok {
-				return nil
-			}
-			err := c.pathListWork(path, i)
-			if err != nil {
-				return err
-			}
+		default:
 		}
 	}
+	return nil
 }
 
 // pathListWork takes a path and either adds it back to the pathC (if folder) or processes it and
 // adds it to the resC.
 func (c *Client) pathListWork(path string, i *folderListWorkInput) error {
+	defer i.wg.Done()
+
 	if IsFolder(path) {
 		list, err := c.PathList(path)
 		if err != nil {
@@ -123,12 +131,17 @@ func (c *Client) pathListWork(path string, i *folderListWorkInput) error {
 		}
 		for _, item := range list {
 			i.wg.Add(1)
-			item = EnsurePrefix(item, path)
-			go func(p string) { i.pathC <- p }(item)
+			go func(item string) {
+				item = EnsurePrefix(item, path)
+				i.pathC <- item
+			}(item)
 		}
 	} else {
-		i.resC <- c.outputPath(path, i.root)
+		select {
+		case i.resC <- c.outputPath(path, i.root):
+		case <-i.ctx.Done():
+			return i.ctx.Err()
+		}
 	}
-	i.wg.Done()
 	return nil
 }

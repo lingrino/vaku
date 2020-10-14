@@ -68,13 +68,12 @@ func InsertIntoPath(path, after, insert string) string {
 	return PathJoin(after, insert, strings.TrimPrefix(path, after))
 }
 
-// waitFuncOnChan takes a function like waitgroup.Wait() and provides a channel that can be read
-// after the function returns. Makes it easy to wait inside of a select statement.
-func waitFuncOnChan(waitFunc func()) <-chan bool {
-	done := make(chan bool)
+// waitFuncOnChan takes a function like waitgroup.Wait() and provides a channel that will be closed
+// when the provided function returns. Makes it easy to wait inside of a select statement.
+func waitFuncOnChan(waitFunc func()) <-chan struct{} {
+	done := make(chan struct{})
 	go func() {
 		waitFunc()
-		done <- true
 		close(done)
 	}()
 	return done

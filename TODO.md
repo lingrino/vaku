@@ -18,6 +18,7 @@
 - graceful worker shutdown <https://callistaenterprise.se/blogg/teknik/2019/10/05/go-worker-cancellation/>
 - CI to make sure api Version() stays up to date with tags
 - CI for line wrapping
+- Add docker push/pull to actions
 
 ## Right Before Release
 
