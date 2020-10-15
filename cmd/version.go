@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/lingrino/vaku/vaku"
+	"github.com/lingrino/vaku/v2/vaku"
 	"github.com/spf13/cobra"
 )
 

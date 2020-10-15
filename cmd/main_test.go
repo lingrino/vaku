@@ -5,7 +5,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/lingrino/vaku/vaku"
+	"github.com/lingrino/vaku/v2/vaku"
 )
 
 // newTestCLI returns a CLI ready for running tests.

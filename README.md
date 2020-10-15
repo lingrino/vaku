@@ -54,7 +54,7 @@ Vaku is well tested and uses only the standard go testing tools.
 
 ```shell
 $ go test -cover -race ./...
-ok  github.com/lingrino/vaku      0.095s  coverage: 100.0% of statements
-ok  github.com/lingrino/vaku/cmd  0.168s  coverage: 100.0% of statements
-ok  github.com/lingrino/vaku/vaku 12.065s coverage: 100.0% of statements
+ok  github.com/lingrino/vaku/v2      0.095s  coverage: 100.0% of statements
+ok  github.com/lingrino/vaku/v2/cmd  0.168s  coverage: 100.0% of statements
+ok  github.com/lingrino/vaku/v2/vaku 12.065s coverage: 100.0% of statements
 ```

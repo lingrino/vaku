@@ -7,7 +7,6 @@
 - API example in readme
 - doc.go in api
 - update readme
-- something about publishing a v2 package and updating pkg.go.dev?
 - make sure all 100% on codeclimate, codacy, codebeat, etc...
 - test that issue works
 

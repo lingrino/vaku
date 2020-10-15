@@ -1,4 +1,4 @@
-module github.com/lingrino/vaku
+module github.com/lingrino/vaku/v2
 
 go 1.15
 

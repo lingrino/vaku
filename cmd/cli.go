@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/vault/api"
 	"github.com/hashicorp/vault/command/config"
-	"github.com/lingrino/vaku/vaku"
+	"github.com/lingrino/vaku/v2/vaku"
 	"github.com/spf13/cobra"
 )
 
