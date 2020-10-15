@@ -28,11 +28,11 @@ func TestPathDestroy(t *testing.T) {
 		},
 		{
 			give:         "0/1",
-			giveVersions: []int{1, 2},
+			giveVersions: []int{1},
 		},
 		{
 			give:            "0/1",
-			giveVersions:    []int{3},
+			giveVersions:    []int{2},
 			wantNilReadback: true,
 		},
 		{

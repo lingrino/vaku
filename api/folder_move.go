@@ -12,12 +12,12 @@ var (
 
 // FolderMove moves data at a source folder to a destination folder. Source is deleted after copy.
 func (c *Client) FolderMove(ctx context.Context, src, dst string) error {
-	err := c.dc.FolderCopy(ctx, src, dst)
+	err := c.FolderCopy(ctx, src, dst)
 	if err != nil {
 		return newWrapErr("", ErrFolderMove, err)
 	}
 
-	err = c.dc.FolderDelete(ctx, src)
+	err = c.FolderDelete(ctx, src)
 	if err != nil {
 		return newWrapErr("delete "+src, ErrFolderMove, err)
 	}

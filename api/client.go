@@ -108,8 +108,12 @@ type withVaultDstClient struct {
 }
 
 func (o withVaultDstClient) apply(c *Client) error {
-	c.dc.vc = o.client
-	c.dc.vl = o.client.Logical()
+	// By default the dest client is just a pointer to the source client. So make a copy of the
+	// source, assign new vault client to the copy, and assign copy back to the dest.
+	newDstClient := *c.dc
+	newDstClient.vc = o.client
+	newDstClient.vl = o.client.Logical()
+	c.dc = &newDstClient
 	return nil
 }
 
