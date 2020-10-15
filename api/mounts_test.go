@@ -3,8 +3,9 @@ package vaku
 import (
 	"testing"
 
-	"github.com/hashicorp/vault/api"
 	"github.com/stretchr/testify/assert"
+
+	vault "github.com/hashicorp/vault/api"
 )
 
 func TestMountInfo(t *testing.T) {
@@ -42,7 +43,7 @@ func TestMountInfo(t *testing.T) {
 	t.Run("empty client", func(t *testing.T) {
 		t.Parallel()
 
-		vc, err := api.NewClient(api.DefaultConfig())
+		vc, err := vault.NewClient(vault.DefaultConfig())
 		assert.NoError(t, err)
 
 		client, err := NewClient(WithVaultClient(vc))

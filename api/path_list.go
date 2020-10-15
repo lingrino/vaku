@@ -3,7 +3,7 @@ package vaku
 import (
 	"errors"
 
-	"github.com/hashicorp/vault/api"
+	vault "github.com/hashicorp/vault/api"
 )
 
 var (
@@ -39,7 +39,7 @@ func (c *Client) PathList(p string) ([]string, error) {
 	return list, nil
 }
 
-func decodeSecret(secret *api.Secret) ([]string, error) {
+func decodeSecret(secret *vault.Secret) ([]string, error) {
 	data, ok := secret.Data["keys"]
 	if !ok || data == nil {
 		return nil, newWrapErr("", ErrDecodeSecret, nil)

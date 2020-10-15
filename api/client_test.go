@@ -3,9 +3,9 @@ package vaku
 import (
 	"testing"
 
-	"github.com/hashicorp/vault/api"
-
 	"github.com/stretchr/testify/assert"
+
+	vault "github.com/hashicorp/vault/api"
 )
 
 const (
@@ -253,10 +253,10 @@ func (o withErrorOpt) apply(c *Client) error {
 }
 
 // newDefaultVaultClient creates a default vault client and fails on error.
-func newDefaultVaultClient(t *testing.T) *api.Client {
+func newDefaultVaultClient(t *testing.T) *vault.Client {
 	t.Helper()
 
-	client, err := api.NewClient(api.DefaultConfig())
+	client, err := vault.NewClient(vault.DefaultConfig())
 	assert.NoError(t, err)
 	client.SetToken(tokenVerifyString)
 

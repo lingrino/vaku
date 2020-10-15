@@ -49,8 +49,8 @@ func TestInitVakuClient(t *testing.T) {
 			wantErr:     "initializing vaku client\nworkers must 1 or greater: 0: invalid workers",
 		},
 		{
-			name:        "fail api.NewClient",
-			giveFail:    "api.NewClient",
+			name:        "fail vault.NewClient",
+			giveFail:    "vault.NewClient",
 			giveWorkers: 1,
 			wantErr:     "initializing vaku client\ncreating new vault client",
 		},

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/vault/api"
+	vault "github.com/hashicorp/vault/api"
 )
 
 var (
@@ -18,18 +18,18 @@ const (
 	defaultWorkers = 10
 )
 
-// logical is functions from api.Logical() used by Vaku. Helps with testing.
+// logical is functions from vault.Logical() used by Vaku. Helps with testing.
 type logical interface {
-	Delete(path string) (*api.Secret, error)
-	List(path string) (*api.Secret, error)
-	Read(path string) (*api.Secret, error)
-	Write(path string, data map[string]interface{}) (*api.Secret, error)
+	Delete(path string) (*vault.Secret, error)
+	List(path string) (*vault.Secret, error)
+	Read(path string) (*vault.Secret, error)
+	Write(path string, data map[string]interface{}) (*vault.Secret, error)
 }
 
 // Client has all Vaku functions and wraps Vault API clients.
 type Client struct {
 	// vc is the vault client.
-	vc *api.Client
+	vc *vault.Client
 	// vl wraps vc.Logical() for easy testing.
 	vl logical
 
@@ -78,17 +78,17 @@ type Option interface {
 }
 
 // WithVaultClient sets the Vault client to be used.
-func WithVaultClient(c *api.Client) Option {
+func WithVaultClient(c *vault.Client) Option {
 	return withVaultClient{c}
 }
 
 // WithVaultSrcClient is an alias for WithVaultClient.
-func WithVaultSrcClient(c *api.Client) Option {
+func WithVaultSrcClient(c *vault.Client) Option {
 	return withVaultClient{c}
 }
 
 type withVaultClient struct {
-	client *api.Client
+	client *vault.Client
 }
 
 func (o withVaultClient) apply(c *Client) error {
@@ -99,12 +99,12 @@ func (o withVaultClient) apply(c *Client) error {
 
 // WithVaultDstClient sets a separate Vault client to be used only on operations that have a source
 // and destination (copy, move, etc...). If unset the source client will be used.
-func WithVaultDstClient(c *api.Client) Option {
+func WithVaultDstClient(c *vault.Client) Option {
 	return withVaultDstClient{c}
 }
 
 type withVaultDstClient struct {
-	client *api.Client
+	client *vault.Client
 }
 
 func (o withVaultDstClient) apply(c *Client) error {

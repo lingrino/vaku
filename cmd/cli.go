@@ -5,10 +5,11 @@ import (
 	"io"
 	"os"
 
-	"github.com/hashicorp/vault/api"
 	"github.com/hashicorp/vault/command/config"
-	"github.com/lingrino/vaku/v2/vaku"
 	"github.com/spf13/cobra"
+
+	vault "github.com/hashicorp/vault/api"
+	vaku "github.com/lingrino/vaku/v2/api"
 )
 
 const (
@@ -102,10 +103,10 @@ func (c *cli) initVakuClient(cmd *cobra.Command, args []string) error {
 }
 
 // newVaultClient creates a new vault client. Prefer passed addr/token. Fallback to env/config.
-func (c *cli) newVaultClient(addr, token string) (*api.Client, error) {
+func (c *cli) newVaultClient(addr, token string) (*vault.Client, error) {
 	// nil means use default configuration and read from environment
-	client, err := api.NewClient(nil)
-	if err != nil || c.fail == "api.NewClient" {
+	client, err := vault.NewClient(nil)
+	if err != nil || c.fail == "vault.NewClient" {
 		return nil, c.combineErr(errNewVaultClient, err)
 	}
 
@@ -121,7 +122,7 @@ func (c *cli) newVaultClient(addr, token string) (*api.Client, error) {
 		return nil, c.combineErr(errSetVaultToken, err)
 	}
 
-	if os.Getenv(api.EnvVaultMaxRetries) == "" {
+	if os.Getenv(vault.EnvVaultMaxRetries) == "" {
 		client.SetMaxRetries(0)
 	}
 
@@ -129,7 +130,7 @@ func (c *cli) newVaultClient(addr, token string) (*api.Client, error) {
 }
 
 // setVaultToken sets vault token on client. Prefer passed token. Fallback to env/config.
-func (c *cli) setVaultToken(vc *api.Client, token string) error {
+func (c *cli) setVaultToken(vc *vault.Client, token string) error {
 	if token != "" {
 		vc.SetToken(token)
 	}
