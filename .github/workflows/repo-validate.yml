@@ -20,3 +20,4 @@ jobs:
         uses: avto-dev/markdown-lint@v1
         with:
           args: ./README.md
+          config: ./markdownlint.json

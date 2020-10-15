@@ -46,7 +46,7 @@ Documentation for the Vaku API is on [pkg.go.dev](https://pkg.go.dev/github.com/
 
 ## Contributing
 
-Suggestions and [contributions](https://github.com/lingrino/.github/blob/HEAD/CONTRIBUTING.md) of all kinds are welcome! If there is functionality you would like to see in Vaku please open an issue or pull request and I will be sure to address it.
+Suggestions and contributions of all kinds are welcome! If there is functionality you would like to see in Vaku please open an Issue or Pull Request and I will be sure to address it.
 
 ## Tests
 
@@ -54,5 +54,7 @@ Vaku is well tested and uses only the standard go testing tools.
 
 ```shell
 $ go test -cover -race ./...
-ok  github.com/lingrino/vaku/vaku (cached) coverage: 100.0% of statements
+ok  github.com/lingrino/vaku      0.095s  coverage: 100.0% of statements
+ok  github.com/lingrino/vaku/cmd  0.168s  coverage: 100.0% of statements
+ok  github.com/lingrino/vaku/vaku 12.065s coverage: 100.0% of statements
 ```

@@ -10,16 +10,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 - GEN: Added a changelog!
 - GEN: CI checks that CLI docs are up to date
+- GEN: CI enforces `go mod tidy`
+- GEN: CI checks for vaku.Version() matching tagged version
 - GEN: CI does `goreleaser check`
 - GEN: Releases for npmfs, docker, scoop
 - GEN: Code coverage in code climate
 - GEN: Badges & integrations with code climate, codacy, goreportcard, codebeat
 - GEN: Compliance with golangci-lint and integration linters
 - GEN: The default branch name is now `main`
-- CLI: Completion commands for bash/fish/zsh/powershell.
-- CLI: Full test coverage.
+- GEN: Examples in readme
 - API: Full test coverage.
-- API: New destroy command that matches v2 kv secrets enginve
+- API: New destroy command that matches v2 kv secrets engine
+- CLI: Full test coverage.
+- CLI: Completion commands for bash/fish/zsh/powershell.
+- CLI: Flag for sorting output
+- CLI: Flag support for separate source/dest vault servers
+- CLI: Hidden commands for unsupport CLI calls will redirect users to the API
 
 ### Changed
 

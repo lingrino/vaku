@@ -2,10 +2,6 @@
 
 Print vaku version
 
-### Synopsis
-
-Print vaku version
-
 ```
 vaku version
 ```
