@@ -1,10 +1,10 @@
 ## vaku folder delete-meta
 
-Recursively delete all secrets metadata and versions in a folder
+Recursively delete all secrets metadata and versions in a folder. V2 engines only.
 
 ### Synopsis
 
-Recursively delete all secrets metadata and versions in a folder
+Recursively delete all secrets metadata and versions in a folder. V2 engines only.
 
 ```
 vaku folder delete-meta <folder> [flags]

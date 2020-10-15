@@ -1,10 +1,10 @@
 ## vaku path delete-meta
 
-Delete all secret metadata and versions at a path
+Delete all secret metadata and versions at a path. V2 engines only.
 
 ### Synopsis
 
-Delete all secret metadata and versions at a path
+Delete all secret metadata and versions at a path. V2 engines only.
 
 ```
 vaku path delete-meta <path> [flags]

@@ -42,7 +42,7 @@ vaku path list secret/foo
 * [vaku](vaku.md)	 - Vaku is a CLI for working with large Vault k/v secret engines
 * [vaku path copy](vaku_path_copy.md)	 - Copy a secret from a source path to a destination path
 * [vaku path delete](vaku_path_delete.md)	 - Delete a secret at a path
-* [vaku path delete-meta](vaku_path_delete-meta.md)	 - Delete all secret metadata and versions at a path
+* [vaku path delete-meta](vaku_path_delete-meta.md)	 - Delete all secret metadata and versions at a path. V2 engines only.
 * [vaku path list](vaku_path_list.md)	 - List all paths at a path
 * [vaku path move](vaku_path_move.md)	 - Move a secret from a source path to a destination path
 * [vaku path read](vaku_path_read.md)	 - Read a secret at a path

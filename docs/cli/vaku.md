@@ -6,14 +6,14 @@ Vaku is a CLI for working with large Vault k/v secret engines
 
 Vaku is a CLI for working with large Vault k/v secret engines
 
-The Vaku CLI provides path and folder based commands that work on
-both version 1 and version 2 k/v secret engines. Vaku can help manage
-large amounts of vault data by updating secrets in place, moving
+The Vaku CLI provides path- and folder-based commands that work on
+both Version 1 and Version 2 K/V secret engines. Vaku can help manage
+large amounts of Vault data by updating secrets in place, moving
 paths or folders, searching secrets, and more.
 
-Vaku is not a replacement for the Vault CLI and requires that you
-already are authenticated to Vault before running any commands. Vaku
-commands should not be run on non-k/v engines.
+Vaku is not a replacement for the Vault CLI and requires that you are
+already authenticated to Vault before running any commands. Vaku
+commands should not be run on non-K/V engines.
 
 CLI documentation - 'vaku help [cmd]'
 API documentation - https://pkg.go.dev/github.com/lingrino/vaku/api
@@ -36,7 +36,8 @@ vaku folder list secret/foo
 
 ### SEE ALSO
 
-* [vaku completion](vaku_completion.md)	 - Generates shell completions
+* [vaku completion](vaku_completion.md)	 - Generate shell completions
 * [vaku folder](vaku_folder.md)	 - Commands that act on Vault folders
 * [vaku path](vaku_path.md)	 - Commands that act on Vault paths
 * [vaku version](vaku_version.md)	 - Print vaku version
+

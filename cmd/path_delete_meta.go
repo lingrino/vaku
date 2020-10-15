@@ -7,8 +7,8 @@ import (
 const (
 	pathDeleteMetaArgs    = 1
 	pathDeleteMetaUse     = "delete-meta <path>"
-	pathDeleteMetaShort   = "Delete all secret metadata and versions at a path"
-	pathDeleteMetaLong    = "Delete all secret metadata and versions at a path"
+	pathDeleteMetaShort   = "Delete all secret metadata and versions at a path. V2 engines only."
+	pathDeleteMetaLong    = "Delete all secret metadata and versions at a path. V2 engines only."
 	pathDeleteMetaExample = "vaku path delete-meta secret/foo"
 )
 

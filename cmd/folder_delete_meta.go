@@ -9,8 +9,8 @@ import (
 const (
 	folderDeleteMetaArgs    = 1
 	folderDeleteMetaUse     = "delete-meta <folder>"
-	folderDeleteMetaShort   = "Recursively delete all secrets metadata and versions in a folder"
-	folderDeleteMetaLong    = "Recursively delete all secrets metadata and versions in a folder"
+	folderDeleteMetaShort   = "Recursively delete all secrets metadata and versions in a folder. V2 engines only."
+	folderDeleteMetaLong    = "Recursively delete all secrets metadata and versions in a folder. V2 engines only."
 	folderDeleteMetaExample = "vaku folder delete-meta secret/foo"
 )
 

@@ -1,6 +1,6 @@
 ## vaku completion
 
-Generates shell completions
+Generate shell completions
 
 ### Synopsis
 

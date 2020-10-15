@@ -10,7 +10,7 @@ import (
 const (
 	docsArgs    = 1
 	docsUse     = "docs <path>"
-	docsShort   = "Generates markdown docs at a path"
+	docsShort   = "Generate markdown docs at a path"
 	docsExample = "vaku docs ."
 )
 
