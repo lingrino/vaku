@@ -20,7 +20,7 @@ already are authenticated to Vault before running any commands. Vaku
 commands should not be run on non-k/v engines.
 
 CLI documentation - 'vaku help [cmd]'
-API documentation - https://pkg.go.dev/github.com/lingrino/vaku/vaku
+API documentation - https://pkg.go.dev/github.com/lingrino/vaku/api
 Built by Sean Lingren <sean@lingrino.com>`
 )
 

@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ### Changed
 
+- API: The api package is now `vaku/api` instead of `vaku/vaku`
 - API: Concurrency limits now set on the client.
 - API: All errors are now exported and can be unwrapped.
 - API: Tests now use an inmem vault server instead of docker.
