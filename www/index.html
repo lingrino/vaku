@@ -1,78 +1,116 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
   <head>
-    <title>Vaku</title>
-    <meta name="Description" content="Vaku is a CLI and API that extends existing Vault functionality">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta charset="utf-8">
+    <!--
+      HTML Head Tags
+      Docs: https://github.com/joshbuchea/HEAD
+    -->
 
-    <!-- Headers -->
-    <!-- https://infosec.mozilla.org/guidelines/web_security -->
-    <meta http-equiv="Content-Security-Policy"
-      content="default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com">
-    <meta http-equiv="Strict-Transport-Security" content="max-age=63072000; includeSubDomains; preload">
+    <!-- Rendering Info -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--
+      Security Headers
+      These are set in HTML because the alternative for this static site is a cloudfront lambda
+      Docs: https://infosec.mozilla.org/guidelines/web_security
+
+      Content Security Policy
+      Docs: https://infosec.mozilla.org/guidelines/web_security#content-security-policy
+      Generator: https://report-uri.com/home/generate
+      Evaluator: https://csp-evaluator.withgoogle.com/
+    -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'none';
+        style-src 'self';
+        img-src 'self';
+        font-src 'self';
+        manifest-src 'self';
+        upgrade-insecure-requests;
+        block-all-mixed-content;
+        require-trusted-types-for 'script';">
+
+    <!--
+      Strict Transport Security
+      Docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
+      Docs: https://infosec.mozilla.org/guidelines/web_security#http-strict-transport-security
+    -->
+    <meta http-equiv="Strict-Transport-Security" content="
+      max-age=63072000;
+      includeSubDomains;
+      preload;">
+
+    <!--
+      X-XSS-Protection
+      Docs: https://infosec.mozilla.org/guidelines/web_security#x-xss-protection
+    -->
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+
+    <!--
+      X-Content-Type-Options
+      Docs: https://infosec.mozilla.org/guidelines/web_security#x-content-type-options
+    -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
-    <link rel="shortcut icon" href="assets/favicon.webp" type="image/webp" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Metadata -->
+    <meta name="referrer" content="no-referrer">
+    <link rel="manifest" href="assets/site/site.webmanifest">
+
+    <!-- Titles -->
+    <title>Vaku</title>
+    <meta name="description" content="Vaku extends the Vault API & CLI">
+
+    <!--
+      Icons
+      Docs: https://developers.google.com/web/fundamentals/design-and-ux/browser-customization/
+      Generated: https://favicon.io/favicon-converter/
+    -->
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="assets/icons/favicon-192x192.png">
+    <link rel="apple-touch-startup-image" href="assets/icons/favicon-192x192.png">
+
+    <!--
+      Colors
+      Docs: https://developers.google.com/web/fundamentals/design-and-ux/browser-customization/
+    -->
+    <meta name="theme-color" content="#93d3e7">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/water/dark.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
   </head>
 
-  <body style="background-color: #fafafa">
-    <div class="container-fluid" style="margin-top: 10%">
-      <div class="row">
-        <div class="col-md-1">
-        </div>
-        <div class="col-md-4">
-          <picture>
-            <source type="image/webp" srcset="assets/logo-vaku.webp">
-            <source type="image/png" srcset="assets/logo-vaku.png">
-            <img src="assets/logo-vaku.png" alt="Vaku Logo" class="img-fluid">
-          </picture>
-        </div>
-        <div class="col-md-6">
-          <main>
-            <div class="container-fluid">
-              <div class="row">
-                <h1 class="display-3">Vaku</h1>
-              </div>
-              <div class="row mb-5">
-                <p class="lead">
-                  Vaku is a CLI and Go API that extends the official Hashicorp Vault CLI and API with useful high-level
-                  functions such as the ability to copy, move, and search Vault paths and folders. The CLI and API are
-                  purpose-built to deal with the actual secret content of paths and folders, and they therefore do not
-                  make use of or reveal Vault features like metadata and wrapping. Use the tools as you see fit and file
-                  issues for anything you think could be improved. Thanks!
-                </p>
-              </div>
-              <div class="row text-left">
-                <div class="col h-100">
-                  <pre class="py-3"><code class="bg-dark text-white p-3">$ brew install lingrino/tap/vaku</code></pre>
-                </div>
-              </div>
-              <div class="row mt-5">
-                <div class="col-3 text-left">
-                  <a href="https://github.com/lingrino/vaku">GitHub</a>
-                </div>
-                <div class="col-3 text-center">
-                  <a href="https://github.com/lingrino/vaku/blob/HEAD/docs/vaku.md">CLI Docs</a>
-                </div>
-                <div class="col-3 text-center">
-                  <a href="https://godoc.org/github.com/lingrino/vaku/vaku">API Docs</a>
-                </div>
-                <div class="col-3 text-right">
-                  Built by
-                  <a href="https://lingrino.com/">Sean Lingren</a>
-                </div>
-              </div>
-            </div>
-          </main>
-        </div>
-        <div class="col-md-1">
-        </div>
-      </div>
+  <body>
+    <div>
+      <h1>Vaku</h1>
+      <picture>
+        <source type="image/webp" srcset="assets/images/logo-vaku-sm.webp">
+        <source type="image/png" srcset="assets/images/logo-vaku-sm.png">
+        <img src="assets/logo-vaku-sm.png" alt="Vaku Logo" class="img-fluid">
+      </picture>
+      <p><code>brew install lingrino/tap/vaku</code></p>
+      <p>
+        Vaku is a CLI and Go API that extends the official Hashicorp Vault CLI and API with useful
+        high-level functions such as the ability to copy, move, and search Vault paths and folders.
+        The CLI and API are purpose-built to deal with the actual secret content of paths and
+        folders, and they therefore do not make use of or reveal Vault features like metadata and
+        wrapping. Use the tools as you see fit, and please file issues for anything you think could
+        be improved. Thanks!
+      </p>
+      <a href="https://github.com/lingrino/vaku" target="_blank" rel="noopener"
+        aria-label="Vaku GitHub Repo">GitHub</a>
+      &nbsp•&nbsp
+      <a href="https://github.com/lingrino/vaku/blob/main/docs/cli/vaku.md" target="_blank"
+        rel="noopener" aria-label="Vaku CLI Docs">CLI Docs</a>
+      &nbsp•&nbsp
+      <a href="https://pkg.go.dev/github.com/lingrino/vaku/vaku" target="_blank" rel="noopener"
+        aria-label="Vaku API Docs">API Docs</a>
+      &nbsp•&nbsp Built By
+      <a href="https://lingrino.com" target="_blank" rel="noopener"
+        aria-label="Sean Lingren's Website'">Sean Lingren</a>
     </div>
   </body>
 

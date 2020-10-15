@@ -32,7 +32,7 @@ var sharedVaku *Client
 var sharedVakuClean *Client
 
 // pathPrefix is used to create new unique seeded paths. Should be incremented after use.
-var pathPrefix int = 100
+var pathPrefix = 100
 var pathPrefixMtx sync.Mutex
 
 // mountVersions lists all kv versions. Tests run against all versions with equal results.

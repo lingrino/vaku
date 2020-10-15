@@ -40,13 +40,10 @@ jobs:
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.31 # https://github.com/golangci/golangci-lint/releases
-      - name: Prep Coverage
-        run: cc-test-reporter before-build
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       - name: Test
         run: go test -cover -coverprofile=c.out -covermode=atomic -race -v ./...
       - name: Upload Coverage
-        run: cc-test-reporter after-build -p "github.com/${GITHUB_REPOSITORY}"
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./c.out
+          fail_ci_if_error: true

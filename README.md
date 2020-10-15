@@ -6,7 +6,7 @@
 [![goreportcard](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
 [![Maintainability](https://api.codeclimate.com/v1/badges/db6951b0aa53becf8c92/maintainability)](https://codeclimate.com/github/lingrino/vaku/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/db6951b0aa53becf8c92/test_coverage)](https://codeclimate.com/github/lingrino/vaku/test_coverage)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/65802905eb8148e2ae9ae4c909673ee2)](https://www.codacy.com/manual/lingrino/vaku)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/65802905eb8148e2ae9ae4c909673ee2)](https://www.codacy.com/gh/lingrino/vaku/dashboard)
 [![Codebeat badge](https://codebeat.co/badges/f6dfd08e-97c5-4afd-9dd0-64cf0a5d03a8)](https://codebeat.co/projects/github-com-lingrino-vaku-main)
 
 A CLI and API for running path and folder based operations on Vault k/v engines.

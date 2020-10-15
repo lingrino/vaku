@@ -1,0 +1,20 @@
+{
+    "name": "vaku",
+    "short_name": "vaku",
+    "description": "Vaku Website",
+    "display": "standalone",
+    "theme_color": "#93d3e7",
+    "background_color": "#7e8898",
+    "icons": [
+        {
+            "src": "assets/icons/favicon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/icons/favicon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
