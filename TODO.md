@@ -8,7 +8,7 @@
 - doc.go in api
 - update readme
 - make sure all 100% on codeclimate, codacy, codebeat, etc...
-- test that issue works
+- test that gh issues are resolved
 
 ## After Release
 

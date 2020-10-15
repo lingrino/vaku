@@ -1,6 +1,6 @@
 # Vaku
 
-[![Vaku](www/assets/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
+[![Vaku](www/assets/images/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/lingrino/vaku/vaku)](https://pkg.go.dev/github.com/lingrino/vaku/vaku)
 [![goreportcard](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
