@@ -1,4 +1,7 @@
 engines:
+  csslint:
+    exclude_paths:
+      - "**/*.min.css"
   remark-lint:
     exclude_paths:
       - "docs/cli/*.md"
