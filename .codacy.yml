@@ -1,7 +1,12 @@
+---
 engines:
   csslint:
     exclude_paths:
-      - "**/*.min.css"
+      - "**.min.css"
+  duplication:
+    exclude_paths:
+      - "cmd/**"
+      - "**_test.go"
   remark-lint:
     exclude_paths:
       - "docs/cli/*.md"
