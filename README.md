@@ -2,7 +2,7 @@
 
 [![Vaku](www/assets/images/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
 
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/lingrino/vaku/api)](https://pkg.go.dev/github.com/lingrino/vaku/api)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/lingrino/vaku/v2/api)](https://pkg.go.dev/github.com/lingrino/vaku/v2/api)
 [![goreportcard](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
 [![Code Quality](https://app.codacy.com/project/badge/Grade/65802905eb8148e2ae9ae4c909673ee2)](https://www.codacy.com/gh/lingrino/vaku/dashboard)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/db6951b0aa53becf8c92/test_coverage)](https://codeclimate.com/github/lingrino/vaku/test_coverage)
@@ -41,7 +41,7 @@ Vaku CLI documentation can be found on the command line using either `vaku help 
 
 ## API
 
-Documentation for the Vaku API is on [pkg.go.dev](https://pkg.go.dev/github.com/lingrino/vaku/api).
+Documentation for the Vaku API is on [pkg.go.dev](https://pkg.go.dev/github.com/lingrino/vaku/v2/api).
 
 ## Contributing
 
