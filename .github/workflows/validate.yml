@@ -80,4 +80,5 @@ jobs:
       - name: Upload Codeclimate Coverage
         uses: paambaati/codeclimate-action@v2.7.4
         env:
+          prefix: github.com/lingrino/vaku
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
