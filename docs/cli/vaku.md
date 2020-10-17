@@ -16,7 +16,7 @@ already authenticated to Vault before running any commands. Vaku
 commands should not be run on non-K/V engines.
 
 CLI documentation - 'vaku help [cmd]'
-API documentation - https://pkg.go.dev/github.com/lingrino/vaku/api
+API documentation - https://pkg.go.dev/github.com/lingrino/vaku/v2/api
 Built by Sean Lingren <sean@lingrino.com>
 
 ### Examples
