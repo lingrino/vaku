@@ -25,10 +25,6 @@ func (c *Client) PathList(p string) ([]string, error) {
 		return nil, newWrapErr(p, ErrPathList, newWrapErr(err.Error(), ErrVaultList, nil))
 	}
 
-	if secret == nil || secret.Data == nil {
-		return nil, nil
-	}
-
 	list, err := decodeSecret(secret)
 	if err != nil {
 		return nil, newWrapErr(p, ErrPathList, err)
@@ -40,6 +36,10 @@ func (c *Client) PathList(p string) ([]string, error) {
 }
 
 func decodeSecret(secret *vault.Secret) ([]string, error) {
+	if secret == nil || secret.Data == nil {
+		return nil, nil
+	}
+
 	data, ok := secret.Data["keys"]
 	if !ok || data == nil {
 		return nil, newWrapErr("", ErrDecodeSecret, nil)
@@ -49,6 +49,10 @@ func decodeSecret(secret *vault.Secret) ([]string, error) {
 		return nil, newWrapErr("", ErrDecodeSecret, nil)
 	}
 
+	return decodeKeys(keys)
+}
+
+func decodeKeys(keys []interface{}) ([]string, error) {
 	output := make([]string, len(keys))
 	for i, k := range keys {
 		key, ok := k.(string)

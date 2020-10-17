@@ -65,7 +65,7 @@ func (c *cli) setVersion(version string) {
 	c.version = version
 }
 
-// initVakuClient initializes our vaku client and underlying vault clients.
+// initVakuClient initializes a vaku client in the cli struct
 // https://github.com/hashicorp/vault/blob/8571221f03c92ac3acac27c240fa7c9b3cb22db5/command/base.go#L67-L159
 func (c *cli) initVakuClient(cmd *cobra.Command, args []string) error {
 	// don't proceed if vc is already set (likely in tests)
@@ -73,18 +73,30 @@ func (c *cli) initVakuClient(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
+	vc, err := c.newVakuClient()
+	if err != nil {
+		return err
+	}
+
+	c.vc = vc
+
+	return nil
+}
+
+// newVakuClient creates a vaku client and underlying vault clients.
+func (c *cli) newVakuClient() (*vaku.Client, error) {
 	var options []vaku.Option
 
 	srcClient, err := c.newVaultClient(c.flagSrcAddr, c.flagSrcToken)
 	if err != nil {
-		return c.combineErr(errInitVakuClient, err)
+		return nil, c.combineErr(errInitVakuClient, err)
 	}
 	options = append(options, vaku.WithVaultSrcClient(srcClient))
 
 	if c.flagDstAddr != "" || c.flagDstToken != "" {
 		dstClient, err := c.newVaultClient(c.flagDstAddr, c.flagDstToken)
 		if err != nil {
-			return c.combineErr(errInitVakuClient, err)
+			return nil, c.combineErr(errInitVakuClient, err)
 		}
 		options = append(options, vaku.WithVaultDstClient(dstClient))
 	}
@@ -94,12 +106,10 @@ func (c *cli) initVakuClient(cmd *cobra.Command, args []string) error {
 
 	vakuClient, err := vaku.NewClient(options...)
 	if err != nil {
-		return c.combineErr(errInitVakuClient, err)
+		return nil, c.combineErr(errInitVakuClient, err)
 	}
 
-	c.vc = vakuClient
-
-	return nil
+	return vakuClient, nil
 }
 
 // newVaultClient creates a new vault client. Prefer passed addr/token. Fallback to env/config.

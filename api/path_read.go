@@ -41,17 +41,7 @@ func extractV2Read(data map[string]interface{}) map[string]interface{} {
 		return nil
 	}
 
-	// Ignore deleted and destroyed secrets
-	metadata, ok := data["metadata"].(map[string]interface{})
-	if !ok {
-		return nil
-	}
-	deletionTime, ok := metadata["deletion_time"].(string)
-	if !ok || deletionTime != "" {
-		return nil
-	}
-	destroyed, ok := metadata["destroyed"].(bool)
-	if !ok || destroyed {
+	if isDeleted(data) {
 		return nil
 	}
 
@@ -61,4 +51,22 @@ func extractV2Read(data map[string]interface{}) map[string]interface{} {
 	}
 
 	return dd.(map[string]interface{})
+}
+
+// isDeleted checks if the secret has been deleted or destroyed
+func isDeleted(data map[string]interface{}) bool {
+	metadata, ok := data["metadata"].(map[string]interface{})
+	if !ok {
+		return true
+	}
+	deletionTime, ok := metadata["deletion_time"].(string)
+	if !ok || deletionTime != "" {
+		return true
+	}
+	destroyed, ok := metadata["destroyed"].(bool)
+	if !ok || destroyed {
+		return true
+	}
+
+	return false
 }
