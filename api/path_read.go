@@ -53,7 +53,7 @@ func extractV2Read(data map[string]interface{}) map[string]interface{} {
 	return dd.(map[string]interface{})
 }
 
-// isDeleted checks if the secret has been deleted or destroyed
+// isDeleted checks if the secret has been deleted or destroyed.
 func isDeleted(data map[string]interface{}) bool {
 	metadata, ok := data["metadata"].(map[string]interface{})
 	if !ok {

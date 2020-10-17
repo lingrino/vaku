@@ -5,6 +5,22 @@ on:
   push:
 
 jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15 # https://golang.org/dl/
+      - name: Docs Check
+        run: |
+          before=$(cat docs/cli/*.md | md5sum)
+          go run main.go docs docs/cli
+          after=$(cat docs/cli/*.md | md5sum)
+          if [ "$before" != "$after" ]; then exit 1; fi
+        shell: bash
   golangci:
     runs-on: ubuntu-latest
     steps:
@@ -14,9 +30,35 @@ jobs:
         uses: golangci/golangci-lint-action@v2
         with:
           version: v1.31 # https://github.com/golangci/golangci-lint/releases
-  validate:
+  gomod:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15 # https://golang.org/dl/
+      - name: Go Mod Tidy
+        run: test -z $(go mod tidy)
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15 # https://golang.org/dl/
+      - name: Goreleaser Check
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          args: check
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Install Go
         uses: actions/setup-go@v2
         with:
@@ -28,21 +70,6 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - name: Goreleaser Check
-        uses: goreleaser/goreleaser-action@v2
-        with:
-          args: check
-      - name: Docs Check
-        run: |
-          before=$(cat docs/cli/*.md | md5sum)
-          go run main.go docs docs/cli
-          after=$(cat docs/cli/*.md | md5sum)
-          if [ "$before" != "$after" ]; then exit 1; fi
-        shell: bash
-      - name: Go Mod Tidy
-        run: test -z $(go mod tidy)
-      - name: Go Format
-        run: test -z $(gofmt -l -s .)
       - name: Test
         run: go test -cover -coverprofile=c.out -covermode=atomic -race -v ./...
       - name: Upload Coverage
