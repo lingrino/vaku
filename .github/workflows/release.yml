@@ -20,6 +20,12 @@ jobs:
       - name: Check API Version
         run: grep -q ${$(git describe --tags)//v} vaku/version.go
         shell: bash
+      - name: Docker Login
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GORELEASER_GITHUB_TOKEN }}
       - name: Release
         uses: goreleaser/goreleaser-action@v2
         env:
