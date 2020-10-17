@@ -72,8 +72,12 @@ jobs:
             ${{ runner.os }}-go-
       - name: Test
         run: go test -cover -coverprofile=c.out -covermode=atomic -race -v ./...
-      - name: Upload Coverage
+      - name: Upload Codecov Coverage
         uses: codecov/codecov-action@v1
         with:
           file: ./c.out
           fail_ci_if_error: true
+      - name: Upload Codeclimate Coverage
+        uses: paambaati/codeclimate-action@v2
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
