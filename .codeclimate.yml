@@ -1,0 +1,21 @@
+version: "2"
+checks:
+  similar-code:
+    enabled: false
+plugins:
+  fixme:
+    enabled: true
+  git-legal:
+    enabled: true
+  gofmt:
+    enabled: true
+  golint:
+    enabled: true
+  govet:
+    enabled: true
+  markdownlint:
+    enabled: true
+    exclude_patterns:
+      - "docs/cli/*.md"
+  shellcheck:
+    enabled: true

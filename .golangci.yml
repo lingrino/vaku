@@ -1,0 +1,82 @@
+linters:
+  enable:
+    - bodyclose
+    - deadcode
+    - depguard
+    - dogsled
+    - dupl
+    - errcheck
+    - funlen
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - godox
+    - gofmt
+    - goimports
+    - golint
+    - gomnd
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nakedret
+    - nestif
+    - prealloc
+    - rowserrcheck
+    - scopelint
+    - staticcheck
+    - structcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - varcheck
+    - whitespace
+  disable:
+    - interfacer # deprecated
+    - maligned # not worth savings
+    - wsl # too strict
+
+linters-settings:
+  dupl:
+    threshold: 100
+  errcheck:
+    check-blank: true
+  gocognit:
+    min-complexity: 10
+  gocyclo:
+    min-complexity: 10
+  nakedret:
+    max-func-lines: 0
+  goconst:
+    min-occurrences: 3
+  golint:
+    min-confidence: 0
+
+issues:
+  exclude-rules:
+    - path: main.go
+      linters:
+        - gochecknoglobals # global in main.go needed for testing
+    - path: cmd/
+      linters:
+        - dupl # CLIs are a lot of similar-looking code!
+    - path: _test.go
+      linters:
+        - dupl # many functions in tests look like duplicates
+        - funlen # test function can be very long due to test cases
+        - gochecknoglobals # globals in tests are fine
+        - gocognit # test functions can be long/complex
+        - gomnd # there are many magic numbers in tests
+    - path: example_*_test.go
+      linters:
+        - errcheck # not required to check errors in examples
+        - ineffassign # not required to check errors in examples

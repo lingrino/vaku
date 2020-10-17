@@ -1,24 +1,38 @@
 package cmd
 
 import (
-	"github.com/lingrino/vaku/vaku"
 	"github.com/spf13/cobra"
+
+	vaku "github.com/lingrino/vaku/v2/api"
 )
 
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Returns the current Vaku CLI and API versions",
+const (
+	versionUse     = "version"
+	versionShort   = "Print vaku version"
+	versionExample = "vaku version"
+)
 
-	Args: cobra.NoArgs,
+func (c *cli) newVersionCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     versionUse,
+		Short:   versionShort,
+		Example: versionExample,
 
-	Run: func(cmd *cobra.Command, args []string) {
-		print(map[string]interface{}{
-			"CLI": version,
-			"API": vaku.Version(),
-		})
-	},
+		Args: cobra.NoArgs,
+
+		DisableFlagsInUseLine: true,
+
+		RunE: c.runVersion,
+	}
+
+	return cmd
 }
 
-func init() {
-	VakuCmd.AddCommand(versionCmd)
+func (c *cli) runVersion(cmd *cobra.Command, args []string) error {
+	output := map[string]interface{}{
+		"CLI": c.version,
+		"API": vaku.Version(),
+	}
+	c.output(output)
+	return nil
 }

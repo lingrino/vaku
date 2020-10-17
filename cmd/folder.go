@@ -4,16 +4,40 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var folderCmd = &cobra.Command{
-	Use:   "folder [cmd]",
-	Short: "Contains all vaku folder functions, does nothing on its own",
+const (
+	folderUse     = "folder <cmd>"
+	folderShort   = "Commands that act on Vault folders"
+	folderExample = "vaku folder list secret/foo"
+	folderLong    = `Commands that act on Vault folders
 
-	// Auth to vault on all commands
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		authVGC()
-	},
-}
+Commands under the folder subcommand act on Vault folders. Folders
+are designated by paths that end in a '/' such as 'secret/foo/'. Vaku
+can list, copy, move, search, etc.. on Vault folders.`
+)
 
-func init() {
-	VakuCmd.AddCommand(folderCmd)
+func (c *cli) newFolderCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     folderUse,
+		Short:   folderShort,
+		Long:    folderLong,
+		Example: folderExample,
+
+		PersistentPreRunE: c.initVakuClient,
+	}
+
+	c.addPathFolderFlags(cmd)
+
+	cmd.AddCommand(
+		c.newFolderListCmd(),
+		c.newFolderReadCmd(),
+		c.newFolderWriteCmd(),
+		c.newFolderDeleteCmd(),
+		c.newFolderDeleteMetaCmd(),
+		c.newFolderDestroyCmd(),
+		c.newFolderSearchCmd(),
+		c.newFolderCopyCmd(),
+		c.newFolderMoveCmd(),
+	)
+
+	return cmd
 }

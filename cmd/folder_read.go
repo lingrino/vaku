@@ -1,39 +1,36 @@
 package cmd
 
 import (
-	"fmt"
+	"context"
 
-	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-var folderReadCmd = &cobra.Command{
-	Use:   "read [path]",
-	Short: "Recursively read a vault folder",
-	Long: `Recursively reads an entire vault folder, returning a map of paths to their values.
+const (
+	folderReadArgs    = 1
+	folderReadUse     = "read <folder>"
+	folderReadShort   = "Recursively read all secrets in a folder"
+	folderReadLong    = "Recursively read all secrets in a folder"
+	folderReadExample = "vaku folder read secret/foo"
+)
 
-Example:
-  vaku folder read secret/foo`,
+func (c *cli) newFolderReadCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     folderReadUse,
+		Short:   folderReadShort,
+		Long:    folderReadLong,
+		Example: folderReadExample,
 
-	Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(folderReadArgs),
 
-	Run: func(cmd *cobra.Command, args []string) {
-		input := vaku.NewPathInput(args[0])
-		input.TrimPathPrefix = !noTrimPathPrefix
+		RunE: c.runfolderRead,
+	}
 
-		output, err := vgc.FolderRead(input)
-		if err != nil {
-			fmt.Printf("%s", errors.Wrapf(err, "Failed to read folder %s", args[0]))
-		} else {
-			print(map[string]interface{}{
-				args[0]: output,
-			})
-		}
-	},
+	return cmd
 }
 
-func init() {
-	folderCmd.AddCommand(folderReadCmd)
-	folderReadCmd.Flags().BoolVarP(&noTrimPathPrefix, "no-trim-path-prefix", "T", false, "Output full paths instead of paths with the input path trimmed")
+func (c *cli) runfolderRead(cmd *cobra.Command, args []string) error {
+	read, err := c.vc.FolderRead(context.Background(), args[0])
+	c.output(read)
+	return err
 }

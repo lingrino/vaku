@@ -1,41 +1,34 @@
 package cmd
 
 import (
-	"fmt"
+	"context"
 
-	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-var folderMoveCmd = &cobra.Command{
-	Use:   "move [source folder] [target path]",
-	Short: "Move a vault folder from one location to another",
-	Long: `Takes in a source path and target path and moves every path in the source to the target.
-Note that this will move the input path if it is a secret and all paths under the input path that
-result from calling 'vaku folder list' on that path. Also note that this will overwrite any existing
-keys at the target paths. Note that this deletes (not destroys) the source folder after a successful copy.
+const (
+	folderMoveArgs    = 2
+	folderMoveUse     = "move <source folder> <destination folder>"
+	folderMoveShort   = "Recursively move all secrets in source folder to destination folder"
+	folderMoveLong    = "Recursively move all secrets in source folder to destination folder"
+	folderMoveExample = "vaku folder move secret/foo secret/bar"
+)
 
-Example:
-  vaku folder move secret/foo secret/bar`,
+func (c *cli) newFolderMoveCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     folderMoveUse,
+		Short:   folderMoveShort,
+		Long:    folderMoveLong,
+		Example: folderMoveExample,
 
-	Args: cobra.ExactArgs(2),
+		Args: cobra.ExactArgs(folderMoveArgs),
 
-	Run: func(cmd *cobra.Command, args []string) {
-		inputSource := vaku.NewPathInput(args[0])
-		inputTarget := vaku.NewPathInput(args[1])
+		RunE: c.runfolderMove,
+	}
 
-		err := vgc.FolderMove(inputSource, inputTarget)
-		if err != nil {
-			fmt.Printf("%s", errors.Wrapf(err, "Failed to move folder %s to %s", args[0], args[1]))
-		} else {
-			print(map[string]interface{}{
-				args[0]: fmt.Sprintf("Successfully moved folder %s to %s", args[0], args[1]),
-			})
-		}
-	},
+	return cmd
 }
 
-func init() {
-	folderCmd.AddCommand(folderMoveCmd)
+func (c *cli) runfolderMove(cmd *cobra.Command, args []string) error {
+	return c.vc.FolderMove(context.Background(), args[0], args[1])
 }

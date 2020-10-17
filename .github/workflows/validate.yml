@@ -1,43 +1,79 @@
 name: Validate
 
 on:
-  - push
-  - pull_request
+  workflow_dispatch:
+  push:
 
 jobs:
-  validate:
+  docs:
     runs-on: ubuntu-latest
-    container: lingrino/ci:latest
-    services:
-      vault:
-        image: vault:1.3.2
-        ports:
-          - 8300:8300
-        env:
-          SKIP_SETCAP: "true"
-          VAULT_DEV_ROOT_TOKEN_ID: hunter2
-          VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8300
-      targetvault:
-        image: vault:1.3.2
-        ports:
-          - 8400:8400
-        env:
-          SKIP_SETCAP: "true"
-          VAULT_DEV_ROOT_TOKEN_ID: targethunter2
-          VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8400
     steps:
-      - name: Code - Checkout
-        uses: actions/checkout@master
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
         with:
-          fetch-depth: 1
-      - name: Go fmt
-        run: test -z $(gofmt -l -w -s vaku/)
-      - name: Run Tests
-        run: go test -cover -race -v -coverprofile=coverage.txt -covermode=atomic ./...
-        env:
-          VAKU_VAULT_ADDR: http://vault:8300
-          VAKU_TARGET_VAULT_ADDR: http://targetvault:8400
+          go-version: 1.15 # https://golang.org/dl/
+      - name: Docs Check
+        run: |
+          before=$(cat docs/cli/*.md | md5sum)
+          go run main.go docs docs/cli
+          after=$(cat docs/cli/*.md | md5sum)
+          if [ "$before" != "$after" ]; then exit 1; fi
+        shell: bash
+  golangci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.31 # https://github.com/golangci/golangci-lint/releases
+  gomod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15 # https://golang.org/dl/
+      - name: Go Mod Tidy
+        run: test -z $(go mod tidy)
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15 # https://golang.org/dl/
+      - name: Goreleaser Check
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          args: check
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15 # https://golang.org/dl/
+      - name: Cache Modules
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Test
+        run: go test -cover -coverprofile=c.out -covermode=atomic -race -v ./...
       - name: Upload Coverage
         uses: codecov/codecov-action@v1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./c.out
+          fail_ci_if_error: true

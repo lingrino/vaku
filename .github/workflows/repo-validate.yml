@@ -1,22 +1,23 @@
 name: Repo - Validate
 
 on:
-  - push
+  workflow_dispatch:
+  push:
 
 jobs:
   validate:
     runs-on: ubuntu-latest
-    container: lingrino/ci:latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@master
-        with:
-          fetch-depth: 1
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: License Exists
         run: test -f LICENSE
+      - name: Gitignore Exists
+        run: test -f .gitignore
       - name: Readme Exists
         run: test -f README.md
       - name: Readme Lint
-        run: markdownlint README.md
-      - name: Gitignore Exists
-        run: test -f .gitignore
+        uses: avto-dev/markdown-lint@v1
+        with:
+          args: ./README.md
+          config: ./markdownlint.json

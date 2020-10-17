@@ -1,42 +1,36 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
+	"context"
 
-	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-var folderListCmd = &cobra.Command{
-	Use:   "list [path]",
-	Short: "Recursively list a vault folder",
-	Long: `Takes in a path and walks the path by calling 'vaku path list' on the input path and all
-folders within that path as well. Returns the results as a sorted list of paths.
+const (
+	folderListArgs    = 1
+	folderListUse     = "list <folder>"
+	folderListShort   = "Recursively list all paths in a folder"
+	folderListLong    = "Recursively list all paths in a folder"
+	folderListExample = "vaku folder list secret/foo"
+)
 
-Example:
-  vaku folder list secret/foo`,
+func (c *cli) newFolderListCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     folderListUse,
+		Short:   folderListShort,
+		Long:    folderListLong,
+		Example: folderListExample,
 
-	Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(folderListArgs),
 
-	Run: func(cmd *cobra.Command, args []string) {
-		input := vaku.NewPathInput(args[0])
-		input.TrimPathPrefix = !noTrimPathPrefix
+		RunE: c.runfolderList,
+	}
 
-		output, err := vgc.FolderList(input)
-		if err != nil {
-			fmt.Printf("%s", errors.Wrapf(err, "Failed to list folder %s", args[0]))
-			os.Exit(1)
-		} else {
-			print(map[string]interface{}{
-				args[0]: output,
-			})
-		}
-	},
+	return cmd
 }
 
-func init() {
-	folderCmd.AddCommand(folderListCmd)
-	folderListCmd.Flags().BoolVarP(&noTrimPathPrefix, "no-trim-path-prefix", "T", false, "Output full paths instead of paths with the input path trimmed")
+func (c *cli) runfolderList(cmd *cobra.Command, args []string) error {
+	list, err := c.vc.FolderList(context.Background(), args[0])
+	c.output(list)
+	return err
 }

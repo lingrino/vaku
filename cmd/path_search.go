@@ -1,39 +1,36 @@
 package cmd
 
 import (
-	"fmt"
+	"strconv"
 
-	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-var pathSearchCmd = &cobra.Command{
-	Use:   "search [path] [search-string]",
-	Short: "Search a vault path for a string, returning true if it is found",
-	Long: `Searches a vault secret at a path for a specified string. Note that this is a simple text search that
-flattens the secret into a string and matches exactly the input provided. Returns true if the string is found and false
-otherwise.
+const (
+	pathSearchArgs    = 2
+	pathSearchUse     = "search <path> <search>"
+	pathSearchShort   = "Search a secret for a search string"
+	pathSearchLong    = "Search a secret for a search string"
+	pathSearchExample = "vaku path search secret/foo bar"
+)
 
-Example:
-  vaku path search secret/foo "bar"`,
+func (c *cli) newPathSearchCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     pathSearchUse,
+		Short:   pathSearchShort,
+		Long:    pathSearchLong,
+		Example: pathSearchExample,
 
-	Args: cobra.ExactArgs(2),
+		Args: cobra.ExactArgs(pathSearchArgs),
 
-	Run: func(cmd *cobra.Command, args []string) {
-		input := vaku.NewPathInput(args[0])
+		RunE: c.runPathSearch,
+	}
 
-		output, err := vgc.PathSearch(input, args[1])
-		if err != nil {
-			fmt.Printf("%s", errors.Wrapf(err, "Failed to search path %s", args[0]))
-		} else {
-			print(map[string]interface{}{
-				args[0]: output,
-			})
-		}
-	},
+	return cmd
 }
 
-func init() {
-	pathCmd.AddCommand(pathSearchCmd)
+func (c *cli) runPathSearch(cmd *cobra.Command, args []string) error {
+	search, err := c.vc.PathSearch(args[0], args[1])
+	c.output(strconv.FormatBool(search))
+	return err
 }

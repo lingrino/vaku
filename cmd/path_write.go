@@ -1,27 +1,28 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
-var pathWriteCmd = &cobra.Command{
-	Hidden:                true,
-	DisableSuggestions:    true,
-	DisableFlagsInUseLine: true,
+const (
+	pathWriteUse   = "write"
+	pathWriteShort = "Vaku CLI does not yet support path write. Use the vaku API or native Vault CLI"
+	pathWriteLong  = "Vaku CLI does not yet support path write. Use the vaku API or native Vault CLI"
+)
 
-	Use:   "write",
-	Short: "Vaku CLI does not support writes. Please use either the native Vault CLI or the Vaku API",
-	Long:  "Vaku CLI does not support writes. Please use either the native Vault CLI or the Vaku API",
+func (c *cli) newPathWriteCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   pathWriteUse,
+		Short: pathWriteShort,
+		Long:  pathWriteLong,
 
-	Args:             cobra.ArbitraryArgs,
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {},
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("ERROR: Vaku CLI does not support writes. Please use either the native Vault CLI or the Vaku API")
-	},
-}
+		// disable all discovery
+		Hidden:                true,
+		DisableSuggestions:    true,
+		DisableFlagsInUseLine: true,
+		PersistentPreRun:      nil,
+		Args:                  cobra.ArbitraryArgs,
+	}
 
-func init() {
-	pathCmd.AddCommand(pathWriteCmd)
+	return cmd
 }

@@ -4,16 +4,40 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var pathCmd = &cobra.Command{
-	Use:   "path [cmd]",
-	Short: "Contains all vaku path functions, does nothing on its own",
+const (
+	pathUse     = "path <cmd>"
+	pathShort   = "Commands that act on Vault paths"
+	pathExample = "vaku path list secret/foo"
+	pathLong    = `Commands that act on Vault paths
 
-	// Auth to vault on all commands
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		authVGC()
-	},
-}
+Commands under the path subcommand act on Vault paths. Vaku can list,
+copy, move, search, etc.. on Vault paths.`
+)
 
-func init() {
-	VakuCmd.AddCommand(pathCmd)
+func (c *cli) newPathCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     pathUse,
+		Short:   pathShort,
+		Long:    pathLong,
+		Example: pathExample,
+
+		PersistentPreRunE: c.initVakuClient,
+	}
+
+	c.addPathFolderFlags(cmd)
+
+	cmd.AddCommand(
+		c.newPathListCmd(),
+		c.newPathReadCmd(),
+		c.newPathWriteCmd(),
+		c.newPathDeleteCmd(),
+		c.newPathDeleteMetaCmd(),
+		c.newPathDestroyCmd(),
+		c.newPathUpdateCmd(),
+		c.newPathSearchCmd(),
+		c.newPathCopyCmd(),
+		c.newPathMoveCmd(),
+	)
+
+	return cmd
 }

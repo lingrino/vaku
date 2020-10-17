@@ -1,39 +1,34 @@
 package cmd
 
 import (
-	"fmt"
-
-	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-var pathListCmd = &cobra.Command{
-	Use:   "list [path]",
-	Short: "List a vault path",
-	Long: `Lists all keys at a vault path. Functionally similar to 'vault list path' but works on v1 and v2 mounts.
+const (
+	pathListArgs    = 1
+	pathListUse     = "list <path>"
+	pathListShort   = "List all paths at a path"
+	pathListLong    = "List all paths at a path"
+	pathListExample = "vaku path list secret/foo"
+)
 
-Example:
-  vaku path list secret/foo`,
+func (c *cli) newPathListCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     pathListUse,
+		Short:   pathListShort,
+		Long:    pathListLong,
+		Example: pathListExample,
 
-	Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(pathListArgs),
 
-	Run: func(cmd *cobra.Command, args []string) {
-		input := vaku.NewPathInput(args[0])
-		input.TrimPathPrefix = !noTrimPathPrefix
+		RunE: c.runPathList,
+	}
 
-		output, err := vgc.PathList(input)
-		if err != nil {
-			fmt.Printf("%s", errors.Wrapf(err, "Failed to list path %s", args[0]))
-		} else {
-			print(map[string]interface{}{
-				args[0]: output,
-			})
-		}
-	},
+	return cmd
 }
 
-func init() {
-	pathCmd.AddCommand(pathListCmd)
-	pathListCmd.Flags().BoolVarP(&noTrimPathPrefix, "no-trim-path-prefix", "T", false, "Output full paths instead of paths with the input path trimmed")
+func (c *cli) runPathList(cmd *cobra.Command, args []string) error {
+	list, err := c.vc.PathList(args[0])
+	c.output(list)
+	return err
 }

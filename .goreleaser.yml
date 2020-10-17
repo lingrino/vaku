@@ -1,37 +1,90 @@
 project_name: vaku
 env:
-  - CGO_ENABLED=0
   - GO111MODULE=on
 before:
   hooks:
     - go mod download
-archives:
+builds:
   - id: vaku
-    replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
-      386: i386
-      amd64: x86_64
-checksum:
-  name_template: 'checksums.txt'
-snapshot:
-  name_template: "{{ .Tag }}-next"
+    binary: vaku
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    ignore:
+      - goos: darwin
+        goarch: 386
+    env:
+      - CGO_ENABLED=0
+release:
+  prerelease: auto
 changelog:
   sort: asc
+  filters:
+    exclude:
+      - Merge pull request
+      - Merge branch
+archives:
+  - id: vaku
+    format: zip
+    replacements:
+      386: i386
+      amd64: x86_64
+      darwin: mac
+      linux: linux
+      windows: windows
 brews:
   - name: vaku
-    description: "A CLI and Go API to extend the official Vault client"
+    description: CLI that extends the official Vault client.
     homepage: https://vaku.dev/
     skip_upload: auto
-    github:
+    tap:
       owner: lingrino
       name: homebrew-tap
+    folder: Formula
     commit_author:
       name: Sean Lingren
       email: sean@lingrino.com
-    folder: Formula
-    dependencies:
-      - vault
     test: |
       system "#{bin}/vaku version"
+scoop:
+  bucket:
+    owner: lingrino
+    name: scoop-vaku
+  description: CLI that extends the official Vault client.
+  homepage: https://vaku.dev/
+  license: MIT
+  commit_author:
+    name: Sean Lingren
+    email: sean@lingrino.com
+nfpms:
+  - id: vaku
+    description: CLI that extends the official Vault client.
+    homepage: https://vaku.dev/
+    maintainer: "Sean Lingren <sean@lingrino.com>"
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    replacements:
+      386: i386
+      amd64: x86_64
+      darwin: mac
+      linux: linux
+      windows: windows
+dockers:
+  - dockerfile: Dockerfile
+    image_templates:
+      - ghcr.io/lingrino/vaku:latest
+      - ghcr.io/lingrino/vaku:{{ .Version }}
+      - ghcr.io/lingrino/vaku:{{ .Major }}
+      - ghcr.io/lingrino/vaku:{{ .Major }}.{{ .Minor }}
+    build_flag_templates:
+      - --label=org.opencontainers.image.created={{.Date}}
+      - --label=org.opencontainers.image.revision={{.FullCommit}}
+      - --label=org.opencontainers.image.version={{.Version}}

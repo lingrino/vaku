@@ -1,37 +1,34 @@
 package cmd
 
 import (
-	"fmt"
-
-	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-var pathReadCmd = &cobra.Command{
-	Use:   "read [path]",
-	Short: "Read a vault path",
-	Long: `Reads a secret at a path. Functionally similar to 'vault read' but works on v1 and v2 mounts.
+const (
+	pathReadArgs    = 1
+	pathReadUse     = "read <path>"
+	pathReadShort   = "Read a secret at a path"
+	pathReadLong    = "Read a secret at a path"
+	pathReadExample = "vaku path read secret/foo"
+)
 
-Example:
-  vaku path read secret/foo`,
+func (c *cli) newPathReadCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     pathReadUse,
+		Short:   pathReadShort,
+		Long:    pathReadLong,
+		Example: pathReadExample,
 
-	Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(pathReadArgs),
 
-	Run: func(cmd *cobra.Command, args []string) {
-		input := vaku.NewPathInput(args[0])
+		RunE: c.runPathRead,
+	}
 
-		output, err := vgc.PathRead(input)
-		if err != nil {
-			fmt.Printf("%s", errors.Wrapf(err, "Failed to read path %s", args[0]))
-		} else {
-			print(map[string]interface{}{
-				args[0]: output,
-			})
-		}
-	},
+	return cmd
 }
 
-func init() {
-	pathCmd.AddCommand(pathReadCmd)
+func (c *cli) runPathRead(cmd *cobra.Command, args []string) error {
+	read, err := c.vc.PathRead(args[0])
+	c.output(read)
+	return err
 }

@@ -1,55 +1,34 @@
 package cmd
 
 import (
-	"fmt"
+	"context"
 
-	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-var folderCopyCmd = &cobra.Command{
-	Use:   "copy [source folder] [target path]",
-	Short: "Copy a vault folder from one location to another",
-	Long: `Takes in a source path and target path and copies every path in the source to the target.
-Note that this will copy the input path if it is a secret and all paths under the input path that
-result from calling 'vaku folder list' on that path. Also note that this will overwrite any existing
-keys at the target paths.
+const (
+	folderCopyArgs    = 2
+	folderCopyUse     = "copy <source folder> <destination folder>"
+	folderCopyShort   = "Recursively copy all secrets in source folder to destination folder"
+	folderCopyLong    = "Recursively copy all secrets in source folder to destination folder"
+	folderCopyExample = "vaku folder copy secret/foo secret/bar"
+)
 
-Example:
-  vaku folder copy secret/foo secret/bar`,
+func (c *cli) newFolderCopyCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     folderCopyUse,
+		Short:   folderCopyShort,
+		Long:    folderCopyLong,
+		Example: folderCopyExample,
 
-	Args: cobra.ExactArgs(2),
+		Args: cobra.ExactArgs(folderCopyArgs),
 
-	Run: func(cmd *cobra.Command, args []string) {
-		inputSource := vaku.NewPathInput(args[0])
-		inputTarget := vaku.NewPathInput(args[1])
+		RunE: c.runfolderCopy,
+	}
 
-		var err error
-		if !useSourceTarget {
-			err = vgc.FolderCopy(inputSource, inputTarget)
-		} else {
-			authCopyClient()
-			err = copyClient.FolderCopy(inputSource, inputTarget)
-		}
-
-		if err != nil {
-			fmt.Printf("%s", errors.Wrapf(err, "Failed to copy folder %s to %s", args[0], args[1]))
-		} else {
-			print(map[string]interface{}{
-				args[0]: fmt.Sprintf("Successfully copied folder %s to %s", args[0], args[1]),
-			})
-		}
-	},
+	return cmd
 }
 
-func init() {
-	folderCmd.AddCommand(folderCopyCmd)
-	folderCopyCmd.Flags().BoolVarP(&useSourceTarget, "use-source-target-params", "", false, "Use source|target address/namespace/token parameters")
-	folderCopyCmd.Flags().StringVarP(&sourceAddress, "source-address", "", "", "The Vault address for the source folder")
-	folderCopyCmd.Flags().StringVarP(&sourceNamespace, "source-namespace", "", "", "The Vault namespace for the source folder")
-	folderCopyCmd.Flags().StringVarP(&sourceToken, "source-token", "", "", "The Vault token to access the source folder")
-	folderCopyCmd.Flags().StringVarP(&targetAddress, "target-address", "", "", "The Vault address for the target folder")
-	folderCopyCmd.Flags().StringVarP(&targetNamespace, "target-namespace", "", "", "The Vault namespace for the target folder")
-	folderCopyCmd.Flags().StringVarP(&targetToken, "target-token", "", "", "The Vault token to access the target folder")
+func (c *cli) runfolderCopy(cmd *cobra.Command, args []string) error {
+	return c.vc.FolderCopy(context.Background(), args[0], args[1])
 }

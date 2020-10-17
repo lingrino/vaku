@@ -1,39 +1,32 @@
 package cmd
 
 import (
-	"fmt"
-
-	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-var pathMoveCmd = &cobra.Command{
-	Use:   "move [source folder] [target path]",
-	Short: "Move a vault path from one location to another",
-	Long: `Moves a path from one location to another. This is equivalent to 'vaku path copy' followed
-by 'vaku path delete (not destroy)' on the target.
+const (
+	pathMoveArgs    = 2
+	pathMoveUse     = "move <source path> <destination path>"
+	pathMoveShort   = "Move a secret from a source path to a destination path"
+	pathMoveLong    = "Move a secret from a source path to a destination path"
+	pathMoveExample = "vaku path move secret/foo secret/bar"
+)
 
-Example:
-  vaku path move secret/foo secret/bar`,
+func (c *cli) newPathMoveCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     pathMoveUse,
+		Short:   pathMoveShort,
+		Long:    pathMoveLong,
+		Example: pathMoveExample,
 
-	Args: cobra.ExactArgs(2),
+		Args: cobra.ExactArgs(pathMoveArgs),
 
-	Run: func(cmd *cobra.Command, args []string) {
-		inputSource := vaku.NewPathInput(args[0])
-		inputTarget := vaku.NewPathInput(args[1])
+		RunE: c.runPathMove,
+	}
 
-		err := vgc.PathMove(inputSource, inputTarget)
-		if err != nil {
-			fmt.Printf("%s", errors.Wrapf(err, "Failed to move path %s to %s", args[0], args[1]))
-		} else {
-			print(map[string]interface{}{
-				args[0]: fmt.Sprintf("Successfully moved path %s to %s", args[0], args[1]),
-			})
-		}
-	},
+	return cmd
 }
 
-func init() {
-	pathCmd.AddCommand(pathMoveCmd)
+func (c *cli) runPathMove(cmd *cobra.Command, args []string) error {
+	return c.vc.PathMove(args[0], args[1])
 }

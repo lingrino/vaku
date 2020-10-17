@@ -1,0 +1,4 @@
+# RULES - https://github.com/markdownlint/markdownlint/blob/master/docs/RULES.md
+
+# Disable line length check
+rules "~MD013"

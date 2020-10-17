@@ -1,38 +1,32 @@
 package cmd
 
 import (
-	"fmt"
-
-	"github.com/lingrino/vaku/vaku"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
-var pathDeleteCmd = &cobra.Command{
-	Use:   "delete [path]",
-	Short: "Delete a vault path",
-	Long: `Deletes a secret at a specified path. Note that for V2 mounts this only deletes the current version.
-Functionally very similar to the 'vault delete' command, but works on v1 and v2 mounts.
+const (
+	pathDeleteArgs    = 1
+	pathDeleteUse     = "delete <path>"
+	pathDeleteShort   = "Delete a secret at a path"
+	pathDeleteLong    = "Delete a secret at a path"
+	pathDeleteExample = "vaku path delete secret/foo"
+)
 
-Example:
-  vaku path delete secret/foo`,
+func (c *cli) newPathDeleteCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     pathDeleteUse,
+		Short:   pathDeleteShort,
+		Long:    pathDeleteLong,
+		Example: pathDeleteExample,
 
-	Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(pathDeleteArgs),
 
-	Run: func(cmd *cobra.Command, args []string) {
-		input := vaku.NewPathInput(args[0])
+		RunE: c.runPathDelete,
+	}
 
-		err := vgc.PathDelete(input)
-		if err != nil {
-			fmt.Printf("%s", errors.Wrapf(err, "Failed to delete path %s", args[0]))
-		} else {
-			print(map[string]interface{}{
-				args[0]: "Successfully deleted path, if it existed",
-			})
-		}
-	},
+	return cmd
 }
 
-func init() {
-	pathCmd.AddCommand(pathDeleteCmd)
+func (c *cli) runPathDelete(cmd *cobra.Command, args []string) error {
+	return c.vc.PathDelete(args[0])
 }
