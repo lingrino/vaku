@@ -42,8 +42,10 @@ type cli struct {
 	// vault flags
 	flagSrcAddr  string
 	flagSrcToken string
+	flagSrcNspc  string
 	flagDstAddr  string
 	flagDstToken string
+	flagDstNspc  string
 
 	// data
 	version string
@@ -87,14 +89,14 @@ func (c *cli) initVakuClient(cmd *cobra.Command, args []string) error {
 func (c *cli) newVakuClient() (*vaku.Client, error) {
 	var options []vaku.Option
 
-	srcClient, err := c.newVaultClient(c.flagSrcAddr, c.flagSrcToken)
+	srcClient, err := c.newVaultClient(c.flagSrcAddr, c.flagSrcNspc, c.flagSrcToken)
 	if err != nil {
 		return nil, c.combineErr(errInitVakuClient, err)
 	}
 	options = append(options, vaku.WithVaultSrcClient(srcClient))
 
 	if c.flagDstAddr != "" || c.flagDstToken != "" {
-		dstClient, err := c.newVaultClient(c.flagDstAddr, c.flagDstToken)
+		dstClient, err := c.newVaultClient(c.flagDstAddr, c.flagDstNspc, c.flagDstToken)
 		if err != nil {
 			return nil, c.combineErr(errInitVakuClient, err)
 		}
@@ -113,7 +115,7 @@ func (c *cli) newVakuClient() (*vaku.Client, error) {
 }
 
 // newVaultClient creates a new vault client. Prefer passed addr/token. Fallback to env/config.
-func (c *cli) newVaultClient(addr, token string) (*vault.Client, error) {
+func (c *cli) newVaultClient(addr, namespace, token string) (*vault.Client, error) {
 	// nil means use default configuration and read from environment
 	client, err := vault.NewClient(nil)
 	if err != nil || c.fail == "vault.NewClient" {
@@ -125,6 +127,10 @@ func (c *cli) newVaultClient(addr, token string) (*vault.Client, error) {
 		if err != nil {
 			return nil, c.combineErr(errSetAddress, err)
 		}
+	}
+
+	if namespace != "" {
+		client.SetNamespace(namespace)
 	}
 
 	err = c.setVaultToken(client, token)

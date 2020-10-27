@@ -75,6 +75,7 @@ func TestInitVakuClient(t *testing.T) {
 
 			cli, _, _ := newTestCLI(t, nil)
 			cli.flagDstToken = "token"
+			cli.flagDstNspc = "foo"
 
 			cli.fail = tt.giveFail
 			cli.flagDstAddr = tt.giveDstAddr
