@@ -48,6 +48,19 @@ const (
 	flagDstAddrUse     = "address of the destination Vault server"
 	flagDstAddrDefault = ""
 
+	flagNspcName    = "namespace"
+	flagNspcShort   = "n"
+	flagNspcUse     = "name of the vault namespace to use in the source client"
+	flagNspcDefault = ""
+
+	flagSrcNspcName    = "source-namespace"
+	flagSrcNspcUse     = "name of the vault namespace to use in the source client (alias for --namespace)"
+	flagSrcNspcDefault = ""
+
+	flagDstNspcName    = "destination-namespace"
+	flagDstNspcUse     = "name of the vault namespace to use in the destination client"
+	flagDstNspcDefault = ""
+
 	flagTokenName    = "token"
 	flagTokenShort   = "t"
 	flagTokenUse     = "token for the vault server"
@@ -82,6 +95,10 @@ func (c *cli) addPathFolderFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().StringVarP(&c.flagSrcAddr, flagAddrName, flagAddrShort, flagAddrDefault, flagAddrUse)
 	cmd.PersistentFlags().StringVar(&c.flagSrcAddr, flagSrcAddrName, flagSrcAddrDefault, flagSrcAddrUse)
 	cmd.PersistentFlags().StringVar(&c.flagDstAddr, flagDstAddrName, flagDstAddrDefault, flagDstAddrUse)
+
+	cmd.PersistentFlags().StringVarP(&c.flagSrcNspc, flagNspcName, flagNspcShort, flagNspcDefault, flagNspcUse)
+	cmd.PersistentFlags().StringVar(&c.flagSrcNspc, flagSrcNspcName, flagSrcNspcDefault, flagSrcNspcUse)
+	cmd.PersistentFlags().StringVar(&c.flagDstNspc, flagDstNspcName, flagDstNspcDefault, flagDstNspcUse)
 
 	cmd.PersistentFlags().StringVarP(&c.flagSrcToken, flagTokenName, flagTokenShort, flagTokenDefault, flagTokenUse)
 	cmd.PersistentFlags().StringVar(&c.flagSrcToken, flagSrcTokenName, flagSrcTokenDefault, flagSrcTokenUse)
