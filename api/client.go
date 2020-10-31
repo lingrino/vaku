@@ -12,6 +12,8 @@ import (
 var (
 	// ErrNumWorkers when workers is not a supported number.
 	ErrNumWorkers = errors.New("invalid workers")
+	// ErrApplyOptions when options fails to apply.
+	ErrApplyOptions = errors.New("applying options")
 )
 
 const (
@@ -163,7 +165,7 @@ func NewClient(opts ...Option) (*Client, error) {
 	for _, opt := range opts {
 		err := opt.apply(client)
 		if err != nil {
-			return nil, err
+			return nil, newWrapErr("", ErrApplyOptions, err)
 		}
 	}
 

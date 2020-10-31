@@ -75,7 +75,7 @@ func TestNewClient(t *testing.T) {
 			name:    "bad workers",
 			give:    []Option{WithWorkers(0)},
 			want:    nil,
-			wantErr: []error{ErrNumWorkers},
+			wantErr: []error{ErrApplyOptions, ErrNumWorkers},
 		},
 		{
 			name: "error",
@@ -83,7 +83,7 @@ func TestNewClient(t *testing.T) {
 				withError(errInject),
 			},
 			want:    nil,
-			wantErr: []error{errInject},
+			wantErr: []error{ErrApplyOptions, errInject},
 		},
 	}
 

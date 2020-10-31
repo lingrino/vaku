@@ -26,7 +26,7 @@ func (c *cli) combineErr(e1, e2 error) error {
 	if e1 == nil {
 		return e2
 	}
-	return fmt.Errorf("%s\n%s%s", e1, c.flagIndent, e2)
+	return fmt.Errorf("%s\n%s%s", e1, c.flagIndent, e2) //nolint:errorlint
 }
 
 // output handles outputting all of our messages (regular output or errors).
