@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.1.1 - 2020-10-31
+
+### Added
+
+- GEN: Update packages
+- GEN: Update golangci-lint
+- GEN: Enable `errorlint`, `tparallel`, `wrapcheck` linters
+- GEN: Fix found linter issues
+- API: `ErrApplyOptions` now returned in `api.NewClient`
+
 ## 2.1.0 - 2020-10-27
 
 ### Added

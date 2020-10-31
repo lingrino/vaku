@@ -59,7 +59,7 @@ func newWrapErr(msg string, is, wraps error) *wrapErr {
 
 // Is compares an error to e.is.
 func (e *wrapErr) Is(target error) bool {
-	return target == e.is
+	return target == e.is //nolint:errorlint
 }
 
 // Error() returns the error message.

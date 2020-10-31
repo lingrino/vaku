@@ -6,6 +6,7 @@ linters:
     - dogsled
     - dupl
     - errcheck
+    - errorlint
     - funlen
     - gochecknoglobals
     - gochecknoinits
@@ -34,12 +35,14 @@ linters:
     - staticcheck
     - structcheck
     - stylecheck
+    - tparallel
     - typecheck
     - unconvert
     - unparam
     - unused
     - varcheck
     - whitespace
+    - wrapcheck
   disable:
     - interfacer # deprecated
     - maligned # not worth savings
@@ -69,6 +72,7 @@ issues:
     - path: cmd/
       linters:
         - dupl # CLIs are a lot of similar-looking code!
+        - wrapcheck # errors don't need to be wrapped in thin CLIs
     - path: _test.go
       linters:
         - dupl # many functions in tests look like duplicates
@@ -76,6 +80,7 @@ issues:
         - gochecknoglobals # globals in tests are fine
         - gocognit # test functions can be long/complex
         - gomnd # there are many magic numbers in tests
+        - wrapcheck # errors don't need to be wrapped in tests
     - path: example_*_test.go
       linters:
         - errcheck # not required to check errors in examples
