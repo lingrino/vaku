@@ -1,0 +1,13 @@
+name = "vaku"
+
+type       = "webpack"
+account_id = "27a6422e1d64fbe9408ab703847ecdab"
+zone_id    = "e8ab93b5d4d914ed505468dbd1f104cd"
+routes     = [
+  "vaku.dev/*",
+  "www.vaku.dev/*"
+]
+
+[site]
+bucket      = "./www"
+entry-point = "workers-site"
