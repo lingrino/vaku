@@ -74,7 +74,7 @@ jobs:
       - name: Test
         run: go test -cover -coverprofile=c.out -covermode=atomic -race -v ./...
       - name: Upload Codeclimate Coverage
-        uses: paambaati/codeclimate-action@v2.7.4
+        uses: paambaati/codeclimate-action@v2.7.5
         with:
           prefix: github.com/lingrino/vaku/v2/
           coverageLocations: ${{ github.workspace }}/c.out:gocov
