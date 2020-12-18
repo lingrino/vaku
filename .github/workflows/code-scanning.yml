@@ -4,6 +4,9 @@ name: Code Scanning
 on:
   workflow_dispatch:
   push:
+    branches: [main]
+  pull_request:
+    branches: [main]
   schedule:
     - cron: 0 16 * * 1 # Every Monday at 16:00 UTC
 
