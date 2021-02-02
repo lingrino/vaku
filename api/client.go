@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	vault "github.com/hashicorp/vault/api"
@@ -96,6 +97,9 @@ type withVaultClient struct {
 func (o withVaultClient) apply(c *Client) error {
 	c.vc = o.client
 	c.vl = o.client.Logical()
+	if bearerToken := os.Getenv("BEARER_AUTH_TOKEN"); strings.TrimSpace(bearerToken) != "" {
+		o.client.AddHeader("Authorization", "Bearer "+bearerToken)
+	}
 	return nil
 }
 
