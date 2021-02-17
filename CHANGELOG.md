@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.2.0 - 2021-02-16
+
+### Changed
+
+- GEN: Update to go 1.16
+- GEN: Support arm macs
+- GEN: Update dependencies
+
 ## 2.1.2 - 2020-11-11
 
 ### Changed
