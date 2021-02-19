@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path"
 	"strconv"
@@ -65,7 +65,7 @@ var seeds = map[string]map[string]interface{}{
 
 // TestMain prepares the test run.
 func TestMain(m *testing.M) {
-	hclog.DefaultOutput = ioutil.Discard
+	hclog.DefaultOutput = io.Discard
 	os.Exit(m.Run())
 }
 
