@@ -19,5 +19,3 @@ plugins:
       - "docs/cli/*.md"
   shellcheck:
     enabled: true
-exclude_patterns:
-  - "workers-site/**"
