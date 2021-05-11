@@ -57,7 +57,7 @@ jobs:
         with:
           go-version: 1.16 # https://golang.org/dl/
       - name: Goreleaser Check
-        uses: goreleaser/goreleaser-action@v2
+        uses: goreleaser/goreleaser-action@v2.5.0
         with:
           args: check
   test:
