@@ -100,7 +100,7 @@ func (c *Client) folderReadWork(i *folderReadWorkInput) error {
 
 // pathReadWork reads the path adds results to the channel.
 func (c *Client) pathReadWork(path string, i *folderReadWorkInput) error {
-	path = EnsurePrefix(path, i.root)
+	path = AddPrefix(path, i.root)
 
 	read, err := c.PathRead(path)
 	if err != nil {

@@ -31,6 +31,11 @@ func EnsurePrefix(p, pfx string) string {
 	return PathJoin(pfx, p)
 }
 
+// AddPrefix adds a prefix to a path.
+func AddPrefix(p, pfx string) string {
+	return PathJoin(pfx, p)
+}
+
 // EnsurePrefixList adds a prefix to every item in a list.
 func EnsurePrefixList(l []string, pfx string) {
 	for i, v := range l {
