@@ -74,7 +74,7 @@ func (e *wrapErr) Unwrap() error {
 	return e.wraps
 }
 
-// ctxErr returns ErrContext if err != nil.
+// ctxErr returns a wrapped ErrContext if err != nil.
 func ctxErr(err error) error {
 	if err == nil {
 		return nil
