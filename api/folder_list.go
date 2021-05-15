@@ -112,7 +112,7 @@ func (c *Client) folderListWork(i *folderListWorkInput) error {
 
 		select {
 		case <-i.ctx.Done():
-			return i.ctx.Err()
+			return ctxErr(i.ctx.Err())
 		default:
 		}
 	}
@@ -139,7 +139,7 @@ func (c *Client) pathListWork(path string, i *folderListWorkInput) error {
 		select {
 		case i.resC <- c.outputPath(path, i.root):
 		case <-i.ctx.Done():
-			return i.ctx.Err()
+			return ctxErr(i.ctx.Err())
 		}
 	}
 	return nil

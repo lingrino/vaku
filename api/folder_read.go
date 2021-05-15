@@ -85,7 +85,7 @@ func (c *Client) folderReadWork(i *folderReadWorkInput) error {
 	for {
 		select {
 		case <-i.ctx.Done():
-			return i.ctx.Err()
+			return ctxErr(i.ctx.Err())
 		case path, ok := <-i.pathC:
 			if !ok {
 				return nil

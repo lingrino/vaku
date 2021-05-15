@@ -13,6 +13,15 @@ Thank you to [@karakanb](https://github.com/karakanb) for finding and fixing a t
 - API: Add `AddPrefix` and `AddPrefixList` helper functions.
 - GEN: Fixed a bug where `folder search` would hang if the mount path shared a name with a folder.
 
+## 2.2.1 - 2021-05-15
+
+### Changed
+
+- GEN: Update dependencies
+- GEN: Run actions on PRs to support forked contributions
+- GEN: Update golangci-lint version and configuration
+- API: Fix new golangci-lint error wrapping issues
+
 ## 2.2.0 - 2021-02-16
 
 ### Changed

@@ -48,7 +48,7 @@ func (c *Client) folderDeleteWithFunc(ctx context.Context, p string, deleteF fun
 		})
 	}
 
-	return eg.Wait()
+	return eg.Wait() //nolint:wrapcheck
 }
 
 // folderDeleteWorkInput is the piecces needed to list a folder.
@@ -65,7 +65,7 @@ func (c *Client) folderDeleteWork(i *folderDeleteWorkInput) error {
 	for {
 		select {
 		case <-i.ctx.Done():
-			return i.ctx.Err()
+			return ctxErr(i.ctx.Err())
 		case path, ok := <-i.pathC:
 			if !ok {
 				return nil

@@ -9,4 +9,3 @@ engines:
       - "docs/cli/*.md"
 exclude_paths:
   - "**.min.css"
-  - "workers-site/**"
