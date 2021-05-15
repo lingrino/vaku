@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ### Changed
 
+- GEN: Update dependencies
 - GEN: Run actions on PRs to support forked contributions
 - GEN: Update golangci-lint version and configuration
 - API: Fix new golangci-lint error wrapping issues
