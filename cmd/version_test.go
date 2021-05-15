@@ -19,12 +19,12 @@ func TestVersion(t *testing.T) {
 		{
 			name:        "version test",
 			giveVersion: "test",
-			wantOut:     "API: 2.2.0\nCLI: test\n",
+			wantOut:     "API: 2.2.1\nCLI: test\n",
 		},
 		{
 			name:        "version version",
 			giveVersion: "version",
-			wantOut:     "API: 2.2.0\nCLI: version\n",
+			wantOut:     "API: 2.2.1\nCLI: version\n",
 		},
 		{
 			name:        "args",

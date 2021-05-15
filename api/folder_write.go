@@ -37,7 +37,11 @@ func (c *Client) FolderWrite(ctx context.Context, d map[string]map[string]interf
 		})
 	}
 
-	return eg.Wait()
+	err := eg.Wait()
+	if err != nil {
+		return newWrapErr("", ErrFolderWrite, err)
+	}
+	return nil
 }
 
 // folderWriteWorkInput is the piecces needed to list a folder.
@@ -53,17 +57,13 @@ func (c *Client) folderWriteWork(i *folderWriteWorkInput) error {
 	for {
 		select {
 		case <-i.ctx.Done():
-			return i.ctx.Err()
+			return ctxErr(i.ctx.Err())
 		case path, ok := <-i.pathC:
 			if !ok {
 				return nil
 			}
-			err := c.PathWrite(path, i.data[path])
-			if err != nil {
-				return newWrapErr(path, ErrFolderWrite, err)
-			}
 
-			return nil
+			return c.PathWrite(path, i.data[path])
 		}
 	}
 }

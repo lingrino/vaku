@@ -3,6 +3,7 @@ name: Repo - Validate
 on:
   workflow_dispatch:
   push:
+  pull_request:
 
 jobs:
   validate:
