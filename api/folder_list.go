@@ -132,8 +132,7 @@ func (c *Client) pathListWork(path string, i *folderListWorkInput) error {
 		for _, item := range list {
 			i.wg.Add(1)
 			go func(item string) {
-				item = EnsurePrefix(item, path)
-				i.pathC <- item
+				i.pathC <- c.inputPath(item, path)
 			}(item)
 		}
 	} else {

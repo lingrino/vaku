@@ -70,7 +70,7 @@ func (c *Client) folderDeleteWork(i *folderDeleteWorkInput) error {
 			if !ok {
 				return nil
 			}
-			path = EnsurePrefix(path, i.root)
+			path = c.inputPath(path, i.root)
 			err := i.deleteF(path)
 			if err != nil {
 				return err
