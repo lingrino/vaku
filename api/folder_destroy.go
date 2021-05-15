@@ -20,11 +20,7 @@ func (c *Client) FolderDestroy(ctx context.Context, p string, versions []int) er
 	// list the path
 	pathC, errC := c.FolderListChan(ctx, p)
 	eg.Go(func() error {
-		err := <-errC
-		if err != nil {
-			return newWrapErr(p, ErrFolderDestroy, err)
-		}
-		return nil
+		return <-errC
 	})
 
 	// fan out and process paths
@@ -39,7 +35,11 @@ func (c *Client) FolderDestroy(ctx context.Context, p string, versions []int) er
 		})
 	}
 
-	return eg.Wait()
+	err := eg.Wait()
+	if err != nil {
+		return newWrapErr(p, ErrFolderDestroy, err)
+	}
+	return nil
 }
 
 // folderDestroyWorkInput is the piecces needed to destroy a folder.
@@ -56,17 +56,13 @@ func (c *Client) folderDestroyWork(i *folderDestroyWorkInput) error {
 	for {
 		select {
 		case <-i.ctx.Done():
-			return i.ctx.Err()
+			return ctxErr(i.ctx.Err())
 		case path, ok := <-i.pathC:
 			if !ok {
 				return nil
 			}
 			path = EnsurePrefix(path, i.root)
-			err := c.PathDestroy(path, i.versions)
-			if err != nil {
-				return newWrapErr(i.root, ErrFolderDestroy, err)
-			}
-			return nil
+			return c.PathDestroy(path, i.versions)
 		}
 	}
 }

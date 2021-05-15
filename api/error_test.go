@@ -101,3 +101,34 @@ func TestNewWrapErr(t *testing.T) {
 		})
 	}
 }
+
+func TestCtxErr(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name string
+		give error
+		want []error
+	}{
+		{
+			name: "nil error",
+			give: nil,
+			want: nil,
+		},
+		{
+			name: "error",
+			give: errInject,
+			want: []error{ErrContext, errInject},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			compareErrors(t, ctxErr(tt.give), tt.want)
+		})
+	}
+
+}

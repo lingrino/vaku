@@ -7,6 +7,8 @@ import (
 
 // Errors that are not specific to one file/function.
 var (
+	// ErrContext when ctx.Err() is not nil.
+	ErrContext = errors.New("context")
 	// ErrDecodeSecret when secret data cannot be extracted from a vault secret.
 	ErrDecodeSecret = errors.New("decode secret")
 	// ErrJSONMarshal when secret data cannot be marshaled into json.
@@ -70,4 +72,13 @@ func (e *wrapErr) Error() string {
 // Unwrap returns the wrapped error.
 func (e *wrapErr) Unwrap() error {
 	return e.wraps
+}
+
+// ctxErr returns ErrContext if err != nil.
+func ctxErr(err error) error {
+	if err == nil {
+		return nil
+	}
+
+	return newWrapErr("", ErrContext, err)
 }

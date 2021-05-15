@@ -7,6 +7,7 @@ linters:
     - dupl
     - errcheck
     - errorlint
+    - exportloopref
     - funlen
     - gochecknoglobals
     - gochecknoinits
@@ -18,8 +19,8 @@ linters:
     - godox
     - gofmt
     - goimports
-    - golint
     - gomnd
+    - gomoddirectives
     - goprintffuncname
     - gosec
     - gosimple
@@ -30,8 +31,8 @@ linters:
     - nakedret
     - nestif
     - prealloc
+    - revive
     - rowserrcheck
-    - scopelint
     - staticcheck
     - structcheck
     - stylecheck
