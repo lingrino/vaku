@@ -61,7 +61,7 @@ func (c *Client) folderDestroyWork(i *folderDestroyWorkInput) error {
 			if !ok {
 				return nil
 			}
-			path = EnsurePrefix(path, i.root)
+			path = c.inputPath(path, i.root)
 			err := c.PathDestroy(path, i.versions)
 			if err != nil {
 				return newWrapErr(i.root, ErrFolderDestroy, err)

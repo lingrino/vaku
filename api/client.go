@@ -180,6 +180,14 @@ func (c *Client) swapPaths(data map[string]map[string]interface{}, src, dst stri
 	EnsurePrefixMap(data, dst)
 }
 
+// inputPath returns a path ready for input into a read/write/list/delete.
+func (c *Client) inputPath(path, root string) string {
+	if c.absolutePath {
+		return path
+	}
+	return AddPrefix(path, root)
+}
+
 // outputPath returns a path for the user, given their formatting preferences.
 func (c *Client) outputPath(path, root string) string {
 	if c.absolutePath {
@@ -191,6 +199,6 @@ func (c *Client) outputPath(path, root string) string {
 // outputPaths prepares a list of paths for the user, given their formatting preferences.
 func (c *Client) outputPaths(paths []string, root string) {
 	if c.absolutePath {
-		EnsurePrefixList(paths, root)
+		AddPrefixList(paths, root)
 	}
 }

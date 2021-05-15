@@ -98,9 +98,9 @@ func (c *Client) folderReadWork(i *folderReadWorkInput) error {
 	}
 }
 
-// pathReadWork reads the path adds results to the channel.
+// pathReadWork reads the path and adds results to the channel.
 func (c *Client) pathReadWork(path string, i *folderReadWorkInput) error {
-	path = AddPrefix(path, i.root)
+	path = c.inputPath(path, i.root)
 
 	read, err := c.PathRead(path)
 	if err != nil {

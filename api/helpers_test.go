@@ -139,6 +139,61 @@ func TestEnsureFolder(t *testing.T) {
 	}
 }
 
+func TestAddPrefix(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		give       string
+		givePrefix string
+		want       string
+	}{
+		{
+			give:       "",
+			givePrefix: "",
+			want:       "",
+		},
+		{
+			give:       "a",
+			givePrefix: "",
+			want:       "a",
+		},
+		{
+			give:       "",
+			givePrefix: "a",
+			want:       "a",
+		},
+		{
+			give:       "a/",
+			givePrefix: "a",
+			want:       "a/a/",
+		},
+		{
+			give:       "a",
+			givePrefix: "a/",
+			want:       "a/a",
+		},
+		{
+			give:       "a/b/c/d",
+			givePrefix: "a/b/",
+			want:       "a/b/a/b/c/d",
+		},
+		{
+			give:       "a/b/c/d",
+			givePrefix: "b",
+			want:       "b/a/b/c/d",
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.give, func(t *testing.T) {
+			t.Parallel()
+
+			assert.Equal(t, tt.want, AddPrefix(tt.give, tt.givePrefix))
+		})
+	}
+}
+
 func TestEnsurePrefix(t *testing.T) {
 	t.Parallel()
 
@@ -190,6 +245,48 @@ func TestEnsurePrefix(t *testing.T) {
 			t.Parallel()
 
 			assert.Equal(t, tt.want, EnsurePrefix(tt.give, tt.givePrefix))
+		})
+	}
+}
+
+func TestAddPrefixList(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		giveList   []string
+		givePrefix string
+		want       []string
+	}{
+		{
+			giveList:   []string{"a"},
+			givePrefix: "b",
+			want:       []string{"b/a"},
+		},
+		{
+			giveList:   []string{"/c/d/e/"},
+			givePrefix: "/f/",
+			want:       []string{"f/c/d/e/"},
+		},
+		{
+			giveList:   []string{"/g/"},
+			givePrefix: "h",
+			want:       []string{"h/g/"},
+		},
+		{
+			giveList:   []string{"i/j"},
+			givePrefix: "i",
+			want:       []string{"i/i/j"},
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.givePrefix, func(t *testing.T) {
+			t.Parallel()
+
+			AddPrefixList(tt.giveList, tt.givePrefix)
+
+			assert.Equal(t, tt.want, tt.giveList)
 		})
 	}
 }

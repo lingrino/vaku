@@ -23,6 +23,11 @@ func EnsureFolder(p string) string {
 	return PathJoin(p, "/")
 }
 
+// AddPrefix adds a prefix to a path.
+func AddPrefix(p, pfx string) string {
+	return PathJoin(pfx, p)
+}
+
 // EnsurePrefix adds a prefix to a path if it doesn't already have it.
 func EnsurePrefix(p, pfx string) string {
 	if strings.HasPrefix(p, pfx) {
@@ -31,12 +36,14 @@ func EnsurePrefix(p, pfx string) string {
 	return PathJoin(pfx, p)
 }
 
-// AddPrefix adds a prefix to a path.
-func AddPrefix(p, pfx string) string {
-	return PathJoin(pfx, p)
+// AddPrefixList adds a prefix to every item in a list.
+func AddPrefixList(l []string, pfx string) {
+	for i, v := range l {
+		l[i] = PathJoin(pfx, v)
+	}
 }
 
-// EnsurePrefixList adds a prefix to every item in a list.
+// EnsurePrefixList adds a prefix to every item in a list if it doesn't already have it.
 func EnsurePrefixList(l []string, pfx string) {
 	for i, v := range l {
 		if !strings.HasPrefix(v, pfx) {
