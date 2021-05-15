@@ -239,6 +239,47 @@ func TestOutputPaths(t *testing.T) {
 	}
 }
 
+func TestInputPath(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		giveRoot string
+		givePath string
+
+		wantAbs   string
+		wantNoAbs string
+	}{
+		{
+			giveRoot:  "0/1/2",
+			givePath:  "3/4",
+			wantAbs:   "3/4",
+			wantNoAbs: "0/1/2/3/4",
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.giveRoot, func(t *testing.T) {
+			t.Parallel()
+
+			client, err := NewClient(WithAbsolutePath(true))
+			assert.NoError(t, err)
+
+			path := client.inputPath(tt.givePath, tt.giveRoot)
+			assert.Equal(t, tt.wantAbs, path)
+		})
+		t.Run(tt.giveRoot, func(t *testing.T) {
+			t.Parallel()
+
+			client, err := NewClient()
+			assert.NoError(t, err)
+
+			path := client.inputPath(tt.givePath, tt.giveRoot)
+			assert.Equal(t, tt.wantNoAbs, path)
+		})
+	}
+}
+
 // withError returns the passed in error for Option error injection.
 func withError(e error) Option {
 	return withErrorOpt{e}
