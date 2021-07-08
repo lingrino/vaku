@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.4.0 - 2021-07-08
+
+### Added
+
+- CLI: Use built in completion commands from cobra 1.2.0
+- GEN: Package updates. A fresh `go get` now completes without error.
+
 ## 2.3.0 - 2021-05-15
 
 Thank you to [@karakanb](https://github.com/karakanb) for finding and fixing a tricky bug!
