@@ -1,32 +1,13 @@
 ## vaku completion
 
-Generate shell completions
+generate the autocompletion script for the specified shell
 
 ### Synopsis
 
-To install completions for your shell
 
-# Bash: In ~/.bashrc
-source <(vaku completion bash)
+Generate the autocompletion script for vaku for the specified shell.
+See each sub-command's help for details on how to use the generated script.
 
-# Fish: In ~/.config/fish/config.fish
-vaku completion fish | source -
-
-# Powershell
-Write the contents of 'vaku completion powershell' and source them in your profile
-
-# Zsh: In ~/.zshhrc
-source <(vaku completion zsh)
-
-```
-vaku completion bash|fish|zsh|powershell
-```
-
-### Examples
-
-```
-vaku completion zsh
-```
 
 ### Options
 
@@ -45,4 +26,8 @@ vaku completion zsh
 ### SEE ALSO
 
 * [vaku](vaku.md)	 - Vaku is a CLI for working with large Vault k/v secret engines
+* [vaku completion bash](vaku_completion_bash.md)	 - generate the autocompletion script for bash
+* [vaku completion fish](vaku_completion_fish.md)	 - generate the autocompletion script for fish
+* [vaku completion powershell](vaku_completion_powershell.md)	 - generate the autocompletion script for powershell
+* [vaku completion zsh](vaku_completion_zsh.md)	 - generate the autocompletion script for zsh
 
