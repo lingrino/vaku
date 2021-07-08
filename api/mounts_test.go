@@ -61,7 +61,7 @@ func TestMountInfo(t *testing.T) {
 		t.Run(tt.give, func(t *testing.T) {
 			t.Parallel()
 
-			client, err := NewClient(WithVaultClient(testServer(t)))
+			client, err := NewClient(WithVaultClient(testServer(t, t)))
 			assert.NoError(t, err)
 
 			path, vers, err := client.mountInfo(tt.give)
@@ -211,7 +211,7 @@ func TestRewritePath(t *testing.T) {
 		t.Run(tt.give, func(t *testing.T) {
 			t.Parallel()
 
-			client, err := NewClient(WithVaultClient(testServer(t)))
+			client, err := NewClient(WithVaultClient(testServer(t, t)))
 			assert.NoError(t, err)
 
 			path, vers, err := client.rewritePath(tt.give, tt.giveOp)
