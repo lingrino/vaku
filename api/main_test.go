@@ -70,11 +70,13 @@ func TestMain(m *testing.M) {
 }
 
 // testServer creates a new vault server and returns a vault API client that points to it.
-func testServer(t *testing.T) *api.Client {
+// Pass an empty &testing.T{} to vt if you're initializing a long-lived client so that
+// vt.Cleanup() does not shutdown your shared client.
+func testServer(t *testing.T, vt *testing.T) *api.Client {
 	t.Helper()
 
 	// create vault core
-	core, _, token := vault.TestCoreUnsealedWithConfig(t, &vault.CoreConfig{
+	core, _, token := vault.TestCoreUnsealedWithConfig(vt, &vault.CoreConfig{
 		// Must be provided for v1/v2 path differences to work.
 		LogicalBackends: map[string]vl.Factory{
 			"kv": kv.Factory,
@@ -107,8 +109,8 @@ func testServer(t *testing.T) *api.Client {
 func initSharedVaku(t *testing.T) {
 	t.Helper()
 
-	srcClient := testServer(t)
-	dstClient := testServer(t)
+	srcClient := testServer(t, &testing.T{})
+	dstClient := testServer(t, &testing.T{})
 
 	client, err := NewClient(
 		WithVaultSrcClient(srcClient),
