@@ -48,7 +48,6 @@ func (c *cli) newVakuCmd() *cobra.Command {
 
 	// add subcommands
 	cmd.AddCommand(
-		c.newCompletionCmd(),
 		c.newDocsCmd(),
 		c.newFolderCmd(),
 		c.newPathCmd(),
