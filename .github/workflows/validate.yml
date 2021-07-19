@@ -88,7 +88,7 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       - name: Upload Codecov Coverage
-        uses: codecov/codecov-action@v1.5.0
+        uses: codecov/codecov-action@2.0.0
         with:
           file: ./c.out
           fail_ci_if_error: true
