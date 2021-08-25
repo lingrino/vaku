@@ -4,9 +4,6 @@
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/lingrino/vaku/v2/api)](https://pkg.go.dev/github.com/lingrino/vaku/v2/api)
 [![goreportcard](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
-[![Code Quality](https://app.codacy.com/project/badge/Grade/65802905eb8148e2ae9ae4c909673ee2)](https://www.codacy.com/gh/lingrino/vaku/dashboard)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/db6951b0aa53becf8c92/test_coverage)](https://codeclimate.com/github/lingrino/vaku/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/db6951b0aa53becf8c92/maintainability)](https://codeclimate.com/github/lingrino/vaku/maintainability)
 
 Vaku is a CLI and API for running path- and folder-based operations on the Vault Key/Value secrets engine. Vaku extends the existing Vault CLI and API by allowing you to run the same path-based list/read/write/delete functions on folders as well. Vaku also lets you search, copy, and move both secrets and folders.
 
