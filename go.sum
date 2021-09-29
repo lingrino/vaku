@@ -715,8 +715,8 @@ github.com/hashicorp/serf v0.8.2/go.mod h1:6hOLApaqBFA1NXqRQAsxw9QxuDEvNxSQRwA/J
 github.com/hashicorp/serf v0.9.4/go.mod h1:UWDWwZeL5cuWDJdl0C6wrvrUwEqtQ4ZKBKKENpqIUyk=
 github.com/hashicorp/serf v0.9.5 h1:EBWvyu9tcRszt3Bxp3KNssBMP1KuHWyO51lz9+786iM=
 github.com/hashicorp/serf v0.9.5/go.mod h1:UWDWwZeL5cuWDJdl0C6wrvrUwEqtQ4ZKBKKENpqIUyk=
-github.com/hashicorp/vault v1.8.2 h1:qn67376JJJ01UIu2/ZsMrGEuaIVX7c8snkCBNY4G94Q=
-github.com/hashicorp/vault v1.8.2/go.mod h1:24IS2QF/PvpopcEsWYmpglWXvlq4z6RCwI+OltiZ9+w=
+github.com/hashicorp/vault v1.8.3 h1:Bpi26msrVH30pj4AaG00IHK5wbtIhVoWchenKbksXq8=
+github.com/hashicorp/vault v1.8.3/go.mod h1:zXxkJPk44LpNjhqN0Ca7DGl0tt0VnVfv37fF1TzaCmQ=
 github.com/hashicorp/vault-plugin-auth-alicloud v0.9.0 h1:VN8Tl+SThy/VcMhsQlFvafTh0COpaee52KtfxXdBB9o=
 github.com/hashicorp/vault-plugin-auth-alicloud v0.9.0/go.mod h1:lyfBMcULXKJfVu8dNo1w9bUikV5oem5HKmJoWwXupnY=
 github.com/hashicorp/vault-plugin-auth-azure v0.8.0 h1:yy/JQWMq22QXP++3eg2WxUEnrtbu8ZrtIfcR0lD1XrI=
@@ -760,8 +760,8 @@ github.com/hashicorp/vault-plugin-secrets-kv v0.9.0 h1:nCw2IfWw2bWUGFZsNk8BvTEg9
 github.com/hashicorp/vault-plugin-secrets-kv v0.9.0/go.mod h1:B/Cybh5aVF7LNAMHwVBxY8t7r2eL0C6HVGgTyP4nKK4=
 github.com/hashicorp/vault-plugin-secrets-mongodbatlas v0.4.0 h1:6ve+7hZmGn7OpML81iZUxYj2AaJptwys323S5XsvVas=
 github.com/hashicorp/vault-plugin-secrets-mongodbatlas v0.4.0/go.mod h1:4mdgPqlkO+vfFX1cFAWcxkeqz6JAtZgKxL/67q/58Oo=
-github.com/hashicorp/vault-plugin-secrets-openldap v0.5.1 h1:iUJU3D/sA5qNBZnhXI5jFdwoWXMhgb6jeABDLYw631Y=
-github.com/hashicorp/vault-plugin-secrets-openldap v0.5.1/go.mod h1:GiFI8Bxwx3+fn0A3SyVp9XdYQhm3cOgN8GzwKxyJ9So=
+github.com/hashicorp/vault-plugin-secrets-openldap v0.5.2 h1:5f3Gh/gcsC2sbn5PhE3YbeXB0cfC3TlZpkrBUSf90p4=
+github.com/hashicorp/vault-plugin-secrets-openldap v0.5.2/go.mod h1:GiFI8Bxwx3+fn0A3SyVp9XdYQhm3cOgN8GzwKxyJ9So=
 github.com/hashicorp/vault-plugin-secrets-terraform v0.2.0 h1:U5hT6xUUbIhI12v+tjzmUz47gpzg5yxbdf+q62sIIvc=
 github.com/hashicorp/vault-plugin-secrets-terraform v0.2.0/go.mod h1:7r/0t51X/ZtSRh/TjBk7gCm1CUMk50aqLAx811OsGQ8=
 github.com/hashicorp/vault/api v1.0.1/go.mod h1:AV/+M5VPDpB90arloVX0rVDUIHkONiwz5Uza9HRtpUE=
@@ -788,8 +788,8 @@ github.com/hashicorp/vault/sdk v0.1.14-0.20210127185906-6b455835fa8c/go.mod h1:c
 github.com/hashicorp/vault/sdk v0.1.14-0.20210204230556-cf85a862b7c6/go.mod h1:cAGI4nVnEfAyMeqt9oB+Mase8DNn3qA/LDNHURiwssY=
 github.com/hashicorp/vault/sdk v0.2.0/go.mod h1:cAGI4nVnEfAyMeqt9oB+Mase8DNn3qA/LDNHURiwssY=
 github.com/hashicorp/vault/sdk v0.2.1/go.mod h1:WfUiO1vYzfBkz1TmoE4ZGU7HD0T0Cl/rZwaxjBkgN4U=
-github.com/hashicorp/vault/sdk v0.2.2-0.20210825150427-9b1f4d486f5d h1:LNFw41cY/UKzhWj6ZOSwmJkwHlCzWL+eZ2G1iHumkXQ=
-github.com/hashicorp/vault/sdk v0.2.2-0.20210825150427-9b1f4d486f5d/go.mod h1:NSB/8AGzKoCBMOCTOLwT/kQI3G5Hf+Wdkmz+orcwPO0=
+github.com/hashicorp/vault/sdk v0.2.2-0.20210927220632-193e27e9cc1e h1:f7BkSeOkgxCzpDRK6mJuuQadEzTWdDeRvAuaUt4qi+E=
+github.com/hashicorp/vault/sdk v0.2.2-0.20210927220632-193e27e9cc1e/go.mod h1:NSB/8AGzKoCBMOCTOLwT/kQI3G5Hf+Wdkmz+orcwPO0=
 github.com/hashicorp/vic v1.5.1-0.20190403131502-bbfe86ec9443 h1:O/pT5C1Q3mVXMyuqg7yuAWUg/jMZR1/0QTzTRdNR6Uw=
 github.com/hashicorp/vic v1.5.1-0.20190403131502-bbfe86ec9443/go.mod h1:bEpDU35nTu0ey1EXjwNwPjI9xErAsoOCmcMb9GKvyxo=
 github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb/go.mod h1:+NfK9FKeTrX5uv1uIXGdwYDTeHna2qgaIlx54MXqjAM=
