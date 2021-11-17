@@ -14,7 +14,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16 # https://golang.org/dl/
+          go-version: 1.17 # https://golang.org/dl/
       - name: Docs Check
         run: |
           before=$(cat docs/cli/*.md | md5sum)
@@ -30,12 +30,12 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16 # https://golang.org/dl/
+          go-version: 1.17 # https://golang.org/dl/
       - name: Lint
         uses: golangci/golangci-lint-action@v2.5.2
         with:
           args: --timeout=5m
-          version: v1.40.1 # https://github.com/golangci/golangci-lint/releases
+          version: v1.42 # https://github.com/golangci/golangci-lint/releases
           skip-go-installation: true
   gomod:
     runs-on: ubuntu-latest
@@ -45,7 +45,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16 # https://golang.org/dl/
+          go-version: 1.17 # https://golang.org/dl/
       - name: Go Mod Tidy
         run: test -z $(go mod tidy)
   goreleaser:
@@ -56,7 +56,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16 # https://golang.org/dl/
+          go-version: 1.17 # https://golang.org/dl/
       - name: Goreleaser Check
         uses: goreleaser/goreleaser-action@v2.8.0
         with:
@@ -69,7 +69,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16 # https://golang.org/dl/
+          go-version: 1.17 # https://golang.org/dl/
       - name: Cache Modules
         uses: actions/cache@v2.1.6
         with:
