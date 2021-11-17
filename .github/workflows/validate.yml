@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
       - name: Install Go
         uses: actions/setup-go@v2
         with:
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
       - name: Install Go
         uses: actions/setup-go@v2
         with:
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
       - name: Install Go
         uses: actions/setup-go@v2
         with:
@@ -52,20 +52,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
       - name: Install Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.17 # https://golang.org/dl/
       - name: Goreleaser Check
-        uses: goreleaser/goreleaser-action@v2.7.0
+        uses: goreleaser/goreleaser-action@v2.8.0
         with:
           args: check
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
       - name: Install Go
         uses: actions/setup-go@v2
         with:
