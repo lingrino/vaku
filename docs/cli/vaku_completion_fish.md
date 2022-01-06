@@ -1,17 +1,18 @@
 ## vaku completion fish
 
-generate the autocompletion script for fish
+Generate the autocompletion script for fish
 
 ### Synopsis
-
 
 Generate the autocompletion script for the fish shell.
 
 To load completions in your current shell session:
-$ vaku completion fish | source
+
+	vaku completion fish | source
 
 To load completions for every new session, execute once:
-$ vaku completion fish > ~/.config/fish/completions/vaku.fish
+
+	vaku completion fish > ~/.config/fish/completions/vaku.fish
 
 You will need to start a new shell for this setup to take effect.
 
@@ -37,5 +38,5 @@ vaku completion fish [flags]
 
 ### SEE ALSO
 
-* [vaku completion](vaku_completion.md)	 - generate the autocompletion script for the specified shell
+* [vaku completion](vaku_completion.md)	 - Generate the autocompletion script for the specified shell
 
