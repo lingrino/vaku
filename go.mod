@@ -3,7 +3,7 @@ module github.com/lingrino/vaku/v2
 go 1.17
 
 require (
-	github.com/hashicorp/go-hclog v1.0.0
+	github.com/hashicorp/go-hclog v1.1.0
 	github.com/hashicorp/vault v1.9.2
 	github.com/hashicorp/vault-plugin-secrets-kv v0.10.1
 	github.com/hashicorp/vault/api v1.3.1
