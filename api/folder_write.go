@@ -62,8 +62,10 @@ func (c *Client) folderWriteWork(i *folderWriteWorkInput) error {
 			if !ok {
 				return nil
 			}
-
-			return c.PathWrite(path, i.data[path])
+			err := c.PathWrite(path, i.data[path])
+			if err != nil {
+				return err
+			}
 		}
 	}
 }

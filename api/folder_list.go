@@ -104,19 +104,20 @@ type folderListWorkInput struct {
 // folderListWork takes input from pathC, lists the path, adds listed folders back into pathC, and
 // adds non-folders into results.
 func (c *Client) folderListWork(i *folderListWorkInput) error {
-	for path := range i.pathC {
-		err := c.pathListWork(path, i)
-		if err != nil {
-			return err
-		}
-
+	for {
 		select {
 		case <-i.ctx.Done():
 			return ctxErr(i.ctx.Err())
-		default:
+		case path, ok := <-i.pathC:
+			if !ok {
+				return nil
+			}
+			err := c.pathListWork(path, i)
+			if err != nil {
+				return err
+			}
 		}
 	}
-	return nil
 }
 
 // pathListWork takes a path and either adds it back to the pathC (if folder) or processes it and
@@ -132,7 +133,11 @@ func (c *Client) pathListWork(path string, i *folderListWorkInput) error {
 		for _, item := range list {
 			i.wg.Add(1)
 			go func(item string) {
-				i.pathC <- c.inputPath(item, path)
+				select {
+				case i.pathC <- c.inputPath(item, path):
+				case <-i.ctx.Done():
+					i.wg.Done()
+				}
 			}(item)
 		}
 	} else {

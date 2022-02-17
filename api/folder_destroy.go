@@ -62,7 +62,10 @@ func (c *Client) folderDestroyWork(i *folderDestroyWorkInput) error {
 				return nil
 			}
 			path = c.inputPath(path, i.root)
-			return c.PathDestroy(path, i.versions)
+			err := c.PathDestroy(path, i.versions)
+			if err != nil {
+				return err
+			}
 		}
 	}
 }

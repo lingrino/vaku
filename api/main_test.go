@@ -116,7 +116,9 @@ func initSharedVaku(t *testing.T) {
 		WithVaultSrcClient(srcClient),
 		WithVaultDstClient(dstClient),
 		WithAbsolutePath(false),
-		WithWorkers(100),
+
+		// set worker < max folder operations to expose any worker threading issue
+		WithWorkers(5),
 	)
 	assert.NoError(t, err)
 

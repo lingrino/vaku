@@ -75,7 +75,6 @@ func (c *Client) folderDeleteWork(i *folderDeleteWorkInput) error {
 			if err != nil {
 				return err
 			}
-			return nil
 		}
 	}
 }
