@@ -55,7 +55,7 @@ linters-settings:
   errcheck:
     check-blank: true
   gocognit:
-    min-complexity: 10
+    min-complexity: 15
   gocyclo:
     min-complexity: 10
   nakedret:
