@@ -36,7 +36,6 @@ jobs:
         with:
           args: --timeout=5m
           version: v1.44 # https://github.com/golangci/golangci-lint/releases
-          skip-go-installation: true
   gomod:
     runs-on: ubuntu-latest
     steps:
