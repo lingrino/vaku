@@ -6,8 +6,8 @@ require (
 	github.com/hashicorp/go-hclog v1.1.0
 	github.com/hashicorp/vault v1.9.4
 	github.com/hashicorp/vault-plugin-secrets-kv v0.11.0
-	github.com/hashicorp/vault/api v1.3.1
-	github.com/hashicorp/vault/sdk v0.3.1-0.20220224202448-00c495209246
+	github.com/hashicorp/vault/api v1.4.1
+	github.com/hashicorp/vault/sdk v0.4.1
 	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
