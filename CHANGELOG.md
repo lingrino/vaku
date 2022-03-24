@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.4.6 - 2022-03-24
+
+### Changed
+
+- GEN: Update to go 1.17
+- GEN: Update dependencies
+
 ## 2.4.5 - 2022-02-17
 
 Thank you [@szechuen](https://github.com/szechuen) for fixing two important worker issues!
