@@ -12,7 +12,7 @@ var (
 )
 
 // PathWrite writes data to a path.
-func (c *Client) PathWrite(p string, d map[string]interface{}) error {
+func (c *Client) PathWrite(p string, d map[string]any) error {
 	if d == nil {
 		return newWrapErr(p, ErrPathWrite, ErrNilData)
 	}
@@ -23,7 +23,7 @@ func (c *Client) PathWrite(p string, d map[string]interface{}) error {
 	}
 
 	if mv == mv2 {
-		d = map[string]interface{}{
+		d = map[string]any{
 			"data": d,
 		}
 	}

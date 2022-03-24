@@ -29,7 +29,7 @@ func (c *cli) newVersionCmd() *cobra.Command {
 }
 
 func (c *cli) runVersion(cmd *cobra.Command, args []string) error {
-	output := map[string]interface{}{
+	output := map[string]any{
 		"CLI": c.version,
 		"API": vaku.Version(),
 	}

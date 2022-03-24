@@ -67,7 +67,7 @@ func TestPathDestroy(t *testing.T) {
 						t.Parallel()
 
 						// overwrite all paths to create a new version
-						overwrite := map[string]interface{}{"foo": "bar"}
+						overwrite := map[string]any{"foo": "bar"}
 						err := sharedVakuClean.PathWrite(PathJoin(prefix, tt.give), overwrite)
 						assert.NoError(t, err)
 

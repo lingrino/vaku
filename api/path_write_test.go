@@ -12,13 +12,13 @@ func TestPathWrite(t *testing.T) {
 	tests := []struct {
 		name           string
 		give           string
-		giveData       map[string]interface{}
+		giveData       map[string]any
 		wantErr        []error
 		wantNoReadback bool
 	}{
 		{
 			give: "newpath",
-			giveData: map[string]interface{}{
+			giveData: map[string]any{
 				"0": "1",
 				"2": "3",
 				"4": "5",
@@ -27,7 +27,7 @@ func TestPathWrite(t *testing.T) {
 		},
 		{
 			give: "0/1",
-			giveData: map[string]interface{}{
+			giveData: map[string]any{
 				"100": "200",
 			},
 			wantErr: nil,
@@ -39,13 +39,13 @@ func TestPathWrite(t *testing.T) {
 		},
 		{
 			give:           "error/write/inject",
-			giveData:       map[string]interface{}{"0": "1"},
+			giveData:       map[string]any{"0": "1"},
 			wantErr:        []error{ErrPathWrite, ErrVaultWrite},
 			wantNoReadback: true,
 		},
 		{
 			give:           mountless,
-			giveData:       map[string]interface{}{"0": "1"},
+			giveData:       map[string]any{"0": "1"},
 			wantErr:        []error{ErrPathWrite, ErrRewritePath, ErrMountInfo, ErrNoMount},
 			wantNoReadback: true,
 		},

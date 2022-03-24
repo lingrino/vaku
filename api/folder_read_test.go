@@ -12,7 +12,7 @@ func TestFolderRead(t *testing.T) {
 
 	tests := []struct {
 		give    string
-		want    map[string]map[string]interface{}
+		want    map[string]map[string]any
 		wantErr []error
 	}{
 		{
@@ -22,7 +22,7 @@ func TestFolderRead(t *testing.T) {
 		},
 		{
 			give: "0/4/13/24/25",
-			want: map[string]map[string]interface{}{
+			want: map[string]map[string]any{
 				"26/27": {
 					"28": "29",
 				},
@@ -31,7 +31,7 @@ func TestFolderRead(t *testing.T) {
 		},
 		{
 			give: "0/4/13",
-			want: map[string]map[string]interface{}{
+			want: map[string]map[string]any{
 				"14": {
 					"15": "16",
 				},

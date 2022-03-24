@@ -13,7 +13,7 @@ func TestFolderDestroy(t *testing.T) {
 
 	tests := []struct {
 		give         string
-		wantReadBack map[string]map[string]interface{}
+		wantReadBack map[string]map[string]any
 		giveVersions []int
 		wantErrKV1   []error
 		wantErrKV2   []error
@@ -35,7 +35,7 @@ func TestFolderDestroy(t *testing.T) {
 		{
 			give:         "0/4/13/24/25/error/list/inject",
 			giveVersions: []int{1, 2},
-			wantReadBack: map[string]map[string]interface{}{
+			wantReadBack: map[string]map[string]any{
 				"26/27": {
 					"28": "29",
 				},
@@ -46,7 +46,7 @@ func TestFolderDestroy(t *testing.T) {
 		{
 			give:         "0/4/13/24/25/26/error/write/inject",
 			giveVersions: []int{1, 2},
-			wantReadBack: map[string]map[string]interface{}{
+			wantReadBack: map[string]map[string]any{
 				"27": {
 					"28": "29",
 				},

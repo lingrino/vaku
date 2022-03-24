@@ -39,7 +39,7 @@ var pathPrefixMtx sync.Mutex
 var mountVersions = [2]string{"1", "2"}
 
 // seeds is the canonical secret seeds for every test.
-var seeds = map[string]map[string]interface{}{
+var seeds = map[string]map[string]any{
 	"0/1": {
 		"2": "3",
 	},
@@ -162,7 +162,7 @@ func seededPrefixes(t *testing.T, p string) []string {
 	// seed prefixes
 	prefixes := make([]string, len(mountVersions))
 	for i, ver := range mountVersions {
-		seedsCopy := make(map[string]map[string]interface{}, len(seeds))
+		seedsCopy := make(map[string]map[string]any, len(seeds))
 		for p, v := range seeds {
 			seedsCopy[PathJoin("kv"+ver, prefix, p)] = v
 		}
@@ -232,14 +232,14 @@ type inject struct {
 var injects = map[string]*inject{
 	"error":       {err: errInject},
 	"nildata":     {secret: &api.Secret{Data: nil}},
-	"nilkeys":     {secret: &api.Secret{Data: map[string]interface{}{"keys": nil}}},
-	"intkeys":     {secret: &api.Secret{Data: map[string]interface{}{"keys": 1}}},
-	"listintkeys": {secret: &api.Secret{Data: map[string]interface{}{"keys": []interface{}{1}}}},
-	"funcdata": {secret: &api.Secret{Data: map[string]interface{}{
-		"data": map[string]interface{}{
+	"nilkeys":     {secret: &api.Secret{Data: map[string]any{"keys": nil}}},
+	"intkeys":     {secret: &api.Secret{Data: map[string]any{"keys": 1}}},
+	"listintkeys": {secret: &api.Secret{Data: map[string]any{"keys": []any{1}}}},
+	"funcdata": {secret: &api.Secret{Data: map[string]any{
+		"data": map[string]any{
 			"foo": func() {},
 		},
-		"metadata": map[string]interface{}{
+		"metadata": map[string]any{
 			"destroyed":     false,
 			"deletion_time": "",
 		},
@@ -334,7 +334,7 @@ func (e *logicalInjector) List(p string) (*api.Secret, error) {
 			return nil, err
 		}
 
-		listI := []interface{}{}
+		listI := []any{}
 		for _, l := range list {
 			p = strings.TrimSuffix(p, "/")
 			ip := PathJoin(path.Base(path.Dir(path.Dir(p))), path.Base(path.Dir(p)), path.Base(p))
@@ -346,7 +346,7 @@ func (e *logicalInjector) List(p string) (*api.Secret, error) {
 		}
 
 		ns := &api.Secret{
-			Data: map[string]interface{}{
+			Data: map[string]any{
 				"keys": listI,
 			},
 		}
@@ -366,7 +366,7 @@ func (e *logicalInjector) Read(p string) (*api.Secret, error) {
 	return e.realL.Read(p)
 }
 
-func (e *logicalInjector) Write(p string, data map[string]interface{}) (*api.Secret, error) {
+func (e *logicalInjector) Write(p string, data map[string]any) (*api.Secret, error) {
 	e.t.Helper()
 
 	p, inj := e.run(p, "write")

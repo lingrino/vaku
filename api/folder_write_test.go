@@ -12,8 +12,8 @@ func TestFolderWrite(t *testing.T) {
 
 	tests := []struct {
 		name         string
-		give         map[string]map[string]interface{}
-		wantReadBack map[string]map[string]interface{}
+		give         map[string]map[string]any
+		wantReadBack map[string]map[string]any
 		wantErr      []error
 	}{
 		{
@@ -24,7 +24,7 @@ func TestFolderWrite(t *testing.T) {
 		},
 		{
 			name: "empty data",
-			give: map[string]map[string]interface{}{
+			give: map[string]map[string]any{
 				"000/001": nil,
 			},
 			wantReadBack: nil,
@@ -32,12 +32,12 @@ func TestFolderWrite(t *testing.T) {
 		},
 		{
 			name: "overwrite",
-			give: map[string]map[string]interface{}{
+			give: map[string]map[string]any{
 				"0/1": {
 					"0001": "0002",
 				},
 			},
-			wantReadBack: map[string]map[string]interface{}{
+			wantReadBack: map[string]map[string]any{
 				"0/1": {
 					"0001": "0002",
 				},
@@ -46,7 +46,7 @@ func TestFolderWrite(t *testing.T) {
 		},
 		{
 			name: "two new paths",
-			give: map[string]map[string]interface{}{
+			give: map[string]map[string]any{
 				"000/001": {
 					"0001": "0002",
 				},
@@ -55,7 +55,7 @@ func TestFolderWrite(t *testing.T) {
 					"0005": "0006",
 				},
 			},
-			wantReadBack: map[string]map[string]interface{}{
+			wantReadBack: map[string]map[string]any{
 				"000/001": {
 					"0001": "0002",
 				},
@@ -68,7 +68,7 @@ func TestFolderWrite(t *testing.T) {
 		},
 		{
 			name: "two different paths",
-			give: map[string]map[string]interface{}{
+			give: map[string]map[string]any{
 				"000/001": {
 					"0001": "0002",
 				},
@@ -77,7 +77,7 @@ func TestFolderWrite(t *testing.T) {
 					"0005": "0006",
 				},
 			},
-			wantReadBack: map[string]map[string]interface{}{
+			wantReadBack: map[string]map[string]any{
 				"000/001": {
 					"0001": "0002",
 				},
@@ -90,7 +90,7 @@ func TestFolderWrite(t *testing.T) {
 		},
 		{
 			name: "path write fail",
-			give: map[string]map[string]interface{}{
+			give: map[string]map[string]any{
 				"failonwrite/error/write/inject": {
 					"01": "02",
 				},
@@ -109,7 +109,7 @@ func TestFolderWrite(t *testing.T) {
 				t.Run(testName(prefix), func(t *testing.T) {
 					t.Parallel()
 
-					writeMap := make(map[string]map[string]interface{}, len(tt.give))
+					writeMap := make(map[string]map[string]any, len(tt.give))
 					for path, data := range tt.give {
 						writeMap[PathJoin(prefix, path)] = data
 					}

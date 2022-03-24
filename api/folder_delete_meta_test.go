@@ -13,7 +13,7 @@ func TestFolderDeleteMeta(t *testing.T) {
 
 	tests := []struct {
 		give         string
-		wantReadBack map[string]map[string]interface{}
+		wantReadBack map[string]map[string]any
 		wantErrKV1   []error
 		wantErrKV2   []error
 	}{
@@ -37,7 +37,7 @@ func TestFolderDeleteMeta(t *testing.T) {
 		},
 		{
 			give: "0/4/13/24/25/error/list/inject",
-			wantReadBack: map[string]map[string]interface{}{
+			wantReadBack: map[string]map[string]any{
 				"26/27": {
 					"28": "29",
 				},
@@ -47,7 +47,7 @@ func TestFolderDeleteMeta(t *testing.T) {
 		},
 		{
 			give: "0/4/13/24/25/26/error/delete/inject",
-			wantReadBack: map[string]map[string]interface{}{
+			wantReadBack: map[string]map[string]any{
 				"27": {
 					"28": "29",
 				},

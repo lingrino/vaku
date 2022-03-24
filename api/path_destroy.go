@@ -20,7 +20,7 @@ func (c *Client) PathDestroy(p string, versions []int) error {
 		return newWrapErr(p, ErrPathDestroy, err)
 	}
 
-	data := map[string]interface{}{
+	data := map[string]any{
 		"versions": versions,
 	}
 

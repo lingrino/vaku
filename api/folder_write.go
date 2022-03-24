@@ -13,7 +13,7 @@ var (
 )
 
 // FolderWrite writes data to a path. Multiple paths can be written to at once.
-func (c *Client) FolderWrite(ctx context.Context, d map[string]map[string]interface{}) error {
+func (c *Client) FolderWrite(ctx context.Context, d map[string]map[string]any) error {
 	// eg manages workers reading from the paths channel
 	eg, ctx := errgroup.WithContext(ctx)
 
@@ -48,7 +48,7 @@ func (c *Client) FolderWrite(ctx context.Context, d map[string]map[string]interf
 type folderWriteWorkInput struct {
 	ctx   context.Context
 	pathC <-chan string
-	data  map[string]map[string]interface{}
+	data  map[string]map[string]any
 }
 
 // folderWriteWork takes input from pathC, lists the path, adds listed folders back into pathC, and
