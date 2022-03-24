@@ -10,7 +10,7 @@ var (
 )
 
 // PathUpdate updates a path with data. New data (precedence) is merged with existing data.
-func (c *Client) PathUpdate(p string, d map[string]interface{}) error {
+func (c *Client) PathUpdate(p string, d map[string]any) error {
 	if d == nil {
 		return newWrapErr(p, ErrPathUpdate, ErrNilData)
 	}
@@ -20,7 +20,7 @@ func (c *Client) PathUpdate(p string, d map[string]interface{}) error {
 		return newWrapErr(p, ErrPathUpdate, err)
 	}
 	if read == nil {
-		read = make(map[string]interface{}, len(d))
+		read = make(map[string]any, len(d))
 	}
 
 	for k, v := range d {

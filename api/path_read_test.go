@@ -11,19 +11,19 @@ func TestPathRead(t *testing.T) {
 
 	tests := []struct {
 		give    string
-		want    map[string]interface{}
+		want    map[string]any
 		wantErr []error
 	}{
 		{
 			give: "0/1",
-			want: map[string]interface{}{
+			want: map[string]any{
 				"2": "3",
 			},
 			wantErr: nil,
 		},
 		{
 			give: "0/4/13/17",
-			want: map[string]interface{}{
+			want: map[string]any{
 				"18": "19",
 				"20": "21",
 				"22": "23",
@@ -71,28 +71,28 @@ func TestExtractV2Read(t *testing.T) {
 
 	tests := []struct {
 		name string
-		give map[string]interface{}
-		want map[string]interface{}
+		give map[string]any
+		want map[string]any
 	}{
 		{
 			give: nil,
 			want: nil,
 		},
 		{
-			give: map[string]interface{}{"foo": "bar"},
+			give: map[string]any{"foo": "bar"},
 			want: nil,
 		},
 		{
-			give: map[string]interface{}{"metadata": map[string]interface{}{"foo": "bar"}},
+			give: map[string]any{"metadata": map[string]any{"foo": "bar"}},
 			want: nil,
 		},
 		{
-			give: map[string]interface{}{"metadata": map[string]interface{}{"deletion_time": ""}},
+			give: map[string]any{"metadata": map[string]any{"deletion_time": ""}},
 			want: nil,
 		},
 		{
-			give: map[string]interface{}{
-				"metadata": map[string]interface{}{
+			give: map[string]any{
+				"metadata": map[string]any{
 					"deletion_time": "",
 					"destroyed":     false,
 				},
@@ -100,16 +100,16 @@ func TestExtractV2Read(t *testing.T) {
 			want: nil,
 		},
 		{
-			give: map[string]interface{}{
-				"metadata": map[string]interface{}{
+			give: map[string]any{
+				"metadata": map[string]any{
 					"deletion_time": "",
 					"destroyed":     false,
 				},
-				"data": map[string]interface{}{
+				"data": map[string]any{
 					"foo": "bar",
 				},
 			},
-			want: map[string]interface{}{
+			want: map[string]any{
 				"foo": "bar",
 			},
 		},

@@ -44,7 +44,7 @@ func decodeSecret(secret *vault.Secret) ([]string, error) {
 	if !ok || data == nil {
 		return nil, newWrapErr("", ErrDecodeSecret, nil)
 	}
-	keys, ok := data.([]interface{})
+	keys, ok := data.([]any)
 	if !ok {
 		return nil, newWrapErr("", ErrDecodeSecret, nil)
 	}
@@ -52,7 +52,7 @@ func decodeSecret(secret *vault.Secret) ([]string, error) {
 	return decodeKeys(keys)
 }
 
-func decodeKeys(keys []interface{}) ([]string, error) {
+func decodeKeys(keys []any) ([]string, error) {
 	output := make([]string, len(keys))
 	for i, k := range keys {
 		key, ok := k.(string)

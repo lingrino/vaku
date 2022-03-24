@@ -60,7 +60,7 @@ func TrimPrefixList(l []string, pfx string) {
 }
 
 // EnsurePrefixMap ensures a prefix for every key in a map.
-func EnsurePrefixMap(m map[string]map[string]interface{}, pfx string) {
+func EnsurePrefixMap(m map[string]map[string]any, pfx string) {
 	for k, v := range m {
 		delete(m, k)
 		m[EnsurePrefix(k, pfx)] = v
@@ -68,7 +68,7 @@ func EnsurePrefixMap(m map[string]map[string]interface{}, pfx string) {
 }
 
 // TrimPrefixMap removes a prefix from every key in a map.
-func TrimPrefixMap(m map[string]map[string]interface{}, pfx string) {
+func TrimPrefixMap(m map[string]map[string]any, pfx string) {
 	for k, v := range m {
 		delete(m, k)
 		m[PathJoin(strings.TrimPrefix(k, pfx))] = v
@@ -92,7 +92,7 @@ func errFuncOnChan(errFunc func() error) <-chan error {
 }
 
 // mergeMaps merges m2 into m1, preferring data from m2.
-func mergeMaps(m1, m2 map[string]map[string]interface{}) {
+func mergeMaps(m1, m2 map[string]map[string]any) {
 	for k, v := range m2 {
 		m1[k] = v
 	}

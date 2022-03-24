@@ -106,27 +106,27 @@ func TestSwapPaths(t *testing.T) {
 	tests := []struct {
 		giveSrc       string
 		giveDst       string
-		giveAbsData   map[string]map[string]interface{}
-		giveNoAbsData map[string]map[string]interface{}
-		wantAbs       map[string]map[string]interface{}
-		wantNoAbs     map[string]map[string]interface{}
+		giveAbsData   map[string]map[string]any
+		giveNoAbsData map[string]map[string]any
+		wantAbs       map[string]map[string]any
+		wantNoAbs     map[string]map[string]any
 	}{
 		{
 			giveSrc: "0/1/2",
 			giveDst: "00/01/02",
-			giveAbsData: map[string]map[string]interface{}{
+			giveAbsData: map[string]map[string]any{
 				"0/1/2/3": nil,
 				"0/1/2/4": nil,
 			},
-			giveNoAbsData: map[string]map[string]interface{}{
+			giveNoAbsData: map[string]map[string]any{
 				"0/1/2/3": nil,
 				"0/1/2/4": nil,
 			},
-			wantAbs: map[string]map[string]interface{}{
+			wantAbs: map[string]map[string]any{
 				"00/01/02/3": nil,
 				"00/01/02/4": nil,
 			},
-			wantNoAbs: map[string]map[string]interface{}{
+			wantNoAbs: map[string]map[string]any{
 				"00/01/02/0/1/2/3": nil,
 				"00/01/02/0/1/2/4": nil,
 			},

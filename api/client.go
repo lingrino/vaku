@@ -25,7 +25,7 @@ type logical interface {
 	Delete(path string) (*vault.Secret, error)
 	List(path string) (*vault.Secret, error)
 	Read(path string) (*vault.Secret, error)
-	Write(path string, data map[string]interface{}) (*vault.Secret, error)
+	Write(path string, data map[string]any) (*vault.Secret, error)
 }
 
 // Client has all Vaku functions and wraps Vault API clients.
@@ -48,21 +48,21 @@ type Client struct {
 // ClientInterface exports the interface for the full Vaku client.
 type ClientInterface interface {
 	PathList(string) ([]string, error)
-	PathRead(string) (map[string]interface{}, error)
-	PathWrite(string, map[string]interface{}) error
+	PathRead(string) (map[string]any, error)
+	PathWrite(string, map[string]any) error
 	PathDelete(string) error
 	PathDeleteMeta(string) error
 	PathDestroy(string, []int) error
-	PathUpdate(string, map[string]interface{}) error
+	PathUpdate(string, map[string]any) error
 	PathSearch(string, string) (bool, error)
 	PathCopy(string, string) error
 	PathMove(string, string) error
 
 	FolderList(context.Context, string) ([]string, error)
 	FolderListChan(context.Context, string) (<-chan string, <-chan error)
-	FolderRead(context.Context, string) (map[string]map[string]interface{}, error)
-	FolderReadChan(context.Context, string) (<-chan map[string]map[string]interface{}, <-chan error)
-	FolderWrite(context.Context, map[string]map[string]interface{}) error
+	FolderRead(context.Context, string) (map[string]map[string]any, error)
+	FolderReadChan(context.Context, string) (<-chan map[string]map[string]any, <-chan error)
+	FolderWrite(context.Context, map[string]map[string]any) error
 	FolderDelete(context.Context, string) error
 	FolderDeleteMeta(context.Context, string) error
 	FolderDestroy(context.Context, string, []int) error
@@ -173,7 +173,7 @@ func NewClient(opts ...Option) (*Client, error) {
 }
 
 // swapPaths replaces source paths in data with dest paths for copy/move after FolderRead.
-func (c *Client) swapPaths(data map[string]map[string]interface{}, src, dst string) {
+func (c *Client) swapPaths(data map[string]map[string]any, src, dst string) {
 	if c.absolutePath {
 		TrimPrefixMap(data, src)
 	}

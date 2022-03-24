@@ -30,7 +30,7 @@ func (c *cli) combineErr(e1, e2 error) error {
 }
 
 // output handles outputting all of our messages (regular output or errors).
-func (c *cli) output(out interface{}) {
+func (c *cli) output(out any) {
 	outW := c.cmd.OutOrStdout()
 	errW := c.cmd.ErrOrStderr()
 
@@ -49,8 +49,8 @@ func (c *cli) output(out interface{}) {
 }
 
 // outputJSON handles output when flagFormat == json.
-func (c *cli) outputJSON(w io.Writer, out interface{}) {
-	var jsonOut interface{}
+func (c *cli) outputJSON(w io.Writer, out any) {
+	var jsonOut any
 
 	switch out := out.(type) {
 	case error:
@@ -72,7 +72,7 @@ func (c *cli) outputJSON(w io.Writer, out interface{}) {
 }
 
 // outputJSON handles output when flagFormat == text.
-func (c *cli) outputText(w io.Writer, out interface{}) {
+func (c *cli) outputText(w io.Writer, out any) {
 	switch out := out.(type) {
 	case error:
 		w = c.cmd.ErrOrStderr()
@@ -81,9 +81,9 @@ func (c *cli) outputText(w io.Writer, out interface{}) {
 		c.outputTextString(w, out)
 	case []string:
 		c.outputTextList(w, out)
-	case map[string]interface{}:
+	case map[string]any:
 		c.outputTextMap(w, 0, out)
-	case map[string]map[string]interface{}:
+	case map[string]map[string]any:
 		c.outputTextNestedMap(w, out)
 	default:
 		c.outputTextError(c.cmd.ErrOrStderr(), errOutputType)
@@ -112,7 +112,7 @@ func (c *cli) outputTextList(w io.Writer, l []string) {
 }
 
 // outputTextMap outputs maps of strings to interfaces.
-func (c *cli) outputTextMap(w io.Writer, indentTimes int, m map[string]interface{}) {
+func (c *cli) outputTextMap(w io.Writer, indentTimes int, m map[string]any) {
 	indent := strings.Repeat(c.flagIndent, indentTimes)
 
 	keys := c.mapKeys(m)
@@ -122,7 +122,7 @@ func (c *cli) outputTextMap(w io.Writer, indentTimes int, m map[string]interface
 }
 
 // outputTextNestedMap outputs nested maps of maps of strings to interfaces.
-func (c *cli) outputTextNestedMap(w io.Writer, m map[string]map[string]interface{}) {
+func (c *cli) outputTextNestedMap(w io.Writer, m map[string]map[string]any) {
 	keys := c.nestedMapKeys(m)
 	for _, k := range keys {
 		fmt.Fprintf(w, "%+v\n", k)
@@ -131,7 +131,7 @@ func (c *cli) outputTextNestedMap(w io.Writer, m map[string]map[string]interface
 }
 
 // mapKeys gets a list of (optionally sorted) keys from a map.
-func (c *cli) mapKeys(m map[string]interface{}) []string {
+func (c *cli) mapKeys(m map[string]any) []string {
 	keys := make([]string, len(m))
 	i := 0
 	for k := range m {
@@ -146,7 +146,7 @@ func (c *cli) mapKeys(m map[string]interface{}) []string {
 }
 
 // nestedMapKeys gets a list of (optionally sorted) keys from a nested map.
-func (c *cli) nestedMapKeys(m map[string]map[string]interface{}) []string {
+func (c *cli) nestedMapKeys(m map[string]map[string]any) []string {
 	keys := make([]string, len(m))
 
 	i := 0

@@ -11,23 +11,23 @@ func TestPathUpate(t *testing.T) {
 
 	tests := []struct {
 		give           string
-		giveData       map[string]interface{}
-		wantData       map[string]interface{}
+		giveData       map[string]any
+		wantData       map[string]any
 		wantErr        []error
 		wantNoReadback bool
 	}{
 		{
 			give:     "newpath",
-			giveData: map[string]interface{}{"0": "1"},
-			wantData: map[string]interface{}{"0": "1"},
+			giveData: map[string]any{"0": "1"},
+			wantData: map[string]any{"0": "1"},
 			wantErr:  nil,
 		},
 		{
 			give: "0/1",
-			giveData: map[string]interface{}{
+			giveData: map[string]any{
 				"100": "101",
 			},
-			wantData: map[string]interface{}{
+			wantData: map[string]any{
 				"2":   "3",
 				"100": "101",
 			},
@@ -41,14 +41,14 @@ func TestPathUpate(t *testing.T) {
 		{
 			give:     "0/4/5",
 			giveData: nil,
-			wantData: map[string]interface{}{
+			wantData: map[string]any{
 				"6": "7",
 			},
 			wantErr: []error{ErrPathUpdate, ErrNilData},
 		},
 		{
 			give: mountless,
-			giveData: map[string]interface{}{
+			giveData: map[string]any{
 				"0": "1",
 			},
 			wantErr:        []error{ErrPathUpdate, ErrPathRead, ErrRewritePath, ErrMountInfo, ErrNoMount},
@@ -56,7 +56,7 @@ func TestPathUpate(t *testing.T) {
 		},
 		{
 			give: "error/write/inject",
-			giveData: map[string]interface{}{
+			giveData: map[string]any{
 				"0": "1",
 			},
 			wantErr:        []error{ErrPathUpdate, ErrPathWrite, ErrVaultWrite},

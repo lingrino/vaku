@@ -27,7 +27,7 @@ func (c *Client) PathSearch(p, s string) (bool, error) {
 }
 
 // searchSecret searches a secret for a string.
-func searchSecret(secret map[string]interface{}, search string) (bool, error) {
+func searchSecret(secret map[string]any, search string) (bool, error) {
 	for k, v := range secret {
 		if strings.Contains(k, search) {
 			return true, nil

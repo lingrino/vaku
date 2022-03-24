@@ -60,7 +60,7 @@ func TestOutput(t *testing.T) {
 
 	tests := []struct {
 		name       string
-		give       interface{}
+		give       any
 		giveErr    error
 		giveFormat string
 		wantOut    string
@@ -84,7 +84,7 @@ func TestOutput(t *testing.T) {
 		},
 		{
 			name: "text map",
-			give: map[string]interface{}{
+			give: map[string]any{
 				"foo": "fooValue",
 				"bar": 100,
 			},
@@ -93,7 +93,7 @@ func TestOutput(t *testing.T) {
 		},
 		{
 			name: "text nested map",
-			give: map[string]map[string]interface{}{
+			give: map[string]map[string]any{
 				"foo": {
 					"infoo": "fooValue",
 					"inbar": 100,
@@ -119,7 +119,7 @@ func TestOutput(t *testing.T) {
 		},
 		{
 			name: "json map",
-			give: map[string]interface{}{
+			give: map[string]any{
 				"foo": "fooValue",
 				"bar": 100,
 			},
@@ -128,7 +128,7 @@ func TestOutput(t *testing.T) {
 		},
 		{
 			name: "json nested map",
-			give: map[string]map[string]interface{}{
+			give: map[string]map[string]any{
 				"foo": {
 					"infoo": "fooValue",
 					"inbar": 100,

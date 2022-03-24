@@ -43,10 +43,10 @@ var _ vaku.ClientInterface = (*testVakuClient)(nil)
 func (c *testVakuClient) PathList(p string) ([]string, error) {
 	return []string{"foo", "moo"}, nil
 }
-func (c *testVakuClient) PathRead(p string) (map[string]interface{}, error) {
-	return map[string]interface{}{"biz": "baz", "foo": "bar"}, nil
+func (c *testVakuClient) PathRead(p string) (map[string]any, error) {
+	return map[string]any{"biz": "baz", "foo": "bar"}, nil
 }
-func (c *testVakuClient) PathWrite(p string, d map[string]interface{}) error {
+func (c *testVakuClient) PathWrite(p string, d map[string]any) error {
 	return nil
 }
 func (c *testVakuClient) PathDelete(p string) error {
@@ -58,7 +58,7 @@ func (c *testVakuClient) PathDestroy(p string, v []int) error {
 func (c *testVakuClient) PathDeleteMeta(p string) error {
 	return nil
 }
-func (c *testVakuClient) PathUpdate(p string, d map[string]interface{}) error {
+func (c *testVakuClient) PathUpdate(p string, d map[string]any) error {
 	return nil
 }
 func (c *testVakuClient) PathSearch(p, s string) (bool, error) {
@@ -76,8 +76,8 @@ func (c *testVakuClient) FolderList(ctx context.Context, p string) ([]string, er
 func (c *testVakuClient) FolderListChan(ctx context.Context, p string) (<-chan string, <-chan error) {
 	return nil, nil
 }
-func (c *testVakuClient) FolderRead(ctx context.Context, p string) (map[string]map[string]interface{}, error) {
-	return map[string]map[string]interface{}{
+func (c *testVakuClient) FolderRead(ctx context.Context, p string) (map[string]map[string]any, error) {
+	return map[string]map[string]any{
 		"foo": {
 			"bim": "bom",
 			"biz": "baz",
@@ -87,10 +87,10 @@ func (c *testVakuClient) FolderRead(ctx context.Context, p string) (map[string]m
 		},
 	}, nil
 }
-func (c *testVakuClient) FolderReadChan(ctx context.Context, p string) (<-chan map[string]map[string]interface{}, <-chan error) { //nolint:lll
+func (c *testVakuClient) FolderReadChan(ctx context.Context, p string) (<-chan map[string]map[string]any, <-chan error) { //nolint:lll
 	return nil, nil
 }
-func (c *testVakuClient) FolderWrite(ctx context.Context, d map[string]map[string]interface{}) error {
+func (c *testVakuClient) FolderWrite(ctx context.Context, d map[string]map[string]any) error {
 	return nil
 }
 func (c *testVakuClient) FolderDelete(ctx context.Context, p string) error {

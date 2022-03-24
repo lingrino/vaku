@@ -12,7 +12,7 @@ var (
 )
 
 // PathRead reads data at a path.
-func (c *Client) PathRead(p string) (map[string]interface{}, error) {
+func (c *Client) PathRead(p string) (map[string]any, error) {
 	vaultPath, mv, err := c.rewritePath(p, vaultRead)
 	if err != nil {
 		return nil, newWrapErr(p, ErrPathRead, err)
@@ -36,7 +36,7 @@ func (c *Client) PathRead(p string) (map[string]interface{}, error) {
 }
 
 // extractV2Read returns data["data"] if the secret is not deleted or destroyed.
-func extractV2Read(data map[string]interface{}) map[string]interface{} {
+func extractV2Read(data map[string]any) map[string]any {
 	if data == nil {
 		return nil
 	}
@@ -50,12 +50,12 @@ func extractV2Read(data map[string]interface{}) map[string]interface{} {
 		return nil
 	}
 
-	return dd.(map[string]interface{})
+	return dd.(map[string]any)
 }
 
 // isDeleted checks if the secret has been deleted or destroyed.
-func isDeleted(data map[string]interface{}) bool {
-	metadata, ok := data["metadata"].(map[string]interface{})
+func isDeleted(data map[string]any) bool {
+	metadata, ok := data["metadata"].(map[string]any)
 	if !ok {
 		return true
 	}

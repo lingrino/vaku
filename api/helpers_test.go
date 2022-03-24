@@ -379,43 +379,43 @@ func TestEnsurePrefixMap(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		giveMap    map[string]map[string]interface{}
+		giveMap    map[string]map[string]any
 		givePrefix string
-		want       map[string]map[string]interface{}
+		want       map[string]map[string]any
 	}{
 		{
-			giveMap: map[string]map[string]interface{}{
+			giveMap: map[string]map[string]any{
 				"foo/bar": {"a": "b"},
 			},
 			givePrefix: "foo",
-			want: map[string]map[string]interface{}{
+			want: map[string]map[string]any{
 				"foo/bar": {"a": "b"},
 			},
 		},
 		{
-			giveMap: map[string]map[string]interface{}{
+			giveMap: map[string]map[string]any{
 				"foo/bar": {"a": "b"},
 			},
 			givePrefix: "foo/",
-			want: map[string]map[string]interface{}{
+			want: map[string]map[string]any{
 				"foo/bar": {"a": "b"},
 			},
 		},
 		{
-			giveMap: map[string]map[string]interface{}{
+			giveMap: map[string]map[string]any{
 				"foo/bar": {"a": "b"},
 			},
 			givePrefix: "fo",
-			want: map[string]map[string]interface{}{
+			want: map[string]map[string]any{
 				"foo/bar": {"a": "b"},
 			},
 		},
 		{
-			giveMap: map[string]map[string]interface{}{
+			giveMap: map[string]map[string]any{
 				"foo/bar": {"a": "b"},
 			},
 			givePrefix: "fooo",
-			want: map[string]map[string]interface{}{
+			want: map[string]map[string]any{
 				"fooo/foo/bar": {"a": "b"},
 			},
 		},
@@ -437,43 +437,43 @@ func TestTrimPrefixMap(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		giveMap    map[string]map[string]interface{}
+		giveMap    map[string]map[string]any
 		givePrefix string
-		want       map[string]map[string]interface{}
+		want       map[string]map[string]any
 	}{
 		{
-			giveMap: map[string]map[string]interface{}{
+			giveMap: map[string]map[string]any{
 				"foo/bar": {"a": "b"},
 			},
 			givePrefix: "foo",
-			want: map[string]map[string]interface{}{
+			want: map[string]map[string]any{
 				"bar": {"a": "b"},
 			},
 		},
 		{
-			giveMap: map[string]map[string]interface{}{
+			giveMap: map[string]map[string]any{
 				"foo/bar": {"a": "b"},
 			},
 			givePrefix: "foo/",
-			want: map[string]map[string]interface{}{
+			want: map[string]map[string]any{
 				"bar": {"a": "b"},
 			},
 		},
 		{
-			giveMap: map[string]map[string]interface{}{
+			giveMap: map[string]map[string]any{
 				"foo/bar": {"a": "b"},
 			},
 			givePrefix: "fo",
-			want: map[string]map[string]interface{}{
+			want: map[string]map[string]any{
 				"o/bar": {"a": "b"},
 			},
 		},
 		{
-			giveMap: map[string]map[string]interface{}{
+			giveMap: map[string]map[string]any{
 				"foo/bar": {"a": "b"},
 			},
 			givePrefix: "fooo",
-			want: map[string]map[string]interface{}{
+			want: map[string]map[string]any{
 				"foo/bar": {"a": "b"},
 			},
 		},

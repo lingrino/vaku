@@ -15,11 +15,11 @@ var (
 )
 
 // FolderRead recursively reads the provided path and all subpaths.
-func (c *Client) FolderRead(ctx context.Context, p string) (map[string]map[string]interface{}, error) {
+func (c *Client) FolderRead(ctx context.Context, p string) (map[string]map[string]any, error) {
 	resC, errC := c.FolderReadChan(ctx, p)
 
 	// read results and errors. send on errC signifies done (can be nil).
-	out := make(map[string]map[string]interface{})
+	out := make(map[string]map[string]any)
 	for {
 		select {
 		case res := <-resC:
@@ -39,12 +39,12 @@ func (c *Client) FolderRead(ctx context.Context, p string) (map[string]map[strin
 // FolderReadChan recursively reads the provided path and all subpaths. Returns an unbuffered
 // channel that can be read until close and an error channel that sends either the first error or
 // nil when the work is done.
-func (c *Client) FolderReadChan(ctx context.Context, p string) (<-chan map[string]map[string]interface{}, <-chan error) { //nolint:lll
+func (c *Client) FolderReadChan(ctx context.Context, p string) (<-chan map[string]map[string]any, <-chan error) { //nolint:lll
 	// eg manages workers reading from the paths channel
 	eg, ctx := errgroup.WithContext(ctx)
 
 	// resC is processed paths
-	resC := make(chan map[string]map[string]interface{})
+	resC := make(chan map[string]map[string]any)
 
 	// list the path
 	pathC, errC := c.FolderListChan(ctx, p)
@@ -76,7 +76,7 @@ type folderReadWorkInput struct {
 	ctx   context.Context
 	root  string
 	pathC <-chan string
-	resC  chan<- map[string]map[string]interface{}
+	resC  chan<- map[string]map[string]any
 }
 
 // folderReadWork takes input from pathC, lists the path, adds listed folders back into pathC, and
@@ -109,7 +109,7 @@ func (c *Client) pathReadWork(path string, i *folderReadWorkInput) error {
 
 	// Don't add nil reads to results. These show up in list but are actually deleted secrets.
 	if read != nil {
-		res := make(map[string]map[string]interface{}, 1)
+		res := make(map[string]map[string]any, 1)
 		res[c.outputPath(path, i.root)] = read
 
 		i.resC <- res
