@@ -4,11 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.5.0 - 2022-04-08
+
+### Changed
+
+- GEN: Update dependencies
+- CLI: Add `folder write` command
+
 ## 2.4.6 - 2022-03-24
 
 ### Changed
 
-- GEN: Update to go 1.17
+- GEN: Update to go 1.18
 - GEN: Update dependencies
 
 ## 2.4.5 - 2022-02-17
