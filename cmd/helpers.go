@@ -10,9 +10,10 @@ import (
 )
 
 var (
-	errOutputFormat = errors.New("unsupported output format")
-	errOutputType   = errors.New("unsupported output type")
-	errJSONMarshal  = errors.New("json marshal")
+	errOutputFormat  = errors.New("unsupported output format")
+	errOutputType    = errors.New("unsupported output type")
+	errJSONMarshal   = errors.New("json marshal")
+	errJSONUnmarshal = errors.New("json unmarshal")
 )
 
 // combineErr combines two errors to be output later.

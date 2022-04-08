@@ -51,4 +51,5 @@ vaku folder list secret/foo
 * [vaku folder move](vaku_folder_move.md)	 - Recursively move all secrets in source folder to destination folder
 * [vaku folder read](vaku_folder_read.md)	 - Recursively read all secrets in a folder
 * [vaku folder search](vaku_folder_search.md)	 - Recursively search all secrets in a folder for a search string
+* [vaku folder write](vaku_folder_write.md)	 - write a folder of secrets. WARNING: command expects a very specific json input
 
