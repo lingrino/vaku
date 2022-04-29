@@ -605,8 +605,8 @@ github.com/hashicorp/raft-boltdb/v2 v2.0.0-20210421194847-a7e34179d62c/go.mod h1
 github.com/hashicorp/raft-snapshot v1.0.4 h1:EuDuayAJPdiDmVk1ygTDnG2zDzrs0/6/yBuma1IYSow=
 github.com/hashicorp/raft-snapshot v1.0.4/go.mod h1:5sL9eUn72lH5DzsFIJ9jaysITbHksSSszImWSOTC8Ic=
 github.com/hashicorp/serf v0.9.6 h1:uuEX1kLR6aoda1TBttmJQKDLZE1Ob7KN0NPdE7EtCDc=
-github.com/hashicorp/vault v1.10.1 h1:OJuvPpbS14M2X+V2/KOt+XNlUxg2YI5Eicx3L9QsTOs=
-github.com/hashicorp/vault v1.10.1/go.mod h1:vPxK4tzGXe/pBJHoHByAF9flG4a7ezQD0VAPQDQdjoA=
+github.com/hashicorp/vault v1.10.2 h1:+Z6G6x1GMJTzrGSDVK40o9SJ4WS0Suq5Vo/0T0cpB7s=
+github.com/hashicorp/vault v1.10.2/go.mod h1:0iaEiGH8Pfhi03CiJwHOMsRdLQO1wfOLFeDEicxrhHw=
 github.com/hashicorp/vault-plugin-auth-alicloud v0.11.0 h1:lDzAQoxIT+dWy/CemGdcI10ZT4PfLCJV33uwntc3V+0=
 github.com/hashicorp/vault-plugin-auth-azure v0.10.0 h1:eJqLyjEhKzSBM1hPK9OrAS+rDESXNCDE0YHWMsg+f98=
 github.com/hashicorp/vault-plugin-auth-centrify v0.11.0 h1:W1Al8Kw4VvXm/mtDdzgBau1YYWn4p+LRkFfeC9H9WwQ=
@@ -641,8 +641,8 @@ github.com/hashicorp/vault/sdk v0.2.1/go.mod h1:WfUiO1vYzfBkz1TmoE4ZGU7HD0T0Cl/r
 github.com/hashicorp/vault/sdk v0.3.0/go.mod h1:aZ3fNuL5VNydQk8GcLJ2TV8YCRVvyaakYkhZRoVuhj0=
 github.com/hashicorp/vault/sdk v0.3.1-0.20220112143259-b48602fdb885/go.mod h1:LzlzYEnxJWaC5mlt2nOVJimp5R15ecXAucsdjRc7KC0=
 github.com/hashicorp/vault/sdk v0.4.1/go.mod h1:aZ3fNuL5VNydQk8GcLJ2TV8YCRVvyaakYkhZRoVuhj0=
-github.com/hashicorp/vault/sdk v0.4.2-0.20220324144656-cdb85cfca8f5 h1:7gRM4fNtXdmicxbVYEtO7zVK0C+YZF+vpX6GGRvQhVA=
-github.com/hashicorp/vault/sdk v0.4.2-0.20220324144656-cdb85cfca8f5/go.mod h1:aZ3fNuL5VNydQk8GcLJ2TV8YCRVvyaakYkhZRoVuhj0=
+github.com/hashicorp/vault/sdk v0.4.2-0.20220422204215-a7cef09c9429 h1:bRkZVYj7g5NP6n1tkj8i+qHQgFq05F5uayYmK1nhPLo=
+github.com/hashicorp/vault/sdk v0.4.2-0.20220422204215-a7cef09c9429/go.mod h1:gqE65IIVlvR382JKqtzG1lJX5wVl/wdbdYhsTKTv13o=
 github.com/hashicorp/vic v1.5.1-0.20190403131502-bbfe86ec9443 h1:O/pT5C1Q3mVXMyuqg7yuAWUg/jMZR1/0QTzTRdNR6Uw=
 github.com/hashicorp/vic v1.5.1-0.20190403131502-bbfe86ec9443/go.mod h1:bEpDU35nTu0ey1EXjwNwPjI9xErAsoOCmcMb9GKvyxo=
 github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb/go.mod h1:+NfK9FKeTrX5uv1uIXGdwYDTeHna2qgaIlx54MXqjAM=
