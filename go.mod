@@ -4,10 +4,10 @@ go 1.18
 
 require (
 	github.com/hashicorp/go-hclog v1.2.0
-	github.com/hashicorp/vault v1.10.1
+	github.com/hashicorp/vault v1.10.2
 	github.com/hashicorp/vault-plugin-secrets-kv v0.11.0
 	github.com/hashicorp/vault/api v1.5.0
-	github.com/hashicorp/vault/sdk v0.4.2-0.20220324144656-cdb85cfca8f5
+	github.com/hashicorp/vault/sdk v0.4.2-0.20220422204215-a7cef09c9429
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.7.1
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
