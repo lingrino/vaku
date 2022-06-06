@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/vault/api v1.6.0
 	github.com/hashicorp/vault/sdk v0.5.0
 	github.com/spf13/cobra v1.4.0
-	github.com/stretchr/testify v1.7.1
+	github.com/stretchr/testify v1.7.2
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 )
 
@@ -186,7 +186,7 @@ require (
 	gopkg.in/resty.v1 v1.12.0 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/api v0.22.2 // indirect
 	k8s.io/apimachinery v0.22.2 // indirect
 	k8s.io/client-go v0.22.2 // indirect
