@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/hashicorp/go-hclog v1.2.0
 	github.com/hashicorp/vault v1.10.3
-	github.com/hashicorp/vault-plugin-secrets-kv v0.12.0
+	github.com/hashicorp/vault-plugin-secrets-kv v0.12.1
 	github.com/hashicorp/vault/api v1.6.0
 	github.com/hashicorp/vault/sdk v0.5.0
 	github.com/spf13/cobra v1.4.0
