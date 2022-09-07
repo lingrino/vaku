@@ -1,7 +1,6 @@
 linters:
   enable:
     - bodyclose
-    - deadcode
     - depguard
     - dogsled
     - dupl
@@ -34,14 +33,12 @@ linters:
     - revive
     - rowserrcheck
     - staticcheck
-    - structcheck
     - stylecheck
     - tparallel
     - typecheck
     - unconvert
     - unparam
     - unused
-    - varcheck
     - whitespace
     - wrapcheck
   disable:
