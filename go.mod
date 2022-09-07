@@ -10,7 +10,7 @@ require (
 	github.com/hashicorp/vault/sdk v0.5.3
 	github.com/spf13/cobra v1.5.0
 	github.com/stretchr/testify v1.8.0
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
 )
 
 require (

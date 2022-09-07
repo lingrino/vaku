@@ -35,7 +35,6 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           args: --timeout=5m
-          version: v1.48 # https://github.com/golangci/golangci-lint/releases
   gomod:
     runs-on: ubuntu-latest
     steps:
