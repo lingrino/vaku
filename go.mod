@@ -7,7 +7,7 @@ require (
 	github.com/hashicorp/vault v1.11.3
 	github.com/hashicorp/vault-plugin-secrets-kv v0.13.0
 	github.com/hashicorp/vault/api v1.7.2
-	github.com/hashicorp/vault/sdk v0.5.3
+	github.com/hashicorp/vault/sdk v0.6.0
 	github.com/spf13/cobra v1.5.0
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
@@ -83,7 +83,7 @@ require (
 	github.com/hashicorp/go-discover v0.0.0-20210818145131-c573d69da192 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-kms-wrapping v0.7.0 // indirect
-	github.com/hashicorp/go-kms-wrapping/entropy v0.1.0 // indirect
+	github.com/hashicorp/go-kms-wrapping/entropy/v2 v2.0.0 // indirect
 	github.com/hashicorp/go-memdb v1.3.2 // indirect
 	github.com/hashicorp/go-msgpack v1.1.5 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
