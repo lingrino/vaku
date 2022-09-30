@@ -617,8 +617,8 @@ github.com/hashicorp/raft-boltdb/v2 v2.0.0-20210421194847-a7e34179d62c/go.mod h1
 github.com/hashicorp/raft-snapshot v1.0.4 h1:EuDuayAJPdiDmVk1ygTDnG2zDzrs0/6/yBuma1IYSow=
 github.com/hashicorp/raft-snapshot v1.0.4/go.mod h1:5sL9eUn72lH5DzsFIJ9jaysITbHksSSszImWSOTC8Ic=
 github.com/hashicorp/serf v0.9.7 h1:hkdgbqizGQHuU5IPqYM1JdSMV8nKfpuOnZYXssk9muY=
-github.com/hashicorp/vault v1.11.3 h1:KROmJz/YRIaYVpwJaWYNfHDcchtugCP8GTRz+939eT8=
-github.com/hashicorp/vault v1.11.3/go.mod h1:shpQ0ikGOzP07k/TJG54VNzbOIISS4h/2UKRD4xjpj8=
+github.com/hashicorp/vault v1.11.4 h1:ZI23dOeVNVklOVUxEojUUjcGL47/AJQqjlVjOuqAuBQ=
+github.com/hashicorp/vault v1.11.4/go.mod h1:WopFEJghbGk4Vy0s5GrttST7d0JoabDZuZhhyT01yic=
 github.com/hashicorp/vault-plugin-auth-alicloud v0.12.0 h1:Uv6V7tLPO09CPcHg2NfhxNkSQqtS3EpFwgC753hjC14=
 github.com/hashicorp/vault-plugin-auth-azure v0.11.0 h1:PY2CuGj2RX4paj1kjX3VC0Q3HC/QvcsJ9uFa74tAIC4=
 github.com/hashicorp/vault-plugin-auth-centrify v0.12.0 h1:d2dDZoUlSBNiw+jfi/2wxPoz6iNU7W5RasuwFc/deYo=
@@ -626,7 +626,7 @@ github.com/hashicorp/vault-plugin-auth-cf v0.12.0 h1:8X3Zlc6P/ih0MVhrPJ54iwiCyMV
 github.com/hashicorp/vault-plugin-auth-gcp v0.13.2 h1:rv8gBKYzFz9BD9pFRyrmfi46BuOh3K2uSS3AjkVVEvg=
 github.com/hashicorp/vault-plugin-auth-jwt v0.13.0 h1:BeMC4ZnP8iwRgL8vInEvCICA6e+iiDtkmOdNYKg3aGQ=
 github.com/hashicorp/vault-plugin-auth-kerberos v0.7.3 h1:QumrPHn5n9iTaZScZwplqdnXoeMOrb3GJcwMweTmR3o=
-github.com/hashicorp/vault-plugin-auth-kubernetes v0.13.0 h1:pONFgWz9hbcS1wFxPtQJYj9Mt/nzPVX1kw1DGv+92Ww=
+github.com/hashicorp/vault-plugin-auth-kubernetes v0.13.2 h1:rkYx4X4wH7DIo4zeXmC3UWF4uCmGdHv36jUy2xcy/R8=
 github.com/hashicorp/vault-plugin-auth-oci v0.11.0 h1:DrdccnGU8O28I1MIs21zmbYM2Nta7RLOAzozvDSX9h0=
 github.com/hashicorp/vault-plugin-database-couchbase v0.7.0 h1:p//NCrYPF7AlCFtwKsO6dT7RvINSq3/x1VN19nfPlK4=
 github.com/hashicorp/vault-plugin-database-elasticsearch v0.11.1 h1:XU2b1wrvHNeQafypbJ0Xs6Zec0kN5VzMZ0AJzWXlI+4=
