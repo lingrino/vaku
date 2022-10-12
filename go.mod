@@ -3,9 +3,9 @@ module github.com/lingrino/vaku/v2
 go 1.19
 
 require (
-	github.com/hashicorp/go-hclog v1.3.0
+	github.com/hashicorp/go-hclog v1.3.1
 	github.com/hashicorp/vault v1.12.0
-	github.com/hashicorp/vault-plugin-secrets-kv v0.13.0
+	github.com/hashicorp/vault-plugin-secrets-kv v0.13.3
 	github.com/hashicorp/vault/api v1.8.0
 	github.com/hashicorp/vault/sdk v0.6.1-0.20221010215534-6545e24b6023
 	github.com/spf13/cobra v1.6.0
@@ -117,7 +117,7 @@ require (
 	github.com/hashicorp/go-secure-stdlib/awsutil v0.1.6 // indirect
 	github.com/hashicorp/go-secure-stdlib/base62 v0.1.2 // indirect
 	github.com/hashicorp/go-secure-stdlib/mlock v0.1.2 // indirect
-	github.com/hashicorp/go-secure-stdlib/parseutil v0.1.6 // indirect
+	github.com/hashicorp/go-secure-stdlib/parseutil v0.1.7 // indirect
 	github.com/hashicorp/go-secure-stdlib/reloadutil v0.1.1 // indirect
 	github.com/hashicorp/go-secure-stdlib/strutil v0.1.2 // indirect
 	github.com/hashicorp/go-secure-stdlib/tlsutil v0.1.2 // indirect
