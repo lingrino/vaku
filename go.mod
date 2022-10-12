@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/vault-plugin-secrets-kv v0.13.0
 	github.com/hashicorp/vault/api v1.8.0
 	github.com/hashicorp/vault/sdk v0.6.1-0.20221010215534-6545e24b6023
-	github.com/spf13/cobra v1.5.0
+	github.com/spf13/cobra v1.6.0
 	github.com/stretchr/testify v1.8.0
 	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
 )
@@ -136,7 +136,7 @@ require (
 	github.com/hashicorp/yamux v0.0.0-20211028200310-0bc27b27de87 // indirect
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/jefferai/isbadcipher v0.0.0-20190226160619-51d2077c035f // indirect
 	github.com/jefferai/jsonx v1.0.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
