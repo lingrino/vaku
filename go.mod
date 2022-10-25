@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/vault-plugin-secrets-kv v0.13.0
 	github.com/hashicorp/vault/api v1.8.1
 	github.com/hashicorp/vault/sdk v0.6.1-0.20221010215534-6545e24b6023
-	github.com/spf13/cobra v1.6.0
+	github.com/spf13/cobra v1.6.1
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
 )
