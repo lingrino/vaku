@@ -4,10 +4,10 @@ go 1.19
 
 require (
 	github.com/hashicorp/go-hclog v1.3.1
-	github.com/hashicorp/vault v1.12.0
+	github.com/hashicorp/vault v1.12.1
 	github.com/hashicorp/vault-plugin-secrets-kv v0.13.0
 	github.com/hashicorp/vault/api v1.8.2
-	github.com/hashicorp/vault/sdk v0.6.1-0.20221010215534-6545e24b6023
+	github.com/hashicorp/vault/sdk v0.6.1-0.20221012172514-e12bdc5ce648
 	github.com/spf13/cobra v1.6.1
 	github.com/stretchr/testify v1.8.1
 	golang.org/x/sync v0.0.0-20220907140024-f12130a52804
@@ -125,7 +125,7 @@ require (
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
-	github.com/hashicorp/hcl v1.0.1-vault-3 // indirect
+	github.com/hashicorp/hcl v1.0.1-vault-5 // indirect
 	github.com/hashicorp/hcp-sdk-go v0.22.0 // indirect
 	github.com/hashicorp/mdns v1.0.4 // indirect
 	github.com/hashicorp/raft v1.3.10 // indirect
