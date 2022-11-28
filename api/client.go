@@ -43,6 +43,9 @@ type Client struct {
 
 	// absolutePath if the absolute path is desired instead of the relative path.
 	absolutePath bool
+
+	// mountProvider provides a list of all mounts.
+	mountProvider mountProvider
 }
 
 // ClientInterface exports the interface for the full Vaku client.
@@ -153,6 +156,22 @@ func (o withAbsolutePath) apply(c *Client) error {
 	return nil
 }
 
+// WithMountProvider makes it possible to inject a custom method for listing mounts.
+// The default method uses the sys/mounts endpoint. This requires a level of privilege that
+// not all users may have.
+func WithMountProvider(p mountProvider) Option {
+	return withMountProvider{provider: p}
+}
+
+type withMountProvider struct {
+	provider mountProvider
+}
+
+func (o withMountProvider) apply(c *Client) error {
+	c.mountProvider = o.provider
+	return nil
+}
+
 // NewClient returns a new Vaku Client based on the Vault API config.
 func NewClient(opts ...Option) (*Client, error) {
 	// set defaults
@@ -160,6 +179,9 @@ func NewClient(opts ...Option) (*Client, error) {
 		workers: defaultWorkers,
 	}
 	client.dc = client
+	client.mountProvider = defaultMountProvider{
+		client: client,
+	}
 
 	// apply options
 	for _, opt := range opts {

@@ -43,21 +43,20 @@ const (
 
 // mountInfo takes a path and returns the mount path and version.
 func (c *Client) mountInfo(p string) (string, mountVersion, error) {
-	mounts, err := c.vc.Sys().ListMounts()
+	mounts, err := c.mountProvider.ListMounts()
 	if err != nil {
 		return "", mv0, newWrapErr(p, ErrMountInfo, newWrapErr(err.Error(), ErrListMounts, nil))
 	}
 
-	for mount, data := range mounts {
+	for _, mount := range mounts {
 		// Ensure '/' so that no match on foo/bar/ when actual path is foo/barbar/
-		mount = EnsureFolder(mount)
-		if strings.HasPrefix(p, mount) {
-			version, ok := data.Options["version"]
-			if !ok {
-				return mount, mv0, nil
+		mount.Path = EnsureFolder(mount.Path)
+		if strings.HasPrefix(p, mount.Path) {
+			if mount.Version == "" {
+				return mount.Path, mv0, nil
 			}
 
-			return mount, mountStringToVersion(version), nil
+			return mount.Path, mountStringToVersion(mount.Version), nil
 		}
 	}
 

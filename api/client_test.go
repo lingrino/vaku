@@ -58,6 +58,9 @@ func TestNewClient(t *testing.T) {
 				WithVaultSrcClient(newDefaultVaultClient(t)),
 				WithVaultDstClient(newDefaultVaultClient(t)),
 				WithAbsolutePath(true),
+				WithMountProvider(&defaultMountProvider{
+					client: &Client{},
+				}),
 			},
 			want: &Client{
 				vc: newDefaultVaultClient(t),
@@ -325,12 +328,16 @@ func assertClientsEqual(t *testing.T, expected *Client, actual *Client) {
 	// zero out clients and assert equal
 	expected.vc = nil
 	expected.vl = nil
+	expected.mountProvider = nil
 	expected.dc.vc = nil
 	expected.dc.vl = nil
+	expected.dc.mountProvider = nil
 	actual.vc = nil
 	actual.vl = nil
+	actual.mountProvider = nil
 	actual.dc.vc = nil
 	actual.dc.vl = nil
+	actual.dc.mountProvider = nil
 
 	if expected.dc.dc != expected {
 		expected.dc.dc = expected
