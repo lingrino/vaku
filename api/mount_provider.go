@@ -22,7 +22,7 @@ type defaultMountProvider struct {
 func (p defaultMountProvider) ListMounts() ([]Mount, error) {
 	mounts, err := p.client.vc.Sys().ListMounts()
 	if err != nil {
-		return nil, err
+		return nil, newWrapErr("", ErrMountInfo, newWrapErr(err.Error(), ErrListMounts, nil))
 	}
 
 	result := make([]Mount, 0)
