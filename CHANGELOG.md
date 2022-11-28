@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.6.0 - 2022-11-27
+
+### Changed
+
+- GEN: Update dependencies
+- API: Ability to specify custom mount provider. Thank you [@tobgu](https://github.com/tobgu)!
+
 ## 2.5.1 - 2022-08-04
 
 ### Changed
