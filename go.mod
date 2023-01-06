@@ -19,7 +19,7 @@ require (
 	cloud.google.com/go/iam v0.3.0 // indirect
 	cloud.google.com/go/kms v1.4.0 // indirect
 	cloud.google.com/go/monitoring v1.3.0 // indirect
-	github.com/Azure/azure-sdk-for-go v62.0.0+incompatible // indirect
+	github.com/Azure/azure-sdk-for-go v67.2.0+incompatible // indirect
 	github.com/Azure/go-autorest v14.2.0+incompatible // indirect
 	github.com/Azure/go-autorest/autorest v0.11.24 // indirect
 	github.com/Azure/go-autorest/autorest/adal v0.9.18 // indirect
