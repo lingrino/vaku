@@ -37,8 +37,6 @@ require (
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Masterminds/sprig v2.22.0+incompatible // indirect
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
-	github.com/PuerkitoBio/purell v1.1.1 // indirect
-	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1499 // indirect
 	github.com/armon/go-metrics v0.4.0 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
@@ -67,12 +65,12 @@ require (
 	github.com/go-openapi/analysis v0.20.0 // indirect
 	github.com/go-openapi/errors v0.19.9 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
-	github.com/go-openapi/jsonreference v0.19.5 // indirect
+	github.com/go-openapi/jsonreference v0.20.0 // indirect
 	github.com/go-openapi/loads v0.20.2 // indirect
 	github.com/go-openapi/runtime v0.19.24 // indirect
-	github.com/go-openapi/spec v0.20.3 // indirect
+	github.com/go-openapi/spec v0.20.7 // indirect
 	github.com/go-openapi/strfmt v0.20.0 // indirect
-	github.com/go-openapi/swag v0.19.14 // indirect
+	github.com/go-openapi/swag v0.19.15 // indirect
 	github.com/go-openapi/validate v0.20.2 // indirect
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
