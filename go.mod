@@ -192,7 +192,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tencentcloud/tencentcloud-sdk-go v1.0.162 // indirect
 	github.com/tklauser/go-sysconf v0.3.10 // indirect
-	github.com/tklauser/numcpus v0.4.0 // indirect
+	github.com/tklauser/numcpus v0.6.0 // indirect
 	github.com/tv42/httpunix v0.0.0-20191220191345-2ba4b9c3382c // indirect
 	github.com/vmware/govmomi v0.18.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
