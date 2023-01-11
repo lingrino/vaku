@@ -30,12 +30,6 @@ changelog:
 archives:
   - id: vaku
     format: zip
-    replacements:
-      386: i386
-      amd64: x86_64
-      darwin: mac
-      linux: linux
-      windows: windows
 brews:
   - name: vaku
     description: CLI that extends the official Vault client.
@@ -69,12 +63,6 @@ nfpms:
     formats:
       - deb
       - rpm
-    replacements:
-      386: i386
-      amd64: x86_64
-      darwin: mac
-      linux: linux
-      windows: windows
 dockers:
   - dockerfile: Dockerfile
     image_templates:
