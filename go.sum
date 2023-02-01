@@ -642,8 +642,8 @@ github.com/hashicorp/golang-lru v0.5.4/go.mod h1:iADmTwqILo4mZ8BN3D2Q6+9jd8WM5uG
 github.com/hashicorp/hcl v1.0.0/go.mod h1:E5yfLk+7swimpb2L/Alb/PJmXilQ/rhwaUYs4T20WEQ=
 github.com/hashicorp/hcl v1.0.1-vault-5 h1:kI3hhbbyzr4dldA8UdTb7ZlVVlI2DACdCfz31RPDgJM=
 github.com/hashicorp/hcl v1.0.1-vault-5/go.mod h1:XYhtn6ijBSAj6n4YqAaf7RBPS4I06AItNorpy+MoQNM=
-github.com/hashicorp/hcp-sdk-go v0.31.0 h1:Xp/v1MlAWyQpcd01tqRaFC6TTTf7Gj26LkWqAxDBxlg=
-github.com/hashicorp/hcp-sdk-go v0.31.0/go.mod h1:n9Obsd+GShhLkyxzrOQOEIMMpOmLYPBT5CiZFwUeaaE=
+github.com/hashicorp/hcp-sdk-go v0.32.0 h1:pXlf9TWcYcQfHXd9EnJt9QYCFf2LooXeXRm77mdT48g=
+github.com/hashicorp/hcp-sdk-go v0.32.0/go.mod h1:7TtPQnTEE/WCdUTetjMD00NMmtsW1OGU6sTgN9GNYT0=
 github.com/hashicorp/jsonapi v0.0.0-20210826224640-ee7dae0fb22d h1:9ARUJJ1VVynB176G1HCwleORqCaXm/Vx0uUi0dL26I0=
 github.com/hashicorp/mdns v1.0.1/go.mod h1:4gW7WsVCke5TE7EPeYliwHlRUyBtfCwuFwuMg2DmyNY=
 github.com/hashicorp/mdns v1.0.5 h1:1M5hW1cunYeoXOqHwEb/GBDDHAFo0Yqb/uz/beC6LbE=
