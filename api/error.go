@@ -30,7 +30,7 @@ type wrapErr struct {
 }
 
 // verify compliance with error interface.
-var _ error = (*wrapErr)(nil)
+var _ error = (*wrapErr)(nil) //nolint:errcheck
 
 // newWrapErr returns a wrapErr that merges defaults and input.
 func newWrapErr(msg string, is, wraps error) *wrapErr {
