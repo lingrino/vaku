@@ -50,7 +50,12 @@ func extractV2Read(data map[string]any) map[string]any {
 		return nil
 	}
 
-	return dd.(map[string]any)
+	dm, ok := dd.(map[string]any)
+	if !ok {
+		return nil
+	}
+
+	return dm
 }
 
 // isDeleted checks if the secret has been deleted or destroyed.

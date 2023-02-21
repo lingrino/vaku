@@ -7,6 +7,7 @@ linters:
     - errcheck
     - errorlint
     - exportloopref
+    - forcetypeassert
     - funlen
     - gochecknoglobals
     - gochecknoinits
@@ -34,6 +35,7 @@ linters:
     - rowserrcheck
     - staticcheck
     - stylecheck
+    - thelper
     - tparallel
     - typecheck
     - unconvert
@@ -41,10 +43,6 @@ linters:
     - unused
     - whitespace
     - wrapcheck
-  disable:
-    - interfacer # deprecated
-    - maligned # not worth savings
-    - wsl # too strict
 
 linters-settings:
   dupl:
