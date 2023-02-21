@@ -309,6 +309,8 @@ func newDefaultVaultClient(t *testing.T) *vault.Client {
 
 // assertClientsEqual compares two Clients.
 func assertClientsEqual(t *testing.T, expected *Client, actual *Client) {
+	t.Helper()
+
 	if expected == nil {
 		assert.Nil(t, actual)
 		return
