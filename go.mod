@@ -9,7 +9,7 @@ require (
 	github.com/hashicorp/vault/api v1.9.0
 	github.com/hashicorp/vault/sdk v0.6.1-0.20221102145943-1e9b0a1225c3
 	github.com/spf13/cobra v1.6.1
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 	golang.org/x/sync v0.1.0
 )
 
