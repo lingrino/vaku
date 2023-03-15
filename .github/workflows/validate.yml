@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: stable # https://golang.org/dl/
       - name: Docs Check
@@ -28,7 +28,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: stable # https://golang.org/dl/
       - name: Lint
@@ -41,7 +41,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: stable # https://golang.org/dl/
       - name: Go Mod Tidy
@@ -52,7 +52,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: stable # https://golang.org/dl/
       - name: Install govulncheck
@@ -65,7 +65,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: stable # https://golang.org/dl/
       - name: Goreleaser Check
@@ -78,7 +78,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
           go-version: stable # https://golang.org/dl/
       - name: Cache Modules
