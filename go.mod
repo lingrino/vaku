@@ -126,7 +126,7 @@ require (
 	github.com/hashicorp/hcl v1.0.1-vault-5 // indirect
 	github.com/hashicorp/hcp-sdk-go v0.38.0 // indirect
 	github.com/hashicorp/mdns v1.0.5 // indirect
-	github.com/hashicorp/raft v1.3.11 // indirect
+	github.com/hashicorp/raft v1.4.0 // indirect
 	github.com/hashicorp/raft-autopilot v0.2.0 // indirect
 	github.com/hashicorp/raft-boltdb/v2 v2.2.2 // indirect
 	github.com/hashicorp/raft-snapshot v1.0.4 // indirect
