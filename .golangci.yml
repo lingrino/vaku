@@ -31,7 +31,6 @@ linters:
     - nakedret
     - nestif
     - prealloc
-    - revive
     - rowserrcheck
     - staticcheck
     - stylecheck
