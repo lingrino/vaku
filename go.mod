@@ -203,7 +203,7 @@ require (
 	github.com/vmware/govmomi v0.30.4 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	go.etcd.io/bbolt v1.3.7 // indirect
-	go.mongodb.org/mongo-driver v1.11.5 // indirect
+	go.mongodb.org/mongo-driver v1.11.6 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	golang.org/x/crypto v0.8.0 // indirect
