@@ -6,7 +6,7 @@ require (
 	github.com/hashicorp/go-hclog v1.5.0
 	github.com/hashicorp/vault v1.12.2
 	github.com/hashicorp/vault-plugin-secrets-kv v0.13.3
-	github.com/hashicorp/vault/api v1.9.1
+	github.com/hashicorp/vault/api v1.9.2
 	github.com/hashicorp/vault/sdk v0.6.1-0.20221102145943-1e9b0a1225c3
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.3
@@ -63,6 +63,7 @@ require (
 	github.com/emicklei/go-restful/v3 v3.10.2 // indirect
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
 	github.com/fatih/color v1.15.0 // indirect
+	github.com/go-jose/go-jose/v3 v3.0.0 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/go-openapi/analysis v0.21.4 // indirect
