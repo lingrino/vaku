@@ -49,8 +49,8 @@ cloud.google.com/go/datastore v1.1.0/go.mod h1:umbIZjpQpHh4hmRpGhH4tLFup+FVzqBi1
 cloud.google.com/go/iam v0.3.0/go.mod h1:XzJPvDayI+9zsASAFO68Hk07u3z+f+JrT2xXNdp4bnY=
 cloud.google.com/go/iam v1.0.1 h1:lyeCAU6jpnVNrE9zGQkTl3WgNgK/X+uWwaw0kynZJMU=
 cloud.google.com/go/iam v1.0.1/go.mod h1:yR3tmSL8BcZB4bxByRv2jkSIahVmCtfKZwLYGBalRE8=
-cloud.google.com/go/kms v1.10.2 h1:8UePKEypK3SQ6g+4mn/s/VgE5L7XOh+FwGGRUqvY3Hw=
-cloud.google.com/go/kms v1.10.2/go.mod h1:9mX3Q6pdroWzL20pbK6RaOdBbXBEhMNgK4Pfz2bweb4=
+cloud.google.com/go/kms v1.11.0 h1:0LPJPKamw3xsVpkel1bDtK0vVJec3EyqdQOLitiD030=
+cloud.google.com/go/kms v1.11.0/go.mod h1:hwdiYC0xjnWsKQQCQQmIQnS9asjYVSK6jtXm+zFqXLM=
 cloud.google.com/go/monitoring v1.5.0/go.mod h1:/o9y8NYX5j91JjD/JvGLYbi86kL11OjyJXq2XziLJu4=
 cloud.google.com/go/monitoring v1.14.0 h1:duMLMV61WSPUSC93WIocFQMG7P7Byjmo73oLDO++Srs=
 cloud.google.com/go/monitoring v1.14.0/go.mod h1:YmMmLn+dX5qvhdXDHYaxUAwxtkY9qona6cL9fc7R8kY=
