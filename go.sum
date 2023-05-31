@@ -52,8 +52,8 @@ cloud.google.com/go/iam v1.1.0/go.mod h1:nxdHjaKfCr7fNYx/HJMM8LgiMugmveWlkatear5
 cloud.google.com/go/kms v1.11.0 h1:0LPJPKamw3xsVpkel1bDtK0vVJec3EyqdQOLitiD030=
 cloud.google.com/go/kms v1.11.0/go.mod h1:hwdiYC0xjnWsKQQCQQmIQnS9asjYVSK6jtXm+zFqXLM=
 cloud.google.com/go/monitoring v1.5.0/go.mod h1:/o9y8NYX5j91JjD/JvGLYbi86kL11OjyJXq2XziLJu4=
-cloud.google.com/go/monitoring v1.14.0 h1:duMLMV61WSPUSC93WIocFQMG7P7Byjmo73oLDO++Srs=
-cloud.google.com/go/monitoring v1.14.0/go.mod h1:YmMmLn+dX5qvhdXDHYaxUAwxtkY9qona6cL9fc7R8kY=
+cloud.google.com/go/monitoring v1.15.0 h1:b85k1A7eWZDkNtK08hDt45vNHJ2b0WpeNFAkUa86ons=
+cloud.google.com/go/monitoring v1.15.0/go.mod h1:/LPLNIY93ZtCpPKuO38kEYh+WhhiqIt8HYch2srelRM=
 cloud.google.com/go/pubsub v1.0.1/go.mod h1:R0Gpsv3s54REJCy4fxDixWD93lHJMoZTyQ2kNxGRt3I=
 cloud.google.com/go/pubsub v1.1.0/go.mod h1:EwwdRX2sKPjnvnqCa270oGRyludottCI76h+R3AArQw=
 cloud.google.com/go/pubsub v1.2.0/go.mod h1:jhfEVHT8odbXTkndysNHCcx0awwzvfOlguIAii9o8iA=
