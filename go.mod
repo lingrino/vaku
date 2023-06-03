@@ -168,7 +168,7 @@ require (
 	github.com/okta/okta-sdk-golang/v2 v2.19.0 // indirect
 	github.com/opentracing/opentracing-go v1.2.1-0.20220228012449-10b1cf09e00b // indirect
 	github.com/oracle/oci-go-sdk/v60 v60.0.0 // indirect
-	github.com/packethost/packngo v0.29.0 // indirect
+	github.com/packethost/packngo v0.30.0 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/petermattis/goid v0.0.0-20180202154549-b0b1615b78e5 // indirect
 	github.com/pierrec/lz4 v2.6.1+incompatible // indirect
