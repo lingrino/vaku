@@ -290,8 +290,8 @@ github.com/dgryski/go-metro v0.0.0-20180109044635-280f6062b5bc h1:8WFBn63wegobsY
 github.com/dgryski/go-metro v0.0.0-20180109044635-280f6062b5bc/go.mod h1:c9O8+fpSOX1DM8cPNSkX/qsBWdkD4yd2dpciOWQjpBw=
 github.com/dgryski/go-sip13 v0.0.0-20181026042036-e10d5fee7954/go.mod h1:vAd38F8PWV+bWy6jNmig1y/TA+kYO4g3RSRF0IAv0no=
 github.com/digitalocean/godo v1.7.5/go.mod h1:h6faOIcZ8lWIwNQ+DN7b3CgX4Kwby5T+nbpNqkUIozU=
-github.com/digitalocean/godo v1.101.0 h1:gtnKn+TdW7e1y42q3ms86GXWWC/4kHttKJyTFZqdmEw=
-github.com/digitalocean/godo v1.101.0/go.mod h1:SaUYccN7r+CO1QtsbXGypAsgobDrmSfVMJESEfXgoEg=
+github.com/digitalocean/godo v1.102.0 h1:iXkLEHmrBi5n9TAbRcKM0182NwXYrp1xCj//7vMRFs4=
+github.com/digitalocean/godo v1.102.0/go.mod h1:SaUYccN7r+CO1QtsbXGypAsgobDrmSfVMJESEfXgoEg=
 github.com/dimchansky/utfbom v1.1.0/go.mod h1:rO41eb7gLfo8SF1jd9F8HplJm1Fewwi4mQvIirEdv+8=
 github.com/dimchansky/utfbom v1.1.1 h1:vV6w1AhK4VMnhBno/TPVCoK9U/LP0PkLCS9tbxHdi/U=
 github.com/dimchansky/utfbom v1.1.1/go.mod h1:SxdoEBH5qIqFocHMyGOXVAybYJdr71b1Q/j0mACtrfE=
