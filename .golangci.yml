@@ -73,6 +73,7 @@ issues:
         - funlen # test function can be very long due to test cases
         - gochecknoglobals # globals in tests are fine
         - gocognit # test functions can be long/complex
+        - goconst # there are many magic numbers in tests
         - gomnd # there are many magic numbers in tests
         - wrapcheck # errors don't need to be wrapped in tests
     - path: example_*_test.go
