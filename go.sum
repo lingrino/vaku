@@ -50,8 +50,8 @@ cloud.google.com/go/datastore v1.1.0/go.mod h1:umbIZjpQpHh4hmRpGhH4tLFup+FVzqBi1
 cloud.google.com/go/iam v0.3.0/go.mod h1:XzJPvDayI+9zsASAFO68Hk07u3z+f+JrT2xXNdp4bnY=
 cloud.google.com/go/iam v1.1.4 h1:K6n/GZHFTtEoKT5aUG3l9diPi0VduZNQ1PfdnpkkIFk=
 cloud.google.com/go/iam v1.1.4/go.mod h1:l/rg8l1AaA+VFMho/HYx2Vv6xinPSLMF8qfhRPIZ0L8=
-cloud.google.com/go/kms v1.15.3 h1:RYsbxTRmk91ydKCzekI2YjryO4c5Y2M80Zwcs9/D/cI=
-cloud.google.com/go/kms v1.15.3/go.mod h1:AJdXqHxS2GlPyduM99s9iGqi2nwbviBbhV/hdmt4iOQ=
+cloud.google.com/go/kms v1.15.4 h1:gEZzC54ZBI+aeW8/jg9tgz9KR4Aa+WEDPbdGIV3iJ7A=
+cloud.google.com/go/kms v1.15.4/go.mod h1:L3Sdj6QTHK8dfwK5D1JLsAyELsNMnd3tAIwGS4ltKpc=
 cloud.google.com/go/monitoring v1.5.0/go.mod h1:/o9y8NYX5j91JjD/JvGLYbi86kL11OjyJXq2XziLJu4=
 cloud.google.com/go/monitoring v1.16.2 h1:gx7BDZcoRqX5DfuJzw9LdhVjEkqCLmDXScdnrmIy9ik=
 cloud.google.com/go/monitoring v1.16.2/go.mod h1:B44KGwi4ZCF8Rk/5n+FWeispDXoKSk9oss2QNlXJBgc=
