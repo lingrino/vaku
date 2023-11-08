@@ -77,8 +77,8 @@ github.com/Azure/azure-sdk-for-go/sdk/azcore v1.9.0 h1:fb8kj/Dh4CSwgsOzHeZY4Xh68
 github.com/Azure/azure-sdk-for-go/sdk/azcore v1.9.0/go.mod h1:uReU2sSxZExRPBAg3qKzmAucSi51+SP1OhohieR821Q=
 github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.5.0-beta.1 h1:H1TQ5NScHE0mQckzLeyjG/+Llrfm6Z2UlYaIO9wOnmc=
 github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.5.0-beta.1/go.mod h1:1fXstnBMas5kzG+S3q8UoJcmyU6nUeunJcMDHcRYHhs=
-github.com/Azure/azure-sdk-for-go/sdk/azidentity/cache v0.2.0 h1:xZaKaIde2fNBQ6cvgvsdlMMeD4OTpLaOQ1UTVDXGicI=
-github.com/Azure/azure-sdk-for-go/sdk/azidentity/cache v0.2.0/go.mod h1:veBEHsnzafwWVNkJ71OdC2tqipKKauNabOxdoi05Mhk=
+github.com/Azure/azure-sdk-for-go/sdk/azidentity/cache v0.2.1 h1:iuZ/YCOdMkIIu2fLAJph6yVGInNifhOG4k7JbdZ6Kac=
+github.com/Azure/azure-sdk-for-go/sdk/azidentity/cache v0.2.1/go.mod h1:PkEJYbZ8a9w/IfGclEtYp0jBGLMSxGscVaFNsEkyZ2Y=
 github.com/Azure/azure-sdk-for-go/sdk/internal v1.5.0 h1:d81/ng9rET2YqdVkVwkb6EXeRrLJIwyGnJcAlAWKwhs=
 github.com/Azure/azure-sdk-for-go/sdk/internal v1.5.0/go.mod h1:s4kgfzA0covAXNicZHDMN58jExvcng2mC/DepXiF1EI=
 github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys v0.10.0 h1:m/sWOGCREuSBqg2htVQTBY8nOZpyajYztF0vUvSZTuM=
