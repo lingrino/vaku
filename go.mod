@@ -82,7 +82,7 @@ require (
 	github.com/go-openapi/spec v0.20.12 // indirect
 	github.com/go-openapi/strfmt v0.21.10 // indirect
 	github.com/go-openapi/swag v0.22.5 // indirect
-	github.com/go-openapi/validate v0.22.3 // indirect
+	github.com/go-openapi/validate v0.22.4 // indirect
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible // indirect
 	github.com/go-resty/resty/v2 v2.10.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
