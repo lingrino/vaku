@@ -44,16 +44,6 @@ brews:
       email: sean@lingrino.com
     test: |
       system "#{bin}/vaku version"
-scoops:
-  - repository:
-      owner: lingrino
-      name: scoop-vaku
-    description: CLI that extends the official Vault client.
-    homepage: https://vaku.dev/
-    license: MIT
-    commit_author:
-      name: Sean Lingren
-      email: sean@lingrino.com
 nfpms:
   - id: vaku
     description: CLI that extends the official Vault client.
