@@ -16,7 +16,7 @@ require (
 require (
 	cloud.google.com/go/compute v1.23.4 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
-	cloud.google.com/go/iam v1.1.5 // indirect
+	cloud.google.com/go/iam v1.1.6 // indirect
 	cloud.google.com/go/kms v1.15.5 // indirect
 	cloud.google.com/go/monitoring v1.17.1 // indirect
 	github.com/Azure/azure-sdk-for-go v68.0.0+incompatible // indirect
