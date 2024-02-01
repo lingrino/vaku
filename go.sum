@@ -623,8 +623,8 @@ github.com/hashicorp/go-kms-wrapping/entropy/v2 v2.0.1 h1:KIge4FHZEDb2/xjaWgmBhe
 github.com/hashicorp/go-kms-wrapping/entropy/v2 v2.0.1/go.mod h1:aHO1EoFD0kBYLBedqxXgalfFT8lrWfP7kpuSoaqGjH0=
 github.com/hashicorp/go-kms-wrapping/v2 v2.0.16 h1:WZeXfD26QMWYC35at25KgE021SF9L3u9UMHK8fJAdV0=
 github.com/hashicorp/go-kms-wrapping/v2 v2.0.16/go.mod h1:ZiKZctjRTLEppuRwrttWkp71VYMbTTCkazK4xT7U/NQ=
-github.com/hashicorp/go-kms-wrapping/wrappers/aead/v2 v2.0.8 h1:knDKIxw+NpErQHRBg/QW1+GEgg6hsbr3S07LzXiAdR8=
-github.com/hashicorp/go-kms-wrapping/wrappers/aead/v2 v2.0.8/go.mod h1:Lq1RIU7tvJuwxr/Hsyt1AekFvZQiJKxxpwJaYk7ayLs=
+github.com/hashicorp/go-kms-wrapping/wrappers/aead/v2 v2.0.9 h1:HpGOHc0Vd3aacMAEtAUVe38zMcq7BfYQSjrGCmtRNx0=
+github.com/hashicorp/go-kms-wrapping/wrappers/aead/v2 v2.0.9/go.mod h1:ygxw8l40DbAQQ587OzoB3bsBWVpB0e/BOWKlXgYkfG8=
 github.com/hashicorp/go-kms-wrapping/wrappers/alicloudkms/v2 v2.0.3 h1:36Pxy8BQd7DAJ2Mk6vuJlIjqQ80e20vlO7a4Ep3RTOg=
 github.com/hashicorp/go-kms-wrapping/wrappers/alicloudkms/v2 v2.0.3/go.mod h1:heY2PS1SGU0cMamgv+zId/sKT+XFHaf61bLOSnP1Gb8=
 github.com/hashicorp/go-kms-wrapping/wrappers/awskms/v2 v2.0.9 h1:qdxeZvDMRGZ3YSE4Oz0Pp7WUSUn5S6cWZguEOkEVL50=
