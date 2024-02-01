@@ -108,7 +108,7 @@ require (
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-kms-wrapping/entropy/v2 v2.0.1 // indirect
 	github.com/hashicorp/go-kms-wrapping/v2 v2.0.16 // indirect
-	github.com/hashicorp/go-kms-wrapping/wrappers/aead/v2 v2.0.8 // indirect
+	github.com/hashicorp/go-kms-wrapping/wrappers/aead/v2 v2.0.9 // indirect
 	github.com/hashicorp/go-kms-wrapping/wrappers/alicloudkms/v2 v2.0.3 // indirect
 	github.com/hashicorp/go-kms-wrapping/wrappers/awskms/v2 v2.0.9 // indirect
 	github.com/hashicorp/go-kms-wrapping/wrappers/azurekeyvault/v2 v2.0.10 // indirect
