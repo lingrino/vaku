@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math/rand/v2"
 	"os"
 	"path"
 	"strconv"
@@ -14,16 +15,16 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/vault/api"
-	"github.com/hashicorp/vault/http"
-	"github.com/hashicorp/vault/vault"
+	"github.com/hashicorp/vault/sdk/helper/testcluster"
+	"github.com/hashicorp/vault/sdk/helper/testcluster/docker"
 	"github.com/stretchr/testify/assert"
-
-	kv "github.com/hashicorp/vault-plugin-secrets-kv"
-	vl "github.com/hashicorp/vault/sdk/logical"
 )
 
 // mountless, when passed in tests, will not be prefixed with a mount.
 const mountless = "mountless"
+
+// cleanupFns is a list of cleanup functions to run at the end of our test run.
+var cleanupFns []func()
 
 // sharedVaku for most vaku tests. Tests isolate by path on each mount.
 var sharedVaku *Client
@@ -66,30 +67,34 @@ var seeds = map[string]map[string]any{
 // TestMain prepares the test run.
 func TestMain(m *testing.M) {
 	hclog.DefaultOutput = io.Discard
-	os.Exit(m.Run())
+
+	code := m.Run()
+
+	for _, cleanup := range cleanupFns {
+		cleanup()
+	}
+
+	os.Exit(code)
 }
 
 // testServer creates a new vault server and returns a vault API client that points to it.
 // Pass an empty &testing.T{} to vt if you're initializing a long-lived client so that
 // vt.Cleanup() does not shutdown your shared client.
-func testServer(t *testing.T, vt *testing.T) *api.Client {
+func testServer(t *testing.T) *api.Client {
 	t.Helper()
 
-	// create vault core
-	core, _, token := vault.TestCoreUnsealedWithConfig(vt, &vault.CoreConfig{
-		// Must be provided for v1/v2 path differences to work.
-		LogicalBackends: map[string]vl.Factory{
-			"kv": kv.Factory,
+	cluster, err := docker.NewDockerCluster(context.Background(), &docker.DockerClusterOptions{
+		ImageRepo: "hashicorp/vault",
+		ImageTag:  "latest",
+		ClusterOptions: testcluster.ClusterOptions{
+			ClusterName: strconv.Itoa(rand.IntN(1000000000)),
+			NumCores:    1,
 		},
-		Logger: hclog.NewNullLogger(),
 	})
-	_, addr := http.TestServer(t, core)
-
-	// create client that points at core
-	client, err := api.NewClient(api.DefaultConfig())
+	cleanupFns = append(cleanupFns, cluster.Cleanup)
 	assert.NoError(t, err)
-	client.SetToken(token)
-	assert.NoError(t, client.SetAddress(addr))
+
+	client := cluster.Nodes()[0].APIClient()
 
 	// mount all mount versions
 	for _, ver := range mountVersions {
@@ -109,8 +114,8 @@ func testServer(t *testing.T, vt *testing.T) *api.Client {
 func initSharedVaku(t *testing.T) {
 	t.Helper()
 
-	srcClient := testServer(t, &testing.T{})
-	dstClient := testServer(t, &testing.T{})
+	srcClient := testServer(t)
+	dstClient := testServer(t)
 
 	client, err := NewClient(
 		WithVaultSrcClient(srcClient),

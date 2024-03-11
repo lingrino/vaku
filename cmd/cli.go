@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/hashicorp/vault/command/config"
+	"github.com/hashicorp/vault/api/cliconfig"
 	"github.com/spf13/cobra"
 
 	vault "github.com/hashicorp/vault/api"
@@ -154,7 +154,7 @@ func (c *cli) setVaultToken(vc *vault.Client, token string) error {
 		return nil
 	}
 
-	helper, err := config.DefaultTokenHelper()
+	helper, err := cliconfig.DefaultTokenHelper()
 	if err != nil || c.fail == "config.DefaultTokenHelper" {
 		return c.combineErr(errVaultTokenHelper, err)
 	}
