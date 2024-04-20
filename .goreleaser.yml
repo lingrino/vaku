@@ -38,7 +38,7 @@ brews:
     repository:
       owner: lingrino
       name: homebrew-tap
-    folder: Formula
+    directory: Formula
     commit_author:
       name: Sean Lingren
       email: sean@lingrino.com
