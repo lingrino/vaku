@@ -87,7 +87,7 @@ func testServer(t *testing.T) *api.Client {
 		ImageRepo: "hashicorp/vault",
 		ImageTag:  "latest",
 		ClusterOptions: testcluster.ClusterOptions{
-			ClusterName: strconv.Itoa(rand.IntN(1000000000)),
+			ClusterName: strconv.Itoa(rand.IntN(1000000000)), //nolint:gosec
 			NumCores:    1,
 		},
 	})
