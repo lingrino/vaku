@@ -18,7 +18,6 @@ linters:
     - godox
     - gofmt
     - goimports
-    - gomnd
     - gomoddirectives
     - goprintffuncname
     - gosec
@@ -27,6 +26,7 @@ linters:
     - ineffassign
     - lll
     - misspell
+    - mnd
     - nakedret
     - nestif
     - prealloc
@@ -55,8 +55,6 @@ linters-settings:
     max-func-lines: 0
   goconst:
     min-occurrences: 3
-  golint:
-    min-confidence: 0
 
 issues:
   exclude-rules:
