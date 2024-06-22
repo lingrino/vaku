@@ -35,7 +35,7 @@ func (c *Client) PathRead(p string) (map[string]any, error) {
 
 	// check data len, choose min from windowsize and data len.
 	// Determine the minimum window size for hashing
-	windowSize := min(8, len(data))
+	windowSize := min(defaultWindowSize, len(data))
 
 	// Create a new hasher for this invocation to avoid concurrency issues
 	hasher := c.hashMaker.Make()

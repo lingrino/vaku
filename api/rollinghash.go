@@ -4,6 +4,8 @@ import (
 	"github.com/chmduquesne/rollinghash/buzhash32"
 )
 
+const defaultWindowSize = 10
+
 // haystacksearch package content
 var (
 	// DefaultHashMaker is the default hash maker used in haystacksearch. It is backed by buzhash32.
