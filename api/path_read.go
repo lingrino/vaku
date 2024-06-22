@@ -2,6 +2,7 @@ package vaku
 
 import (
 	"errors"
+	"fmt"
 )
 
 var (
@@ -31,6 +32,20 @@ func (c *Client) PathRead(p string) (map[string]any, error) {
 	if mv == mv2 {
 		data = extractV2Read(data)
 	}
+
+	// check data len, choose min from windowsize and data len.
+	// Determine the minimum window size for hashing
+	windowSize := min(8, len(data))
+
+	// Create a new hasher for this invocation to avoid concurrency issues
+	hasher := c.hashMaker.Make()
+
+	// Initialize the hashers with the initial window
+	rollingData := []byte(fmt.Sprint(data))
+	hasher.Write(rollingData[:windowSize])
+
+	// Add the rolling hash value to the data
+	data["data"] = hasher.Sum32()
 
 	return data, nil
 }

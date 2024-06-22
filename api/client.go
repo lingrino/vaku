@@ -46,6 +46,9 @@ type Client struct {
 
 	// mountProvider provides a list of all mounts.
 	mountProvider mountProvider
+
+	// HasherMaker
+	hashMaker RollingHashMaker
 }
 
 // ClientInterface exports the interface for the full Vaku client.
@@ -190,6 +193,8 @@ func NewClient(opts ...Option) (*Client, error) {
 			return nil, newWrapErr("", ErrApplyOptions, err)
 		}
 	}
+
+	client.hashMaker = NewRollingHashMaker()
 
 	return client, nil
 }
