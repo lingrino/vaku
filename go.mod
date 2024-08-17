@@ -1,6 +1,6 @@
 module github.com/lingrino/vaku/v2
 
-go 1.22
+go 1.23
 
 require (
 	github.com/hashicorp/go-hclog v1.6.3
