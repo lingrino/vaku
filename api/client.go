@@ -46,6 +46,9 @@ type Client struct {
 
 	// mountProvider provides a list of all mounts.
 	mountProvider mountProvider
+
+	// ignoreErrors to ignore permission errors
+	ignoreErrors bool
 }
 
 // ClientInterface exports the interface for the full Vaku client.

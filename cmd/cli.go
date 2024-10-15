@@ -40,12 +40,13 @@ type cli struct {
 	flagWorkers int
 
 	// vault flags
-	flagSrcAddr  string
-	flagSrcToken string
-	flagSrcNspc  string
-	flagDstAddr  string
-	flagDstToken string
-	flagDstNspc  string
+	flagSrcAddr     string
+	flagSrcToken    string
+	flagSrcNspc     string
+	flagDstAddr     string
+	flagDstToken    string
+	flagDstNspc     string
+	flagIgnoreError bool
 
 	// data
 	version string

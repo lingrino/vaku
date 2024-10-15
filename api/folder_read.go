@@ -50,7 +50,7 @@ func (c *Client) FolderReadChan(ctx context.Context, p string) (<-chan map[strin
 	pathC, errC := c.FolderListChan(ctx, p)
 	eg.Go(func() error {
 		err := <-errC
-		if err != nil {
+		if err != nil && c.ignoreErrors {
 			return newWrapErr(p, ErrFolderReadChan, err)
 		}
 		return nil

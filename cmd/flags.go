@@ -73,6 +73,11 @@ const (
 	flagDstTokenName    = "destination-token"
 	flagDstTokenUse     = "token for the destination vault server (alias for --token)"
 	flagDstTokenDefault = ""
+
+	flagIgnoreErrorName    = "ignore-error"
+	flagIgnoreErrorShort   = "q"
+	flagIgnoreErrorUse     = "to ignore permission errors"
+	flagIgnoreErrorDefault = false
 )
 
 var (
@@ -103,6 +108,7 @@ func (c *cli) addPathFolderFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().StringVarP(&c.flagSrcToken, flagTokenName, flagTokenShort, flagTokenDefault, flagTokenUse)
 	cmd.PersistentFlags().StringVar(&c.flagSrcToken, flagSrcTokenName, flagSrcTokenDefault, flagSrcTokenUse)
 	cmd.PersistentFlags().StringVar(&c.flagDstToken, flagDstTokenName, flagDstTokenDefault, flagDstTokenUse)
+	cmd.PersistentFlags().BoolVarP(&c.flagIgnoreError, flagIgnoreErrorName, flagIgnoreErrorShort, flagIgnoreErrorDefault, flagIgnoreErrorUse)
 }
 
 // validateFlags checks if valid flag values were passed. Use as cmd.PersistentPreRunE.
