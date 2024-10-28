@@ -31,6 +31,7 @@ vaku path delete secret/foo
       --destination-namespace string   name of the vault namespace to use in the destination client
       --destination-token string       token for the destination vault server (alias for --token)
       --format string                  output format: text|json (default "text")
+      --ignore-read-errors             ignore path read errors and continue
   -i, --indent-char string             string used for indents (default "    ")
   -n, --namespace string               name of the vault namespace to use in the source client
   -s, --sort                           sort output text (default true)

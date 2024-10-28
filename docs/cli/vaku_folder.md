@@ -25,6 +25,7 @@ vaku folder list secret/foo
       --destination-namespace string   name of the vault namespace to use in the destination client
       --destination-token string       token for the destination vault server (alias for --token)
   -h, --help                           help for folder
+      --ignore-read-errors             ignore path read errors and continue
   -n, --namespace string               name of the vault namespace to use in the source client
       --source-address string          address of the source Vault server (alias for --address)
       --source-namespace string        name of the vault namespace to use in the source client (alias for --namespace)
