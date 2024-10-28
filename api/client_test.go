@@ -96,7 +96,6 @@ func TestNewClient(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -142,7 +141,6 @@ func TestSwapPaths(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.giveSrc, func(t *testing.T) {
 			t.Parallel()
 
@@ -182,7 +180,6 @@ func TestOutputPath(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.givePath, func(t *testing.T) {
 			t.Parallel()
 
@@ -225,7 +222,6 @@ func TestOutputPaths(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.giveRoot, func(t *testing.T) {
 			t.Parallel()
 
@@ -266,7 +262,6 @@ func TestInputPath(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.giveRoot, func(t *testing.T) {
 			t.Parallel()
 
