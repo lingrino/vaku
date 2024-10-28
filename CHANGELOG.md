@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.8.0 - 2024-10-27
+
+### Added
+
+- API: Add ignoreAccessErrors option to skip list and read errors and continue operation
+- CLI: Add --ignore-access-errors flag to skip list and read errors and continue operation
+
+### Changed
+
+- GEN: Update dependencies
+
 ## 2.7.1 - 2024-03-11
 
 ### Changed
