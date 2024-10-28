@@ -33,11 +33,12 @@ type cli struct {
 	cmd *cobra.Command
 
 	// flags
-	flagAbsPath bool
-	flagFormat  string
-	flagIndent  string
-	flagSort    bool
-	flagWorkers int
+	flagAbsPath     bool
+	flagNoAccessErr bool
+	flagFormat      string
+	flagIndent      string
+	flagSort        bool
+	flagWorkers     int
 
 	// vault flags
 	flagSrcAddr  string
@@ -104,6 +105,7 @@ func (c *cli) newVakuClient() (*vaku.Client, error) {
 	}
 
 	options = append(options, vaku.WithAbsolutePath(c.flagAbsPath))
+	options = append(options, vaku.WithIgnoreAccessErrors(c.flagNoAccessErr))
 	options = append(options, vaku.WithWorkers(c.flagWorkers))
 
 	vakuClient, err := vaku.NewClient(options...)

@@ -44,6 +44,9 @@ type Client struct {
 	// absolutePath if the absolute path is desired instead of the relative path.
 	absolutePath bool
 
+	// ignoreAccessErrors if access-based errors should be ignored.
+	ignoreAccessErrors bool
+
 	// mountProvider provides a list of all mounts.
 	mountProvider mountProvider
 }
@@ -153,6 +156,21 @@ type withAbsolutePath bool
 func (o withAbsolutePath) apply(c *Client) error {
 	c.absolutePath = bool(o)
 	c.dc.absolutePath = bool(o)
+	return nil
+}
+
+// WithIgnoreAccessErrors allows errors on path reads to be ignored. This may be useful when listing
+// and searching where you only have access to a subset of the paths. By default read errors will
+// return an error but you can set this to true to silently ignore them.
+func WithIgnoreAccessErrors(b bool) Option {
+	return withIgnoreAccessErrors(b)
+}
+
+type withIgnoreAccessErrors bool
+
+func (o withIgnoreAccessErrors) apply(c *Client) error {
+	c.ignoreAccessErrors = bool(o)
+	c.dc.ignoreAccessErrors = bool(o)
 	return nil
 }
 

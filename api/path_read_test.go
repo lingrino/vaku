@@ -125,3 +125,44 @@ func TestExtractV2Read(t *testing.T) {
 		})
 	}
 }
+
+func TestPathReadIgnoreErrors(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		give    string
+		want    map[string]any
+		wantErr []error
+	}{
+		{
+			give:    "error/read/inject",
+			want:    nil,
+			wantErr: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(testName(tt.give), func(t *testing.T) {
+			t.Parallel()
+			for _, prefix := range seededPrefixes(t, tt.give) {
+				prefix := prefix
+				t.Run(testName(prefix), func(t *testing.T) {
+					t.Parallel()
+
+					client, err := NewClient(
+						WithVaultSrcClient(testServer(t)),
+						WithIgnoreAccessErrors(true),
+					)
+					assert.NoError(t, err)
+					client.vl = &logicalInjector{realL: client.vl, t: t}
+
+					read, err := client.PathRead(PathJoin(prefix, tt.give))
+
+					compareErrors(t, err, tt.wantErr)
+					assert.Equal(t, tt.want, read)
+				})
+			}
+		})
+	}
+}
