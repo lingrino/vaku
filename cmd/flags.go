@@ -30,6 +30,10 @@ const (
 	flagAbsPathUse     = "show absolute path in output"
 	flagAbsPathDefault = false
 
+	flagNoAccessErrName    = "ignore-read-errors"
+	flagNoAccessErrUse     = "ignore path read errors and continue"
+	flagNoAccessErrDefault = false
+
 	flagWorkersName    = "workers"
 	flagWorkersShort   = "w"
 	flagWorkersUse     = "number of concurrent workers"
@@ -90,6 +94,7 @@ func (c *cli) addVakuFlags(cmd *cobra.Command) {
 // addPathFolderFlags adds all flags for the path and folder commands.
 func (c *cli) addPathFolderFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().BoolVarP(&c.flagAbsPath, flagAbsPathName, flagAbsPathShort, flagAbsPathDefault, flagAbsPathUse)
+	cmd.PersistentFlags().BoolVar(&c.flagNoAccessErr, flagNoAccessErrName, flagNoAccessErrDefault, flagNoAccessErrUse)
 	cmd.PersistentFlags().IntVarP(&c.flagWorkers, flagWorkersName, flagWorkersShort, flagWorkersDefault, flagWorkersUse)
 
 	cmd.PersistentFlags().StringVarP(&c.flagSrcAddr, flagAddrName, flagAddrShort, flagAddrDefault, flagAddrUse)
