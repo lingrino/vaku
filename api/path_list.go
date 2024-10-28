@@ -22,6 +22,9 @@ func (c *Client) PathList(p string) ([]string, error) {
 
 	secret, err := c.vl.List(vaultPath)
 	if err != nil {
+		if c.ignoreAccessErrors {
+			return nil, nil
+		}
 		return nil, newWrapErr(p, ErrPathList, newWrapErr(err.Error(), ErrVaultList, nil))
 	}
 

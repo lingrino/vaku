@@ -19,7 +19,10 @@ func (c *Client) PathRead(p string) (map[string]any, error) {
 	}
 
 	secret, err := c.vl.Read(vaultPath)
-	if err != nil && !c.ignoreAccessErrors {
+	if err != nil {
+		if c.ignoreAccessErrors {
+			return nil, nil
+		}
 		return nil, newWrapErr(p, ErrPathRead, newWrapErr(err.Error(), ErrVaultRead, nil))
 	}
 
