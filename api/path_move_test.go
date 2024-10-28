@@ -43,11 +43,9 @@ func TestPathMove(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(testName(tt.giveSrc, tt.giveDst), func(t *testing.T) {
 			t.Parallel()
 			for _, prefixPair := range seededPrefixProduct(t) {
-				prefixPair := prefixPair
 				t.Run(testName(prefixPair[0], prefixPair[1]), func(t *testing.T) {
 					t.Parallel()
 

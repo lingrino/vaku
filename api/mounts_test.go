@@ -57,7 +57,6 @@ func TestMountInfo(t *testing.T) {
 	})
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.give, func(t *testing.T) {
 			t.Parallel()
 
@@ -103,7 +102,6 @@ func TestMountStringToVersion(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.give, func(t *testing.T) {
 			t.Parallel()
 
@@ -207,7 +205,6 @@ func TestRewritePath(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.give, func(t *testing.T) {
 			t.Parallel()
 

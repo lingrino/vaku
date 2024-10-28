@@ -101,11 +101,9 @@ func TestFolderWrite(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			for _, prefix := range seededPrefixes(t, "") {
-				prefix := prefix
 				t.Run(testName(prefix), func(t *testing.T) {
 					t.Parallel()
 

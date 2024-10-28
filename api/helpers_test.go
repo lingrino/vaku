@@ -44,7 +44,6 @@ func TestPathJoin(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.want, func(t *testing.T) {
 			t.Parallel()
 
@@ -91,7 +90,6 @@ func TestIsFolder(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.give, func(t *testing.T) {
 			t.Parallel()
 
@@ -130,7 +128,6 @@ func TestEnsureFolder(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.give, func(t *testing.T) {
 			t.Parallel()
 
@@ -185,7 +182,6 @@ func TestAddPrefix(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.give, func(t *testing.T) {
 			t.Parallel()
 
@@ -240,7 +236,6 @@ func TestEnsurePrefix(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.give, func(t *testing.T) {
 			t.Parallel()
 
@@ -280,7 +275,6 @@ func TestAddPrefixList(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.givePrefix, func(t *testing.T) {
 			t.Parallel()
 
@@ -322,7 +316,6 @@ func TestEnsurePrefixList(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.givePrefix, func(t *testing.T) {
 			t.Parallel()
 
@@ -364,7 +357,6 @@ func TestTrimPrefixList(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.givePrefix, func(t *testing.T) {
 			t.Parallel()
 
@@ -422,7 +414,6 @@ func TestEnsurePrefixMap(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.givePrefix, func(t *testing.T) {
 			t.Parallel()
 
@@ -480,7 +471,6 @@ func TestTrimPrefixMap(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.givePrefix, func(t *testing.T) {
 			t.Parallel()
 
@@ -539,7 +529,6 @@ func TestInsertIntoPath(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.want, func(t *testing.T) {
 			t.Parallel()
 
