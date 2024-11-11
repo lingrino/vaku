@@ -68,7 +68,7 @@ jobs:
         with:
           go-version: stable # https://golang.org/dl/
       - name: Goreleaser Check
-        uses: goreleaser/goreleaser-action@v6.0.0
+        uses: goreleaser/goreleaser-action@v6.1.0
         with:
           args: check
   test:
