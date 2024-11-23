@@ -21,7 +21,7 @@ commands should not be run on non-K/V engines.
 
 CLI documentation - 'vaku help [cmd]'
 API documentation - https://pkg.go.dev/github.com/lingrino/vaku/v2/api
-Built by Sean Lingren <sean@lingrino.com>`
+Built by Sean Lingren <sean@lingren.com>`
 )
 
 // newVakuCmd sets flags/subcommands and returns the base vaku command.
