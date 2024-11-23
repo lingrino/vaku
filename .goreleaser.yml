@@ -43,14 +43,14 @@ brews:
     directory: Formula
     commit_author:
       name: Sean Lingren
-      email: sean@lingrino.com
+      email: sean@lingren.com
     test: |
       system "#{bin}/vaku version"
 nfpms:
   - id: vaku
     description: CLI that extends the official Vault client.
     homepage: https://vaku.dev/
-    maintainer: "Sean Lingren <sean@lingrino.com>"
+    maintainer: "Sean Lingren <sean@lingren.com>"
     license: MIT
     formats:
       - deb
@@ -65,4 +65,6 @@ dockers:
     build_flag_templates:
       - --label=org.opencontainers.image.created={{.Date}}
       - --label=org.opencontainers.image.revision={{.FullCommit}}
+      - --label=org.opencontainers.image.source={{.GitURL}}
+      - --label=org.opencontainers.image.title={{.ProjectName}}
       - --label=org.opencontainers.image.version={{.Version}}
