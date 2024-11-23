@@ -13,7 +13,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: stable # https://golang.org/dl/
+          go-version: stable
       - name: Docs Check
         run: |
           before=$(cat docs/cli/*.md | md5sum)
@@ -29,7 +29,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: stable # https://golang.org/dl/
+          go-version: stable
       - name: Lint
         uses: golangci/golangci-lint-action@v6
         with:
@@ -42,7 +42,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: stable # https://golang.org/dl/
+          go-version: stable
       - name: Go Mod Tidy
         run: test -z $(go mod tidy)
   govulncheck:
@@ -53,7 +53,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: stable # https://golang.org/dl/
+          go-version: stable
       - name: Install govulncheck
         run: go install golang.org/x/vuln/cmd/govulncheck@latest
       - name: Run govulncheck
@@ -66,7 +66,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: stable # https://golang.org/dl/
+          go-version: stable
       - name: Goreleaser Check
         uses: goreleaser/goreleaser-action@v6.1.0
         with:
@@ -79,7 +79,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: stable # https://golang.org/dl/
+          go-version: stable
       - name: Cache Modules
         uses: actions/cache@v4
         with:
