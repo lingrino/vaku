@@ -65,6 +65,4 @@ dockers:
     build_flag_templates:
       - --label=org.opencontainers.image.created={{.Date}}
       - --label=org.opencontainers.image.revision={{.FullCommit}}
-      - --label=org.opencontainers.image.source={{.GitURL}}
-      - --label=org.opencontainers.image.title={{.ProjectName}}
       - --label=org.opencontainers.image.version={{.Version}}
