@@ -1,6 +1,7 @@
 module github.com/lingrino/vaku/v2
 
-go 1.23
+go 1.23.3
+
 toolchain go1.23.4
 
 require (
