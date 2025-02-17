@@ -31,7 +31,7 @@ changelog:
       - Merge branch
 archives:
   - id: vaku
-    format: zip
+    formats: ["zip"]
 brews:
   - name: vaku
     description: CLI that extends the official Vault client.
