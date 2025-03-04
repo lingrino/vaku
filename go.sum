@@ -77,8 +77,8 @@ github.com/hashicorp/hcl v1.0.1-vault-5 h1:kI3hhbbyzr4dldA8UdTb7ZlVVlI2DACdCfz31
 github.com/hashicorp/hcl v1.0.1-vault-5/go.mod h1:XYhtn6ijBSAj6n4YqAaf7RBPS4I06AItNorpy+MoQNM=
 github.com/hashicorp/vault/api v1.16.0 h1:nbEYGJiAPGzT9U4oWgaaB0g+Rj8E59QuHKyA5LhwQN4=
 github.com/hashicorp/vault/api v1.16.0/go.mod h1:KhuUhzOD8lDSk29AtzNjgAu2kxRA9jL9NAbkFlqvkBA=
-github.com/hashicorp/vault/sdk v0.15.0 h1:xNo1lL2shm0yE4coXNZkTV/6++2GfEh+/cCAfBjzEnA=
-github.com/hashicorp/vault/sdk v0.15.0/go.mod h1:2Wj2tHIgfz0gNWgEPWBbCXFIiPrq96E8FTjPNV9J1Bc=
+github.com/hashicorp/vault/sdk v0.15.2 h1:Rp5Yp4lyBhlWgq24ZVb2n/YN47RKOAvmx/jlMfS9ku4=
+github.com/hashicorp/vault/sdk v0.15.2/go.mod h1:2Wj2tHIgfz0gNWgEPWBbCXFIiPrq96E8FTjPNV9J1Bc=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
