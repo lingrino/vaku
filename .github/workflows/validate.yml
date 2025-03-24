@@ -31,7 +31,7 @@ jobs:
         with:
           go-version: stable
       - name: Lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v7
         with:
           args: --timeout=5m
   gomod:
