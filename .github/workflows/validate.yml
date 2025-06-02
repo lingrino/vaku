@@ -31,7 +31,7 @@ jobs:
         with:
           go-version: stable
       - name: Lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v8
         with:
           args: --timeout=5m
   gomod:
@@ -68,7 +68,7 @@ jobs:
         with:
           go-version: stable
       - name: Goreleaser Check
-        uses: goreleaser/goreleaser-action@v6.2.1
+        uses: goreleaser/goreleaser-action@v6.3.0
         with:
           args: check
   test:
