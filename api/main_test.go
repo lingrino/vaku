@@ -84,8 +84,9 @@ func testServer(t *testing.T) *api.Client {
 	t.Helper()
 
 	cluster, err := docker.NewDockerCluster(context.Background(), &docker.DockerClusterOptions{
-		ImageRepo: "hashicorp/vault",
-		ImageTag:  "latest",
+		ImageRepo:    "hashicorp/vault",
+		ImageTag:     "latest",
+		DisableMlock: true, // otherwise test containers can oom
 		ClusterOptions: testcluster.ClusterOptions{
 			ClusterName: strconv.Itoa(rand.IntN(1000000000)), //nolint:gosec
 			NumCores:    1,
