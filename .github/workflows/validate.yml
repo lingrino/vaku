@@ -81,7 +81,4 @@ jobs:
         with:
           go-version: stable
       - name: Test
-        run: |
-          go test -cover -coverprofile=c.out -covermode=atomic -race -v .
-          go test -cover -coverprofile=c.out -covermode=atomic -race -v ./api
-          go test -cover -coverprofile=c.out -covermode=atomic -race -v ./cmd
+        run: go test -cover -coverprofile=c.out -covermode=atomic -race -v ./...
