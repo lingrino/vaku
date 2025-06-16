@@ -4,8 +4,8 @@ go 1.24.0
 
 require (
 	github.com/hashicorp/go-hclog v1.6.3
-	github.com/hashicorp/vault/api v1.16.0
-	github.com/hashicorp/vault/sdk v0.18.0
+	github.com/hashicorp/vault/api v1.20.0
+	github.com/hashicorp/vault/sdk v0.15.2
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/sync v0.15.0
