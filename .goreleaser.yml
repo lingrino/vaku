@@ -32,7 +32,7 @@ changelog:
 archives:
   - id: vaku
     formats: ["zip"]
-brews:
+homebrew_casks:
   - name: vaku
     description: CLI that extends the official Vault client.
     homepage: https://vaku.dev/
@@ -44,8 +44,6 @@ brews:
     commit_author:
       name: Sean Lingren
       email: sean@lingren.com
-    test: |
-      system "#{bin}/vaku version"
 nfpms:
   - id: vaku
     description: CLI that extends the official Vault client.

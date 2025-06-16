@@ -12,3 +12,6 @@ bench.txt
 # IDE settings
 .idea/
 .vscode/
+
+# AI Tools
+.claude
