@@ -1,5 +1,4 @@
-run:
-  timeout: 5m
+version: "2"
 
 linters:
   enable:
@@ -7,7 +6,6 @@ linters:
     - copyloopvar
     - dogsled
     - dupl
-    - errcheck
     - errorlint
     - forcetypeassert
     - funlen
@@ -19,14 +17,9 @@ linters:
     - gocyclo
     - godot
     - godox
-    - gofmt
-    - goimports
     - gomoddirectives
     - goprintffuncname
     - gosec
-    - gosimple
-    - govet
-    - ineffassign
     - lll
     - misspell
     - mnd
@@ -35,49 +28,54 @@ linters:
     - prealloc
     - rowserrcheck
     - staticcheck
-    - stylecheck
     - thelper
     - tparallel
-    - typecheck
     - unconvert
     - unparam
-    - unused
     - whitespace
     - wrapcheck
 
-linters-settings:
-  dupl:
-    threshold: 100
-  errcheck:
-    check-blank: true
-  gocognit:
-    min-complexity: 15
-  gocyclo:
-    min-complexity: 10
-  nakedret:
-    max-func-lines: 0
-  goconst:
-    min-occurrences: 3
+  settings:
+    dupl:
+      threshold: 100
+    errcheck:
+      check-blank: true
+    gocognit:
+      min-complexity: 15
+    goconst:
+      min-occurrences: 3
+    gocyclo:
+      min-complexity: 10
+    nakedret:
+      max-func-lines: 0
 
-issues:
-  exclude-rules:
-    - path: main.go
-      linters:
-        - gochecknoglobals # global in main.go needed for testing
-    - path: cmd/
-      linters:
-        - dupl # CLIs are a lot of similar-looking code!
-        - wrapcheck # errors don't need to be wrapped in thin CLIs
-    - path: _test.go
-      linters:
-        - dupl # many functions in tests look like duplicates
-        - funlen # test function can be very long due to test cases
-        - gochecknoglobals # globals in tests are fine
-        - gocognit # test functions can be long/complex
-        - goconst # there are many magic numbers in tests
-        - gomnd # there are many magic numbers in tests
-        - wrapcheck # errors don't need to be wrapped in tests
-    - path: example_*_test.go
-      linters:
-        - errcheck # not required to check errors in examples
-        - ineffassign # not required to check errors in examples
+  exclusions:
+    rules:
+      - linters:
+          - gochecknoglobals
+        path: main.go
+      - linters:
+          - dupl
+          - wrapcheck
+        path: cmd/
+      - linters:
+          - dupl
+          - funlen
+          - gochecknoglobals
+          - gocognit
+          - goconst
+          - mnd
+          - wrapcheck
+        path: _test.go
+      - linters:
+          - errcheck
+          - ineffassign
+        path: example_*_test.go
+      - linters:
+          - errcheck
+        text: "Error return value of `fmt.Fprintf` is not checked"
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
