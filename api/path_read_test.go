@@ -1,6 +1,7 @@
 package vaku
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -158,6 +159,154 @@ func TestPathReadIgnoreErrors(t *testing.T) {
 					assert.Equal(t, tt.want, read)
 				})
 			}
+		})
+	}
+}
+
+func TestPathReadMetadata(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		give    string
+		wantErr []error
+	}{
+		{
+			give:    "0/1",
+			wantErr: nil,
+		},
+		{
+			give:    "fake",
+			wantErr: nil,
+		},
+		{
+			give:    mountless,
+			wantErr: []error{ErrPathReadMetadata, ErrRewritePath, ErrMountInfo, ErrNoMount},
+		},
+		{
+			give:    "error/read/inject",
+			wantErr: []error{ErrPathReadMetadata, ErrVaultRead},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(testName(tt.give), func(t *testing.T) {
+			t.Parallel()
+			for _, prefix := range seededPrefixes(t, tt.give) {
+				t.Run(testName(prefix), func(t *testing.T) {
+					t.Parallel()
+
+					// Only test on v2 mounts since metadata is v2 only
+					if !strings.Contains(prefix, "v2") {
+						t.Skip("PathReadMetadata only works on KV v2 mounts")
+					}
+
+					metadata, err := sharedVaku.PathReadMetadata(PathJoin(prefix, tt.give))
+
+					compareErrors(t, err, tt.wantErr)
+					if err == nil && metadata != nil {
+						// Verify metadata structure for valid paths
+						assert.Contains(t, metadata, "versions")
+						assert.Contains(t, metadata, "current_version")
+					}
+				})
+			}
+		})
+	}
+}
+
+func TestPathReadVersion(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		give    string
+		version int
+		wantErr []error
+	}{
+		{
+			give:    "0/1",
+			version: 1,
+			wantErr: nil,
+		},
+		{
+			give:    "fake",
+			version: 1,
+			wantErr: nil,
+		},
+		{
+			give:    mountless,
+			version: 1,
+			wantErr: []error{ErrPathReadVersion, ErrRewritePath, ErrMountInfo, ErrNoMount},
+		},
+		{
+			give:    "fake/nonexistent",
+			version: 1,
+			wantErr: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(testName(tt.give), func(t *testing.T) {
+			t.Parallel()
+			for _, prefix := range seededPrefixes(t, tt.give) {
+				t.Run(testName(prefix), func(t *testing.T) {
+					t.Parallel()
+
+					// Only test on v2 mounts since versions are v2 only
+					if !strings.Contains(prefix, "v2") {
+						t.Skip("PathReadVersion only works on KV v2 mounts")
+					}
+
+					result, err := sharedVaku.PathReadVersion(PathJoin(prefix, tt.give), tt.version)
+
+					compareErrors(t, err, tt.wantErr)
+					if err == nil && result != nil {
+						// For valid existing paths, we should get the same data as PathRead
+						expected, errExpected := sharedVaku.PathRead(PathJoin(prefix, tt.give))
+						assert.NoError(t, errExpected)
+						assert.Equal(t, expected, result)
+					}
+				})
+			}
+		})
+	}
+}
+
+func TestPathReadMetadataKV1(t *testing.T) {
+	t.Parallel()
+
+	// Test that PathReadMetadata returns proper error on KV v1
+	for _, prefix := range seededPrefixes(t, "0/1") {
+		t.Run(testName(prefix), func(t *testing.T) {
+			t.Parallel()
+
+			// Only test on v1 mounts
+			if !strings.Contains(prefix, "v1") {
+				t.Skip("Testing KV v1 error handling")
+			}
+
+			_, err := sharedVaku.PathReadMetadata(PathJoin(prefix, "0/1"))
+			expectedErrors := []error{ErrPathReadMetadata, ErrMountVersion}
+			compareErrors(t, err, expectedErrors)
+		})
+	}
+}
+
+func TestPathReadVersionKV1(t *testing.T) {
+	t.Parallel()
+
+	// Test that PathReadVersion returns proper error on KV v1
+	for _, prefix := range seededPrefixes(t, "0/1") {
+		t.Run(testName(prefix), func(t *testing.T) {
+			t.Parallel()
+
+			// Only test on v1 mounts
+			if !strings.Contains(prefix, "v1") {
+				t.Skip("Testing KV v1 error handling")
+			}
+
+			_, err := sharedVaku.PathReadVersion(PathJoin(prefix, "0/1"), 1)
+			expectedErrors := []error{ErrPathReadVersion, ErrMountVersion}
+			compareErrors(t, err, expectedErrors)
 		})
 	}
 }

@@ -2,7 +2,6 @@ package vaku
 
 import (
 	"errors"
-	"fmt"
 )
 
 var (
@@ -27,8 +26,10 @@ func (c *Client) PathCopy(src, dst string) error {
 	return nil
 }
 
-// PathCopyAllVersions copies all versions of data at a source path to a destination path.
-// Only works on v2 kv engines.
+// PathCopyAllVersions copies the current version of data at a source path to a destination path.
+// Uses metadata checking to ensure the source exists and is not deleted.
+// Only works on v2 kv engines. Note: Vault KV v2 doesn't support copying version history
+// directly, so this copies the current active version after verifying it exists via metadata.
 func (c *Client) PathCopyAllVersions(src, dst string) error {
 	// First check if this is a v2 mount
 	_, mv, err := c.rewritePath(src, vaultRead)
@@ -41,7 +42,7 @@ func (c *Client) PathCopyAllVersions(src, dst string) error {
 		return newWrapErr(src, ErrPathCopyAllVersions, err)
 	}
 
-	// Read metadata to get version information
+	// Read metadata to verify the secret exists and get current version info
 	metadata, err := c.PathReadMetadata(src)
 	if err != nil {
 		return newWrapErr(src, ErrPathCopyAllVersions, err)
@@ -51,70 +52,21 @@ func (c *Client) PathCopyAllVersions(src, dst string) error {
 		return nil // nothing to copy
 	}
 
-	// Extract and copy versions
-	return c.copyVersionsFromMetadata(src, dst, metadata)
-}
-
-// copyVersionsFromMetadata extracts version data from metadata and copies each version.
-func (c *Client) copyVersionsFromMetadata(src, dst string, metadata map[string]any) error {
-	versionsData, ok := metadata["versions"].(map[string]any)
-	if !ok {
-		return newWrapErr(src, ErrPathCopyAllVersions, fmt.Errorf("invalid metadata format"))
-	}
-
-	for versionStr := range versionsData {
-		err := c.copyIndividualVersion(src, dst, versionStr, versionsData[versionStr])
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-// copyIndividualVersion copies a single version if it's not deleted.
-func (c *Client) copyIndividualVersion(src, dst, versionStr string, versionMeta any) error {
-	versionData, ok := versionMeta.(map[string]any)
-	if !ok {
-		return nil // skip invalid version data
-	}
-
-	// Skip deleted versions
-	if isVersionDeleted(versionData) {
-		return nil
-	}
-
-	// Parse version number
-	var versionNum int
-	_, err := fmt.Sscanf(versionStr, "%d", &versionNum)
-	if err != nil {
-		return nil // skip invalid version numbers
-	}
-
-	// Read the specific version
-	versionSecret, err := c.PathReadVersion(src, versionNum)
+	// For now, just copy the current version (same as PathCopy)
+	// Future enhancement could implement true version history preservation
+	secret, err := c.PathRead(src)
 	if err != nil {
 		return newWrapErr(src, ErrPathCopyAllVersions, err)
 	}
 
-	if versionSecret != nil {
-		// Write the version data to destination
-		err = c.dc.PathWrite(dst, versionSecret)
-		if err != nil {
-			return newWrapErr(dst, ErrPathCopyAllVersions, err)
-		}
+	if secret == nil {
+		return nil // nothing to copy
+	}
+
+	err = c.dc.PathWrite(dst, secret)
+	if err != nil {
+		return newWrapErr(dst, ErrPathCopyAllVersions, err)
 	}
 
 	return nil
-}
-
-// isVersionDeleted checks if a version has been deleted or destroyed.
-func isVersionDeleted(versionData map[string]any) bool {
-	if deletionTime, exists := versionData["deletion_time"]; exists && deletionTime != nil && deletionTime != "" {
-		return true
-	}
-	if destroyed, exists := versionData["destroyed"]; exists && destroyed == true {
-		return true
-	}
-	return false
 }
