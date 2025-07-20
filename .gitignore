@@ -1,6 +1,7 @@
 # Binaries
 dist/
 *.test
+vaku
 
 # Coverage
 *.out

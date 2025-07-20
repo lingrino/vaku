@@ -19,7 +19,8 @@ vaku path move secret/foo secret/bar
 ### Options
 
 ```
-  -h, --help   help for move
+      --all-versions   copy/move all versions of secrets (KV v2 only)
+  -h, --help           help for move
 ```
 
 ### Options inherited from parent commands
