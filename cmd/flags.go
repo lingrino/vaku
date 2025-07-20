@@ -77,6 +77,10 @@ const (
 	flagDstTokenName    = "destination-token"
 	flagDstTokenUse     = "token for the destination vault server (alias for --token)"
 	flagDstTokenDefault = ""
+
+	flagAllVersionsName    = "all-versions"
+	flagAllVersionsUse     = "copy/move all versions of secrets (KV v2 only)"
+	flagAllVersionsDefault = false
 )
 
 var (
@@ -108,6 +112,11 @@ func (c *cli) addPathFolderFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().StringVarP(&c.flagSrcToken, flagTokenName, flagTokenShort, flagTokenDefault, flagTokenUse)
 	cmd.PersistentFlags().StringVar(&c.flagSrcToken, flagSrcTokenName, flagSrcTokenDefault, flagSrcTokenUse)
 	cmd.PersistentFlags().StringVar(&c.flagDstToken, flagDstTokenName, flagDstTokenDefault, flagDstTokenUse)
+}
+
+// addAllVersionsFlag adds the --all-versions flag to specific commands.
+func (c *cli) addAllVersionsFlag(cmd *cobra.Command) {
+	cmd.Flags().BoolVar(&c.flagAllVersions, flagAllVersionsName, flagAllVersionsDefault, flagAllVersionsUse)
 }
 
 // validateFlags checks if valid flag values were passed. Use as cmd.PersistentPreRunE.

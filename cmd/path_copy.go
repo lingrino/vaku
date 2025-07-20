@@ -24,9 +24,14 @@ func (c *cli) newPathCopyCmd() *cobra.Command {
 		RunE: c.runPathCopy,
 	}
 
+	c.addAllVersionsFlag(cmd)
+
 	return cmd
 }
 
 func (c *cli) runPathCopy(cmd *cobra.Command, args []string) error {
+	if c.flagAllVersions {
+		return c.vc.PathCopyAllVersions(args[0], args[1])
+	}
 	return c.vc.PathCopy(args[0], args[1])
 }

@@ -62,7 +62,9 @@ type ClientInterface interface {
 	PathUpdate(string, map[string]any) error
 	PathSearch(string, string) (bool, error)
 	PathCopy(string, string) error
+	PathCopyAllVersions(string, string) error
 	PathMove(string, string) error
+	PathMoveAllVersions(string, string) error
 
 	FolderList(context.Context, string) ([]string, error)
 	FolderListChan(context.Context, string) (<-chan string, <-chan error)

@@ -39,6 +39,7 @@ type cli struct {
 	flagIndent      string
 	flagSort        bool
 	flagWorkers     int
+	flagAllVersions bool
 
 	// vault flags
 	flagSrcAddr  string

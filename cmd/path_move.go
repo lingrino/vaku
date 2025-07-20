@@ -24,9 +24,14 @@ func (c *cli) newPathMoveCmd() *cobra.Command {
 		RunE: c.runPathMove,
 	}
 
+	c.addAllVersionsFlag(cmd)
+
 	return cmd
 }
 
 func (c *cli) runPathMove(cmd *cobra.Command, args []string) error {
+	if c.flagAllVersions {
+		return c.vc.PathMoveAllVersions(args[0], args[1])
+	}
 	return c.vc.PathMove(args[0], args[1])
 }

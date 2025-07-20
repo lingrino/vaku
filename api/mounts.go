@@ -39,6 +39,7 @@ const (
 	vaultDelete
 	vaultDestroy
 	vaultDeleteMeta
+	vaultReadMeta
 )
 
 // mountInfo takes a path and returns the mount path and version.
@@ -91,7 +92,7 @@ func (c *Client) rewritePath(p string, op vaultOperation) (string, mountVersion,
 	}
 
 	switch op {
-	case vaultList, vaultDeleteMeta:
+	case vaultList, vaultDeleteMeta, vaultReadMeta:
 		p = InsertIntoPath(p, mount, "metadata")
 	case vaultRead, vaultWrite, vaultDelete:
 		p = InsertIntoPath(p, mount, "data")

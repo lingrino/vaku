@@ -67,7 +67,13 @@ func (c *testVakuClient) PathSearch(p, s string) (bool, error) {
 func (c *testVakuClient) PathCopy(src, dst string) error {
 	return nil
 }
+func (c *testVakuClient) PathCopyAllVersions(src, dst string) error {
+	return nil
+}
 func (c *testVakuClient) PathMove(src, dst string) error {
+	return nil
+}
+func (c *testVakuClient) PathMoveAllVersions(src, dst string) error {
 	return nil
 }
 func (c *testVakuClient) FolderList(ctx context.Context, p string) ([]string, error) {
