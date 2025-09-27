@@ -12,7 +12,7 @@ Vaku is a CLI and API for running path- and folder-based operations on the Vault
 ### Homebrew
 
 ```shell
-brew install lingrino/tap/vaku
+brew install --cask lingrino/tap/vaku
 ```
 
 ### Scoop

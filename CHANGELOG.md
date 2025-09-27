@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.9.0 - 2025-09-26
+
+### Changed
+
+- GEN: Vaku is now published as a homebrew cask instead of a formula. You can make the switch by running `brew rm lingrino/tap/vaku && brew install --cask lingrino/tap/vaku`
+- GEN: Update to go 1.25
+- GEN: Update dependencies
+
 ## 2.8.3 - 2025-02-17
 
 ### Changed
