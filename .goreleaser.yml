@@ -40,7 +40,7 @@ homebrew_casks:
     repository:
       owner: lingrino
       name: homebrew-tap
-    directory: Formula
+    directory: Casks
     commit_author:
       name: Sean Lingren
       email: sean@lingren.com
