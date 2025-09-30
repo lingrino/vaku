@@ -10,9 +10,23 @@ var (
 )
 
 // PathMove moves data at a source path to a destination path (copy + delete).
-// If allVersions is true, all versions of the secret are moved (KV v2 only).
-func (c *Client) PathMove(src, dst string, allVersions bool) error {
-	err := c.PathCopy(src, dst, allVersions)
+func (c *Client) PathMove(src, dst string) error {
+	err := c.PathCopy(src, dst)
+	if err != nil {
+		return newWrapErr("", ErrPathMove, err)
+	}
+
+	err = c.PathDelete(src)
+	if err != nil {
+		return newWrapErr(dst, ErrPathMove, err)
+	}
+
+	return nil
+}
+
+// PathMoveAllVersions moves all versions of a secret at a source path to a destination path (KV v2 only).
+func (c *Client) PathMoveAllVersions(src, dst string) error {
+	err := c.PathCopyAllVersions(src, dst)
 	if err != nil {
 		return newWrapErr("", ErrPathMove, err)
 	}

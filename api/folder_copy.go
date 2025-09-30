@@ -13,8 +13,17 @@ var (
 )
 
 // FolderCopy copies data at a source folder to a destination folder.
-// If allVersions is true, all versions of each secret are copied (KV v2 only).
-func (c *Client) FolderCopy(ctx context.Context, src, dst string, allVersions bool) error {
+func (c *Client) FolderCopy(ctx context.Context, src, dst string) error {
+	return c.folderCopy(ctx, src, dst, false)
+}
+
+// FolderCopyAllVersions copies all versions of each secret at a source folder to a destination folder (KV v2 only).
+func (c *Client) FolderCopyAllVersions(ctx context.Context, src, dst string) error {
+	return c.folderCopy(ctx, src, dst, true)
+}
+
+// folderCopy is the internal implementation for folder copying.
+func (c *Client) folderCopy(ctx context.Context, src, dst string, allVersions bool) error {
 	if !allVersions {
 		// Original behavior: copy only latest versions
 		read, err := c.FolderRead(ctx, src)
@@ -62,7 +71,7 @@ func (c *Client) FolderCopy(ctx context.Context, src, dst string, allVersions bo
 					}
 					srcPath := c.inputPath(path, src)
 					dstPath := c.dc.inputPath(path, dst)
-					err := c.PathCopy(srcPath, dstPath, true)
+					err := c.PathCopyAllVersions(srcPath, dstPath)
 					if err != nil {
 						return newWrapErr("copy "+srcPath+" to "+dstPath, ErrFolderCopy, err)
 					}

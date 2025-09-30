@@ -11,9 +11,23 @@ var (
 )
 
 // FolderMove moves data at a source folder to a destination folder. Source is deleted after copy.
-// If allVersions is true, all versions of each secret are moved (KV v2 only).
-func (c *Client) FolderMove(ctx context.Context, src, dst string, allVersions bool) error {
-	err := c.FolderCopy(ctx, src, dst, allVersions)
+func (c *Client) FolderMove(ctx context.Context, src, dst string) error {
+	err := c.FolderCopy(ctx, src, dst)
+	if err != nil {
+		return newWrapErr("", ErrFolderMove, err)
+	}
+
+	err = c.FolderDelete(ctx, src)
+	if err != nil {
+		return newWrapErr("delete "+src, ErrFolderMove, err)
+	}
+
+	return nil
+}
+
+// FolderMoveAllVersions moves all versions of each secret at a source folder to a destination folder (KV v2 only). Source is deleted after copy.
+func (c *Client) FolderMoveAllVersions(ctx context.Context, src, dst string) error {
+	err := c.FolderCopyAllVersions(ctx, src, dst)
 	if err != nil {
 		return newWrapErr("", ErrFolderMove, err)
 	}

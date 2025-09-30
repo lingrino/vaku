@@ -56,7 +56,7 @@ func TestFolderMove(t *testing.T) {
 					assert.NoError(t, err)
 					TrimPrefixMap(origSrc, pathSrc)
 
-					err = sharedVaku.FolderMove(context.Background(), pathSrc, pathDst, false)
+					err = sharedVaku.FolderMove(context.Background(), pathSrc, pathDst)
 					compareErrors(t, err, tt.wantErr)
 
 					readSrc, errSrc := sharedVakuClean.FolderRead(context.Background(), pathSrc)
@@ -137,7 +137,7 @@ func TestFolderMoveAllVersions(t *testing.T) {
 					}
 
 					// Move with allVersions=true
-					err := sharedVaku.FolderMove(context.Background(), srcFolder, dstFolder, true)
+					err := sharedVaku.FolderMoveAllVersions(context.Background(), srcFolder, dstFolder)
 					compareErrors(t, err, tt.wantErr)
 
 					if err == nil {

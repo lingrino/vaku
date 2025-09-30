@@ -46,7 +46,7 @@ func TestPathCopy(t *testing.T) {
 				t.Run(testName(prefixPair[0], prefixPair[1]), func(t *testing.T) {
 					t.Parallel()
 
-					err := sharedVaku.PathCopy(PathJoin(prefixPair[0], tt.giveSrc), PathJoin(prefixPair[1], tt.giveDst), false)
+					err := sharedVaku.PathCopy(PathJoin(prefixPair[0], tt.giveSrc), PathJoin(prefixPair[1], tt.giveDst))
 					compareErrors(t, err, tt.wantErr)
 
 					readSrc, errSrc := sharedVakuClean.PathRead(PathJoin(prefixPair[0], tt.giveSrc))
@@ -108,7 +108,7 @@ func TestPathCopyAllVersions(t *testing.T) {
 					}
 
 					// Copy with allVersions=true
-					err := sharedVaku.PathCopy(srcPath, dstPath, true)
+					err := sharedVaku.PathCopyAllVersions(srcPath, dstPath)
 					compareErrors(t, err, tt.wantErr)
 
 					if err == nil {

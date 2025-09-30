@@ -30,5 +30,8 @@ func (c *cli) newFolderMoveCmd() *cobra.Command {
 }
 
 func (c *cli) runfolderMove(cmd *cobra.Command, args []string) error {
-	return c.vc.FolderMove(context.Background(), args[0], args[1], c.flagAllVersions)
+	if c.flagAllVersions {
+		return c.vc.FolderMoveAllVersions(context.Background(), args[0], args[1])
+	}
+	return c.vc.FolderMove(context.Background(), args[0], args[1])
 }

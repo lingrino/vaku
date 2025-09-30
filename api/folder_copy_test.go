@@ -50,7 +50,7 @@ func TestFolderCopy(t *testing.T) {
 					pathSrc := PathJoin(prefixPair[0], tt.giveSrc)
 					pathDst := PathJoin(prefixPair[1], tt.giveDst)
 
-					err := sharedVaku.FolderCopy(context.Background(), pathSrc, pathDst, false)
+					err := sharedVaku.FolderCopy(context.Background(), pathSrc, pathDst)
 					compareErrors(t, err, tt.wantErr)
 
 					readSrc, errSrc := sharedVakuClean.FolderRead(context.Background(), pathSrc)
@@ -126,7 +126,7 @@ func TestFolderCopyAllVersions(t *testing.T) {
 					}
 
 					// Copy with allVersions=true
-					err := sharedVaku.FolderCopy(context.Background(), srcFolder, dstFolder, true)
+					err := sharedVaku.FolderCopyAllVersions(context.Background(), srcFolder, dstFolder)
 					compareErrors(t, err, tt.wantErr)
 
 					if err == nil {

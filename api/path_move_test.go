@@ -52,7 +52,7 @@ func TestPathMove(t *testing.T) {
 					origSrc, err := sharedVakuClean.PathRead(PathJoin(prefixPair[0], tt.giveSrc))
 					assert.NoError(t, err)
 
-					err = sharedVaku.PathMove(PathJoin(prefixPair[0], tt.giveSrc), PathJoin(prefixPair[1], tt.giveDst), false)
+					err = sharedVaku.PathMove(PathJoin(prefixPair[0], tt.giveSrc), PathJoin(prefixPair[1], tt.giveDst))
 					compareErrors(t, err, tt.wantErr)
 
 					readSrc, errSrc := sharedVakuClean.PathRead(PathJoin(prefixPair[0], tt.giveSrc))
@@ -119,7 +119,7 @@ func TestPathMoveAllVersions(t *testing.T) {
 					}
 
 					// Move with allVersions=true
-					err := sharedVaku.PathMove(srcPath, dstPath, true)
+					err := sharedVaku.PathMoveAllVersions(srcPath, dstPath)
 					compareErrors(t, err, tt.wantErr)
 
 					if err == nil {
