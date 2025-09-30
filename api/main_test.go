@@ -25,6 +25,7 @@ const mountless = "mountless"
 
 // cleanupFns is a list of cleanup functions to run at the end of our test run.
 var cleanupFns []func()
+var cleanupFnsMtx sync.Mutex
 
 // sharedVaku for most vaku tests. Tests isolate by path on each mount.
 var sharedVaku *Client
@@ -70,7 +71,12 @@ func TestMain(m *testing.M) {
 
 	code := m.Run()
 
-	for _, cleanup := range cleanupFns {
+	cleanupFnsMtx.Lock()
+	fns := make([]func(), len(cleanupFns))
+	copy(fns, cleanupFns)
+	cleanupFnsMtx.Unlock()
+
+	for _, cleanup := range fns {
 		cleanup()
 	}
 
@@ -92,7 +98,9 @@ func testServer(t *testing.T) *api.Client {
 			NumCores:    1,
 		},
 	})
+	cleanupFnsMtx.Lock()
 	cleanupFns = append(cleanupFns, cluster.Cleanup)
+	cleanupFnsMtx.Unlock()
 	assert.NoError(t, err)
 
 	client := cluster.Nodes()[0].APIClient()

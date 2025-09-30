@@ -61,8 +61,8 @@ type ClientInterface interface {
 	PathDestroy(string, []int) error
 	PathUpdate(string, map[string]any) error
 	PathSearch(string, string) (bool, error)
-	PathCopy(string, string) error
-	PathMove(string, string) error
+	PathCopy(string, string, bool) error
+	PathMove(string, string, bool) error
 
 	FolderList(context.Context, string) ([]string, error)
 	FolderListChan(context.Context, string) (<-chan string, <-chan error)
@@ -73,8 +73,8 @@ type ClientInterface interface {
 	FolderDeleteMeta(context.Context, string) error
 	FolderDestroy(context.Context, string, []int) error
 	FolderSearch(context.Context, string, string) ([]string, error)
-	FolderCopy(context.Context, string, string) error
-	FolderMove(context.Context, string, string) error
+	FolderCopy(context.Context, string, string, bool) error
+	FolderMove(context.Context, string, string, bool) error
 }
 
 // Verify Client compliance with the interface.

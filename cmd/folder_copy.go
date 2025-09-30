@@ -30,5 +30,5 @@ func (c *cli) newFolderCopyCmd() *cobra.Command {
 }
 
 func (c *cli) runfolderCopy(cmd *cobra.Command, args []string) error {
-	return c.vc.FolderCopy(context.Background(), args[0], args[1])
+	return c.vc.FolderCopy(context.Background(), args[0], args[1], c.flagAllVersions)
 }

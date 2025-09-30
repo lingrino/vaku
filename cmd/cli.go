@@ -35,6 +35,7 @@ type cli struct {
 	// flags
 	flagAbsPath     bool
 	flagNoAccessErr bool
+	flagAllVersions bool
 	flagFormat      string
 	flagIndent      string
 	flagSort        bool

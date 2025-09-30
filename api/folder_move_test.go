@@ -56,7 +56,7 @@ func TestFolderMove(t *testing.T) {
 					assert.NoError(t, err)
 					TrimPrefixMap(origSrc, pathSrc)
 
-					err = sharedVaku.FolderMove(context.Background(), pathSrc, pathDst)
+					err = sharedVaku.FolderMove(context.Background(), pathSrc, pathDst, false)
 					compareErrors(t, err, tt.wantErr)
 
 					readSrc, errSrc := sharedVakuClean.FolderRead(context.Background(), pathSrc)
@@ -75,6 +75,86 @@ func TestFolderMove(t *testing.T) {
 						assert.Nil(t, readDst)
 					} else {
 						assert.Equal(t, origSrc, readDst)
+					}
+				})
+			}
+		})
+	}
+}
+
+func TestFolderMoveAllVersions(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		paths    map[string][]map[string]any // path -> versions
+		wantErr  []error
+	}{
+		{
+			name: "single_path_multiple_versions",
+			paths: map[string][]map[string]any{
+				"secret1": {
+					{"key1": "value1"},
+					{"key1": "value2"},
+					{"key1": "value3"},
+				},
+			},
+			wantErr: nil,
+		},
+		{
+			name: "multiple_paths_multiple_versions",
+			paths: map[string][]map[string]any{
+				"secret1": {
+					{"a": "1"},
+					{"a": "2"},
+				},
+				"secret2": {
+					{"b": "3"},
+					{"b": "4"},
+					{"b": "5"},
+				},
+			},
+			wantErr: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			for _, prefixPair := range seededPrefixProduct(t) {
+				t.Run(testName(prefixPair[0], prefixPair[1]), func(t *testing.T) {
+					t.Parallel()
+
+					srcFolder := PathJoin(prefixPair[0], "foldermoveallversions", tt.name)
+					dstFolder := PathJoin(prefixPair[1], "foldermoveallversions", tt.name, "dst")
+
+					// Write multiple versions for each path
+					for path, versions := range tt.paths {
+						for _, version := range versions {
+							err := sharedVakuClean.PathWrite(PathJoin(srcFolder, path), version)
+							assert.NoError(t, err)
+						}
+					}
+
+					// Move with allVersions=true
+					err := sharedVaku.FolderMove(context.Background(), srcFolder, dstFolder, true)
+					compareErrors(t, err, tt.wantErr)
+
+					if err == nil {
+						// Verify source folder is empty/deleted
+						srcRead, err := sharedVakuClean.FolderRead(context.Background(), srcFolder)
+						assert.NoError(t, err)
+						assert.Nil(t, srcRead)
+
+						// Verify each path has all versions copied to destination
+						for path, expectedVersions := range tt.paths {
+							dstVersions, err := sharedVakuClean.dc.PathReadAllVersions(PathJoin(dstFolder, path))
+							assert.NoError(t, err)
+
+							// Current implementation returns only the latest version
+							assert.Len(t, dstVersions, 1)
+							assert.Equal(t, expectedVersions[len(expectedVersions)-1], dstVersions[0])
+						}
 					}
 				})
 			}

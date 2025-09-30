@@ -64,10 +64,10 @@ func (c *testVakuClient) PathUpdate(p string, d map[string]any) error {
 func (c *testVakuClient) PathSearch(p, s string) (bool, error) {
 	return true, nil
 }
-func (c *testVakuClient) PathCopy(src, dst string) error {
+func (c *testVakuClient) PathCopy(src, dst string, allVersions bool) error {
 	return nil
 }
-func (c *testVakuClient) PathMove(src, dst string) error {
+func (c *testVakuClient) PathMove(src, dst string, allVersions bool) error {
 	return nil
 }
 func (c *testVakuClient) FolderList(ctx context.Context, p string) ([]string, error) {
@@ -105,9 +105,9 @@ func (c *testVakuClient) FolderDestroy(context.Context, string, []int) error {
 func (c *testVakuClient) FolderSearch(ctx context.Context, path, search string) ([]string, error) {
 	return []string{"foo/bar", "bim/bom"}, nil
 }
-func (c *testVakuClient) FolderCopy(ctx context.Context, src, dst string) error {
+func (c *testVakuClient) FolderCopy(ctx context.Context, src, dst string, allVersions bool) error {
 	return nil
 }
-func (c *testVakuClient) FolderMove(ctx context.Context, src, dst string) error {
+func (c *testVakuClient) FolderMove(ctx context.Context, src, dst string, allVersions bool) error {
 	return nil
 }
