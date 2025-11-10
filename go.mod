@@ -8,7 +8,7 @@ require (
 	github.com/hashicorp/vault/sdk v0.20.0
 	github.com/spf13/cobra v1.10.1
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/sync v0.17.0
+	golang.org/x/sync v0.18.0
 )
 
 require (
