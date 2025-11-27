@@ -77,11 +77,22 @@ const (
 	flagDstTokenName    = "destination-token"
 	flagDstTokenUse     = "token for the destination vault server (alias for --token)"
 	flagDstTokenDefault = ""
+
+	flagMountPathName    = "mount-path"
+	flagMountPathShort   = "m"
+	flagMountPathUse     = "mount path to use (bypasses sys/mounts lookup)"
+	flagMountPathDefault = ""
+
+	flagMountVersionName    = "mount-version"
+	flagMountVersionUse     = "mount version: 1|2 (requires --mount-path)"
+	flagMountVersionDefault = "2"
 )
 
 var (
-	errFlagInvalidFormat  = errors.New("format must be one of: text|json")
-	errFlagInvalidWorkers = errors.New("workers must be >= 1")
+	errFlagInvalidFormat       = errors.New("format must be one of: text|json")
+	errFlagInvalidWorkers      = errors.New("workers must be >= 1")
+	errFlagInvalidMountVersion = errors.New("mount-version must be one of: 1|2")
+	errFlagMountVersionNoPath  = errors.New("mount-version requires --mount-path")
 )
 
 // addVakuFlags adds all flags for the vaku command.
@@ -108,6 +119,9 @@ func (c *cli) addPathFolderFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().StringVarP(&c.flagSrcToken, flagTokenName, flagTokenShort, flagTokenDefault, flagTokenUse)
 	cmd.PersistentFlags().StringVar(&c.flagSrcToken, flagSrcTokenName, flagSrcTokenDefault, flagSrcTokenUse)
 	cmd.PersistentFlags().StringVar(&c.flagDstToken, flagDstTokenName, flagDstTokenDefault, flagDstTokenUse)
+
+	cmd.PersistentFlags().StringVarP(&c.flagMountPath, flagMountPathName, flagMountPathShort, flagMountPathDefault, flagMountPathUse)
+	cmd.PersistentFlags().StringVar(&c.flagMountVersion, flagMountVersionName, flagMountVersionDefault, flagMountVersionUse)
 }
 
 // validateFlags checks if valid flag values were passed. Use as cmd.PersistentPreRunE.
@@ -115,6 +129,7 @@ func (c *cli) validateVakuFlags(cmd *cobra.Command, args []string) error {
 	validationFuncs := []func() error{
 		c.validFormat,
 		c.validWorkers,
+		c.validMountFlags,
 	}
 
 	for _, f := range validationFuncs {
@@ -143,5 +158,26 @@ func (c *cli) validWorkers() error {
 	if c.flagWorkers < 1 {
 		return errFlagInvalidWorkers
 	}
+	return nil
+}
+
+// validMountFlags checks if the mount flags are valid.
+func (c *cli) validMountFlags() error {
+	// If mount-version is explicitly set to non-default and non-empty but mount-path is empty, error
+	if c.flagMountVersion != flagMountVersionDefault && c.flagMountVersion != "" && c.flagMountPath == "" {
+		return errFlagMountVersionNoPath
+	}
+
+	// If mount-path is set, validate mount-version
+	if c.flagMountPath != "" {
+		validVersions := []string{"1", "2"}
+		for _, v := range validVersions {
+			if c.flagMountVersion == v {
+				return nil
+			}
+		}
+		return errFlagInvalidMountVersion
+	}
+
 	return nil
 }

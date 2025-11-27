@@ -41,12 +41,14 @@ type cli struct {
 	flagWorkers     int
 
 	// vault flags
-	flagSrcAddr  string
-	flagSrcToken string
-	flagSrcNspc  string
-	flagDstAddr  string
-	flagDstToken string
-	flagDstNspc  string
+	flagSrcAddr      string
+	flagSrcToken     string
+	flagSrcNspc      string
+	flagDstAddr      string
+	flagDstToken     string
+	flagDstNspc      string
+	flagMountPath    string
+	flagMountVersion string
 
 	// data
 	version string
@@ -107,6 +109,10 @@ func (c *cli) newVakuClient() (*vaku.Client, error) {
 	options = append(options, vaku.WithAbsolutePath(c.flagAbsPath))
 	options = append(options, vaku.WithIgnoreAccessErrors(c.flagNoAccessErr))
 	options = append(options, vaku.WithWorkers(c.flagWorkers))
+
+	if c.flagMountPath != "" {
+		options = append(options, vaku.WithMountProvider(vaku.NewStaticMountProvider(c.flagMountPath, c.flagMountVersion)))
+	}
 
 	vakuClient, err := vaku.NewClient(options...)
 	if err != nil {
