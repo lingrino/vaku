@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.11.0 - Upcoming
+
+- API: Add `PathReadMeta` and `PathReadVersion`
+- API: Add `PathCopyAllVersions` and `PathMoveAllVersions`
+- CLI: Add `--all-versions` flag to path copy/move to include past versions
+
 ## 2.10.0 - 2025-11-27
 
 ### Added
