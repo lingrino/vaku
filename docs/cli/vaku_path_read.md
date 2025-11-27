@@ -33,6 +33,8 @@ vaku path read secret/foo
       --format string                  output format: text|json (default "text")
       --ignore-read-errors             ignore path read errors and continue
   -i, --indent-char string             string used for indents (default "    ")
+  -m, --mount-path string              mount path to use (bypasses sys/mounts lookup)
+      --mount-version string           mount version: 1|2 (requires --mount-path) (default "2")
   -n, --namespace string               name of the vault namespace to use in the source client
   -s, --sort                           sort output text (default true)
       --source-address string          address of the source Vault server (alias for --address)

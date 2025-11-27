@@ -120,8 +120,10 @@ func (c *cli) addPathFolderFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().StringVar(&c.flagSrcToken, flagSrcTokenName, flagSrcTokenDefault, flagSrcTokenUse)
 	cmd.PersistentFlags().StringVar(&c.flagDstToken, flagDstTokenName, flagDstTokenDefault, flagDstTokenUse)
 
-	cmd.PersistentFlags().StringVarP(&c.flagMountPath, flagMountPathName, flagMountPathShort, flagMountPathDefault, flagMountPathUse)
-	cmd.PersistentFlags().StringVar(&c.flagMountVersion, flagMountVersionName, flagMountVersionDefault, flagMountVersionUse)
+	cmd.PersistentFlags().StringVarP(&c.flagMountPath,
+		flagMountPathName, flagMountPathShort, flagMountPathDefault, flagMountPathUse)
+	cmd.PersistentFlags().StringVar(&c.flagMountVersion,
+		flagMountVersionName, flagMountVersionDefault, flagMountVersionUse)
 }
 
 // validateFlags checks if valid flag values were passed. Use as cmd.PersistentPreRunE.
