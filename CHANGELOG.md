@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.10.0 - 2025-11-27
+
+### Added
+
+- API: Add `StaticMountProvider` to bypass `sys/mounts` lookup when mount path is known
+- CLI: Add `--mount-path` flag to specify mount path directly (bypasses `sys/mounts` permission requirement)
+- CLI: Add `--mount-version` flag to specify KV version (1 or 2, defaults to 2)
+
 ## 2.9.0 - 2025-09-26
 
 ### Changed

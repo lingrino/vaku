@@ -50,6 +50,45 @@ func TestValidateVakuFlags(t *testing.T) {
 			},
 			want: errFlagInvalidWorkers,
 		},
+		{
+			name: "valid mount flags",
+			give: &cli{
+				flagFormat:       "text",
+				flagWorkers:      10,
+				flagMountPath:    "secret/",
+				flagMountVersion: "2",
+			},
+			want: nil,
+		},
+		{
+			name: "valid mount flags v1",
+			give: &cli{
+				flagFormat:       "text",
+				flagWorkers:      10,
+				flagMountPath:    "kv1/",
+				flagMountVersion: "1",
+			},
+			want: nil,
+		},
+		{
+			name: "invalid mount version",
+			give: &cli{
+				flagFormat:       "text",
+				flagWorkers:      10,
+				flagMountPath:    "secret/",
+				flagMountVersion: "3",
+			},
+			want: errFlagInvalidMountVersion,
+		},
+		{
+			name: "mount version without path",
+			give: &cli{
+				flagFormat:       "text",
+				flagWorkers:      10,
+				flagMountVersion: "1",
+			},
+			want: errFlagMountVersionNoPath,
+		},
 	}
 
 	for _, tt := range tests {

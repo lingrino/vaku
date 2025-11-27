@@ -41,12 +41,14 @@ type cli struct {
 	flagWorkers     int
 
 	// vault flags
-	flagSrcAddr  string
-	flagSrcToken string
-	flagSrcNspc  string
-	flagDstAddr  string
-	flagDstToken string
-	flagDstNspc  string
+	flagSrcAddr      string
+	flagSrcToken     string
+	flagSrcNspc      string
+	flagDstAddr      string
+	flagDstToken     string
+	flagDstNspc      string
+	flagMountPath    string
+	flagMountVersion string
 
 	// data
 	version string
@@ -71,6 +73,11 @@ func (c *cli) setVersion(version string) {
 // initVakuClient initializes a vaku client in the cli struct
 // https://github.com/hashicorp/vault/blob/8571221f03c92ac3acac27c240fa7c9b3cb22db5/command/base.go#L67-L159
 func (c *cli) initVakuClient(cmd *cobra.Command, args []string) error {
+	// validate flags first (child PersistentPreRunE overrides parent's validateVakuFlags)
+	if err := c.validateVakuFlags(cmd, args); err != nil {
+		return err
+	}
+
 	// don't proceed if vc is already set (likely in tests)
 	if c.vc != nil {
 		return nil
@@ -107,6 +114,10 @@ func (c *cli) newVakuClient() (*vaku.Client, error) {
 	options = append(options, vaku.WithAbsolutePath(c.flagAbsPath))
 	options = append(options, vaku.WithIgnoreAccessErrors(c.flagNoAccessErr))
 	options = append(options, vaku.WithWorkers(c.flagWorkers))
+
+	if c.flagMountPath != "" {
+		options = append(options, vaku.WithMountProvider(vaku.NewStaticMountProvider(c.flagMountPath, c.flagMountVersion)))
+	}
 
 	vakuClient, err := vaku.NewClient(options...)
 	if err != nil {

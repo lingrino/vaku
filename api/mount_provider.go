@@ -36,3 +36,26 @@ func (p defaultMountProvider) ListMounts() ([]Mount, error) {
 	}
 	return result, nil
 }
+
+// StaticMountProvider is a mount provider that returns a single static mount.
+// This is useful when the user doesn't have permission to list mounts but knows
+// the mount path and version.
+type StaticMountProvider struct {
+	mount Mount
+}
+
+// NewStaticMountProvider creates a new static mount provider with the given mount.
+func NewStaticMountProvider(path, version string) *StaticMountProvider {
+	return &StaticMountProvider{
+		mount: Mount{
+			Path:    path,
+			Type:    "kv",
+			Version: version,
+		},
+	}
+}
+
+// ListMounts returns the single static mount.
+func (p *StaticMountProvider) ListMounts() ([]Mount, error) {
+	return []Mount{p.mount}, nil
+}
