@@ -14,68 +14,78 @@ var (
 // Only works on v2 kv engines for both source and destination.
 // Deleted or destroyed versions are preserved by writing empty secrets.
 func (c *Client) PathCopyAllVersions(src, dst string) error {
-	// Validate source is KV v2
-	_, srcVersion, err := c.mountInfo(src)
-	if err != nil {
+	if err := c.validateKV2Mount(src, c); err != nil {
 		return newWrapErr(src, ErrPathCopyAllVersions, err)
 	}
-	if srcVersion != mv2 {
-		return newWrapErr(src, ErrPathCopyAllVersions, ErrMountVersion)
-	}
-
-	// Validate destination is KV v2
-	_, dstVersion, err := c.dc.mountInfo(dst)
-	if err != nil {
+	if err := c.validateKV2Mount(dst, c.dc); err != nil {
 		return newWrapErr(dst, ErrPathCopyAllVersions, err)
 	}
-	if dstVersion != mv2 {
-		return newWrapErr(dst, ErrPathCopyAllVersions, ErrMountVersion)
-	}
 
-	// Read metadata to get all versions
 	meta, err := c.PathReadMeta(src)
 	if err != nil {
 		return newWrapErr(src, ErrPathCopyAllVersions, err)
 	}
-
-	// If no metadata or no versions, nothing to copy
 	if meta == nil || len(meta.Versions) == 0 {
 		return nil
 	}
 
-	// Get sorted list of version numbers
-	versions := make([]int, 0, len(meta.Versions))
-	for v := range meta.Versions {
-		versions = append(versions, v)
-	}
-	sort.Ints(versions)
-
-	// Copy each version in order
+	versions := sortedVersions(meta.Versions)
 	for _, v := range versions {
-		vMeta := meta.Versions[v]
-
-		var data map[string]any
-		if vMeta.Deleted || vMeta.Destroyed {
-			// Write empty secret to preserve version position
-			data = map[string]any{}
-		} else {
-			// Read the version data
-			data, err = c.PathReadVersion(src, v)
-			if err != nil {
-				return newWrapErr(src, ErrPathCopyAllVersions, err)
-			}
-			// If data is nil (shouldn't happen for non-deleted), use empty map
-			if data == nil {
-				data = map[string]any{}
-			}
-		}
-
-		// Write to destination
-		err = c.dc.PathWrite(dst, data)
-		if err != nil {
-			return newWrapErr(dst, ErrPathCopyAllVersions, err)
+		if err := c.copyVersion(src, dst, v, meta.Versions[v]); err != nil {
+			return err
 		}
 	}
 
 	return nil
+}
+
+// validateKV2Mount checks that a path is on a KV v2 mount.
+func (c *Client) validateKV2Mount(path string, client *Client) error {
+	_, version, err := client.mountInfo(path)
+	if err != nil {
+		return err
+	}
+	if version != mv2 {
+		return ErrMountVersion
+	}
+	return nil
+}
+
+// sortedVersions returns version numbers sorted in ascending order.
+func sortedVersions(versions map[int]SecretVersionMeta) []int {
+	result := make([]int, 0, len(versions))
+	for v := range versions {
+		result = append(result, v)
+	}
+	sort.Ints(result)
+	return result
+}
+
+// copyVersion copies a single version from source to destination.
+func (c *Client) copyVersion(src, dst string, version int, vMeta SecretVersionMeta) error {
+	data, err := c.getVersionData(src, version, vMeta)
+	if err != nil {
+		return newWrapErr(src, ErrPathCopyAllVersions, err)
+	}
+
+	if err := c.dc.PathWrite(dst, data); err != nil {
+		return newWrapErr(dst, ErrPathCopyAllVersions, err)
+	}
+	return nil
+}
+
+// getVersionData retrieves data for a version, returning empty map for deleted/destroyed versions.
+func (c *Client) getVersionData(src string, version int, vMeta SecretVersionMeta) (map[string]any, error) {
+	if vMeta.Deleted || vMeta.Destroyed {
+		return map[string]any{}, nil
+	}
+
+	data, err := c.PathReadVersion(src, version)
+	if err != nil {
+		return nil, err
+	}
+	if data == nil {
+		return map[string]any{}, nil
+	}
+	return data, nil
 }

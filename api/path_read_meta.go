@@ -95,7 +95,10 @@ func extractInt(v any) int {
 	case float64:
 		return int(n)
 	case json.Number:
-		i, _ := n.Int64()
+		i, err := n.Int64()
+		if err != nil {
+			return 0
+		}
 		return int(i)
 	case int:
 		return n

@@ -34,7 +34,10 @@ func (c *cli) newPathCopyCmd() *cobra.Command {
 }
 
 func (c *cli) runPathCopy(cmd *cobra.Command, args []string) error {
-	allVersions, _ := cmd.Flags().GetBool(flagAllVersionsName)
+	allVersions, err := cmd.Flags().GetBool(flagAllVersionsName)
+	if err != nil {
+		return err
+	}
 	if allVersions {
 		return c.vc.PathCopyAllVersions(args[0], args[1])
 	}
