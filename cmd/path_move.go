@@ -24,9 +24,18 @@ func (c *cli) newPathMoveCmd() *cobra.Command {
 		RunE: c.runPathMove,
 	}
 
+	cmd.Flags().Bool(flagAllVersionsName, flagAllVersionsDefault, "move all versions of the secret (KV v2 only)")
+
 	return cmd
 }
 
 func (c *cli) runPathMove(cmd *cobra.Command, args []string) error {
+	allVersions, err := cmd.Flags().GetBool(flagAllVersionsName)
+	if err != nil {
+		return err
+	}
+	if allVersions {
+		return c.vc.PathMoveAllVersions(args[0], args[1])
+	}
 	return c.vc.PathMove(args[0], args[1])
 }

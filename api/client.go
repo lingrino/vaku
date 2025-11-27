@@ -25,6 +25,7 @@ type logical interface {
 	Delete(path string) (*vault.Secret, error)
 	List(path string) (*vault.Secret, error)
 	Read(path string) (*vault.Secret, error)
+	ReadWithData(path string, data map[string][]string) (*vault.Secret, error)
 	Write(path string, data map[string]any) (*vault.Secret, error)
 }
 
@@ -55,6 +56,8 @@ type Client struct {
 type ClientInterface interface {
 	PathList(string) ([]string, error)
 	PathRead(string) (map[string]any, error)
+	PathReadMeta(string) (*SecretMeta, error)
+	PathReadVersion(string, int) (map[string]any, error)
 	PathWrite(string, map[string]any) error
 	PathDelete(string) error
 	PathDeleteMeta(string) error
@@ -62,7 +65,9 @@ type ClientInterface interface {
 	PathUpdate(string, map[string]any) error
 	PathSearch(string, string) (bool, error)
 	PathCopy(string, string) error
+	PathCopyAllVersions(string, string) error
 	PathMove(string, string) error
+	PathMoveAllVersions(string, string) error
 
 	FolderList(context.Context, string) ([]string, error)
 	FolderListChan(context.Context, string) (<-chan string, <-chan error)

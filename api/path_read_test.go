@@ -1,6 +1,7 @@
 package vaku
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -159,5 +160,69 @@ func TestPathReadIgnoreErrors(t *testing.T) {
 				})
 			}
 		})
+	}
+}
+
+func TestPathReadVersion(t *testing.T) {
+	t.Parallel()
+
+	for _, prefix := range seededPrefixes(t, "readversion") {
+		if strings.HasPrefix(prefix, "kv1") {
+			t.Run(testName(prefix, "kv1 error"), func(t *testing.T) {
+				t.Parallel()
+
+				_, err := sharedVaku.PathReadVersion(PathJoin(prefix, "0/1"), 1)
+				compareErrors(t, err, []error{ErrPathReadVersion, ErrMountVersion})
+			})
+		}
+
+		if strings.HasPrefix(prefix, "kv2") {
+			t.Run(testName(prefix, "basic read"), func(t *testing.T) {
+				t.Parallel()
+
+				srcPath := PathJoin(prefix, "readversion/basic")
+
+				// Write multiple versions
+				v1 := map[string]any{"version": "1"}
+				v2 := map[string]any{"version": "2"}
+
+				err := sharedVakuClean.PathWrite(srcPath, v1)
+				assert.NoError(t, err)
+				err = sharedVakuClean.PathWrite(srcPath, v2)
+				assert.NoError(t, err)
+
+				// Read version 1
+				read1, err := sharedVaku.PathReadVersion(srcPath, 1)
+				assert.NoError(t, err)
+				assert.Equal(t, v1, read1)
+
+				// Read version 2
+				read2, err := sharedVaku.PathReadVersion(srcPath, 2)
+				assert.NoError(t, err)
+				assert.Equal(t, v2, read2)
+			})
+
+			t.Run(testName(prefix, "nonexistent version"), func(t *testing.T) {
+				t.Parallel()
+
+				srcPath := PathJoin(prefix, "readversion/nonexistent")
+
+				// Write one version
+				err := sharedVakuClean.PathWrite(srcPath, map[string]any{"foo": "bar"})
+				assert.NoError(t, err)
+
+				// Try to read version that doesn't exist
+				read, err := sharedVaku.PathReadVersion(srcPath, 999)
+				assert.NoError(t, err)
+				assert.Nil(t, read)
+			})
+
+			t.Run(testName(prefix, "read error"), func(t *testing.T) {
+				t.Parallel()
+
+				_, err := sharedVaku.PathReadVersion(PathJoin(prefix, "error/read/inject"), 1)
+				compareErrors(t, err, []error{ErrPathReadVersion, ErrVaultRead})
+			})
+		}
 	}
 }

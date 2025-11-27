@@ -10,6 +10,10 @@ const (
 	pathCopyShort   = "Copy a secret from a source path to a destination path"
 	pathCopyLong    = "Copy a secret from a source path to a destination path"
 	pathCopyExample = "vaku path copy secret/foo secret/bar"
+
+	flagAllVersionsName    = "all-versions"
+	flagAllVersionsUse     = "copy all versions of the secret (KV v2 only)"
+	flagAllVersionsDefault = false
 )
 
 func (c *cli) newPathCopyCmd() *cobra.Command {
@@ -24,9 +28,18 @@ func (c *cli) newPathCopyCmd() *cobra.Command {
 		RunE: c.runPathCopy,
 	}
 
+	cmd.Flags().Bool(flagAllVersionsName, flagAllVersionsDefault, flagAllVersionsUse)
+
 	return cmd
 }
 
 func (c *cli) runPathCopy(cmd *cobra.Command, args []string) error {
+	allVersions, err := cmd.Flags().GetBool(flagAllVersionsName)
+	if err != nil {
+		return err
+	}
+	if allVersions {
+		return c.vc.PathCopyAllVersions(args[0], args[1])
+	}
 	return c.vc.PathCopy(args[0], args[1])
 }

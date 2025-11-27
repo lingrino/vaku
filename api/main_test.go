@@ -373,6 +373,16 @@ func (e *logicalInjector) Read(p string) (*api.Secret, error) {
 	return e.realL.Read(p)
 }
 
+func (e *logicalInjector) ReadWithData(p string, data map[string][]string) (*api.Secret, error) {
+	e.t.Helper()
+
+	p, inj := e.run(p, "read")
+	if inj != nil {
+		return inj.secret, inj.err
+	}
+	return e.realL.ReadWithData(p, data)
+}
+
 func (e *logicalInjector) Write(p string, data map[string]any) (*api.Secret, error) {
 	e.t.Helper()
 
