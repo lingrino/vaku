@@ -2,11 +2,14 @@ package vaku
 
 import (
 	"errors"
+	"strconv"
 )
 
 var (
 	// ErrPathRead when PathRead fails.
 	ErrPathRead = errors.New("path read")
+	// ErrPathReadVersion when PathReadVersion fails.
+	ErrPathReadVersion = errors.New("path read version")
 	// ErrVaultRead when the underlying Vault API read fails.
 	ErrVaultRead = errors.New("vault read")
 )
@@ -77,4 +80,34 @@ func isDeleted(data map[string]any) bool {
 	}
 
 	return false
+}
+
+// PathReadVersion reads data at a path for a specific version. Only works on v2 kv engines.
+func (c *Client) PathReadVersion(p string, version int) (map[string]any, error) {
+	vaultPath, mv, err := c.rewritePath(p, vaultRead)
+	if err != nil {
+		return nil, newWrapErr(p, ErrPathReadVersion, err)
+	}
+
+	// Only v2 mounts support versioning
+	if mv != mv2 {
+		return nil, newWrapErr(p, ErrPathReadVersion, ErrMountVersion)
+	}
+
+	// Pass version as query parameter using ReadWithData
+	queryParams := map[string][]string{
+		"version": {strconv.Itoa(version)},
+	}
+
+	secret, err := c.vl.ReadWithData(vaultPath, queryParams)
+	if err != nil {
+		return nil, newWrapErr(p, ErrPathReadVersion, newWrapErr(err.Error(), ErrVaultRead, nil))
+	}
+
+	if secret == nil || secret.Data == nil {
+		return nil, nil
+	}
+
+	// Always extract v2 data since this function only works on v2
+	return extractV2Read(secret.Data), nil
 }

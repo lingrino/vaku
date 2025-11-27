@@ -46,6 +46,12 @@ func (c *testVakuClient) PathList(p string) ([]string, error) {
 func (c *testVakuClient) PathRead(p string) (map[string]any, error) {
 	return map[string]any{"biz": "baz", "foo": "bar"}, nil
 }
+func (c *testVakuClient) PathReadMeta(p string) (*vaku.SecretMeta, error) {
+	return &vaku.SecretMeta{CurrentVersion: 1, Versions: map[int]vaku.SecretVersionMeta{1: {}}}, nil
+}
+func (c *testVakuClient) PathReadVersion(p string, v int) (map[string]any, error) {
+	return map[string]any{"biz": "baz", "foo": "bar"}, nil
+}
 func (c *testVakuClient) PathWrite(p string, d map[string]any) error {
 	return nil
 }
@@ -65,6 +71,9 @@ func (c *testVakuClient) PathSearch(p, s string) (bool, error) {
 	return true, nil
 }
 func (c *testVakuClient) PathCopy(src, dst string) error {
+	return nil
+}
+func (c *testVakuClient) PathCopyAllVersions(src, dst string) error {
 	return nil
 }
 func (c *testVakuClient) PathMove(src, dst string) error {
