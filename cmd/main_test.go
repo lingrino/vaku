@@ -79,6 +79,9 @@ func (c *testVakuClient) PathCopyAllVersions(src, dst string) error {
 func (c *testVakuClient) PathMove(src, dst string) error {
 	return nil
 }
+func (c *testVakuClient) PathMoveAllVersions(src, dst string) error {
+	return nil
+}
 func (c *testVakuClient) FolderList(ctx context.Context, p string) ([]string, error) {
 	return []string{"foo/bar", "foo/baz", "bim/bom"}, nil
 }
