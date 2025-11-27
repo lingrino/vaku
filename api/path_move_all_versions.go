@@ -19,7 +19,7 @@ func (c *Client) PathMoveAllVersions(src, dst string) error {
 
 	err = c.PathDeleteMeta(src)
 	if err != nil {
-		return newWrapErr(dst, ErrPathMoveAllVersions, err)
+		return newWrapErr(src, ErrPathMoveAllVersions, err)
 	}
 
 	return nil
