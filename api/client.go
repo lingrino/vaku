@@ -79,7 +79,9 @@ type ClientInterface interface {
 	FolderDestroy(context.Context, string, []int) error
 	FolderSearch(context.Context, string, string) ([]string, error)
 	FolderCopy(context.Context, string, string) error
+	FolderCopyAllVersions(context.Context, string, string) error
 	FolderMove(context.Context, string, string) error
+	FolderMoveAllVersions(context.Context, string, string) error
 }
 
 // Verify Client compliance with the interface.

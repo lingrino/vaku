@@ -120,6 +120,12 @@ func (c *testVakuClient) FolderSearch(ctx context.Context, path, search string) 
 func (c *testVakuClient) FolderCopy(ctx context.Context, src, dst string) error {
 	return nil
 }
+func (c *testVakuClient) FolderCopyAllVersions(ctx context.Context, src, dst string) error {
+	return nil
+}
 func (c *testVakuClient) FolderMove(ctx context.Context, src, dst string) error {
+	return nil
+}
+func (c *testVakuClient) FolderMoveAllVersions(ctx context.Context, src, dst string) error {
 	return nil
 }

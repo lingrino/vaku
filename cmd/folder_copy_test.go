@@ -21,6 +21,12 @@ func TestFolderCopy(t *testing.T) {
 			wantOut:  "",
 			wantErr:  "",
 		},
+		{
+			name:     "all versions",
+			giveArgs: []string{"--all-versions", "foo", "bar"},
+			wantOut:  "",
+			wantErr:  "",
+		},
 	}
 
 	for _, tt := range tests {

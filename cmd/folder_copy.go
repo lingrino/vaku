@@ -26,9 +26,22 @@ func (c *cli) newFolderCopyCmd() *cobra.Command {
 		RunE: c.runfolderCopy,
 	}
 
+	cmd.Flags().Bool(flagAllVersionsName, flagAllVersionsDefault, flagAllVersionsUse)
+
 	return cmd
 }
 
 func (c *cli) runfolderCopy(cmd *cobra.Command, args []string) error {
-	return c.vc.FolderCopy(context.Background(), args[0], args[1])
+	allVersions, err := cmd.Flags().GetBool(flagAllVersionsName)
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+	src, dst := args[0], args[1]
+
+	if allVersions {
+		return c.vc.FolderCopyAllVersions(ctx, src, dst)
+	}
+	return c.vc.FolderCopy(ctx, src, dst)
 }

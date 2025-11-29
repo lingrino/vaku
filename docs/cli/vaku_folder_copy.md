@@ -19,7 +19,8 @@ vaku folder copy secret/foo secret/bar
 ### Options
 
 ```
-  -h, --help   help for copy
+      --all-versions   copy all versions of the secret (KV v2 only)
+  -h, --help           help for copy
 ```
 
 ### Options inherited from parent commands

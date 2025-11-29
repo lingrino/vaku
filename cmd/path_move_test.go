@@ -27,6 +27,12 @@ func TestPathMove(t *testing.T) {
 			wantOut:  "",
 			wantErr:  "",
 		},
+		{
+			name:     "destroy",
+			giveArgs: []string{"--destroy", "foo", "bar"},
+			wantOut:  "",
+			wantErr:  "",
+		},
 	}
 
 	for _, tt := range tests {

@@ -20,6 +20,7 @@ vaku path move secret/foo secret/bar
 
 ```
       --all-versions   move all versions of the secret (KV v2 only)
+      --destroy        permanently destroy all versions at source after copy (KV v2 only)
   -h, --help           help for move
 ```
 
