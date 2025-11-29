@@ -1,117 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-
-  <head>
-    <!--
-      HTML Head Tags
-      Docs: https://github.com/joshbuchea/HEAD
-    -->
-
-    <!-- Rendering Info -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!--
-      Security Headers
-      These are set in HTML because the alternative for this static site is a cloudfront lambda
-      Docs: https://infosec.mozilla.org/guidelines/web_security
-
-      Content Security Policy
-      Docs: https://infosec.mozilla.org/guidelines/web_security#content-security-policy
-      Generator: https://report-uri.com/home/generate
-      Evaluator: https://csp-evaluator.withgoogle.com/
-    -->
-    <meta http-equiv="Content-Security-Policy" content="
-        default-src 'none';
-        style-src 'self';
-        img-src 'self';
-        font-src 'self';
-        manifest-src 'self';
-        upgrade-insecure-requests;
-        block-all-mixed-content;
-        require-trusted-types-for 'script';">
-
-    <!--
-      Strict Transport Security
-      Docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
-      Docs: https://infosec.mozilla.org/guidelines/web_security#http-strict-transport-security
-    -->
-    <meta http-equiv="Strict-Transport-Security" content="
-      max-age=63072000;
-      includeSubDomains;
-      preload;">
-
-    <!--
-      X-XSS-Protection
-      Docs: https://infosec.mozilla.org/guidelines/web_security#x-xss-protection
-    -->
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
-
-    <!--
-      X-Content-Type-Options
-      Docs: https://infosec.mozilla.org/guidelines/web_security#x-content-type-options
-    -->
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-
-    <!-- Metadata -->
-    <meta name="referrer" content="no-referrer">
-    <link rel="manifest" href="assets/site/site.webmanifest">
-
-    <!-- Titles -->
-    <title>Vaku</title>
-    <meta name="description" content="Vaku extends the Vault API & CLI">
-
-    <!--
-      Icons
-      Docs: https://developers.google.com/web/fundamentals/design-and-ux/browser-customization/
-      Generated: https://favicon.io/favicon-converter/
-    -->
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/favicon-192x192.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="assets/icons/favicon-192x192.png">
-    <link rel="apple-touch-startup-image" href="assets/icons/favicon-192x192.png">
-
-    <!--
-      Colors
-      Docs: https://developers.google.com/web/fundamentals/design-and-ux/browser-customization/
-    -->
-    <meta name="theme-color" content="#93d3e7">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="assets/css/water/dark.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-  </head>
-
-  <body>
-    <div>
-      <h1>Vaku</h1>
-      <picture>
-        <source type="image/webp" srcset="assets/images/logo-vaku-sm.webp">
-        <source type="image/png" srcset="assets/images/logo-vaku-sm.png">
-        <img src="assets/logo-vaku-sm.png" alt="Vaku Logo" class="img-fluid">
-      </picture>
-      <p><code>brew install --cask lingrino/tap/vaku</code></p>
-      <p>
-        Vaku is a CLI and Go API that extends the official Hashicorp Vault CLI and API with useful
-        high-level functions such as the ability to copy, move, and search Vault paths and folders.
-        The CLI and API are purpose-built to deal with the actual secret content of paths and
-        folders and they therefore do not make use of or reveal Vault features like metadata and
-        wrapping. Use the tools as you see fit, and please file issues for anything you think could
-        be improved. Thanks!
-      </p>
-      <a href="https://github.com/lingrino/vaku" target="_blank" rel="noopener"
-        aria-label="Vaku GitHub Repo">GitHub</a>
-      &nbsp•&nbsp
-      <a href="https://github.com/lingrino/vaku/blob/main/docs/cli/vaku.md" target="_blank"
-        rel="noopener" aria-label="Vaku CLI Docs">CLI Docs</a>
-      &nbsp•&nbsp
-      <a href="https://pkg.go.dev/github.com/lingrino/vaku/v2/api" target="_blank" rel="noopener"
-        aria-label="Vaku API Docs">API Docs</a>
-      &nbsp•&nbsp Built By
-      <a href="https://lingrino.com" target="_blank" rel="noopener"
-        aria-label="Sean Lingren's Website'">Sean Lingren</a>
-    </div>
-  </body>
-
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vaku</title>
+  <meta name="description" content="Vaku extends the Vault API & CLI">
+  <meta name="referrer" content="no-referrer">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/favicon-180x180.png">
+  <style>
+    body {
+      font-family: monospace;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+      background: #1a1a1a;
+      color: #e0e0e0;
+    }
+    a { color: #93d3e7; }
+    img { max-width: 200px; display: block; margin: 20px 0; }
+    code { background: #2a2a2a; padding: 2px 6px; }
+    hr { border: none; border-top: 1px solid #444; margin: 24px 0; }
+  </style>
+</head>
+<body>
+  <h1>vaku</h1>
+  <picture>
+    <source type="image/webp" srcset="assets/images/logo-vaku-sm.webp">
+    <source type="image/png" srcset="assets/images/logo-vaku-sm.png">
+    <img src="assets/images/logo-vaku-sm.png" alt="Vaku Logo">
+  </picture>
+  <p><code>brew install --cask lingrino/tap/vaku</code></p>
+  <hr>
+  <p>
+    vaku is a cli and go api that extends the official HashiCorp Vault cli and api
+    with useful high-level functions such as the ability to copy, move, and search
+    vault paths and folders.
+  </p>
+  <hr>
+  <p>
+    <a href="https://github.com/lingrino/vaku">github</a> ·
+    <a href="https://github.com/lingrino/vaku/blob/main/docs/cli/vaku.md">cli docs</a> ·
+    <a href="https://pkg.go.dev/github.com/lingrino/vaku/v2/api">api docs</a> ·
+    <a href="https://lingrino.com">sean lingren</a>
+  </p>
+</body>
 </html>

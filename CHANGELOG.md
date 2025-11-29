@@ -8,7 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 - API: Add `PathReadMeta` and `PathReadVersion`
 - API: Add `PathCopyAllVersions` and `PathMoveAllVersions`
-- CLI: Add `--all-versions` flag to path copy/move to include past versions
+- API: Add `FolderCopyAllVersions` and `FolderMoveAllVersions`
+- CLI: Add `--all-versions` flag to path and folder copy/move to include past versions
+- CLI: Add `--destroy` flag to path and folder move to permanently delete versions from source
+- WWW: Simplify website design
 
 ## 2.10.0 - 2025-11-27
 
