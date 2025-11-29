@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.11.0 - Upcoming
+## 2.11.0 - 2025-11-29
 
 - API: Add `PathReadMeta` and `PathReadVersion`
 - API: Add `PathCopyAllVersions` and `PathMoveAllVersions`

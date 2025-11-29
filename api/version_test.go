@@ -8,5 +8,5 @@ import (
 
 func TestVersion(t *testing.T) {
 	t.Parallel()
-	assert.Equal(t, "2.10.0", Version())
+	assert.Equal(t, "2.11.0", Version())
 }
