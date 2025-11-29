@@ -3,6 +3,7 @@ package vaku
 import (
 	"context"
 	"errors"
+	"strings"
 
 	"golang.org/x/sync/errgroup"
 )
@@ -74,7 +75,16 @@ func (c *Client) folderCopyAllVersionsWork(i *folderCopyAllVersionsWorkInput) er
 				return nil
 			}
 			srcPath := c.inputPath(path, i.src)
-			dstPath := c.inputPath(path, i.dst)
+			// Transform path from source to destination:
+			// - When absolutePath=true: path has source prefix, strip it and add dest prefix
+			// - When absolutePath=false: path is relative, just add dest prefix
+			var dstPath string
+			if c.absolutePath {
+				relativePath := strings.TrimPrefix(path, i.src)
+				dstPath = PathJoin(i.dst, relativePath)
+			} else {
+				dstPath = c.inputPath(path, i.dst)
+			}
 			err := c.PathCopyAllVersions(srcPath, dstPath)
 			if err != nil {
 				return err
