@@ -41,14 +41,18 @@ type cli struct {
 	flagWorkers     int
 
 	// vault flags
-	flagSrcAddr      string
-	flagSrcToken     string
-	flagSrcNspc      string
-	flagDstAddr      string
-	flagDstToken     string
-	flagDstNspc      string
-	flagMountPath    string
-	flagMountVersion string
+	flagSrcAddr         string
+	flagSrcToken        string
+	flagSrcNspc         string
+	flagDstAddr         string
+	flagDstToken        string
+	flagDstNspc         string
+	flagMountPath       string
+	flagMountVersion    string
+	flagSrcMountPath    string
+	flagSrcMountVersion string
+	flagDstMountPath    string
+	flagDstMountVersion string
 
 	// data
 	version string
@@ -115,8 +119,18 @@ func (c *cli) newVakuClient() (*vaku.Client, error) {
 	options = append(options, vaku.WithIgnoreAccessErrors(c.flagNoAccessErr))
 	options = append(options, vaku.WithWorkers(c.flagWorkers))
 
-	if c.flagMountPath != "" {
-		options = append(options, vaku.WithMountProvider(vaku.NewStaticMountProvider(c.flagMountPath, c.flagMountVersion)))
+	// Source mount provider - use explicit source flags or short aliases
+	srcMountPath := c.getSrcMountPath()
+	if srcMountPath != "" {
+		srcMountVersion := c.getSrcMountVersion()
+		options = append(options,
+			vaku.WithSrcMountProvider(vaku.NewStaticMountProvider(srcMountPath, srcMountVersion)))
+	}
+
+	// Destination mount provider
+	if c.flagDstMountPath != "" {
+		options = append(options,
+			vaku.WithDstMountProvider(vaku.NewStaticMountProvider(c.flagDstMountPath, c.flagDstMountVersion)))
 	}
 
 	vakuClient, err := vaku.NewClient(options...)

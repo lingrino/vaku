@@ -89,6 +89,96 @@ func TestValidateVakuFlags(t *testing.T) {
 			},
 			want: errFlagMountVersionNoPath,
 		},
+		{
+			name: "valid source mount flags",
+			give: &cli{
+				flagFormat:          "text",
+				flagWorkers:         10,
+				flagSrcMountPath:    "secret/",
+				flagSrcMountVersion: "2",
+			},
+			want: nil,
+		},
+		{
+			name: "valid source mount flags v1",
+			give: &cli{
+				flagFormat:          "text",
+				flagWorkers:         10,
+				flagSrcMountPath:    "kv1/",
+				flagSrcMountVersion: "1",
+			},
+			want: nil,
+		},
+		{
+			name: "invalid source mount version",
+			give: &cli{
+				flagFormat:          "text",
+				flagWorkers:         10,
+				flagSrcMountPath:    "secret/",
+				flagSrcMountVersion: "3",
+			},
+			want: errFlagInvalidSrcMountVersion,
+		},
+		{
+			name: "source mount version without path",
+			give: &cli{
+				flagFormat:          "text",
+				flagWorkers:         10,
+				flagSrcMountVersion: "1",
+			},
+			want: errFlagSrcMountVersionNoPath,
+		},
+		{
+			name: "valid destination mount flags",
+			give: &cli{
+				flagFormat:          "text",
+				flagWorkers:         10,
+				flagDstMountPath:    "dest/",
+				flagDstMountVersion: "2",
+			},
+			want: nil,
+		},
+		{
+			name: "valid destination mount flags v1",
+			give: &cli{
+				flagFormat:          "text",
+				flagWorkers:         10,
+				flagDstMountPath:    "kv1/",
+				flagDstMountVersion: "1",
+			},
+			want: nil,
+		},
+		{
+			name: "invalid destination mount version",
+			give: &cli{
+				flagFormat:          "text",
+				flagWorkers:         10,
+				flagDstMountPath:    "dest/",
+				flagDstMountVersion: "3",
+			},
+			want: errFlagInvalidDstMountVersion,
+		},
+		{
+			name: "destination mount version without path",
+			give: &cli{
+				flagFormat:          "text",
+				flagWorkers:         10,
+				flagDstMountVersion: "1",
+			},
+			want: errFlagDstMountVersionNoPath,
+		},
+		{
+			name: "valid both source and destination mount flags",
+			give: &cli{
+				flagFormat:          "text",
+				flagWorkers:         10,
+				flagSrcMountPath:    "src/",
+				flagSrcMountVersion: "2",
+				flagDstMountPath:    "dst/",
+				flagDstMountVersion: "2",
+			},
+			want: nil,
+		},
 	}
 
 	for _, tt := range tests {

@@ -80,19 +80,39 @@ const (
 
 	flagMountPathName    = "mount-path"
 	flagMountPathShort   = "m"
-	flagMountPathUse     = "mount path to use (bypasses sys/mounts lookup)"
+	flagMountPathUse     = "source mount path (bypasses sys/mounts lookup, alias for --mount-path-source)"
 	flagMountPathDefault = ""
 
 	flagMountVersionName    = "mount-version"
-	flagMountVersionUse     = "mount version: 1|2 (requires --mount-path)"
+	flagMountVersionUse     = "source mount version: 1|2 (requires --mount-path, alias for --mount-version-source)"
 	flagMountVersionDefault = "2"
+
+	flagSrcMountPathName    = "mount-path-source"
+	flagSrcMountPathUse     = "source mount path (bypasses sys/mounts lookup)"
+	flagSrcMountPathDefault = ""
+
+	flagSrcMountVersionName    = "mount-version-source"
+	flagSrcMountVersionUse     = "source mount version: 1|2 (requires --mount-path-source)"
+	flagSrcMountVersionDefault = "2"
+
+	flagDstMountPathName    = "mount-path-destination"
+	flagDstMountPathUse     = "destination mount path (bypasses sys/mounts lookup)"
+	flagDstMountPathDefault = ""
+
+	flagDstMountVersionName    = "mount-version-destination"
+	flagDstMountVersionUse     = "destination mount version: 1|2 (requires --mount-path-destination)"
+	flagDstMountVersionDefault = "2"
 )
 
 var (
-	errFlagInvalidFormat       = errors.New("format must be one of: text|json")
-	errFlagInvalidWorkers      = errors.New("workers must be >= 1")
-	errFlagInvalidMountVersion = errors.New("mount-version must be one of: 1|2")
-	errFlagMountVersionNoPath  = errors.New("mount-version requires --mount-path")
+	errFlagInvalidFormat          = errors.New("format must be one of: text|json")
+	errFlagInvalidWorkers         = errors.New("workers must be >= 1")
+	errFlagInvalidMountVersion    = errors.New("mount-version must be one of: 1|2")
+	errFlagMountVersionNoPath     = errors.New("mount-version requires --mount-path")
+	errFlagInvalidSrcMountVersion = errors.New("mount-version-source must be one of: 1|2")
+	errFlagSrcMountVersionNoPath  = errors.New("mount-version-source requires --mount-path-source")
+	errFlagInvalidDstMountVersion = errors.New("mount-version-destination must be one of: 1|2")
+	errFlagDstMountVersionNoPath  = errors.New("mount-version-destination requires --mount-path-destination")
 )
 
 // addVakuFlags adds all flags for the vaku command.
@@ -124,6 +144,16 @@ func (c *cli) addPathFolderFlags(cmd *cobra.Command) {
 		flagMountPathName, flagMountPathShort, flagMountPathDefault, flagMountPathUse)
 	cmd.PersistentFlags().StringVar(&c.flagMountVersion,
 		flagMountVersionName, flagMountVersionDefault, flagMountVersionUse)
+
+	cmd.PersistentFlags().StringVar(&c.flagSrcMountPath,
+		flagSrcMountPathName, flagSrcMountPathDefault, flagSrcMountPathUse)
+	cmd.PersistentFlags().StringVar(&c.flagSrcMountVersion,
+		flagSrcMountVersionName, flagSrcMountVersionDefault, flagSrcMountVersionUse)
+
+	cmd.PersistentFlags().StringVar(&c.flagDstMountPath,
+		flagDstMountPathName, flagDstMountPathDefault, flagDstMountPathUse)
+	cmd.PersistentFlags().StringVar(&c.flagDstMountVersion,
+		flagDstMountVersionName, flagDstMountVersionDefault, flagDstMountVersionUse)
 }
 
 // validateFlags checks if valid flag values were passed. Use as cmd.PersistentPreRunE.
@@ -163,23 +193,59 @@ func (c *cli) validWorkers() error {
 	return nil
 }
 
+// isValidMountVersion checks if the version string is valid (1 or 2).
+func isValidMountVersion(version string) bool {
+	return version == "1" || version == "2"
+}
+
+// validateMountPair validates a mount path and version pair.
+func validateMountPair(path, version, defaultVersion string, errNoPath, errInvalidVersion error) error {
+	// If version is explicitly set to non-default and non-empty but path is empty, error
+	if version != defaultVersion && version != "" && path == "" {
+		return errNoPath
+	}
+	// If path is set, validate version
+	if path != "" && !isValidMountVersion(version) {
+		return errInvalidVersion
+	}
+	return nil
+}
+
 // validMountFlags checks if the mount flags are valid.
 func (c *cli) validMountFlags() error {
-	// If mount-version is explicitly set to non-default and non-empty but mount-path is empty, error
-	if c.flagMountVersion != flagMountVersionDefault && c.flagMountVersion != "" && c.flagMountPath == "" {
-		return errFlagMountVersionNoPath
+	// Validate --mount-path / --mount-version (short aliases)
+	if err := validateMountPair(c.flagMountPath, c.flagMountVersion, flagMountVersionDefault,
+		errFlagMountVersionNoPath, errFlagInvalidMountVersion); err != nil {
+		return err
 	}
 
-	// If mount-path is set, validate mount-version
-	if c.flagMountPath != "" {
-		validVersions := []string{"1", "2"}
-		for _, v := range validVersions {
-			if c.flagMountVersion == v {
-				return nil
-			}
-		}
-		return errFlagInvalidMountVersion
+	// Validate --mount-path-source / --mount-version-source
+	if err := validateMountPair(c.flagSrcMountPath, c.flagSrcMountVersion, flagSrcMountVersionDefault,
+		errFlagSrcMountVersionNoPath, errFlagInvalidSrcMountVersion); err != nil {
+		return err
+	}
+
+	// Validate --mount-path-destination / --mount-version-destination
+	if err := validateMountPair(c.flagDstMountPath, c.flagDstMountVersion, flagDstMountVersionDefault,
+		errFlagDstMountVersionNoPath, errFlagInvalidDstMountVersion); err != nil {
+		return err
 	}
 
 	return nil
+}
+
+// getSrcMountPath returns the source mount path, preferring the explicit source flag over the alias.
+func (c *cli) getSrcMountPath() string {
+	if c.flagSrcMountPath != "" {
+		return c.flagSrcMountPath
+	}
+	return c.flagMountPath
+}
+
+// getSrcMountVersion returns the source mount version, preferring the explicit source flag over alias.
+func (c *cli) getSrcMountVersion() string {
+	if c.flagSrcMountPath != "" {
+		return c.flagSrcMountVersion
+	}
+	return c.flagMountVersion
 }
