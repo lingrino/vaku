@@ -188,12 +188,36 @@ func WithMountProvider(p mountProvider) Option {
 	return withMountProvider{provider: p}
 }
 
+// WithSrcMountProvider is an alias for WithMountProvider.
+func WithSrcMountProvider(p mountProvider) Option {
+	return withMountProvider{provider: p}
+}
+
 type withMountProvider struct {
 	provider mountProvider
 }
 
 func (o withMountProvider) apply(c *Client) error {
 	c.mountProvider = o.provider
+	return nil
+}
+
+// WithDstMountProvider sets the mount provider for the destination client.
+// This is useful for copy/move operations where the destination may be on a different mount.
+func WithDstMountProvider(p mountProvider) Option {
+	return withDstMountProvider{provider: p}
+}
+
+type withDstMountProvider struct {
+	provider mountProvider
+}
+
+func (o withDstMountProvider) apply(c *Client) error {
+	// By default the dest client is just a pointer to the source client. So make a copy of the
+	// source, assign new mount provider to the copy, and assign copy back to the dest.
+	newDstClient := *c.dc
+	newDstClient.mountProvider = o.provider
+	c.dc = &newDstClient
 	return nil
 }
 
