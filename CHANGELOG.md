@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.12.0 - 2025-12-14
+
+### Added
+
+- API: Add `WithSrcMountProvider` as alias for `WithMountProvider`
+- API: Add `WithDstMountProvider` to set mount provider for destination client in copy/move operations
+- CLI: Add `--mount-path-source` and `--mount-version-source` flags for explicit source mount configuration
+- CLI: Add `--mount-path-destination` and `--mount-version-destination` flags to bypass `sys/mounts` lookup on destination
+- CLI: Existing `--mount-path` and `--mount-version` flags now serve as aliases for the source flags
+
 ## 2.11.0 - 2025-11-29
 
 - API: Add `PathReadMeta` and `PathReadVersion`
