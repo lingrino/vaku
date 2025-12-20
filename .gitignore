@@ -1,17 +1,17 @@
-# Binaries
+# binaries
 dist/
 *.test
 
-# Coverage
+# coverage
 *.out
 coverage.txt
 
-# Benchmark
+# benchmark
 bench.txt
 
-# IDE settings
+# ide settings
 .idea/
 .vscode/
 
-# AI Tools
+# ai tools
 .claude

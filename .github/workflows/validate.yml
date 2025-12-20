@@ -1,20 +1,21 @@
-name: Validate
+name: validate
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: checkout
         uses: actions/checkout@v6
-      - name: Install Go
+      - name: install go
         uses: actions/setup-go@v6
         with:
           go-version: stable
-      - name: Docs Check
+      - name: docs check
         run: |
           before=$(cat docs/cli/*.md | md5sum)
           go run main.go docs docs/cli
@@ -24,61 +25,61 @@ jobs:
   golangci:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: checkout
         uses: actions/checkout@v6
-      - name: Install Go
+      - name: install go
         uses: actions/setup-go@v6
         with:
           go-version: stable
-      - name: Lint
+      - name: lint
         uses: golangci/golangci-lint-action@v9
         with:
           args: --timeout=5m
   gomod:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: checkout
         uses: actions/checkout@v6
-      - name: Install Go
+      - name: install go
         uses: actions/setup-go@v6
         with:
           go-version: stable
-      - name: Go Mod Tidy
+      - name: go mod tidy
         run: test -z $(go mod tidy)
   govulncheck:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: checkout
         uses: actions/checkout@v6
-      - name: Install Go
+      - name: install go
         uses: actions/setup-go@v6
         with:
           go-version: stable
-      - name: Install govulncheck
+      - name: install govulncheck
         run: go install golang.org/x/vuln/cmd/govulncheck@latest
-      - name: Run govulncheck
+      - name: run govulncheck
         run: govulncheck ./...
   goreleaser:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: checkout
         uses: actions/checkout@v6
-      - name: Install Go
+      - name: install go
         uses: actions/setup-go@v6
         with:
           go-version: stable
-      - name: Goreleaser Check
+      - name: goreleaser check
         uses: goreleaser/goreleaser-action@v6.4.0
         with:
           args: check
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: checkout
         uses: actions/checkout@v6
-      - name: Install Go
+      - name: install go
         uses: actions/setup-go@v6
         with:
           go-version: stable
-      - name: Test
+      - name: test
         run: go test -cover -coverprofile=c.out -covermode=atomic -race -v ./...
