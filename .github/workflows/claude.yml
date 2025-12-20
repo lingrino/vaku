@@ -13,7 +13,17 @@ on:
 jobs:
   claude:
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      issues: read
+      pull-requests: read
+      id-token: write
     steps:
+      - name: checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
