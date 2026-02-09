@@ -89,6 +89,8 @@ github.com/hashicorp/vault/sdk v0.20.0 h1:a4ulj2gICzw/qH0A4+6o36qAHxkUdcmgpMaSSj
 github.com/hashicorp/vault/sdk v0.20.0/go.mod h1:xEjAt/n/2lHBAkYiRPRmvf1d5B6HlisPh2pELlRCosk=
 github.com/hashicorp/vault/sdk v0.21.0 h1:3gDqdKLhHY2ekmCEE9EeesoNpgsReq2bo/SpMqvBYdw=
 github.com/hashicorp/vault/sdk v0.21.0/go.mod h1:BkJpVju7qe2cDe+T8gA84uFtRnNYQIPXkiJqqWGUYrc=
+github.com/hashicorp/vault/sdk v0.23.0 h1:uxSnO1+IgHFJk1zO7QblLNuZcXtu15FZWR8N+wPb5KM=
+github.com/hashicorp/vault/sdk v0.23.0/go.mod h1:BkJpVju7qe2cDe+T8gA84uFtRnNYQIPXkiJqqWGUYrc=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
