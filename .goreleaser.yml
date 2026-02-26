@@ -19,6 +19,8 @@ builds:
     ignore:
       - goos: darwin
         goarch: 386
+      - goos: windows
+        goarch: arm
     env:
       - CGO_ENABLED=0
 release:
@@ -53,14 +55,15 @@ nfpms:
     formats:
       - deb
       - rpm
-dockers:
-  - dockerfile: Dockerfile
-    image_templates:
-      - ghcr.io/lingrino/vaku:latest
-      - ghcr.io/lingrino/vaku:{{ .Version }}
-      - ghcr.io/lingrino/vaku:{{ .Major }}
-      - ghcr.io/lingrino/vaku:{{ .Major }}.{{ .Minor }}
-    build_flag_templates:
-      - --label=org.opencontainers.image.created={{.Date}}
-      - --label=org.opencontainers.image.revision={{.FullCommit}}
-      - --label=org.opencontainers.image.version={{.Version}}
+dockers_v2:
+  - images:
+      - ghcr.io/lingrino/vaku
+    tags:
+      - latest
+      - "{{ .Version }}"
+      - "{{ .Major }}"
+      - "{{ .Major }}.{{ .Minor }}"
+    labels:
+      "--label=org.opencontainers.image.created": "{{.Date}}"
+      "--label=org.opencontainers.image.revision": "{{.FullCommit}}"
+      "--label=org.opencontainers.image.version": "{{.Version}}"
