@@ -180,7 +180,7 @@ func seededPrefixes(t *testing.T, p string) []string {
 		err = sharedVakuClean.dc.FolderWrite(context.Background(), seedsCopy)
 		assert.NoError(t, err)
 
-		prefixes[i] = PathJoin("kv"+ver, prefix)
+		prefixes[i] = PathJoin("kv"+ver, prefix) //nolint:gosec // https://github.com/securego/gosec/pull/1546
 	}
 
 	return prefixes

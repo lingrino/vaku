@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.12.1 - 2026-02-25
+
+### Changed
+
+- GEN: Update to go 1.26
+- GEN: Update dependencies
+
 ## 2.12.0 - 2025-12-14
 
 ### Added
