@@ -88,9 +88,11 @@ func testServer(t *testing.T) *api.Client {
 		ImageRepo:    "hashicorp/vault",
 		ImageTag:     "latest",
 		DisableMlock: true, // otherwise test containers can oom
-		// Vault 2.0.0+ entrypoint runs `setcap cap_ipc_lock=+ep` which needs CAP_SETFCAP;
-		// SKIP_SETCAP avoids that since DisableMlock already removes the need.
-		Envs: []string{"SKIP_SETCAP=true"},
+		// Vault 2.0.0+ image runs as the unprivileged "vault" user, so the entrypoint's
+		// `chown -R vault:vault /vault/config` fails and writes errors to stderr. The SDK
+		// treats the first stderr line as "vault is up" and signals SIGHUP, killing the
+		// container before vault server actually starts. SKIP_CHOWN avoids that output.
+		Envs: []string{"SKIP_CHOWN=true"},
 		ClusterOptions: testcluster.ClusterOptions{
 			ClusterName: strconv.Itoa(rand.IntN(1000000000)), //nolint:gosec
 			NumCores:    1,
