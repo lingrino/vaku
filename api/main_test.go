@@ -18,6 +18,7 @@ import (
 	"github.com/hashicorp/vault/sdk/helper/testcluster"
 	"github.com/hashicorp/vault/sdk/helper/testcluster/docker"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // mountless, when passed in tests, will not be prefixed with a mount.
@@ -87,13 +88,16 @@ func testServer(t *testing.T) *api.Client {
 		ImageRepo:    "hashicorp/vault",
 		ImageTag:     "latest",
 		DisableMlock: true, // otherwise test containers can oom
+		// Vault 2.0.0+ entrypoint runs `setcap cap_ipc_lock=+ep` which needs CAP_SETFCAP;
+		// SKIP_SETCAP avoids that since DisableMlock already removes the need.
+		Envs: []string{"SKIP_SETCAP=true"},
 		ClusterOptions: testcluster.ClusterOptions{
 			ClusterName: strconv.Itoa(rand.IntN(1000000000)), //nolint:gosec
 			NumCores:    1,
 		},
 	})
+	require.NoError(t, err)
 	cleanupFns = append(cleanupFns, cluster.Cleanup)
-	assert.NoError(t, err)
 
 	client := cluster.Nodes()[0].APIClient()
 
