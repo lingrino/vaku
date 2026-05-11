@@ -51,7 +51,7 @@ func extractV2Read(data map[string]any) map[string]any {
 		return nil
 	}
 
-	dd := data["data"]
+	dd := data[kv2Data]
 	if dd == nil {
 		return nil
 	}
@@ -66,7 +66,7 @@ func extractV2Read(data map[string]any) map[string]any {
 
 // isDeleted checks if the secret has been deleted or destroyed.
 func isDeleted(data map[string]any) bool {
-	metadata, ok := data["metadata"].(map[string]any)
+	metadata, ok := data[kv2Metadata].(map[string]any)
 	if !ok {
 		return true
 	}
@@ -96,7 +96,7 @@ func (c *Client) PathReadVersion(p string, version int) (map[string]any, error) 
 
 	// Pass version as query parameter using ReadWithData
 	queryParams := map[string][]string{
-		"version": {strconv.Itoa(version)},
+		kv2Version: {strconv.Itoa(version)},
 	}
 
 	secret, err := c.vl.ReadWithData(vaultPath, queryParams)

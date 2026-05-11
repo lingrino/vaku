@@ -16,6 +16,9 @@ var (
 	errJSONUnmarshal = errors.New("json unmarshal")
 )
 
+// jsonErrorKey is the JSON object key used when emitting an error.
+const jsonErrorKey = "error"
+
 // combineErr combines two errors to be output later.
 func (c *cli) combineErr(e1, e2 error) error {
 	if e1 == nil && e2 == nil {
@@ -40,9 +43,9 @@ func (c *cli) output(out any) {
 	}
 
 	switch c.flagFormat {
-	case "json":
+	case flagFormatJSON:
 		c.outputJSON(outW, out)
-	case "text":
+	case flagFormatDefault:
 		c.outputText(outW, out)
 	default:
 		c.outputText(errW, errOutputFormat)
@@ -57,7 +60,7 @@ func (c *cli) outputJSON(w io.Writer, out any) {
 	case error:
 		w = c.cmd.ErrOrStderr()
 		jsonOut = map[string]string{
-			"error": out.Error(),
+			jsonErrorKey: out.Error(),
 		}
 	default:
 		jsonOut = out

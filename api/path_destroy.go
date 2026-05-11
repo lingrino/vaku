@@ -21,7 +21,7 @@ func (c *Client) PathDestroy(p string, versions []int) error {
 	}
 
 	data := map[string]any{
-		"versions": versions,
+		kv2Versions: versions,
 	}
 
 	_, err = c.vl.Write(vaultPath, data)

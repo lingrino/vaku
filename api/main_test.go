@@ -18,6 +18,7 @@ import (
 	"github.com/hashicorp/vault/sdk/helper/testcluster"
 	"github.com/hashicorp/vault/sdk/helper/testcluster/docker"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // mountless, when passed in tests, will not be prefixed with a mount.
@@ -87,13 +88,18 @@ func testServer(t *testing.T) *api.Client {
 		ImageRepo:    "hashicorp/vault",
 		ImageTag:     "latest",
 		DisableMlock: true, // otherwise test containers can oom
+		// Vault 2.0.0+ image runs as the unprivileged "vault" user, so the entrypoint's
+		// `chown -R vault:vault /vault/config` fails and writes errors to stderr. The SDK
+		// treats the first stderr line as "vault is up" and signals SIGHUP, killing the
+		// container before vault server actually starts. SKIP_CHOWN avoids that output.
+		Envs: []string{"SKIP_CHOWN=true"},
 		ClusterOptions: testcluster.ClusterOptions{
 			ClusterName: strconv.Itoa(rand.IntN(1000000000)), //nolint:gosec
 			NumCores:    1,
 		},
 	})
+	require.NoError(t, err)
 	cleanupFns = append(cleanupFns, cluster.Cleanup)
-	assert.NoError(t, err)
 
 	client := cluster.Nodes()[0].APIClient()
 
