@@ -30,7 +30,7 @@ func (p defaultMountProvider) ListMounts() ([]Mount, error) {
 		mount := Mount{
 			Path:    mountPath,
 			Type:    data.Type,
-			Version: data.Options["version"],
+			Version: data.Options[kv2Version],
 		}
 		result = append(result, mount)
 	}

@@ -24,7 +24,7 @@ func (c *Client) PathWrite(p string, d map[string]any) error {
 
 	if mv == mv2 {
 		d = map[string]any{
-			"data": d,
+			kv2Data: d,
 		}
 	}
 

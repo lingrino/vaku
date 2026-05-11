@@ -53,7 +53,7 @@ func extractSecretMeta(data map[string]any) (*SecretMeta, error) {
 	meta.CurrentVersion = extractInt(data["current_version"])
 
 	// Extract versions map
-	versionsRaw, ok := data["versions"].(map[string]any)
+	versionsRaw, ok := data[kv2Versions].(map[string]any)
 	if !ok {
 		return meta, nil
 	}

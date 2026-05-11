@@ -11,6 +11,7 @@ const (
 	flagFormatName    = "format"
 	flagFormatUse     = "output format: text|json"
 	flagFormatDefault = "text"
+	flagFormatJSON    = "json"
 
 	flagIndentName    = "indent-char"
 	flagIndentShort   = "i"
@@ -175,7 +176,7 @@ func (c *cli) validateVakuFlags(cmd *cobra.Command, args []string) error {
 
 // validFormat checks if the format flag is a valid option.
 func (c *cli) validFormat() error {
-	validFormats := []string{"text", "json"}
+	validFormats := []string{flagFormatDefault, flagFormatJSON}
 
 	for _, v := range validFormats {
 		if c.flagFormat == v {

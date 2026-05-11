@@ -28,6 +28,15 @@ const (
 	mv2
 )
 
+// Vault KV v2 keys and sub-paths.
+const (
+	kv2Data     = "data"
+	kv2Metadata = "metadata"
+	kv2Destroy  = "destroy"
+	kv2Version  = "version"
+	kv2Versions = "versions"
+)
+
 // vaultOperation represents a call made to vault (read, write, delete, etc...).
 type vaultOperation int
 
@@ -93,11 +102,11 @@ func (c *Client) rewritePath(p string, op vaultOperation) (string, mountVersion,
 
 	switch op {
 	case vaultList, vaultDeleteMeta, vaultReadMeta:
-		p = InsertIntoPath(p, mount, "metadata")
+		p = InsertIntoPath(p, mount, kv2Metadata)
 	case vaultRead, vaultWrite, vaultDelete:
-		p = InsertIntoPath(p, mount, "data")
+		p = InsertIntoPath(p, mount, kv2Data)
 	case vaultDestroy:
-		p = InsertIntoPath(p, mount, "destroy")
+		p = InsertIntoPath(p, mount, kv2Destroy)
 	}
 
 	return p, version, nil
