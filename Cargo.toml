@@ -2,6 +2,7 @@
 name = "vaku"
 version = "3.0.0"
 edition = "2021"
+autotests = false
 rust-version = "1.83"
 license = "MIT"
 description = "A CLI and library that extend the official Vault client with path- and folder-based operations on the K/V secret engine."
@@ -37,9 +38,14 @@ url = "2"
 [dev-dependencies]
 pretty_assertions = "1"
 tempfile = "3"
-testcontainers = "0.21"
+once_cell = "1"
 
 [profile.release]
 codegen-units = 1
 lto = "thin"
 strip = true
+
+# Single integration-test binary so all tests share one Vault container.
+[[test]]
+name = "it"
+path = "tests/it/main.rs"

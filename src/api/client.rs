@@ -62,7 +62,7 @@ impl Client {
 
     /// Returns a [`Client`] view that uses the destination side as its source.
     /// Used internally by copy/move operations to write to the destination.
-    pub(crate) fn as_destination(&self) -> Client {
+    pub fn as_destination(&self) -> Client {
         let inner = Arc::new(ClientInner {
             src: Side {
                 logical: self.inner.dst.logical.clone(),
