@@ -192,7 +192,7 @@ impl Error {
 
     /// Wrap an underlying error in [`ErrorKind::Context`] (mirrors Go's
     /// `ctxErr`). Returns `None` when `err` is `None`.
-    pub(crate) fn ctx(err: Option<BoxError>) -> Option<Self> {
+    pub fn ctx(err: Option<BoxError>) -> Option<Self> {
         err.map(|e| Self::new(None, Some(ErrorKind::Context), Some(e)))
     }
 
