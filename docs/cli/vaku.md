@@ -16,7 +16,7 @@ already authenticated to Vault before running any commands. Vaku
 commands should not be run on non-K/V engines.
 
 CLI documentation - 'vaku help [cmd]'
-API documentation - https://pkg.go.dev/github.com/lingrino/vaku/v2/api
+API documentation - https://docs.rs/vaku
 Built by Sean Lingren <sean@lingren.com>
 
 ### Examples
@@ -25,19 +25,17 @@ Built by Sean Lingren <sean@lingren.com>
 vaku folder list secret/foo
 ```
 
-### Options
+### Options inherited from parent commands
 
 ```
-      --format string        output format: text|json (default "text")
-  -h, --help                 help for vaku
+    , --format string   output format: text|json (default "text")
   -i, --indent-char string   string used for indents (default "    ")
-  -s, --sort                 sort output text (default true)
+  -s, --sort string   sort output text (default "true")
 ```
 
 ### SEE ALSO
 
-* [vaku completion](vaku_completion.md)	 - Generate the autocompletion script for the specified shell
-* [vaku folder](vaku_folder.md)	 - Commands that act on Vault folders
 * [vaku path](vaku_path.md)	 - Commands that act on Vault paths
+* [vaku folder](vaku_folder.md)	 - Commands that act on Vault folders
 * [vaku version](vaku_version.md)	 - Print vaku version
 

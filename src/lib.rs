@@ -4,6 +4,7 @@
 //! The public API mirrors the original Go library 1:1 in semantics.
 
 pub mod api;
+pub mod cli;
 
 pub use api::client::{Client, ClientBuilder};
 pub use api::error::{Error, ErrorKind, Result};

@@ -36,3 +36,9 @@ mod api_path_read_meta;
 mod api_path_search;
 mod api_path_update;
 mod api_path_write;
+
+// CLI tests
+mod cli_basic;
+mod cli_common;
+mod cli_flags;
+mod cli_helpers;

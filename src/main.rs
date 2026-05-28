@@ -1,6 +1,6 @@
 use std::process::ExitCode;
 
-mod cli;
+use vaku::cli;
 
 fn main() -> ExitCode {
     let version = env!("CARGO_PKG_VERSION");
