@@ -114,3 +114,87 @@ pub(crate) fn extract_int(v: &Value) -> i64 {
         _ => 0,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    fn obj(v: Value) -> Option<Map<String, Value>> {
+        v.as_object().cloned()
+    }
+
+    #[test]
+    fn extract_v2_read_nil() {
+        assert!(extract_v2_read(None).is_none());
+    }
+
+    #[test]
+    fn extract_v2_read_no_metadata() {
+        let data = obj(json!({"foo": "bar"})).unwrap();
+        assert!(extract_v2_read(Some(&data)).is_none());
+    }
+
+    #[test]
+    fn extract_v2_read_meta_only() {
+        let data = obj(json!({"metadata": {"foo": "bar"}})).unwrap();
+        assert!(extract_v2_read(Some(&data)).is_none());
+    }
+
+    #[test]
+    fn extract_v2_read_missing_destroyed() {
+        let data = obj(json!({"metadata": {"deletion_time": ""}})).unwrap();
+        assert!(extract_v2_read(Some(&data)).is_none());
+    }
+
+    #[test]
+    fn extract_v2_read_no_data_field() {
+        let data = obj(json!({
+            "metadata": {"deletion_time": "", "destroyed": false}
+        })).unwrap();
+        assert!(extract_v2_read(Some(&data)).is_none());
+    }
+
+    #[test]
+    fn extract_v2_read_happy() {
+        let data = obj(json!({
+            "metadata": {"deletion_time": "", "destroyed": false},
+            "data": {"foo": "bar"},
+        })).unwrap();
+        let got = extract_v2_read(Some(&data)).unwrap();
+        assert_eq!(got.get("foo").unwrap(), &Value::String("bar".into()));
+    }
+
+    #[test]
+    fn extract_secret_meta_full() {
+        let data = obj(json!({
+            "current_version": 3,
+            "versions": {
+                "1": {"created_time": "2023-01-01T00:00:00Z", "deletion_time": "", "destroyed": false},
+                "2": {"created_time": "2023-01-02T00:00:00Z", "deletion_time": "2023-01-03T00:00:00Z", "destroyed": false},
+                "3": {"created_time": "2023-01-04T00:00:00Z", "deletion_time": "", "destroyed": true},
+            }
+        })).unwrap();
+        let got = extract_secret_meta(Some(&data));
+        assert_eq!(got.current_version, 3);
+        assert_eq!(got.versions.len(), 3);
+        assert!(!got.versions[&1].deleted);
+        assert!(got.versions[&2].deleted);
+        assert!(got.versions[&3].destroyed);
+    }
+
+    #[test]
+    fn extract_secret_meta_nil_data() {
+        let got = extract_secret_meta(None);
+        assert_eq!(got.current_version, 0);
+        assert!(got.versions.is_empty());
+    }
+
+    #[test]
+    fn extract_secret_meta_empty_versions() {
+        let data = obj(json!({"current_version": 0, "versions": {}})).unwrap();
+        let got = extract_secret_meta(Some(&data));
+        assert_eq!(got.current_version, 0);
+        assert!(got.versions.is_empty());
+    }
+}

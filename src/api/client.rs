@@ -33,9 +33,9 @@ pub(crate) struct ClientInner {
 }
 
 /// One side of a client — either source or destination.
-pub(crate) struct Side {
-    pub(crate) logical: Arc<dyn Logical>,
-    pub(crate) mount_provider: Arc<dyn MountProvider>,
+pub struct Side {
+    pub logical: Arc<dyn Logical>,
+    pub mount_provider: Arc<dyn MountProvider>,
 }
 
 impl Client {
@@ -44,19 +44,19 @@ impl Client {
         ClientBuilder::default()
     }
 
-    pub(crate) fn src(&self) -> &Side {
+    pub fn src(&self) -> &Side {
         &self.inner.src
     }
-    pub(crate) fn dst(&self) -> &Side {
+    pub fn dst(&self) -> &Side {
         &self.inner.dst
     }
-    pub(crate) fn workers(&self) -> usize {
+    pub fn workers(&self) -> usize {
         self.inner.workers
     }
-    pub(crate) fn absolute_path(&self) -> bool {
+    pub fn absolute_path(&self) -> bool {
         self.inner.absolute_path
     }
-    pub(crate) fn ignore_access_errors(&self) -> bool {
+    pub fn ignore_access_errors(&self) -> bool {
         self.inner.ignore_access_errors
     }
 
@@ -80,7 +80,7 @@ impl Client {
     }
 
     /// Rewrite paths in `data` from `src` to `dst`, honouring `absolute_path`.
-    pub(crate) fn swap_paths(
+    pub fn swap_paths(
         &self,
         data: &mut BTreeMap<String, Map<String, Value>>,
         src: &str,
@@ -94,7 +94,7 @@ impl Client {
 
     /// Prepare a path for input into a read/write/list/delete given the user's
     /// `absolute_path` preference.
-    pub(crate) fn input_path(&self, path: &str, root: &str) -> String {
+    pub fn input_path(&self, path: &str, root: &str) -> String {
         if self.absolute_path() {
             path.to_string()
         } else {
@@ -103,7 +103,7 @@ impl Client {
     }
 
     /// Prepare a path for output to the user.
-    pub(crate) fn output_path(&self, path: &str, root: &str) -> String {
+    pub fn output_path(&self, path: &str, root: &str) -> String {
         if self.absolute_path() {
             crate::api::helpers::ensure_prefix(path, root)
         } else {
@@ -112,7 +112,7 @@ impl Client {
     }
 
     /// Prepare a list of paths for output to the user.
-    pub(crate) fn output_paths(&self, paths: &mut [String], root: &str) {
+    pub fn output_paths(&self, paths: &mut [String], root: &str) {
         if self.absolute_path() {
             add_prefix_list(paths, root);
         }

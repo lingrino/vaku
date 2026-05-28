@@ -13,25 +13,16 @@ impl Client {
             .await
             .map_err(|e| Error::wrap(p, ErrorKind::PathList, Some(Box::new(e))))?;
 
-        let secret = self.src().logical.list(&vault_path).await.map_err(|e| {
-            if self.ignore_access_errors() {
-                // Bookkeeping path: we want to ignore the error entirely.
-                // Bubble a sentinel "ignore" up via a custom-flagged Error so
-                // the caller below can swallow it.
-                Error::wrap("__ignore__", ErrorKind::Custom("__ignore__".into()), None)
-            } else {
-                Error::wrap(
+        let secret = match self.src().logical.list(&vault_path).await {
+            Ok(s) => s,
+            Err(_) if self.ignore_access_errors() => return Ok(Vec::new()),
+            Err(e) => {
+                return Err(Error::wrap(
                     p,
                     ErrorKind::PathList,
                     Some(Box::new(Error::wrap(&e.to_string(), ErrorKind::VaultList, None))),
-                )
+                ))
             }
-        });
-
-        let secret: Option<Secret> = match secret {
-            Ok(s) => s,
-            Err(e) if matches!(e.kind(), ErrorKind::Custom(s) if s == "__ignore__") => return Ok(Vec::new()),
-            Err(e) => return Err(e),
         };
 
         let mut list = decode_secret_keys(secret.as_ref())
