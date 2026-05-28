@@ -1,17 +1,14 @@
-# binaries
-dist/
-*.test
+# Rust build
+/target/
+**/*.rs.bk
+*.profraw
 
-# coverage
-*.out
-coverage.txt
+# Release artifacts
+/dist/
 
-# benchmark
-bench.txt
-
-# ide settings
+# IDE
 .idea/
 .vscode/
 
-# ai tools
+# AI tools
 .claude
