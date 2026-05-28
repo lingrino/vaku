@@ -42,3 +42,20 @@ jobs:
         run: docker pull hashicorp/vault:latest
       - name: cargo test
         run: cargo test --all-features --workspace -- --nocapture --test-threads=4
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: docs check
+        run: |
+          before=$(cat docs/cli/*.md | md5sum)
+          cargo run --release -- docs docs/cli
+          after=$(cat docs/cli/*.md | md5sum)
+          if [ "$before" != "$after" ]; then
+            echo "::error::docs/cli/ is stale. Regenerate with: cargo run -- docs docs/cli"
+            git --no-pager diff -- docs/cli || true
+            exit 1
+          fi
