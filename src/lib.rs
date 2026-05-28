@@ -12,3 +12,4 @@ pub use api::logical::{Logical, Secret, VaultHttpClient};
 pub use api::mount_provider::{Mount, MountProvider, StaticMountProvider};
 pub use api::secret::{SecretMeta, SecretVersionMeta};
 pub use api::version::version;
+// trigger ci
