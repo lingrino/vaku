@@ -2,24 +2,29 @@
 
 [![Vaku](www/assets/images/logo-vaku-sm.png?raw=true)](www/assets/logo-vaku-sm.png "Vaku")
 
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/lingrino/vaku/v2/api)](https://pkg.go.dev/github.com/lingrino/vaku/v2/api)
-[![goreportcard](https://goreportcard.com/badge/github.com/lingrino/vaku)](https://goreportcard.com/report/github.com/lingrino/vaku)
+Vaku is a CLI and Rust library for running path- and folder-based
+operations on Vault's K/V secrets engine. Vaku extends the existing Vault
+CLI/API by letting you run the same list / read / write / delete actions on
+**folders** as well as paths, and adds copy, move, search, and bulk
+delete/destroy across either source or source/destination Vault clusters.
 
-Vaku is a CLI and API for running path- and folder-based operations on the Vault Key/Value secrets engine. Vaku extends the existing Vault CLI and API by allowing you to run the same path-based list/read/write/delete functions on folders as well. Vaku also lets you search, copy, and move both secrets and folders.
+> Vaku was originally written in Go. **Version 3 is a full rewrite in
+> Rust**. The CLI surface (flags, subcommands, output) is identical; the
+> public library API now lives at [docs.rs/vaku](https://docs.rs/vaku).
 
 ## Installation
 
-### Homebrew
+### Binary
+
+Download the latest binary for your OS/arch from the
+[releases page](https://github.com/lingrino/vaku/releases) — `.tar.gz`
+archives are published for Linux (x86_64, aarch64), macOS (x86_64,
+aarch64), and Windows (x86_64).
+
+### Cargo
 
 ```shell
-brew install --cask lingrino/tap/vaku
-```
-
-### Scoop
-
-```shell
-scoop bucket add vaku https://github.com/lingrino/scoop-vaku.git
-scoop install vaku
+cargo install vaku
 ```
 
 ### Docker
@@ -28,29 +33,61 @@ scoop install vaku
 docker run ghcr.io/lingrino/vaku --help
 ```
 
-### Binary
+### Homebrew
 
-Download the latest binary or deb/rpm for your os/arch from the [releases page](https://github.com/lingrino/vaku/releases).
+The Rust rewrite is not yet on the Homebrew tap. Use the binary or
+`cargo install` until v3.x is published there.
 
 ## Usage
 
-Vaku CLI documentation can be found on the command line using either `vaku help [cmd]` or `vaku [cmd] --help`. The same documentation is also available in markdown form in the [docs/cli](docs/cli/vaku.md) folder.
+```shell
+vaku --help
+vaku path list secret/foo
+vaku folder copy secret/old/ secret/new/
+```
 
-## API
+Full per-command docs live in [docs/cli](docs/cli/vaku.md) and are
+regenerated from the binary with `vaku docs docs/cli`.
 
-Documentation for the Vaku API is on [pkg.go.dev](https://pkg.go.dev/github.com/lingrino/vaku/v2/api).
+## Library
 
-## Contributing
+```toml
+# Cargo.toml
+[dependencies]
+vaku = "3"
+```
 
-Suggestions and contributions of all kinds are welcome! If there is functionality you would like to see in Vaku please open an Issue or Pull Request and I will be sure to address it.
+```rust
+use std::sync::Arc;
+use vaku::{Client, VaultHttpClient};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let http = VaultHttpClient::new("http://127.0.0.1:8200", "dev-root-token", None)?;
+    let client = Client::builder().with_vault_client(http).build()?;
+    let secrets = client.folder_read("secret/foo/").await?;
+    println!("{:#?}", secrets);
+    Ok(())
+}
+```
 
 ## Tests
 
-Vaku is well tested and uses only the standard go testing tools.
+Vaku is well tested. Most tests run against a live `hashicorp/vault`
+Docker container.
 
 ```shell
-$ go test -cover -race ./...
-ok  github.com/lingrino/vaku/v2      0.095s coverage: 100.0% of statements
-ok  github.com/lingrino/vaku/v2/api 12.065s coverage: 100.0% of statements
-ok  github.com/lingrino/vaku/v2/cmd  0.168s coverage: 100.0% of statements
+# Full suite (requires Docker)
+cargo test --all-features
+
+# Skip the live-Vault tests
+VAKU_SKIP_LIVE_TESTS=1 cargo test
 ```
+
+CI runs `cargo fmt`, `cargo clippy -- -D warnings`, and `cargo test` on
+every push & PR.
+
+## Contributing
+
+Bug reports, ideas, and PRs are all welcome. Open an issue first for
+substantial changes so we can sketch the approach together.

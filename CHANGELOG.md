@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.0.0 - Rust rewrite
+
+### Changed
+
+- GEN: **Full rewrite in Rust.** The CLI surface (flags, subcommands,
+  output formats, exit codes) is unchanged; the Go library API
+  (`github.com/lingrino/vaku/v2/api`) is **replaced** with a Rust crate
+  (`vaku` on crates.io). Library consumers of the Go API must port their
+  code; CLI users can drop in the new binary.
+- GEN: Build via `cargo build --release`. Tests via `cargo test`
+  (Docker required for live Vault tests; opt-out with
+  `VAKU_SKIP_LIVE_TESTS=1`).
+- CI: Replaced `golangci-lint`/`goreleaser` with `cargo fmt`, `cargo
+  clippy -- -D warnings`, `cargo test`, and a 5-target release matrix
+  (Linux x86_64/aarch64 musl, macOS x86_64/aarch64, Windows x86_64).
+- DIST: Homebrew cask is **not** updated in this release. Use the
+  binary tarballs or `cargo install vaku` until v3.x lands on the tap.
+
+### Notes
+
+- KV1/KV2 semantics, path rewriting, concurrent folder operations,
+  sentinel error chains, and the `--all-versions`/`--destroy` flags
+  match the Go implementation 1:1.
+- Docs at [docs.rs/vaku](https://docs.rs/vaku).
+
 ## 2.12.1 - 2026-02-25
 
 ### Changed
