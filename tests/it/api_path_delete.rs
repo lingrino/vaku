@@ -15,8 +15,16 @@ async fn test_path_delete() {
         no_readback: bool,
     }
     let cases = vec![
-        Case { give: "0/1", want_err: vec![], no_readback: false },
-        Case { give: "fake", want_err: vec![], no_readback: false },
+        Case {
+            give: "0/1",
+            want_err: vec![],
+            no_readback: false,
+        },
+        Case {
+            give: "fake",
+            want_err: vec![],
+            no_readback: false,
+        },
         Case {
             give: MOUNTLESS,
             want_err: vec![

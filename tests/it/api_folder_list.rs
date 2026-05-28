@@ -15,7 +15,11 @@ async fn test_folder_list() {
         want_err: Vec<ErrMatch>,
     }
     let cases = vec![
-        Case { give: "0/1", want: vec![], want_err: vec![] },
+        Case {
+            give: "0/1",
+            want: vec![],
+            want_err: vec![],
+        },
         Case {
             give: "0/4/",
             want: vec!["5", "8", "13/14", "13/17", "13/24/25/26/27"],
@@ -46,7 +50,8 @@ async fn test_folder_list() {
             assert_eq!(got_sorted, want, "give={} prefix={}", tt.give, prefix);
 
             let er: Option<&(dyn std::error::Error + 'static)> = match res.as_ref() {
-                Ok(_) => None, Err(e) => Some(e),
+                Ok(_) => None,
+                Err(e) => Some(e),
             };
             compare_errors(er, &tt.want_err);
         }

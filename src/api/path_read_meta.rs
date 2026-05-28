@@ -18,12 +18,20 @@ impl Client {
             Error::wrap(
                 p,
                 ErrorKind::PathReadMeta,
-                Some(Box::new(Error::wrap(&e.to_string(), ErrorKind::VaultRead, None))),
+                Some(Box::new(Error::wrap(
+                    &e.to_string(),
+                    ErrorKind::VaultRead,
+                    None,
+                ))),
             )
         })?;
 
-        let Some(secret) = secret else { return Ok(None) };
-        let Some(data) = secret.data else { return Ok(None) };
+        let Some(secret) = secret else {
+            return Ok(None);
+        };
+        let Some(data) = secret.data else {
+            return Ok(None);
+        };
         Ok(Some(extract_secret_meta(Some(&data))))
     }
 }

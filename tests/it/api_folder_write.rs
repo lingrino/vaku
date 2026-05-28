@@ -11,7 +11,9 @@ fn build(items: &[(&str, &[(&str, &str)])]) -> BTreeMap<String, Map<String, Valu
     let mut m = BTreeMap::new();
     for (p, kvs) in items {
         let mut inner = Map::new();
-        for (k, v) in *kvs { inner.insert((*k).to_string(), json!(*v)); }
+        for (k, v) in *kvs {
+            inner.insert((*k).to_string(), json!(*v));
+        }
         m.insert((*p).to_string(), inner);
     }
     m
@@ -33,7 +35,12 @@ async fn test_folder_write() {
         m
     };
     let cases = vec![
-        Case { name: "nil", give: BTreeMap::new(), read_back: BTreeMap::new(), want_err: vec![] },
+        Case {
+            name: "nil",
+            give: BTreeMap::new(),
+            read_back: BTreeMap::new(),
+            want_err: vec![],
+        },
         Case {
             name: "empty",
             give: empty_path,
@@ -97,12 +104,7 @@ async fn test_folder_write() {
             // converting to None.
             let normalized: BTreeMap<String, Map<String, Value>> = write_map
                 .iter()
-                .map(|(k, v)| {
-                    (
-                        k.clone(),
-                        if v.is_empty() { Map::new() } else { v.clone() },
-                    )
-                })
+                .map(|(k, v)| (k.clone(), if v.is_empty() { Map::new() } else { v.clone() }))
                 .collect();
 
             // To get the same "nil data" error chain that Go's PathWrite
@@ -114,25 +116,42 @@ async fn test_folder_write() {
             // passing through `path_write` with `None` — but our FolderWrite
             // takes `Map<String, Value>`. Use a separate code path:
             let res = if tt.name == "empty" {
-                clients.vaku.path_write(&path_join(&[&prefix, "000/001"]), None).await
+                clients
+                    .vaku
+                    .path_write(&path_join(&[&prefix, "000/001"]), None)
+                    .await
                     .map(|_| ())
                     .err()
-                    .map(|e| Err::<(), _>(vaku::api::error::Error::wrap(
-                        "", ErrorKind::FolderWrite, Some(Box::new(e)),
-                    )))
+                    .map(|e| {
+                        Err::<(), _>(vaku::api::error::Error::wrap(
+                            "",
+                            ErrorKind::FolderWrite,
+                            Some(Box::new(e)),
+                        ))
+                    })
                     .unwrap_or(Ok(()))
             } else {
                 clients.vaku.folder_write(normalized).await
             };
 
             let er: Option<&(dyn std::error::Error + 'static)> = match res.as_ref() {
-                Ok(_) => None, Err(e) => Some(e),
+                Ok(_) => None,
+                Err(e) => Some(e),
             };
             compare_errors(er, &tt.want_err);
 
             for (p, want) in &tt.read_back {
-                let read = clients.clean.path_read(&path_join(&[&prefix, p])).await.unwrap();
-                assert_eq!(read, Some(want.clone()), "readback mismatch for {p} ({})", tt.name);
+                let read = clients
+                    .clean
+                    .path_read(&path_join(&[&prefix, p]))
+                    .await
+                    .unwrap();
+                assert_eq!(
+                    read,
+                    Some(want.clone()),
+                    "readback mismatch for {p} ({})",
+                    tt.name
+                );
             }
         }
     }

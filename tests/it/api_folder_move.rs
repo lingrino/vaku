@@ -17,10 +17,23 @@ async fn test_folder_move() {
         nil_dst: bool,
     }
     let cases = vec![
-        Case { src: "0/1", dst: "move/0/1", want_err: vec![], nil_src: true, nil_dst: false },
-        Case { src: "0", dst: "move/0", want_err: vec![], nil_src: true, nil_dst: false },
         Case {
-            src: "0/4/13/24/25/26/error/read/inject", dst: "move/0/4/13/24/25/26",
+            src: "0/1",
+            dst: "move/0/1",
+            want_err: vec![],
+            nil_src: true,
+            nil_dst: false,
+        },
+        Case {
+            src: "0",
+            dst: "move/0",
+            want_err: vec![],
+            nil_src: true,
+            nil_dst: false,
+        },
+        Case {
+            src: "0/4/13/24/25/26/error/read/inject",
+            dst: "move/0/4/13/24/25/26",
             want_err: vec![
                 ErrorKind::FolderMove.into(),
                 ErrorKind::FolderCopy.into(),
@@ -29,17 +42,20 @@ async fn test_folder_move() {
                 ErrorKind::PathRead.into(),
                 ErrorKind::VaultRead.into(),
             ],
-            nil_src: false, nil_dst: true,
+            nil_src: false,
+            nil_dst: true,
         },
         Case {
-            src: "0/4/13/24/25/26/error/delete/inject", dst: "move/0/4/13/24/25/26",
+            src: "0/4/13/24/25/26/error/delete/inject",
+            dst: "move/0/4/13/24/25/26",
             want_err: vec![
                 ErrorKind::FolderMove.into(),
                 ErrorKind::FolderDelete.into(),
                 ErrorKind::PathDelete.into(),
                 ErrorKind::VaultDelete.into(),
             ],
-            nil_src: false, nil_dst: false,
+            nil_src: false,
+            nil_dst: false,
         },
     ];
 
@@ -47,24 +63,47 @@ async fn test_folder_move() {
         for (psrc, pdst) in seeded_prefix_product().await {
             let src = path_join(&[&psrc, tt.src]);
             let dst = path_join(&[&pdst, tt.dst]);
-            let mut orig_src = clients.clean.folder_read(&src).await.unwrap().unwrap_or_default();
+            let mut orig_src = clients
+                .clean
+                .folder_read(&src)
+                .await
+                .unwrap()
+                .unwrap_or_default();
             trim_prefix_map(&mut orig_src, &src);
 
             let res = clients.vaku.folder_move(&src, &dst).await;
             let er: Option<&(dyn std::error::Error + 'static)> = match res.as_ref() {
-                Ok(_) => None, Err(e) => Some(e),
+                Ok(_) => None,
+                Err(e) => Some(e),
             };
             compare_errors(er, &tt.want_err);
 
-            let mut read_src = clients.clean.folder_read(&src).await.unwrap().unwrap_or_default();
-            let mut read_dst = clients.clean.as_destination().folder_read(&dst).await.unwrap().unwrap_or_default();
+            let mut read_src = clients
+                .clean
+                .folder_read(&src)
+                .await
+                .unwrap()
+                .unwrap_or_default();
+            let mut read_dst = clients
+                .clean
+                .as_destination()
+                .folder_read(&dst)
+                .await
+                .unwrap()
+                .unwrap_or_default();
             trim_prefix_map(&mut read_src, &src);
             trim_prefix_map(&mut read_dst, &dst);
 
-            if tt.nil_src { assert!(read_src.is_empty()); }
-            else { assert_eq!(read_src, orig_src); }
-            if tt.nil_dst { assert!(read_dst.is_empty()); }
-            else { assert_eq!(read_dst, orig_src); }
+            if tt.nil_src {
+                assert!(read_src.is_empty());
+            } else {
+                assert_eq!(read_src, orig_src);
+            }
+            if tt.nil_dst {
+                assert!(read_dst.is_empty());
+            } else {
+                assert_eq!(read_dst, orig_src);
+            }
         }
     }
 }

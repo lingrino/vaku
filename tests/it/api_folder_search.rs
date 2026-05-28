@@ -16,16 +16,34 @@ async fn test_folder_search() {
         want_err: Vec<ErrMatch>,
     }
     let cases = vec![
-        Case { give: "0", search: "notfound", want: vec![], want_err: vec![] },
-        Case { give: "0/4/13/24", search: "7", want: vec![], want_err: vec![] },
-        Case { give: "0/4/13", search: "3", want: vec!["17"], want_err: vec![] },
         Case {
-            give: "0/4", search: "2",
+            give: "0",
+            search: "notfound",
+            want: vec![],
+            want_err: vec![],
+        },
+        Case {
+            give: "0/4/13/24",
+            search: "7",
+            want: vec![],
+            want_err: vec![],
+        },
+        Case {
+            give: "0/4/13",
+            search: "3",
+            want: vec!["17"],
+            want_err: vec![],
+        },
+        Case {
+            give: "0/4",
+            search: "2",
             want: vec!["8", "13/17", "13/24/25/26/27"],
             want_err: vec![],
         },
         Case {
-            give: "0/4/error/read/inject", search: "aaaaaaaaa", want: vec![],
+            give: "0/4/error/read/inject",
+            search: "aaaaaaaaa",
+            want: vec![],
             want_err: vec![
                 ErrorKind::FolderSearch.into(),
                 ErrorKind::FolderRead.into(),
@@ -35,8 +53,13 @@ async fn test_folder_search() {
             ],
         },
         Case {
-            give: "0/4/funcdata/read/inject", search: "aaaaaaaaa", want: vec![],
-            want_err: vec![ErrorKind::FolderSearch.into(), ErrorKind::JsonMarshal.into()],
+            give: "0/4/funcdata/read/inject",
+            search: "aaaaaaaaa",
+            want: vec![],
+            want_err: vec![
+                ErrorKind::FolderSearch.into(),
+                ErrorKind::JsonMarshal.into(),
+            ],
         },
     ];
 
@@ -52,7 +75,8 @@ async fn test_folder_search() {
             assert_eq!(got, want, "give={} prefix={}", tt.give, prefix);
 
             let er: Option<&(dyn std::error::Error + 'static)> = match res.as_ref() {
-                Ok(_) => None, Err(e) => Some(e),
+                Ok(_) => None,
+                Err(e) => Some(e),
             };
             compare_errors(er, &tt.want_err);
         }

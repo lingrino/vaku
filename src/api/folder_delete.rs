@@ -17,10 +17,10 @@ type Deleter = Arc<
 impl Client {
     /// Recursively delete every secret under `p`. Soft delete on KV v2.
     pub async fn folder_delete(&self, p: &str) -> Result<(), Error> {
-        let deleter: Deleter = Arc::new(|c: Client, path: String| {
-            Box::pin(async move { c.path_delete(&path).await })
-        });
-        self.folder_delete_with(p, deleter, ErrorKind::FolderDelete).await
+        let deleter: Deleter =
+            Arc::new(|c: Client, path: String| Box::pin(async move { c.path_delete(&path).await }));
+        self.folder_delete_with(p, deleter, ErrorKind::FolderDelete)
+            .await
     }
 
     pub(crate) async fn folder_delete_with(

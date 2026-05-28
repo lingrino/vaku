@@ -72,7 +72,11 @@ impl Client {
         }
 
         if let Some(e) = first_err {
-            return Err(Error::wrap(src, ErrorKind::FolderCopyAllVersions, Some(Box::new(e))));
+            return Err(Error::wrap(
+                src,
+                ErrorKind::FolderCopyAllVersions,
+                Some(Box::new(e)),
+            ));
         }
         Ok(())
     }

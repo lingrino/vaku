@@ -1,44 +1,94 @@
 name: release
 
+# Manual + tag-driven. While the Rust rewrite is unreleased, prefer
+# `workflow_dispatch` to build & verify artifacts without cutting a release.
 on:
+  workflow_dispatch:
   push:
     tags:
       - "v*"
 
 jobs:
-  release:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest,  target: x86_64-unknown-linux-musl,   bin: vaku,    extra: "musl-tools" }
+          - { os: ubuntu-latest,  target: aarch64-unknown-linux-musl,  bin: vaku,    extra: "musl-tools gcc-aarch64-linux-gnu" }
+          - { os: macos-latest,   target: x86_64-apple-darwin,         bin: vaku,    extra: "" }
+          - { os: macos-latest,   target: aarch64-apple-darwin,        bin: vaku,    extra: "" }
+          - { os: windows-latest, target: x86_64-pc-windows-msvc,      bin: vaku.exe, extra: "" }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - name: install extra deps
+        if: matrix.extra != ''
+        run: |
+          if [ "${{ runner.os }}" = "Linux" ]; then
+            sudo apt-get update
+            sudo apt-get install -y ${{ matrix.extra }}
+          fi
+        shell: bash
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+      - name: configure cross linker
+        if: matrix.target == 'aarch64-unknown-linux-musl'
+        run: |
+          mkdir -p .cargo
+          echo '[target.aarch64-unknown-linux-musl]' >> .cargo/config.toml
+          echo 'linker = "aarch64-linux-gnu-gcc"' >> .cargo/config.toml
+      - name: build
+        run: cargo build --release --target ${{ matrix.target }}
+      - name: package
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp "target/${{ matrix.target }}/release/${{ matrix.bin }}" "dist/${{ matrix.bin }}"
+          cd dist
+          tar -czf "vaku-${{ matrix.target }}.tar.gz" "${{ matrix.bin }}"
+          rm -f "${{ matrix.bin }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vaku-${{ matrix.target }}
+          path: dist/*
+          if-no-files-found: error
+
+  verify:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: vaku-x86_64-unknown-linux-musl
+          path: ./dist
+      - name: smoke
+        run: |
+          tar -xzf dist/vaku-x86_64-unknown-linux-musl.tar.gz
+          chmod +x vaku
+          ./vaku version
+          ./vaku --help
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build, verify]
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
-      attestations: write
-      id-token: write
     steps:
-      - name: checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
-          fetch-depth: 0
-      - name: install go
-        uses: actions/setup-go@v6
+          path: dist
+      - name: collect artifacts
+        run: ls -R dist
+      - uses: softprops/action-gh-release@v2
         with:
-          go-version: stable # https://golang.org/dl/
-      - name: check api version
-        run: |
-          version="$(git describe --tags)"
-          version="${version/v}"
-          grep -q "${version}" api/version.go
-        shell: bash
-      - name: setup docker buildx
-        uses: docker/setup-buildx-action@v4.0.0
-      - name: docker login
-        uses: docker/login-action@v4.1.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: release
-        uses: goreleaser/goreleaser-action@v7.2.1
-        with:
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.GORELEASER_GITHUB_TOKEN }}
+          files: dist/**/*.tar.gz
+      # NOTE: Homebrew cask publish intentionally omitted until the Rust
+      # rewrite is approved and tagged for general availability.

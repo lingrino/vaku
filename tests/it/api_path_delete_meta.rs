@@ -15,11 +15,22 @@ async fn test_path_delete_meta() {
         no_readback: bool,
     }
     let cases = vec![
-        Case { give: "0/1", want_err: vec![], no_readback: false },
-        Case { give: "fake", want_err: vec![], no_readback: false },
+        Case {
+            give: "0/1",
+            want_err: vec![],
+            no_readback: false,
+        },
+        Case {
+            give: "fake",
+            want_err: vec![],
+            no_readback: false,
+        },
         Case {
             give: "error/delete/inject",
-            want_err: vec![ErrorKind::PathDeleteMeta.into(), ErrorKind::VaultDelete.into()],
+            want_err: vec![
+                ErrorKind::PathDeleteMeta.into(),
+                ErrorKind::VaultDelete.into(),
+            ],
             no_readback: true,
         },
     ];
@@ -31,10 +42,13 @@ async fn test_path_delete_meta() {
             if prefix.starts_with("kv1/") {
                 let err = res.unwrap_err();
                 let dyn_err: &(dyn std::error::Error + 'static) = &err;
-                compare_errors(Some(dyn_err), &[
-                    ErrorKind::PathDeleteMeta.into(),
-                    ErrorKind::MountVersion.into(),
-                ]);
+                compare_errors(
+                    Some(dyn_err),
+                    &[
+                        ErrorKind::PathDeleteMeta.into(),
+                        ErrorKind::MountVersion.into(),
+                    ],
+                );
                 continue;
             }
             // KV2

@@ -14,7 +14,7 @@ pub enum MountVersion {
 }
 
 impl MountVersion {
-    pub fn from_str(s: &str) -> Self {
+    pub fn parse(s: &str) -> Self {
         match s.parse::<i64>() {
             Ok(0) => MountVersion::Mv0,
             Ok(1) => MountVersion::Mv1,
@@ -42,7 +42,10 @@ pub fn mount_supports_operation(op: VaultOp, v: MountVersion) -> bool {
     if matches!(v, MountVersion::Mv2) {
         return true;
     }
-    !matches!(op, VaultOp::Destroy | VaultOp::DeleteMeta | VaultOp::ReadMeta)
+    !matches!(
+        op,
+        VaultOp::Destroy | VaultOp::DeleteMeta | VaultOp::ReadMeta
+    )
 }
 
 /// Find the mount that `path` lives under. Returns `(mount_path, version)`.
@@ -70,7 +73,7 @@ pub async fn mount_info(
             let version = if mount.version.is_empty() {
                 MountVersion::Mv0
             } else {
-                MountVersion::from_str(&mount.version)
+                MountVersion::parse(&mount.version)
             };
             return Ok((mp, version));
         }

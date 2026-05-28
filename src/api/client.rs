@@ -248,7 +248,10 @@ struct NullLogical;
 
 #[async_trait::async_trait]
 impl Logical for NullLogical {
-    async fn read(&self, _: &str) -> Result<Option<crate::api::logical::Secret>, crate::api::error::BoxError> {
+    async fn read(
+        &self,
+        _: &str,
+    ) -> Result<Option<crate::api::logical::Secret>, crate::api::error::BoxError> {
         Err("no vault client configured".into())
     }
     async fn read_with_data(
@@ -258,13 +261,23 @@ impl Logical for NullLogical {
     ) -> Result<Option<crate::api::logical::Secret>, crate::api::error::BoxError> {
         Err("no vault client configured".into())
     }
-    async fn list(&self, _: &str) -> Result<Option<crate::api::logical::Secret>, crate::api::error::BoxError> {
+    async fn list(
+        &self,
+        _: &str,
+    ) -> Result<Option<crate::api::logical::Secret>, crate::api::error::BoxError> {
         Err("no vault client configured".into())
     }
-    async fn write(&self, _: &str, _: serde_json::Value) -> Result<Option<crate::api::logical::Secret>, crate::api::error::BoxError> {
+    async fn write(
+        &self,
+        _: &str,
+        _: serde_json::Value,
+    ) -> Result<Option<crate::api::logical::Secret>, crate::api::error::BoxError> {
         Err("no vault client configured".into())
     }
-    async fn delete(&self, _: &str) -> Result<Option<crate::api::logical::Secret>, crate::api::error::BoxError> {
+    async fn delete(
+        &self,
+        _: &str,
+    ) -> Result<Option<crate::api::logical::Secret>, crate::api::error::BoxError> {
         Err("no vault client configured".into())
     }
 }

@@ -26,10 +26,7 @@ fn seed_map() -> BTreeMap<&'static str, BTreeMap<&'static str, &'static str>> {
     BTreeMap::from_iter([
         ("0/1", BTreeMap::from_iter([("2", "3")])),
         ("0/4/5", BTreeMap::from_iter([("6", "7")])),
-        (
-            "0/4/8",
-            BTreeMap::from_iter([("9", "10"), ("11", "12")]),
-        ),
+        ("0/4/8", BTreeMap::from_iter([("9", "10"), ("11", "12")])),
         ("0/4/13/14", BTreeMap::from_iter([("15", "16")])),
         (
             "0/4/13/17",

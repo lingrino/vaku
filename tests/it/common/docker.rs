@@ -88,9 +88,7 @@ fn docker_port(container_id: &str, port: u16) -> u16 {
     let text = String::from_utf8_lossy(&out.stdout);
     let line = text
         .lines()
-        .find(|l| {
-            l.starts_with("0.0.0.0") || l.starts_with("127.0.0.1")
-        })
+        .find(|l| l.starts_with("0.0.0.0") || l.starts_with("127.0.0.1"))
         .unwrap_or_else(|| panic!("no port mapping found in: {text}"));
     let port_str = line.rsplit(':').next().expect("port str");
     port_str
@@ -117,10 +115,9 @@ fn wait_for_vault(_addr: &str, port: u16) {
 /// context — keeps the test harness dependency-light.
 fn check_health(port: u16) -> bool {
     let addr = format!("127.0.0.1:{port}");
-    let Ok(mut stream) = TcpStream::connect_timeout(
-        &addr.parse().expect("socket addr"),
-        Duration::from_secs(1),
-    ) else {
+    let Ok(mut stream) =
+        TcpStream::connect_timeout(&addr.parse().expect("socket addr"), Duration::from_secs(1))
+    else {
         return false;
     };
     let _ = stream.set_read_timeout(Some(Duration::from_secs(2)));

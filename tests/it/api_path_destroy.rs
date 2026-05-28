@@ -18,10 +18,30 @@ async fn test_path_destroy() {
         nil_read: bool,
     }
     let cases = vec![
-        Case { give: "0/1", versions: vec![], want_err: vec![ErrorKind::PathDestroy.into()], nil_read: false },
-        Case { give: "0/1", versions: vec![1], want_err: vec![], nil_read: false },
-        Case { give: "0/1", versions: vec![2], want_err: vec![], nil_read: true },
-        Case { give: "fake", versions: vec![1,2,3,4,5,6,7], want_err: vec![], nil_read: true },
+        Case {
+            give: "0/1",
+            versions: vec![],
+            want_err: vec![ErrorKind::PathDestroy.into()],
+            nil_read: false,
+        },
+        Case {
+            give: "0/1",
+            versions: vec![1],
+            want_err: vec![],
+            nil_read: false,
+        },
+        Case {
+            give: "0/1",
+            versions: vec![2],
+            want_err: vec![],
+            nil_read: true,
+        },
+        Case {
+            give: "fake",
+            versions: vec![1, 2, 3, 4, 5, 6, 7],
+            want_err: vec![],
+            nil_read: true,
+        },
         Case {
             give: "error/write/inject",
             versions: vec![1],
@@ -36,16 +56,23 @@ async fn test_path_destroy() {
             if prefix.starts_with("kv1/") {
                 let err = clients.vaku.path_destroy(&p, &[1]).await.unwrap_err();
                 let dyn_err: &(dyn std::error::Error + 'static) = &err;
-                compare_errors(Some(dyn_err), &[
-                    ErrorKind::PathDestroy.into(),
-                    ErrorKind::MountVersion.into(),
-                ]);
+                compare_errors(
+                    Some(dyn_err),
+                    &[
+                        ErrorKind::PathDestroy.into(),
+                        ErrorKind::MountVersion.into(),
+                    ],
+                );
                 continue;
             }
             // KV2: overwrite first to create a new version
             let mut overwrite = Map::new();
             overwrite.insert("foo".into(), json!("bar"));
-            clients.clean.path_write(&p, Some(overwrite.clone())).await.unwrap();
+            clients
+                .clean
+                .path_write(&p, Some(overwrite.clone()))
+                .await
+                .unwrap();
 
             let res = clients.vaku.path_destroy(&p, &tt.versions).await;
             let err_ref: Option<&(dyn std::error::Error + 'static)> = match res.as_ref() {

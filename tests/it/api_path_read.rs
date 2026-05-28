@@ -3,11 +3,11 @@
 use crate::common::{seeded_prefixes, shared_clients, MOUNTLESS};
 use crate::skip_if_no_docker;
 use serde_json::{json, Map, Value};
+use std::sync::Arc;
 use vaku::api::client::Client;
 use vaku::api::error::{compare_errors, ErrMatch, ErrorKind};
 use vaku::api::helpers::path_join;
 use vaku::api::logical::VaultHttpClient;
-use std::sync::Arc;
 
 fn want_map(kvs: &[(&str, &str)]) -> Option<Map<String, Value>> {
     let mut m = Map::new();
@@ -82,7 +82,11 @@ async fn test_path_read() {
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn test_path_read_ignore_errors() {
     skip_if_no_docker!();
-    let prefix = seeded_prefixes("error/read/inject").await.into_iter().next().unwrap();
+    let prefix = seeded_prefixes("error/read/inject")
+        .await
+        .into_iter()
+        .next()
+        .unwrap();
     let server = &crate::common::seeds::SERVERS.src;
     let http = Arc::new(VaultHttpClient::new(&server.addr, &server.token, None).unwrap());
     let injector = Arc::new(crate::common::injector::LogicalInjector::new(http, false));
@@ -97,7 +101,6 @@ async fn test_path_read_ignore_errors() {
     assert!(got.is_none());
 }
 
-
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn test_path_read_version() {
     skip_if_no_docker!();
@@ -107,33 +110,52 @@ async fn test_path_read_version() {
             let p = path_join(&[&prefix, "0/1"]);
             let err = clients.vaku.path_read_version(&p, 1).await.unwrap_err();
             let dyn_err: &(dyn std::error::Error + 'static) = &err;
-            compare_errors(Some(dyn_err), &[
-                ErrorKind::PathReadVersion.into(),
-                ErrorKind::MountVersion.into(),
-            ]);
+            compare_errors(
+                Some(dyn_err),
+                &[
+                    ErrorKind::PathReadVersion.into(),
+                    ErrorKind::MountVersion.into(),
+                ],
+            );
             continue;
         }
         // KV2 cases
         let src_path = path_join(&[&prefix, "readversion/basic"]);
-        clients.clean.path_write(&src_path, want_map(&[("version", "1")])).await.unwrap();
-        clients.clean.path_write(&src_path, want_map(&[("version", "2")])).await.unwrap();
+        clients
+            .clean
+            .path_write(&src_path, want_map(&[("version", "1")]))
+            .await
+            .unwrap();
+        clients
+            .clean
+            .path_write(&src_path, want_map(&[("version", "2")]))
+            .await
+            .unwrap();
 
         let v1 = clients.vaku.path_read_version(&src_path, 1).await.unwrap();
         assert_eq!(v1, want_map(&[("version", "1")]));
         let v2 = clients.vaku.path_read_version(&src_path, 2).await.unwrap();
         assert_eq!(v2, want_map(&[("version", "2")]));
 
-        let non = clients.vaku.path_read_version(&src_path, 999).await.unwrap();
+        let non = clients
+            .vaku
+            .path_read_version(&src_path, 999)
+            .await
+            .unwrap();
         assert!(non.is_none());
 
-        let err = clients.vaku
+        let err = clients
+            .vaku
             .path_read_version(&path_join(&[&prefix, "error/read/inject"]), 1)
             .await
             .unwrap_err();
         let dyn_err: &(dyn std::error::Error + 'static) = &err;
-        compare_errors(Some(dyn_err), &[
-            ErrorKind::PathReadVersion.into(),
-            ErrorKind::VaultRead.into(),
-        ]);
+        compare_errors(
+            Some(dyn_err),
+            &[
+                ErrorKind::PathReadVersion.into(),
+                ErrorKind::VaultRead.into(),
+            ],
+        );
     }
 }

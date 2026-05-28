@@ -16,10 +16,21 @@ async fn test_folder_copy() {
         nil_dst: bool,
     }
     let cases = vec![
-        Case { src: "0/1", dst: "copy/0/1", want_err: vec![], nil_dst: false },
-        Case { src: "0", dst: "copy/0", want_err: vec![], nil_dst: false },
         Case {
-            src: "0/4/13/24/25/26/error/read/inject", dst: "copy/0/4/13/24/25/26",
+            src: "0/1",
+            dst: "copy/0/1",
+            want_err: vec![],
+            nil_dst: false,
+        },
+        Case {
+            src: "0",
+            dst: "copy/0",
+            want_err: vec![],
+            nil_dst: false,
+        },
+        Case {
+            src: "0/4/13/24/25/26/error/read/inject",
+            dst: "copy/0/4/13/24/25/26",
             want_err: vec![
                 ErrorKind::FolderCopy.into(),
                 ErrorKind::FolderRead.into(),
@@ -30,7 +41,8 @@ async fn test_folder_copy() {
             nil_dst: true,
         },
         Case {
-            src: "0/4/13/24/25/26", dst: "copy/0/4/13/24/25/26/error/write/inject",
+            src: "0/4/13/24/25/26",
+            dst: "copy/0/4/13/24/25/26/error/write/inject",
             want_err: vec![
                 ErrorKind::FolderCopy.into(),
                 ErrorKind::FolderWrite.into(),
@@ -47,12 +59,24 @@ async fn test_folder_copy() {
             let dst = path_join(&[&pdst, tt.dst]);
             let res = clients.vaku.folder_copy(&src, &dst).await;
             let er: Option<&(dyn std::error::Error + 'static)> = match res.as_ref() {
-                Ok(_) => None, Err(e) => Some(e),
+                Ok(_) => None,
+                Err(e) => Some(e),
             };
             compare_errors(er, &tt.want_err);
 
-            let mut read_src = clients.clean.folder_read(&src).await.unwrap().unwrap_or_default();
-            let mut read_dst = clients.clean.as_destination().folder_read(&dst).await.unwrap().unwrap_or_default();
+            let mut read_src = clients
+                .clean
+                .folder_read(&src)
+                .await
+                .unwrap()
+                .unwrap_or_default();
+            let mut read_dst = clients
+                .clean
+                .as_destination()
+                .folder_read(&dst)
+                .await
+                .unwrap()
+                .unwrap_or_default();
             if tt.nil_dst {
                 assert!(read_dst.is_empty());
             } else {

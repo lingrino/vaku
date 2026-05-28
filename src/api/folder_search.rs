@@ -13,7 +13,9 @@ impl Client {
             .await
             .map_err(|e| Error::wrap(path, ErrorKind::FolderSearch, Some(Box::new(e))))?;
 
-        let Some(read) = read else { return Ok(Vec::new()) };
+        let Some(read) = read else {
+            return Ok(Vec::new());
+        };
 
         let mut matches = Vec::new();
         for (p, secret) in read {

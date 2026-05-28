@@ -10,7 +10,11 @@ impl Client {
             .await
             .map_err(|e| Error::wrap("", ErrorKind::FolderMove, Some(Box::new(e))))?;
         self.folder_delete(src).await.map_err(|e| {
-            Error::wrap(&format!("delete {src}"), ErrorKind::FolderMove, Some(Box::new(e)))
+            Error::wrap(
+                &format!("delete {src}"),
+                ErrorKind::FolderMove,
+                Some(Box::new(e)),
+            )
         })
     }
 }

@@ -25,13 +25,21 @@ impl Client {
                 return Err(Error::wrap(
                     p,
                     ErrorKind::PathRead,
-                    Some(Box::new(Error::wrap(&e.to_string(), ErrorKind::VaultRead, None))),
+                    Some(Box::new(Error::wrap(
+                        &e.to_string(),
+                        ErrorKind::VaultRead,
+                        None,
+                    ))),
                 ))
             }
         };
 
-        let Some(secret) = secret else { return Ok(None) };
-        let Some(data) = secret.data else { return Ok(None) };
+        let Some(secret) = secret else {
+            return Ok(None);
+        };
+        let Some(data) = secret.data else {
+            return Ok(None);
+        };
 
         if matches!(mv, MountVersion::Mv2) {
             Ok(extract_v2_read(Some(&data)))
@@ -68,12 +76,20 @@ impl Client {
                 Error::wrap(
                     p,
                     ErrorKind::PathReadVersion,
-                    Some(Box::new(Error::wrap(&e.to_string(), ErrorKind::VaultRead, None))),
+                    Some(Box::new(Error::wrap(
+                        &e.to_string(),
+                        ErrorKind::VaultRead,
+                        None,
+                    ))),
                 )
             })?;
 
-        let Some(secret) = secret else { return Ok(None) };
-        let Some(data) = secret.data else { return Ok(None) };
+        let Some(secret) = secret else {
+            return Ok(None);
+        };
+        let Some(data) = secret.data else {
+            return Ok(None);
+        };
         Ok(extract_v2_read(Some(&data)))
     }
 }

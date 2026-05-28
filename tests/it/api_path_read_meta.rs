@@ -15,8 +15,16 @@ async fn test_path_read_meta() {
         want_nil: bool,
     }
     let cases = vec![
-        Case { give: "0/1", want_err: vec![], want_nil: false },
-        Case { give: "fake/path", want_err: vec![], want_nil: true },
+        Case {
+            give: "0/1",
+            want_err: vec![],
+            want_nil: false,
+        },
+        Case {
+            give: "fake/path",
+            want_err: vec![],
+            want_nil: true,
+        },
         Case {
             give: "error/read/inject",
             want_err: vec![ErrorKind::PathReadMeta.into(), ErrorKind::VaultRead.into()],
@@ -30,10 +38,13 @@ async fn test_path_read_meta() {
             if prefix.starts_with("kv1/") {
                 let err = clients.vaku.path_read_meta(&p).await.unwrap_err();
                 let dyn_err: &(dyn std::error::Error + 'static) = &err;
-                compare_errors(Some(dyn_err), &[
-                    ErrorKind::PathReadMeta.into(),
-                    ErrorKind::MountVersion.into(),
-                ]);
+                compare_errors(
+                    Some(dyn_err),
+                    &[
+                        ErrorKind::PathReadMeta.into(),
+                        ErrorKind::MountVersion.into(),
+                    ],
+                );
                 continue;
             }
             // KV2

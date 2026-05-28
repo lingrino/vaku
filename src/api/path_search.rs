@@ -25,8 +25,8 @@ pub(crate) fn search_secret(secret: &Map<String, Value>, search: &str) -> Result
         if k.contains(search) {
             return Ok(true);
         }
-        let s = serde_json::to_string(v)
-            .map_err(|_| Error::wrap("", ErrorKind::JsonMarshal, None))?;
+        let s =
+            serde_json::to_string(v).map_err(|_| Error::wrap("", ErrorKind::JsonMarshal, None))?;
         if s.contains(search) {
             return Ok(true);
         }

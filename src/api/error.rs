@@ -153,13 +153,7 @@ impl Error {
         let kind_msg = kind.message();
         let msg: String = match (msg_or_empty.is_empty(), source.as_ref()) {
             (true, None) => kind_msg.to_string(),
-            (true, Some(src)) => {
-                if matches!(kind, ErrorKind::Custom(_)) {
-                    format!("{kind_msg}: {src}")
-                } else {
-                    format!("{kind_msg}: {src}")
-                }
-            }
+            (true, Some(src)) => format!("{kind_msg}: {src}"),
             (false, None) => {
                 if msg_or_empty == kind_msg {
                     kind_msg.to_string()
@@ -181,7 +175,11 @@ impl Error {
 
     /// Shortcut: wrap with kind only (and optional source).
     pub fn wrap(msg: &str, kind: ErrorKind, source: Option<BoxError>) -> Self {
-        let m = if msg.is_empty() { None } else { Some(msg.to_string()) };
+        let m = if msg.is_empty() {
+            None
+        } else {
+            Some(msg.to_string())
+        };
         Self::new(m, Some(kind), source)
     }
 

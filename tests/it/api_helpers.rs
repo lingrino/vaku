@@ -41,12 +41,7 @@ fn test_is_folder() {
 
 #[test]
 fn test_ensure_folder() {
-    let cases = [
-        ("", "/"),
-        ("a", "a/"),
-        ("a/", "a/"),
-        ("a/b", "a/b/"),
-    ];
+    let cases = [("", "/"), ("a", "a/"), ("a/", "a/"), ("a/b", "a/b/")];
     for (input, want) in cases {
         assert_eq!(ensure_folder(input), want, "input={input}");
     }
@@ -64,7 +59,11 @@ fn test_add_prefix() {
         ("a/b/c/d", "b", "b/a/b/c/d"),
     ];
     for (give, prefix, want) in cases {
-        assert_eq!(add_prefix(give, prefix), want, "give={give} prefix={prefix}");
+        assert_eq!(
+            add_prefix(give, prefix),
+            want,
+            "give={give} prefix={prefix}"
+        );
     }
 }
 
@@ -145,10 +144,26 @@ fn mk_map(kvs: &[(&str, &str, &str)]) -> BTreeMap<String, Map<String, Value>> {
 #[test]
 fn test_ensure_prefix_map() {
     let cases = [
-        ("foo", vec![("foo/bar", "a", "b")], vec![("foo/bar", "a", "b")]),
-        ("foo/", vec![("foo/bar", "a", "b")], vec![("foo/bar", "a", "b")]),
-        ("fo", vec![("foo/bar", "a", "b")], vec![("foo/bar", "a", "b")]),
-        ("fooo", vec![("foo/bar", "a", "b")], vec![("fooo/foo/bar", "a", "b")]),
+        (
+            "foo",
+            vec![("foo/bar", "a", "b")],
+            vec![("foo/bar", "a", "b")],
+        ),
+        (
+            "foo/",
+            vec![("foo/bar", "a", "b")],
+            vec![("foo/bar", "a", "b")],
+        ),
+        (
+            "fo",
+            vec![("foo/bar", "a", "b")],
+            vec![("foo/bar", "a", "b")],
+        ),
+        (
+            "fooo",
+            vec![("foo/bar", "a", "b")],
+            vec![("fooo/foo/bar", "a", "b")],
+        ),
     ];
     for (prefix, give, want) in cases {
         let mut got = mk_map(&give);
@@ -164,7 +179,11 @@ fn test_trim_prefix_map() {
         ("foo", vec![("foo/bar", "a", "b")], vec![("bar", "a", "b")]),
         ("foo/", vec![("foo/bar", "a", "b")], vec![("bar", "a", "b")]),
         ("fo", vec![("foo/bar", "a", "b")], vec![("o/bar", "a", "b")]),
-        ("fooo", vec![("foo/bar", "a", "b")], vec![("foo/bar", "a", "b")]),
+        (
+            "fooo",
+            vec![("foo/bar", "a", "b")],
+            vec![("foo/bar", "a", "b")],
+        ),
     ];
     for (prefix, give, want) in cases {
         let mut got = mk_map(&give);

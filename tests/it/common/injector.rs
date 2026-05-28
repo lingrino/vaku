@@ -82,9 +82,10 @@ fn injects(name: &str) -> Option<Inject> {
             let mut inner = Map::new();
             inner.insert(
                 "foo".into(),
-                Value::Number(serde_json::Number::from_f64(f64::NAN).unwrap_or_else(|| {
-                    serde_json::Number::from(0)
-                })),
+                Value::Number(
+                    serde_json::Number::from_f64(f64::NAN)
+                        .unwrap_or_else(|| serde_json::Number::from(0)),
+                ),
             );
             let mut outer = Map::new();
             outer.insert("data".into(), Value::Object(inner));
@@ -163,9 +164,13 @@ impl LogicalInjector {
     /// LIST-specific result fixup: re-add the injection markers to listed keys
     /// so they continue to fire on subsequent operations down the tree.
     fn rewrite_list_result(orig_path: &str, sec: Option<Secret>) -> Option<Secret> {
-        let Some(mut sec) = sec else { return None };
-        let Some(data) = &sec.data else { return Some(sec) };
-        let Some(Value::Array(arr)) = data.get("keys") else { return Some(sec) };
+        let mut sec = sec?;
+        let Some(data) = &sec.data else {
+            return Some(sec);
+        };
+        let Some(Value::Array(arr)) = data.get("keys") else {
+            return Some(sec);
+        };
 
         // Only fire when the original path ended in `.../inject` (or
         // `.../inject/`).
@@ -276,5 +281,9 @@ fn _touch_shared() {
 // chain comparisons line up.
 #[allow(dead_code)]
 pub fn inject_error_node() -> VakuError {
-    VakuError::wrap(ERR_INJECT_MSG, vaku::api::error::ErrorKind::Custom(ERR_INJECT_MSG.into()), None)
+    VakuError::wrap(
+        ERR_INJECT_MSG,
+        vaku::api::error::ErrorKind::Custom(ERR_INJECT_MSG.into()),
+        None,
+    )
 }

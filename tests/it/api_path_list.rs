@@ -2,11 +2,11 @@
 
 use crate::common::{seeded_prefixes, shared_clients, MOUNTLESS};
 use crate::skip_if_no_docker;
+use std::sync::Arc;
 use vaku::api::client::Client;
 use vaku::api::error::{compare_errors, ErrMatch, ErrorKind};
 use vaku::api::helpers::{path_join, trim_prefix_list};
 use vaku::api::logical::VaultHttpClient;
-use std::sync::Arc;
 
 struct Case {
     give: &'static str,
@@ -98,7 +98,11 @@ async fn test_path_list() {
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn test_path_list_ignore_errors() {
     skip_if_no_docker!();
-    let prefix = seeded_prefixes("error/list/inject").await.into_iter().next().unwrap();
+    let prefix = seeded_prefixes("error/list/inject")
+        .await
+        .into_iter()
+        .next()
+        .unwrap();
     let server = &crate::common::seeds::SERVERS.src;
     let http = Arc::new(VaultHttpClient::new(&server.addr, &server.token, None).unwrap());
     let injector = Arc::new(crate::common::injector::LogicalInjector::new(http, false));

@@ -9,7 +9,13 @@ impl Client {
         let mut read = self
             .folder_read(src)
             .await
-            .map_err(|e| Error::wrap(&format!("read from {src}"), ErrorKind::FolderCopy, Some(Box::new(e))))?
+            .map_err(|e| {
+                Error::wrap(
+                    &format!("read from {src}"),
+                    ErrorKind::FolderCopy,
+                    Some(Box::new(e)),
+                )
+            })?
             .unwrap_or_default();
 
         if read.is_empty() {
@@ -19,9 +25,12 @@ impl Client {
         self.swap_paths(&mut read, src, dst);
 
         let dst_client = self.as_destination();
-        dst_client
-            .folder_write(read)
-            .await
-            .map_err(|e| Error::wrap(&format!("write to {dst}"), ErrorKind::FolderCopy, Some(Box::new(e))))
+        dst_client.folder_write(read).await.map_err(|e| {
+            Error::wrap(
+                &format!("write to {dst}"),
+                ErrorKind::FolderCopy,
+                Some(Box::new(e)),
+            )
+        })
     }
 }

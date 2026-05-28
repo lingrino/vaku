@@ -16,8 +16,18 @@ async fn test_path_copy() {
         nil_dst: bool,
     }
     let cases = vec![
-        Case { src: "0/1", dst: "copy/0/1", want_err: vec![], nil_dst: false },
-        Case { src: "0/1", dst: "0/4/5", want_err: vec![], nil_dst: false },
+        Case {
+            src: "0/1",
+            dst: "copy/0/1",
+            want_err: vec![],
+            nil_dst: false,
+        },
+        Case {
+            src: "0/1",
+            dst: "0/4/5",
+            want_err: vec![],
+            nil_dst: false,
+        },
         Case {
             src: "0/4/8/error/read/inject",
             dst: "copy/readerror",
@@ -52,7 +62,12 @@ async fn test_path_copy() {
             compare_errors(err_ref, &tt.want_err);
 
             let read_src = clients.clean.path_read(&src).await.unwrap();
-            let read_dst = clients.clean.as_destination().path_read(&dst).await.unwrap();
+            let read_dst = clients
+                .clean
+                .as_destination()
+                .path_read(&dst)
+                .await
+                .unwrap();
             if tt.nil_dst {
                 assert!(read_dst.is_none());
             } else {

@@ -63,8 +63,13 @@ impl VaultHttpClient {
     /// Create a new client. `addr` should be a full URL like
     /// `http://127.0.0.1:8200`.
     pub fn new(addr: &str, token: &str, namespace: Option<&str>) -> Result<Self, Error> {
-        let mut base = Url::parse(addr)
-            .map_err(|e| Error::wrap("vault address", ErrorKind::Custom("invalid vault address".into()), Some(Box::new(e))))?;
+        let mut base = Url::parse(addr).map_err(|e| {
+            Error::wrap(
+                "vault address",
+                ErrorKind::Custom("invalid vault address".into()),
+                Some(Box::new(e)),
+            )
+        })?;
 
         // Ensure a trailing slash on the base URL so `base.join` works.
         if !base.path().ends_with('/') {
@@ -73,9 +78,13 @@ impl VaultHttpClient {
             base.set_path(&path);
         }
 
-        let client = reqwest::Client::builder()
-            .build()
-            .map_err(|e| Error::wrap("vault client", ErrorKind::Custom("http client build".into()), Some(Box::new(e))))?;
+        let client = reqwest::Client::builder().build().map_err(|e| {
+            Error::wrap(
+                "vault client",
+                ErrorKind::Custom("http client build".into()),
+                Some(Box::new(e)),
+            )
+        })?;
 
         Ok(Self {
             base,

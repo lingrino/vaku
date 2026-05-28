@@ -9,7 +9,9 @@ use vaku::api::helpers::{path_join, trim_prefix_map};
 
 fn inner(kvs: &[(&str, &str)]) -> Map<String, Value> {
     let mut m = Map::new();
-    for (k, v) in kvs { m.insert((*k).to_string(), json!(*v)); }
+    for (k, v) in kvs {
+        m.insert((*k).to_string(), json!(*v));
+    }
     m
 }
 
@@ -23,9 +25,21 @@ async fn test_folder_delete() {
         want_err: Vec<ErrMatch>,
     }
     let cases = vec![
-        Case { give: "0/1", read_back: BTreeMap::new(), want_err: vec![] },
-        Case { give: "0/4/13", read_back: BTreeMap::new(), want_err: vec![] },
-        Case { give: "empty/path", read_back: BTreeMap::new(), want_err: vec![] },
+        Case {
+            give: "0/1",
+            read_back: BTreeMap::new(),
+            want_err: vec![],
+        },
+        Case {
+            give: "0/4/13",
+            read_back: BTreeMap::new(),
+            want_err: vec![],
+        },
+        Case {
+            give: "empty/path",
+            read_back: BTreeMap::new(),
+            want_err: vec![],
+        },
         Case {
             give: "0/4/13/24/25/error/list/inject",
             read_back: BTreeMap::from_iter([("26/27".to_string(), inner(&[("28", "29")]))]),
@@ -52,11 +66,17 @@ async fn test_folder_delete() {
             let p = path_join(&[&prefix, tt.give]);
             let res = clients.vaku.folder_delete(&p).await;
             let er: Option<&(dyn std::error::Error + 'static)> = match res.as_ref() {
-                Ok(_) => None, Err(e) => Some(e),
+                Ok(_) => None,
+                Err(e) => Some(e),
             };
             compare_errors(er, &tt.want_err);
 
-            let mut got = clients.clean.folder_read(&p).await.unwrap().unwrap_or_default();
+            let mut got = clients
+                .clean
+                .folder_read(&p)
+                .await
+                .unwrap()
+                .unwrap_or_default();
             trim_prefix_map(&mut got, &prefix);
             assert_eq!(got, tt.read_back, "give={} prefix={}", tt.give, prefix);
         }

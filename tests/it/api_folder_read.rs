@@ -9,13 +9,17 @@ use vaku::api::helpers::{path_join, trim_prefix_map};
 
 fn inner(kvs: &[(&str, &str)]) -> Map<String, Value> {
     let mut m = Map::new();
-    for (k, v) in kvs { m.insert((*k).to_string(), json!(*v)); }
+    for (k, v) in kvs {
+        m.insert((*k).to_string(), json!(*v));
+    }
     m
 }
 
 fn mk(items: &[(&str, &[(&str, &str)])]) -> BTreeMap<String, Map<String, Value>> {
     let mut m = BTreeMap::new();
-    for (p, kvs) in items { m.insert((*p).to_string(), inner(kvs)); }
+    for (p, kvs) in items {
+        m.insert((*p).to_string(), inner(kvs));
+    }
     m
 }
 
@@ -29,7 +33,11 @@ async fn test_folder_read() {
         want_err: Vec<ErrMatch>,
     }
     let cases = vec![
-        Case { give: "0/1", want: None, want_err: vec![] },
+        Case {
+            give: "0/1",
+            want: None,
+            want_err: vec![],
+        },
         Case {
             give: "0/4/13/24/25",
             want: Some(mk(&[("26/27", &[("28", "29")])])),
@@ -78,7 +86,8 @@ async fn test_folder_read() {
             assert_eq!(got, want, "give={} prefix={}", tt.give, prefix);
 
             let er: Option<&(dyn std::error::Error + 'static)> = match res.as_ref() {
-                Ok(_) => None, Err(e) => Some(e),
+                Ok(_) => None,
+                Err(e) => Some(e),
             };
             compare_errors(er, &tt.want_err);
         }

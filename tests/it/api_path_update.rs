@@ -8,7 +8,9 @@ use vaku::api::helpers::path_join;
 
 fn mk(kvs: &[(&str, &str)]) -> Option<Map<String, Value>> {
     let mut m = Map::new();
-    for (k, v) in kvs { m.insert((*k).to_string(), json!(*v)); }
+    for (k, v) in kvs {
+        m.insert((*k).to_string(), json!(*v));
+    }
     Some(m)
 }
 

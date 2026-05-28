@@ -69,7 +69,10 @@ fn new_wrap_err_standard_error() {
         Some(ErrorKind::Custom("standard error".into())),
         Some(inject()),
     );
-    assert_eq!(e.to_string(), "context here: standard error: injected error");
+    assert_eq!(
+        e.to_string(),
+        "context here: standard error: injected error"
+    );
 }
 
 #[test]

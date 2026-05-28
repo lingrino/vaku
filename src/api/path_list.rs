@@ -20,7 +20,11 @@ impl Client {
                 return Err(Error::wrap(
                     p,
                     ErrorKind::PathList,
-                    Some(Box::new(Error::wrap(&e.to_string(), ErrorKind::VaultList, None))),
+                    Some(Box::new(Error::wrap(
+                        &e.to_string(),
+                        ErrorKind::VaultList,
+                        None,
+                    ))),
                 ))
             }
         };
@@ -35,8 +39,12 @@ impl Client {
 
 /// Decode the `keys` array from a Vault LIST response.
 pub(crate) fn decode_secret_keys(secret: Option<&Secret>) -> Result<Vec<String>, Error> {
-    let Some(secret) = secret else { return Ok(Vec::new()) };
-    let Some(data) = &secret.data else { return Ok(Vec::new()) };
+    let Some(secret) = secret else {
+        return Ok(Vec::new());
+    };
+    let Some(data) = &secret.data else {
+        return Ok(Vec::new());
+    };
 
     let raw = match data.get("keys") {
         Some(v) => v,

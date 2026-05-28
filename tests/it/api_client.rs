@@ -14,12 +14,16 @@ async fn test_new_client_defaults() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn test_new_client_bad_workers() {
-    let err = Client::builder().with_workers(0).build().map(|_| ()).unwrap_err();
+    let err = Client::builder()
+        .with_workers(0)
+        .build()
+        .map(|_| ())
+        .unwrap_err();
     let de: &(dyn std::error::Error + 'static) = &err;
-    compare_errors(Some(de), &[
-        ErrorKind::ApplyOptions.into(),
-        ErrorKind::NumWorkers.into(),
-    ]);
+    compare_errors(
+        Some(de),
+        &[ErrorKind::ApplyOptions.into(), ErrorKind::NumWorkers.into()],
+    );
 }
 
 #[tokio::test(flavor = "multi_thread")]
@@ -66,16 +70,28 @@ async fn test_input_output_paths() {
 
     // swap_paths
     let mut data: BTreeMap<String, Map<String, Value>> = BTreeMap::from([
-        ("0/1/2/3".to_string(), Map::from_iter([("k".to_string(), json!("v"))])),
-        ("0/1/2/4".to_string(), Map::from_iter([("k".to_string(), json!("v"))])),
+        (
+            "0/1/2/3".to_string(),
+            Map::from_iter([("k".to_string(), json!("v"))]),
+        ),
+        (
+            "0/1/2/4".to_string(),
+            Map::from_iter([("k".to_string(), json!("v"))]),
+        ),
     ]);
     abs.swap_paths(&mut data, "0/1/2", "00/01/02");
     assert!(data.contains_key("00/01/02/3"));
     assert!(data.contains_key("00/01/02/4"));
 
     let mut data: BTreeMap<String, Map<String, Value>> = BTreeMap::from([
-        ("0/1/2/3".to_string(), Map::from_iter([("k".to_string(), json!("v"))])),
-        ("0/1/2/4".to_string(), Map::from_iter([("k".to_string(), json!("v"))])),
+        (
+            "0/1/2/3".to_string(),
+            Map::from_iter([("k".to_string(), json!("v"))]),
+        ),
+        (
+            "0/1/2/4".to_string(),
+            Map::from_iter([("k".to_string(), json!("v"))]),
+        ),
     ]);
     rel.swap_paths(&mut data, "0/1/2", "00/01/02");
     assert!(data.contains_key("00/01/02/0/1/2/3"));
@@ -83,4 +99,6 @@ async fn test_input_output_paths() {
 }
 
 #[allow(dead_code)]
-fn _err_matchers() -> Vec<ErrMatch> { Vec::new() } // touch ErrMatch
+fn _err_matchers() -> Vec<ErrMatch> {
+    Vec::new()
+} // touch ErrMatch

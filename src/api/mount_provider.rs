@@ -35,24 +35,33 @@ pub(crate) struct DefaultMountProvider {
 impl MountProvider for DefaultMountProvider {
     async fn list_mounts(&self) -> Result<Vec<Mount>, Error> {
         let secret = self.logical.read("sys/mounts").await.map_err(|e| {
-            Error::wrap("", ErrorKind::MountInfo, Some(Box::new(Error::wrap(
-                &e.to_string(),
-                ErrorKind::ListMounts,
-                None,
-            ))))
+            Error::wrap(
+                "",
+                ErrorKind::MountInfo,
+                Some(Box::new(Error::wrap(
+                    &e.to_string(),
+                    ErrorKind::ListMounts,
+                    None,
+                ))),
+            )
         })?;
 
-        let Some(secret) = secret else { return Ok(Vec::new()) };
-        let Some(data) = secret.data else { return Ok(Vec::new()) };
+        let Some(secret) = secret else {
+            return Ok(Vec::new());
+        };
+        let Some(data) = secret.data else {
+            return Ok(Vec::new());
+        };
 
         let mut mounts = Vec::with_capacity(data.len());
         // The `sys/mounts` endpoint can place mounts at the top level (legacy)
         // or under a nested `data` key (newer Vault). Walk both shapes.
-        let candidates: Vec<(&String, &Value)> = if let Some(nested) = data.get("data").and_then(Value::as_object) {
-            nested.iter().collect()
-        } else {
-            data.iter().filter(|(_, v)| v.is_object()).collect()
-        };
+        let candidates: Vec<(&String, &Value)> =
+            if let Some(nested) = data.get("data").and_then(Value::as_object) {
+                nested.iter().collect()
+            } else {
+                data.iter().filter(|(_, v)| v.is_object()).collect()
+            };
 
         for (mount_path, value) in candidates {
             let obj = match value.as_object() {
@@ -63,7 +72,11 @@ impl MountProvider for DefaultMountProvider {
             if !obj.contains_key("type") {
                 continue;
             }
-            let r#type = obj.get("type").and_then(Value::as_str).unwrap_or_default().to_string();
+            let r#type = obj
+                .get("type")
+                .and_then(Value::as_str)
+                .unwrap_or_default()
+                .to_string();
             let version = obj
                 .get("options")
                 .and_then(Value::as_object)

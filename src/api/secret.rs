@@ -50,7 +50,8 @@ pub(crate) fn is_deleted(data: &Map<String, Value>) -> bool {
     let Some(metadata) = data.get(KV2_METADATA).and_then(Value::as_object) else {
         return true;
     };
-    let deletion_time_ok = matches!(metadata.get("deletion_time"), Some(Value::String(s)) if s.is_empty());
+    let deletion_time_ok =
+        matches!(metadata.get("deletion_time"), Some(Value::String(s)) if s.is_empty());
     if !deletion_time_ok {
         return true;
     }
@@ -75,8 +76,12 @@ pub(crate) fn extract_secret_meta(data: Option<&Map<String, Value>>) -> SecretMe
     };
 
     for (version_str, raw) in versions {
-        let Ok(version) = version_str.parse::<i64>() else { continue };
-        let Some(version_data) = raw.as_object() else { continue };
+        let Ok(version) = version_str.parse::<i64>() else {
+            continue;
+        };
+        let Some(version_data) = raw.as_object() else {
+            continue;
+        };
 
         let mut vm = SecretVersionMeta::default();
 
@@ -151,7 +156,8 @@ mod tests {
     fn extract_v2_read_no_data_field() {
         let data = obj(json!({
             "metadata": {"deletion_time": "", "destroyed": false}
-        })).unwrap();
+        }))
+        .unwrap();
         assert!(extract_v2_read(Some(&data)).is_none());
     }
 
@@ -160,7 +166,8 @@ mod tests {
         let data = obj(json!({
             "metadata": {"deletion_time": "", "destroyed": false},
             "data": {"foo": "bar"},
-        })).unwrap();
+        }))
+        .unwrap();
         let got = extract_v2_read(Some(&data)).unwrap();
         assert_eq!(got.get("foo").unwrap(), &Value::String("bar".into()));
     }

@@ -13,12 +13,13 @@ impl Client {
     }
 
     pub(crate) async fn path_delete_with_op(&self, p: &str, op: VaultOp) -> Result<(), Error> {
-        let (vault_path, _) =
-            rewrite_path(self.src().mount_provider.as_ref(), p, op).await?;
+        let (vault_path, _) = rewrite_path(self.src().mount_provider.as_ref(), p, op).await?;
 
-        self.src().logical.delete(&vault_path).await.map_err(|e| {
-            Error::wrap(&e.to_string(), ErrorKind::VaultDelete, None)
-        })?;
+        self.src()
+            .logical
+            .delete(&vault_path)
+            .await
+            .map_err(|e| Error::wrap(&e.to_string(), ErrorKind::VaultDelete, None))?;
         Ok(())
     }
 }

@@ -16,12 +16,42 @@ async fn test_path_search() {
         want_err: Vec<ErrMatch>,
     }
     let cases = vec![
-        Case { give: "0/1", search: "2", want: true, want_err: vec![] },
-        Case { give: "0/4/5", search: "7", want: true, want_err: vec![] },
-        Case { give: "0/4/8", search: "13", want: false, want_err: vec![] },
-        Case { give: "0/4/13/17", search: "9", want: true, want_err: vec![] },
-        Case { give: "fake", search: "searchstring", want: false, want_err: vec![] },
-        Case { give: "fakeempty", search: "", want: false, want_err: vec![] },
+        Case {
+            give: "0/1",
+            search: "2",
+            want: true,
+            want_err: vec![],
+        },
+        Case {
+            give: "0/4/5",
+            search: "7",
+            want: true,
+            want_err: vec![],
+        },
+        Case {
+            give: "0/4/8",
+            search: "13",
+            want: false,
+            want_err: vec![],
+        },
+        Case {
+            give: "0/4/13/17",
+            search: "9",
+            want: true,
+            want_err: vec![],
+        },
+        Case {
+            give: "fake",
+            search: "searchstring",
+            want: false,
+            want_err: vec![],
+        },
+        Case {
+            give: "fakeempty",
+            search: "",
+            want: false,
+            want_err: vec![],
+        },
         Case {
             give: MOUNTLESS,
             search: "searchstring",

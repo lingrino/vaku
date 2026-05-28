@@ -11,6 +11,7 @@ impl Client {
             Box::pin(async move { c.path_delete_meta(&path).await })
                 as std::pin::Pin<Box<dyn std::future::Future<Output = Result<(), Error>> + Send>>
         });
-        self.folder_delete_with(p, deleter, ErrorKind::FolderDeleteMeta).await
+        self.folder_delete_with(p, deleter, ErrorKind::FolderDeleteMeta)
+            .await
     }
 }

@@ -16,7 +16,8 @@ impl Client {
         let mut done = stream.done;
         let path_rx = stream.results;
 
-        let (res_tx, mut res_rx) = tokio::sync::mpsc::unbounded_channel::<(String, Map<String, Value>)>();
+        let (res_tx, mut res_rx) =
+            tokio::sync::mpsc::unbounded_channel::<(String, Map<String, Value>)>();
 
         // Spawn `workers` readers; each drains the path stream into res_tx.
         let mut workers: JoinSet<Result<(), Error>> = JoinSet::new();
@@ -82,14 +83,22 @@ impl Client {
             return Err(Error::wrap(
                 p,
                 ErrorKind::FolderRead,
-                Some(Box::new(Error::wrap(p, ErrorKind::FolderReadChan, Some(Box::new(e))))),
+                Some(Box::new(Error::wrap(
+                    p,
+                    ErrorKind::FolderReadChan,
+                    Some(Box::new(e)),
+                ))),
             ));
         }
         if let Some(e) = worker_err {
             return Err(Error::wrap(
                 p,
                 ErrorKind::FolderRead,
-                Some(Box::new(Error::wrap(p, ErrorKind::FolderReadChan, Some(Box::new(e))))),
+                Some(Box::new(Error::wrap(
+                    p,
+                    ErrorKind::FolderReadChan,
+                    Some(Box::new(e)),
+                ))),
             ));
         }
 

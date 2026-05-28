@@ -9,11 +9,7 @@ use serde_json::{Map, Value};
 impl Client {
     /// Write `data` to `p`. Mirrors Go's `PathWrite` — a `None` data argument
     /// yields [`ErrorKind::NilData`].
-    pub async fn path_write(
-        &self,
-        p: &str,
-        data: Option<Map<String, Value>>,
-    ) -> Result<(), Error> {
+    pub async fn path_write(&self, p: &str, data: Option<Map<String, Value>>) -> Result<(), Error> {
         let Some(data) = data else {
             return Err(Error::wrap(
                 p,
@@ -34,13 +30,21 @@ impl Client {
             Value::Object(data)
         };
 
-        self.src().logical.write(&vault_path, body).await.map_err(|e| {
-            Error::wrap(
-                p,
-                ErrorKind::PathWrite,
-                Some(Box::new(Error::wrap(&e.to_string(), ErrorKind::VaultWrite, None))),
-            )
-        })?;
+        self.src()
+            .logical
+            .write(&vault_path, body)
+            .await
+            .map_err(|e| {
+                Error::wrap(
+                    p,
+                    ErrorKind::PathWrite,
+                    Some(Box::new(Error::wrap(
+                        &e.to_string(),
+                        ErrorKind::VaultWrite,
+                        None,
+                    ))),
+                )
+            })?;
         Ok(())
     }
 }
