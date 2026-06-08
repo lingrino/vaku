@@ -84,15 +84,27 @@ func TestMain(m *testing.M) {
 func testServer(t *testing.T) *api.Client {
 	t.Helper()
 
+	// The SDK's PostStart sends Vault a SIGHUP (to reload the PKI cert it copies
+	// in) as soon as the container emits its first line of output, on the
+	// assumption that Vault has installed its signal handler by then. If output
+	// appears before that handler exists, the default SIGHUP disposition kills
+	// the container and cluster creation fails with "container not running".
+	//
+	// The Vault 2.0.0+ image runs as the unprivileged "vault" user, and its
+	// entrypoint warns to stderr ("Container is running as non-root user,
+	// ignoring SKIP_CHOWN" / "...SKIP_SETCAP") whenever those vars are set. That
+	// warning is the first line out of the container, so it loses the race before
+	// Vault has even started. We must keep both vars empty so the entrypoint stays
+	// silent and Vault's own (post-handler) startup log is the first output. The
+	// SDK hardcodes SKIP_SETCAP=true, so we override it with an empty value
+	// (Docker keeps the last value for a duplicated key); SKIP_CHOWN we simply
+	// leave unset. Neither chown nor setcap runs as non-root anyway, so silencing
+	// them is purely cosmetic to the container and does not change its behavior.
 	cluster, err := docker.NewDockerCluster(context.Background(), &docker.DockerClusterOptions{
 		ImageRepo:    "hashicorp/vault",
 		ImageTag:     "latest",
-		DisableMlock: true, // otherwise test containers can oom
-		// Vault 2.0.0+ image runs as the unprivileged "vault" user, so the entrypoint's
-		// `chown -R vault:vault /vault/config` fails and writes errors to stderr. The SDK
-		// treats the first stderr line as "vault is up" and signals SIGHUP, killing the
-		// container before vault server actually starts. SKIP_CHOWN avoids that output.
-		Envs: []string{"SKIP_CHOWN=true"},
+		DisableMlock: true,                     // otherwise test containers can oom
+		Envs:         []string{"SKIP_SETCAP="}, // see above; keep the entrypoint quiet
 		ClusterOptions: testcluster.ClusterOptions{
 			ClusterName: strconv.Itoa(rand.IntN(1000000000)), //nolint:gosec
 			NumCores:    1,
