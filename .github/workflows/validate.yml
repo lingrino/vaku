@@ -45,7 +45,7 @@ jobs:
         with:
           go-version: stable
       - name: go mod tidy
-        run: test -z $(go mod tidy)
+        run: go mod tidy -diff
   govulncheck:
     runs-on: ubuntu-latest
     steps:
