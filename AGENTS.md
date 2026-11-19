@@ -1,4 +1,4 @@
-# Claude Code Guidelines for Vaku
+# Agent Guidelines for Vaku
 
 ## Project Overview
 
